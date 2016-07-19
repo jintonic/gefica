@@ -1,17 +1,17 @@
-#ifndef PLANAR1D_H
-#define PLANAR1D_H
+#ifndef PLANARX_H
+#define PLANARX_H
 
-#include "Field.h"
+#include "X.h"
 
-namespace GEFICA { class Planar1D; }
+namespace GEFICA { class PlanarX; }
 
-class GEFICA::Planar1D : public GEFICA::Field
+class GEFICA::PlanarX : public GEFICA::X
 {
   public :
-    Planar1D(int ix) : Field(ix) {};
+    PlanarX(int ix) : X(ix) {};
     void SetVoltage(double voltage); 
 
-    ClassDef(Planar1D,1);
+    ClassDef(PlanarX,1);
 };
 
 #endif

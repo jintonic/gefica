@@ -1,9 +1,10 @@
-#include "halfball.h"
+#include "Spherical.h"
 
 using namespace GEFICA;
 
-void halfball::Create(double steplength)
+void Spherical::Create(double steplength)
 {
+  z=2*z;
   n=x*y*z;
   Field2D::Create(steplength);
   E3=new double[n];
@@ -15,20 +16,20 @@ void halfball::Create(double steplength)
     if(i/(x*y)==0)C3[i]=-3.1415926;
     else C3[i]=C3[i-x*y]+3.14159265*2/z;
     if((i%(x*y))/x!=0)C2[i]=C2[i-x]-3.1415926/(2*y-1);
-    else C2[i]=1.570796;
+    else C2[i]=3.14159265;
     if(i%x==0)C1[i]=0;
     else C1[i]=C1[i-1]+steplength;
 
     E3[i]=0;
-    StepLeft[i]=3.1415/z;
-    StepRight[i]=3.1415/z;
-    StepUp[i]=3.1415/(y*2-1);
-    StepDown[i]=3.1415/(y*2-1);
+    StepLeft[i]=3.14159265/z;
+    StepRight[i]=3.14159265/z;
+    StepUp[i]=3.14159265/(y*2-1);
+    StepDown[i]=3.14159265/(y*2-1);
   }
 }
 
 
-void halfball::Update(int idx)
+void Spherical::Update(int idx)
 {//need update
   if (isbegin[idx])return;
   double density=Impurity[idx]*1.6e12;
@@ -49,7 +50,11 @@ void halfball::Update(int idx)
     else Pyp1=P[idx-n/2];
   }
   else Pyp1=P[idx+x];
-  if(idx%(x*y)<x)Pym1=P[idx];
+  if(idx%(x*y)<x)
+  {
+    if(idx<n/2)Pym1=P[idx+n/2];
+    else Pym1=P[idx-n/2];
+  }
   else Pym1=P[idx-x];
   if((idx%(x*y))%x==x-1)Pxp1=P[idx];
   else Pxp1=P[idx+1];
@@ -70,15 +75,15 @@ void halfball::Update(int idx)
   E3[idx]=(Pzp1-Pzm1)/(h0+h5);
 }
 
-int halfball::FindIdx(double tarx,double tary ,double tarz,int begin,int end)
+int Spherical::FindIdx(double tarx,double tary ,double tarz,int begin,int end)
 {
-  if(begin>=end)return Field2D::FindIdx(tarx,tary,begin,begin+x*y-1);
+  if(begin>=end)return XY::FindIdx(tarx,tary,begin,begin+x*y-1);
   int mid=((begin/(x*y)+end/(x*y))/2)*x*y;
   if(C3[mid]>=tarz)return FindIdx(tarx,tary,tarz,begin,mid);
   else return FindIdx(tarx,tary,tarz,mid+1,end);
 }
 
-double halfball::GetData(double tarx, double tary, double tarz,int thing)
+double Spherical::GetData(double tarx, double tary, double tarz,int thing)
 {
   int idx=FindIdx(tarx,tary,tarz,0,n);
   double ab=(tarx-C1[idx])/StepNext[idx];
@@ -113,7 +118,7 @@ double halfball::GetData(double tarx, double tary, double tarz,int thing)
   if(tar7==-1)tar7=tar[idx+x*y+x+1];
   return ((tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb)*ac+((tar4*aa+tar5*ab)*ba+(tar6*aa+tar7*ab)*bb)*ca;
 }
-void halfball::Save(const char * fout)
+void Spherical::Save(const char * fout)
 {
   Field2D::Save(fout);
   TFile *file=new TFile(fout,"update");
@@ -135,7 +140,7 @@ void halfball::Save(const char * fout)
   delete file;
 
 }
-void halfball::Load(const char * fin)
+void Spherical::Load(const char * fin)
 {
   Field2D::Load(fin);
   TFile *file=new TFile(fin);
@@ -161,7 +166,7 @@ void halfball::Load(const char * fin)
   file->Close();
   delete file;
 }
-void halfball::SetImpurity(TF3 * Im)
+void Spherical::SetImpurity(TF3 * Im)
 {
   for(int i=n;i-->0;)
   {

@@ -1,8 +1,8 @@
-#include "Field3D.h"
+#include "XYZ.h"
 
 using namespace GEFICA;
 
-void Field3D::Create(double steplength)
+void XYZ::Create(double steplength)
 {
   Field2D::Create(steplength);
   E3=new double[n];
@@ -25,7 +25,7 @@ void Field3D::Create(double steplength)
 }
 
 
-void Field3D::Update(int idx)
+void XYXYZnt idx)
 {//need update
   if (isbegin[idx])return;
   double density=Impurity[idx]*1.6e12;
@@ -63,15 +63,15 @@ void Field3D::Update(int idx)
   E3[idx]=(Pzp1-Pzm1)/(h0+h5);
 }
 
-int Field3D::FindIdx(double tarx,double tary ,double tarz,int begin,int end)
+int XYXYXYXYZary ,double tarz,int begin,int end)
 {
-  if(begin>=end)return Field2D::FindIdx(tarx,tary,begin,begin+x*y-1);
+  if(begin>=end)return XY::FindIdx(tarx,tary,begin,begin+x*y-1);
   int mid=((begin/(x*y)+end/(x*y))/2)*x*y;
   if(C3[mid]>=tarz)return FindIdx(tarx,tary,tarz,begin,mid);
   else return FindIdx(tarx,tary,tarz,mid+1,end);
 }
 
-double Field3D::GetData(double tarx, double tary, double tarz,int thing)
+double XYZ::GetData(double tarx, double tary, double tarz,int thing)
 {
   int idx=FindIdx(tarx,tary,tarz,0,n);
   double ab=(tarx-C1[idx])/StepNext[idx];
@@ -105,7 +105,7 @@ double Field3D::GetData(double tarx, double tary, double tarz,int thing)
   if(tar7==-1)tar7=tar[idx+x*y+x+1];
   return ((tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb)*ac+((tar4*aa+tar5*ab)*ba+(tar6*aa+tar7*ab)*bb)*ca;
 }
-void Field3D::Save(const char * fout)
+void XYZ::Save(const char * fout)
 {
   Field2D::Save(fout);
   TFile *file=new TFile(fout,"update");
@@ -127,7 +127,7 @@ void Field3D::Save(const char * fout)
   delete file;
 
 }
-void Field3D::Load(const char * fin)
+void XYZ::Load(const char * fin)
 {
   Field2D::Load(fin);
   TFile *file=new TFile(fin);
@@ -153,7 +153,7 @@ void Field3D::Load(const char * fin)
   file->Close();
   delete file;
 }
-void Field3D::SetImpurity(TF3 * Im)
+void XYZ::SetImpurity(TF3 * Im)
 {
   for(int i=n;i-->0;)
   {

@@ -1,16 +1,16 @@
-#ifndef FIELD3D_H
-#define FIELD3D_H
+#ifndef XYZ_H
+#define XYZ_H
 
-#include "Field2D.h"
+#include "XY.h"
 #include <TF3.h>
 
-namespace GEFICA { class Field3D; }
+namespace GEFICA { class XYZ; }
 
-class GEFICA::Field3D : public GEFICA::Field2D
+class GEFICA::XYZ : public GEFICA::XYZ
 {
    public:
-    Field3D(unsigned short x=0, unsigned short y=0,unsigned short z=0): Field2D(x,y), z(z) {n=x*y*z;}
-    virtual ~Field3D() {delete[] E1;delete[] E2;delete []E3;delete[] C1; delete [] C2;delete[] C3; delete[] P; delete[] StepNext;delete[] StepBefore;delete []StepLeft;delete[] StepRight; delete []StepUp; delete [] StepDown; delete[] isbegin; delete[] Impurity;};
+    XYZ(unsigned short x=0, unsigned short y=0,unsigned short z=0): XYZ(x,y,z) {n=x*y*z;}
+    virtual ~XYZ() {delete[] E1;delete[] E2;delete []E3;delete[] C1; delete [] C2;delete[] C3; delete[] P; delete[] StepNext;delete[] StepBefore;delete []StepLeft;delete[] StepRight; delete []StepUp; delete [] StepDown; delete[] isbegin; delete[] Impurity;};
 
     unsigned short z; // number of steps along the 3nd axis
     double *E3,*C3,*StepUp,*StepDown;//left and right are for y axis
@@ -25,7 +25,7 @@ class GEFICA::Field3D : public GEFICA::Field2D
 	double tarz,int zbegin,int zend);
     virtual double GetData(double tarx,double tary,double tarz,int thing);
     virtual void SetImpurity(TF3 * Im);
-    ClassDef(Field3D,1);
+    ClassDef(XYZ,1);
 };
 
 #endif

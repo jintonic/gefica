@@ -1,8 +1,8 @@
-#include "Planar1D.h"
+#include "PlanarX.h"
 
 using namespace GEFICA;
 
-void Planar1D::SetVoltage(double Voltage)
+void PlanarX::SetVoltage(double Voltage)
 {
   isbegin[0]=true;
   isbegin[n-1]=true;

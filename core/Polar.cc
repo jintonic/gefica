@@ -1,6 +1,6 @@
-#include "TrueCoaxial.h"
+#include "Polar.h"
 using namespace GEFICA;
-void TrueCoaxial::Create(double steplength)
+void Polar::Create(double steplength)
 {
   Field2D::Create(steplength);
   for (int i=0;i<n;i++)
@@ -15,7 +15,7 @@ void TrueCoaxial::Create(double steplength)
     StepRight[i]=360/y;
   }
 }
-double TrueCoaxial::GetData(double tarx, double tary, int thing)
+double Polar::GetData(double tarx, double tary, int thing)
 {
   int idx=FindIdx(tarx,tary,0,n);
   double ab=(tarx-C1[idx])/StepNext[idx];

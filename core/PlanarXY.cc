@@ -1,8 +1,8 @@
-#include "Planar2D.h"
+#include "PlanarXY.h"
 
 using namespace GEFICA;
 
-void Planar2D::SetVoltage(double dVoltage)
+void PlanarXY::SetVoltage(double dVoltage)
 {
   if(isx)
   {

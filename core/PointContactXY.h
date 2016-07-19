@@ -1,16 +1,16 @@
-#ifndef NSHAPE_H
-#define NSHAPE_H
+#ifndef POINTCONTACTXY_H
+#define POINTCONTACTXY_H
 
-#include "Field2D.h"
+#include "XY.h"
 
-namespace GEFICA { class nshape; }
+namespace GEFICA { class PointContactXY; }
 
-class GEFICA::nshape : public GEFICA::Field2D
+class GEFICA::PointContactXY : public GEFICA::XY
 {
   public :
-    nshape(int ix,int iy) : Field2D(ix,iy) {};
+    PointContactXY(int ix,int iy) : XY(ix,iy) {};
     void SetVoltage(double voltage,double topbegin,double topend); 
-    ClassDef(nshape,1);
+    ClassDef(PointContactXY,1);
 };
 
 #endif

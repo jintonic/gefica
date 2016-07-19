@@ -1,17 +1,17 @@
-#ifndef PLANAR2D_H
-#define PLANAR2D_H
+#ifndef PLANARXY_H
+#define PLANARXY_H
 
-#include "Field2D.h"
+#include "XY.h"
 
-namespace GEFICA { class Planar2D; }
+namespace GEFICA { class PlanarXY; }
 
-class GEFICA::Planar2D : public GEFICA::Field2D
+class GEFICA::PlanarXY : public GEFICA::XY
 {
   public :
     bool isx;
-    Planar2D(int ix,int iy) : Field2D(ix,iy) {};
+    PlanarXY(int ix,int iy) : XY(ix,iy) {};
     void SetVoltage(double voltage); 
-    ClassDef(Planar2D,1);
+    ClassDef(PlanarXY,1);
 };
 
 #endif

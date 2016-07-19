@@ -1,9 +1,9 @@
-#include "Field.h"
+#include "X.h"
 
 using namespace std;
 using namespace GEFICA;
 
-void Field::Create(double steplength)
+void X::Create(double steplength)
 {
   E0=8.854;ER=16;Csor=1;Xlimit=0.0000001;
   
@@ -26,7 +26,7 @@ void Field::Create(double steplength)
   }
 }
 
-bool Field::Iterate()
+bool X::Iterate()
 {
   int cnt=0,looptime=MaxIterations;
   while (cnt++<looptime)
@@ -49,7 +49,7 @@ bool Field::Iterate()
   return false;
 }
 
-void Field::Update(int idx)
+void X::Update(int idx)
 {
   if (isbegin[idx])return;
   double density=Impurity[idx]*1.6/1000000000000;
@@ -60,7 +60,7 @@ void Field::Update(int idx)
   E1[idx]=(P[idx+1]-P[idx-1])/(h2+h3);
 }
 
-int Field::FindIdx(double tarx,int begin,int end)
+int X::FindIdx(double tarx,int begin,int end)
 {
   if (begin>=end)return begin;
   int mid=(begin+end)/2;
@@ -68,7 +68,7 @@ int Field::FindIdx(double tarx,int begin,int end)
   else return FindIdx(tarx,mid+1,end);
 }
 
-double Field::GetData(double tarx,int thing)
+double X::GetData(double tarx,int thing)
 {
   int idx=FindIdx(tarx,0,n-1);
   if (idx==n)
@@ -90,7 +90,7 @@ double Field::GetData(double tarx,int thing)
   }
   return -1;
 }
-void Field::Save(const char * fout)
+void X::Save(const char * fout)
 {
   TFile * file=new TFile(fout,"recreate","data");
   TTree * tree=new TTree("t","1D");
@@ -111,7 +111,7 @@ void Field::Save(const char * fout)
   bool isbegins;
 
   double E1s,C1s,Ps,StepNexts,StepBefores,impuritys;
-  tree->Branch("e1",&E1s,"e1/D"); // Electric field in x
+  tree->Branch("e1",&E1s,"e1/D"); // Electric X in x
   tree->Branch("c1",&C1s,"c1/D"); // persition in x
   tree->Branch("p",&Ps,"p/D"); // electric potential
   tree->Branch("sn",&StepNexts,"StepNext/D"); // Step length to next point in x
@@ -132,7 +132,7 @@ void Field::Save(const char * fout)
   file->Close();
   delete file;
 }
-void Field::Load(const char * fin)
+void X::Load(const char * fin)
 {
   TFile *file=new TFile(fin);
   TVectorD *v1=(TVectorD*)file->Get("v");
@@ -182,7 +182,7 @@ void Field::Load(const char * fin)
   delete file;
 }
 
-void Field::SetImpurity(TF1 * Im)
+void X::SetImpurity(TF1 * Im)
 {
   for(int i=n;i-->0;)
   {

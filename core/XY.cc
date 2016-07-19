@@ -1,8 +1,8 @@
-#include "Field2D.h"
+#include "XY.h"
 
 using namespace GEFICA;
 
-void Field2D::Create(double steplength)
+void XY::Create(double steplength)
 {
   Field::Create(steplength);
   E2=new double[n];
@@ -23,7 +23,7 @@ void Field2D::Create(double steplength)
 }
 
 
-void Field2D::Update(int idx)
+void XY::Update(int idx)
 {//need update
   if (isbegin[idx])return;
   double density=Impurity[idx]*1.6e12;
@@ -46,15 +46,15 @@ void Field2D::Update(int idx)
   E2[idx]=(Pyp1-Pym1)/(h1+h4);
 }
 
-int Field2D::FindIdx(double tarx,double tary ,int ybegin,int yend)
+int XY::FindIdx(double tarx,double tary ,int ybegin,int yend)
 {
-  if(ybegin>=yend)return Field::FindIdx(tarx,ybegin,ybegin+x-1);
+  if(ybegin>=yend)return X::FindIdx(tarx,ybegin,ybegin+x-1);
   int mid=((ybegin/x+yend/x)/2)*x;
   if(C2[mid]>=tary)return FindIdx(tarx,tary,ybegin,mid);
   else return FindIdx(tarx,tary,mid+1,yend);
 }
 
-double Field2D::GetData(double tarx, double tary, int thing)
+double XY::GetData(double tarx, double tary, int thing)
 {
   int idx=FindIdx(tarx,tary,0,n);
   double ab=(tarx-C1[idx])/StepNext[idx];
@@ -78,7 +78,7 @@ double Field2D::GetData(double tarx, double tary, int thing)
   if (tar3==-1)tar3=tar[idx+x+1];
   return (tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb;
 }
-void Field2D::Save(const char * fout)
+void XY::Save(const char * fout)
 {
   Field::Save(fout);
   TFile *file=new TFile(fout,"update");
@@ -100,7 +100,7 @@ void Field2D::Save(const char * fout)
   delete file;
 
 }
-void Field2D::Load(const char * fin)
+void XY::Load(const char * fin)
 {
   Field::Load(fin);
   TFile *file=new TFile(fin);
@@ -126,7 +126,7 @@ void Field2D::Load(const char * fin)
   file->Close();
   delete file;
 }
-void Field2D::SetImpurity(TF2 * Im)
+void XY::SetImpurity(TF2 * Im)
 {
   for(int i=n;i-->0;)
   {

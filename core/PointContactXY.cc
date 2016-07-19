@@ -1,8 +1,8 @@
-#include "nshape.h"
+#include "PointContactXY.h"
 
 using namespace GEFICA;
 
-void nshape::SetVoltage(double dVoltage,double topbegin,double topend)
+void PointContactXY::SetVoltage(double dVoltage,double topbegin,double topend)
 {
   for(int i=n;i-->n-x;)
   {

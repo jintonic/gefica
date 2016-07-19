@@ -1,8 +1,8 @@
-#include "idntnshape.h"
+#include "HemiSpheric.h"
 
 using namespace GEFICA;
 
-void idntnshape::SetVoltage(double dVoltage,double r)
+void HemiSpheric::SetVoltage(double dVoltage,double r)
 {
 for(int i=x-1;i<n;i=i+x)
 {

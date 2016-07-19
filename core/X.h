@@ -1,5 +1,5 @@
-#ifndef GEFICA_FIELD_H
-#define GEFICA_FIELD_H
+#ifndef X_H
+#define X_H
 
 #include <TFile.h>
 #include <TTree.h>
@@ -9,9 +9,9 @@
 #include <iostream>
 #include <TF1.h>
 
-namespace GEFICA { class Field; }
+namespace GEFICA { class X; }
 
-class GEFICA::Field: public TObject 
+class GEFICA::X: public TObject 
 {
    public:
       int x; // number of steps along the 1st axis
@@ -22,8 +22,8 @@ class GEFICA::Field: public TObject
       double XUpSum,XDownSum,Xlimit;
 
    public:
-      Field(int ix) {n=ix;x=ix;};
-      virtual ~Field() {delete[] E1;delete [] P;delete [] C1;
+      X(int ix) {n=ix;x=ix;};
+      virtual ~X() {delete[] E1;delete [] P;delete [] C1;
          delete[] StepNext;delete[] StepBefore;delete[] isbegin;delete[] Impurity;};
 
       virtual void Create(double steplength);
@@ -40,6 +40,6 @@ class GEFICA::Field: public TObject
       virtual int FindIdx(double tarx,int begin,int end);
 
    public:
-      ClassDef(Field,1);
+      ClassDef(X,1);
 };
 #endif

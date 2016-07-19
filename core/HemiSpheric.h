@@ -1,16 +1,16 @@
-#ifndef IDNTNSHAPE_H
-#define IDNTNSHAPE_H
+#ifndef HEMISPHERIC_H
+#define HEMISPHERIC_H
 
-#include "halfball.h"
+#include "Spherical.h"
 
-namespace GEFICA { class idntnshape; }
+namespace GEFICA { class HemiSpheric; }
 
-class GEFICA::idntnshape : public GEFICA::halfball
+class GEFICA::HemiSpheric : public GEFICA::Spherical
 {
   public :
-    idntnshape(int ix,int iy,int iz) : halfball(ix,iy,iz) {};
+    HemiSpheric(int ix,int iy,int iz) : halfball(ix,iy,iz) {};
     void SetVoltage(double voltage,double r); 
-    ClassDef(idntnshape,1);
+    ClassDef(HemiSpheric,1);
 };
 
 #endif
