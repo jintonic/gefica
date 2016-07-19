@@ -1,0 +1,3 @@
+#ifndef GEFICA_CYLINDRICAL_H
+#define GEFICA_CYLINDRICAL_H
+#endif
