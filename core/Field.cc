@@ -5,7 +5,7 @@ using namespace GEFICA;
 
 void Field::Create(double steplength)
 {
-  E0=8.854/100000000000;ER=16;Csor=1;Xlimit=0.0000001;
+  E0=8.854;ER=16;Csor=1;Xlimit=0.0000001;
   
   E1=new double[n];
   C1=new double[n];
@@ -37,13 +37,13 @@ bool Field::Iterate()
     {
       double tmp=P[i];
       Update(i);
-      if(i<3)continue;
       if(tmp>0)XDownSum+=tmp;
       else XDownSum=XDownSum-tmp;
       if(P[i]-tmp>0)XUpSum=XUpSum+P[i]-tmp;
       else XUpSum=XUpSum+tmp-P[i];
-    } 
-    if (XUpSum/XDownSum<Xlimit)return true;
+    }
+    if(cnt%1000==0)cout<<cnt<<"  "<<XUpSum/XDownSum<<endl;
+    if (XUpSum/XDownSum<Xlimit){return true;}
   }
   cout<<cnt<<endl;
   return false;
@@ -52,7 +52,7 @@ bool Field::Iterate()
 void Field::Update(int idx)
 {
   if (isbegin[idx])return;
-  double density=Impurity[idx]*1.6/100000000000/10000000000000;
+  double density=Impurity[idx]*1.6/1000000000000;
   double h2=StepBefore[idx];
   double h3=StepNext[idx];
   double tmp=density/(E0*ER)*h2*h3+(h3*P[idx-1]+h2*P[idx+1])/(h2+h3);
@@ -111,7 +111,7 @@ void Field::Save(const char * fout)
   bool isbegins;
 
   double E1s,C1s,Ps,StepNexts,StepBefores,impuritys;
-  tree->Branch("e1",&E1s,"E1/D"); // Electric field in x
+  tree->Branch("e1",&E1s,"e1/D"); // Electric field in x
   tree->Branch("c1",&C1s,"c1/D"); // persition in x
   tree->Branch("p",&Ps,"p/D"); // electric potential
   tree->Branch("sn",&StepNexts,"StepNext/D"); // Step length to next point in x
