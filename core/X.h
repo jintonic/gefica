@@ -1,5 +1,5 @@
-#ifndef X_H
-#define X_H
+#ifndef GEFICA_X_H
+#define GEFICA_X_H
 
 #include <TFile.h>
 #include <TTree.h>
@@ -42,4 +42,5 @@ class GEFICA::X: public TObject
    public:
       ClassDef(X,1);
 };
+
 #endif
