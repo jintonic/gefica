@@ -13,11 +13,11 @@ class GEFICA::X: public TObject
       int MaxIterations;
       int n;
       bool * isbegin;
-      double *E1,*C1,*P,*StepNext,*StepBefore,*Impurity,Csor,E0,ER;
+      double *E1, *P,*C1,*StepNext,*StepBefore,*Impurity,Csor,E0,ER;
       double XUpSum,XDownSum,Xlimit;
 
    public:
-      X(int ix) {n=ix;x=ix;};
+      X(int nx=101);
       virtual ~X();
 
       virtual void Create(double steplength);
@@ -28,6 +28,8 @@ class GEFICA::X: public TObject
       virtual void SetImpurity(TF1 * Im);
 
       virtual double GetData(double tarx,int thing); // 1:Ex 2:f 0:Impurty
+
+      void Initialize(detector=kPlanarX);
 
       ClassDef(X,1);
 

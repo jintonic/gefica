@@ -8,10 +8,8 @@ namespace GEFICA { class PlanarX; }
 class GEFICA::PlanarX : public GEFICA::X
 {
    public :
-      PlanarX(int ix) : X(ix) {};
+      PlanarX(int nx=11) : X(nx) {};
       void SetVoltage(double voltage); 
-
-      ClassDef(PlanarX,1);
 };
 
 #endif

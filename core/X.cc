@@ -10,15 +10,19 @@ using namespace std;
 #include "X.h"
 using namespace GEFICA;
 
+X::X(int nx) : TObject(), 
+   isbegin(0), E1(0), P(0), C1(0), StepNext(0), StepBefore(0), Impurity(0)
+{ n=nx;x=nx; }
+
 X::~X()
 {
-   delete[] E1;
-   delete[] P;
-   delete[] C1;
-   delete[] StepNext;
-   delete[] StepBefore;
-   delete[] isbegin;
-   delete[] Impurity;
+   if (E1) delete[] E1;
+   if (P) delete[] P;
+   if (C1) delete[] C1;
+   if (StepNext) delete[] StepNext;
+   if (StepBefore) delete[] StepBefore;
+   if (isbegin) delete[] isbegin;
+   if (Impurity) delete[] Impurity;
 }
 
 void X::Create(double steplength)
