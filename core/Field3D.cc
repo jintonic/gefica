@@ -80,7 +80,7 @@ double Field3D::GetData(double tarx, double tary, double tarz,int thing)
   double bb=1-ba;
   double ac=(tarz-C3[idx])/StepUp[idx];
   double ca=1-ac;
-  double tar0,tar1,tar2,tar3,tar4,tar5,tar6,tar7,*tar;
+  double tar0,tar1,tar2,tar3,tar4,tar5,tar6,tar7,*tar=NULL;
   switch(thing)
   {
     case 0:tar= Impurity;break;

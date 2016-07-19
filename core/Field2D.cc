@@ -61,7 +61,7 @@ double Field2D::GetData(double tarx, double tary, int thing)
   double aa=1-ab;
   double ba=(tary-C2[idx])/StepRight[idx];
   double bb=1-ba;
-  double tar0,tar1,tar2,tar3,*tar;
+  double tar0,tar1,tar2,tar3,*tar=NULL;
   switch(thing)
   {
     case 0:tar= Impurity;break;
