@@ -47,13 +47,10 @@ ifneq ($(ALTCXX),)
   CXX = $(ALTCXX)
 endif
 
-# dependence
-CXXFLAGS+= -I$(UNIC)/include
-
 # Finally, define CXXFLAGS & LIBS
-CXXFLAGS+= $(ROOTCFLAGS)
-CXXFLAGS+= -g
-LIBS    += $(ROOTLIBS)
+CXXFLAGS+=$(subst -std=c++11,,$(ROOTCFLAGS))
+CXXFLAGS+=-g
+LIBS    +=$(ROOTLIBS)
 
 
 # Define things related to rootcint
@@ -161,7 +158,8 @@ $(ROOTIFIED_SOURCE): $(HEADERS) $(LINKDEF)
 	@echo 
 	@echo "* Rootifying files:" 
 	@rm -f $(ROOTIFIED_SOURCE) $(ROOTIFIED_HEADER) 
-	$(ROOTCINT) $(ROOTIFIED_SOURCE) -c -p $(CXXFLAGS) $(HEADERS) $(LINKDEF)
+	$(ROOTCINT) -f $(ROOTIFIED_SOURCE) -c -p $(CXXFLAGS) $(HEADERS) $(LINKDEF)
+	#@rootcint -v -f GEFICA.cc -c -p -Wall -fPIC -I/include -pthread -Wno-deprecated-declarations -m64 -I/home/rdlab/Downloads/root/include  TrueCoaxial.h Detector.h Field.h Planar.h Planar1D.h LinkDef.h
 	@echo 
 	@echo "* Creating object files:" 
 

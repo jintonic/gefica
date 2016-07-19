@@ -1,3 +1,7 @@
+#include <TFile.h>
+#include <Planar1D.h>
+using namespace GEFICA;
+
 void planar(const char* fin="input.root")
 {
    detector->field = new Field2D(10);
