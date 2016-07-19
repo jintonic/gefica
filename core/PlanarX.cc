@@ -1,5 +1,4 @@
 #include "PlanarX.h"
-
 using namespace GEFICA;
 
 void PlanarX::SetVoltage(double Voltage)

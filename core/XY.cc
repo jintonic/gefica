@@ -1,16 +1,31 @@
-#include "XY.h"
+#include <TFile.h>
+#include <TChain.h>
+#include <TVectorD.h>
 
+#include "XY.h"
 using namespace GEFICA;
+
+XY::~XY()
+{
+   delete[] E1;
+   delete[] E2;
+   delete[] C1;
+   delete[] C2;
+   delete[] P;
+   delete[] StepNext;
+   delete[] StepBefore;
+   delete[] isbegin;
+   delete[] Impurity;
+}
 
 void XY::Create(double steplength)
 {
-   Field::Create(steplength);
+   X::Create(steplength);
    E2=new double[n];
    C2=new double[n];
    StepLeft=new double[n];
    StepRight=new double[n];
-   for (int i=0;i<n;i++)
-   {
+   for (int i=0;i<n;i++) {
       if(i>x-1)C2[i]=C2[i-x]+steplength;
       else C2[i]=0;
       if(i%x==0)C1[i]=0;
@@ -21,7 +36,6 @@ void XY::Create(double steplength)
       StepRight[i]=steplength;
    }
 }
-
 
 void XY::Update(int idx)
 {//need update
@@ -80,7 +94,7 @@ double XY::GetData(double tarx, double tary, int thing)
 }
 void XY::Save(const char * fout)
 {
-   Field::Save(fout);
+   X::Save(fout);
    TFile *file=new TFile(fout,"update");
    TVectorD  v=*(TVectorD*)file->Get("v");
    v[8]=(double)y;
@@ -89,8 +103,7 @@ void XY::Save(const char * fout)
    double E2s,C2s;
    tree->Branch("e2",&E2s,"e2/D"); // Electric field in y
    tree->Branch("c2",&C2s,"c2/D"); // persition in y
-   for(int i=0;i<n;i++)
-   {
+   for(int i=0;i<n;i++) {
       E2s=E2[i];
       C2s=C2[i];
       tree->Fill();
@@ -102,7 +115,7 @@ void XY::Save(const char * fout)
 }
 void XY::Load(const char * fin)
 {
-   Field::Load(fin);
+   X::Load(fin);
    TFile *file=new TFile(fin);
    TVectorD *v1=(TVectorD*)file->Get("v");
    double * v=v1->GetMatrixArray();
@@ -117,8 +130,7 @@ void XY::Load(const char * fin)
    E2=new double[n];
    C2=new double[n];
 
-   for (int i=0;i<n;i++)
-   {
+   for (int i=0;i<n;i++) {
       t->GetEntry(i);
       E2[i]=fEy;
       C2[i]=fPy;
@@ -128,8 +140,7 @@ void XY::Load(const char * fin)
 }
 void XY::SetImpurity(TF2 * Im)
 {
-   for(int i=n;i-->0;)
-   {
+   for(int i=n;i-->0;) {
       Impurity[i]=Im->Eval((double)C1[i],(double)C2[i]);
    }
 }

@@ -1,16 +1,38 @@
-#include "XYZ.h"
+#include <TF3.h>
+#include <TFile.h>
+#include <TChain.h>
+#include <TVectorD.h>
 
+#include "XYZ.h"
 using namespace GEFICA;
+
+XYZ::~XYZ()
+{
+   delete[] E1;
+   delete[] E2;
+   delete[] E3;
+   delete[] C1;
+   delete[] C2;
+   delete[] C3;
+   delete[] P;
+   delete[] StepNext;
+   delete[] StepBefore;
+   delete[] StepLeft;
+   delete[] StepRight;
+   delete[] StepUp;
+   delete[] StepDown; 
+   delete[] isbegin;
+   delete[] Impurity;
+}
 
 void XYZ::Create(double steplength)
 {
-   Field2D::Create(steplength);
+   XY::Create(steplength);
    E3=new double[n];
    C3=new double[n];
    StepUp=new double[n];
    StepDown=new double[n];
-   for (int i=0;i<n;i++)
-   {
+   for (int i=0;i<n;i++) {
       if(i/x*y==0)C3[i]=0;
       else C3[i]=C3[i-9]+steplength;
       if((i%(x*y))/x!=0)C2[i]=C2[i-x]+steplength;
@@ -24,8 +46,7 @@ void XYZ::Create(double steplength)
    }
 }
 
-
-void XYXYZnt idx)
+void XYZ::Update(int idx)
 {//need update
    if (isbegin[idx])return;
    double density=Impurity[idx]*1.6e12;
@@ -63,7 +84,7 @@ void XYXYZnt idx)
    E3[idx]=(Pzp1-Pzm1)/(h0+h5);
 }
 
-int XYXYXYXYZary ,double tarz,int begin,int end)
+int XYZ::FindIdx(double tarx, double tary ,double tarz,int begin,int end)
 {
    if(begin>=end)return XY::FindIdx(tarx,tary,begin,begin+x*y-1);
    int mid=((begin/(x*y)+end/(x*y))/2)*x*y;
@@ -107,7 +128,7 @@ double XYZ::GetData(double tarx, double tary, double tarz,int thing)
 }
 void XYZ::Save(const char * fout)
 {
-   Field2D::Save(fout);
+   XY::Save(fout);
    TFile *file=new TFile(fout,"update");
    TVectorD  v=*(TVectorD*)file->Get("v");
    v[9]=(double)z;
@@ -116,8 +137,7 @@ void XYZ::Save(const char * fout)
    double E3s,C3s;
    tree->Branch("e3",&E3s,"e3/D"); // Electric field in z
    tree->Branch("c3",&C3s,"c3/D"); // persition in z
-   for(int i=0;i<n;i++)
-   {
+   for(int i=0;i<n;i++) {
       E3s=E3[i];
       C3s=C3[i];
       tree->Fill();
@@ -129,7 +149,7 @@ void XYZ::Save(const char * fout)
 }
 void XYZ::Load(const char * fin)
 {
-   Field2D::Load(fin);
+   XY::Load(fin);
    TFile *file=new TFile(fin);
    TVectorD *v1=(TVectorD*)file->Get("v");
    double * v=v1->GetMatrixArray();
@@ -144,8 +164,7 @@ void XYZ::Load(const char * fin)
    E3=new double[n];
    C3=new double[n];
 
-   for (int i=0;i<n;i++)
-   {
+   for (int i=0;i<n;i++) {
       t->GetEntry(i);
       E3[i]=fEz;
       C3[i]=fPz;
@@ -155,8 +174,7 @@ void XYZ::Load(const char * fin)
 }
 void XYZ::SetImpurity(TF3 * Im)
 {
-   for(int i=n;i-->0;)
-   {
+   for(int i=n;i-->0;) {
       Impurity[i]=Im->Eval((double)C1[i],(double)C2[i],(double)C3[i]);
    }
 }

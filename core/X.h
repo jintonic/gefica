@@ -1,13 +1,8 @@
 #ifndef GEFICA_X_H
 #define GEFICA_X_H
 
-#include <TFile.h>
-#include <TTree.h>
-#include <TChain.h>
 #include <TObject.h>
-#include <TVectorD.h>
-#include <iostream>
-#include <TF1.h>
+class TF1;
 
 namespace GEFICA { class X; }
 
@@ -23,8 +18,7 @@ class GEFICA::X: public TObject
 
    public:
       X(int ix) {n=ix;x=ix;};
-      virtual ~X() {delete[] E1;delete [] P;delete [] C1;
-         delete[] StepNext;delete[] StepBefore;delete[] isbegin;delete[] Impurity;};
+      virtual ~X();
 
       virtual void Create(double steplength);
       virtual bool Iterate();
@@ -35,12 +29,11 @@ class GEFICA::X: public TObject
 
       virtual double GetData(double tarx,int thing); // 1:Ex 2:f 0:Impurty
 
+      ClassDef(X,1);
+
    protected:
       virtual void Update(int idx); 
       virtual int FindIdx(double tarx,int begin,int end);
-
-   public:
-      ClassDef(X,1);
 };
 
 #endif

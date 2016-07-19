@@ -1,7 +1,25 @@
-#include "X.h"
-
+#include <iostream>
 using namespace std;
+
+#include <TFile.h>
+#include <TTree.h>
+#include <TChain.h>
+#include <TVectorD.h>
+#include <TF1.h>
+
+#include "X.h"
 using namespace GEFICA;
+
+X::~X()
+{
+   delete[] E1;
+   delete[] P;
+   delete[] C1;
+   delete[] StepNext;
+   delete[] StepBefore;
+   delete[] isbegin;
+   delete[] Impurity;
+}
 
 void X::Create(double steplength)
 {
@@ -14,8 +32,7 @@ void X::Create(double steplength)
    StepNext=new double[n];
    StepBefore=new double[n];
    Impurity=new double[n];
-   for (int i=n;i-->0;)
-   {
+   for (int i=n;i-->0;) {
       isbegin[i]=false;
       E1[i]=0;
       C1[i]=i*steplength;
@@ -29,12 +46,10 @@ void X::Create(double steplength)
 bool X::Iterate()
 {
    int cnt=0,looptime=MaxIterations;
-   while (cnt++<looptime)
-   {
+   while (cnt++<looptime) {
       XUpSum=0;
       XDownSum=0;
-      for (int i=0;i<n;i++)
-      {
+      for (int i=0;i<n;i++) {
          double tmp=P[i];
          Update(i);
          if(tmp>0)XDownSum+=tmp;
@@ -118,8 +133,7 @@ void X::Save(const char * fout)
    tree->Branch("sb",&StepBefores,"StepBefore/D"); // Step length to before point in x
    tree->Branch("ib",&isbegins,"isbegin/O"); // check is initial point
    tree->Branch("im",&impuritys,"impurity/D"); // Impurity
-   for(int i=0;i<n;i++)
-   {
+   for(int i=0;i<n;i++) {
       impuritys=Impurity[i];
       E1s=E1[i];
       C1s=C1[i];
@@ -167,8 +181,7 @@ void X::Load(const char * fin)
    StepBefore=new double[n];
    Impurity=new double[n];
 
-   for (int i=0;i<n;i++)
-   {
+   for (int i=0;i<n;i++) {
       t->GetEntry(i);
       E1[i]=fE1;
       C1[i]=fC1;
@@ -184,8 +197,7 @@ void X::Load(const char * fin)
 
 void X::SetImpurity(TF1 * Im)
 {
-   for(int i=n;i-->0;)
-   {
+   for(int i=n;i-->0;) {
       Impurity[i]=Im->Eval((double)C1[i]);
    }
 }
