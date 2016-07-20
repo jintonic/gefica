@@ -3,17 +3,9 @@ using namespace GEFICA;
 
 void PlanarXY::SetVoltage(double dVoltage)
 {
-   if(isx) {
-      for(int i=0;i<x;i++) {
-         fIsFixed[i]=true;
-         fIsFixed[n-i-1]=true;
-         P[i]=dVoltage;
-      }
-   } else {
-      for(int i=0;i<y;i++) {
-         fIsFixed[i*x]=true;
-         fIsFixed[(i+1)*x-1]=true;
-         P[i*x]=dVoltage;
-      }
+   for(int i=0;i<n2;i++) {
+      fIsFixed[i*n1]=true;
+      fIsFixed[(i+1)*n1-1]=true;
+      fPotential[i*n1]=dVoltage;
    }
 }

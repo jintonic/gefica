@@ -1,9 +1,9 @@
 #include "PlanarX.h"
 using namespace GEFICA;
 
-void PlanarX::SetVoltage(double Voltage)
+void PlanarX::SetVoltage(double anode_voltage, double cathode_voltage)
 {
    fIsFixed[0]=true;
    fIsFixed[n-1]=true;
-   P[n-1]=Voltage;
+   fPotential[n-1]=(anode_voltage-cathode_voltage);
 }

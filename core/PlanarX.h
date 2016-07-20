@@ -8,9 +8,13 @@ namespace GEFICA { class PlanarX; }
 class GEFICA::PlanarX : public GEFICA::X
 {
    public :
-      PlanarX(int nx=11) : X(nx) {};
-      double GetThickness() { return fC1[n]; }
+      double Thickness; // Thickness of the planar detector
+
+   public :
+      PlanarX(int nx=101) : X(nx) {};
       void SetVoltage(double anode_voltage, double cathode_voltage); 
+
+      ClassDef(PlanarX, 1);
 };
 
 #endif

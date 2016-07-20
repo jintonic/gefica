@@ -8,7 +8,9 @@ namespace GEFICA { class HemiSpheric; }
 class GEFICA::HemiSpheric : public GEFICA::Spherical
 {
    public :
-      HemiSpheric(int ix,int iy,int iz) : Spherical(ix,iy,iz) {};
+      double Radius, PointContactR;
+
+      HemiSpheric(int n_rho,int n_theta,int n_phi) : Spherical(n_rho, n_theta, n_phi) {};
       void SetVoltage(double voltage,double r); 
 
       ClassDef(HemiSpheric,1);
