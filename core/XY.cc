@@ -7,13 +7,13 @@ using namespace GEFICA;
 
 XY::~XY()
 {
-   delete[] E1;
-   delete[] E2;
-   delete[] C1;
-   delete[] C2;
-   delete[] P;
-   delete[] StepNext;
-   delete[] StepBefore;
+   delete[] fE1;
+   delete[] fE2;
+   delete[] fC1;
+   delete[] fC2;
+   delete[] fPotential;
+   delete[] fDistanceToNext;
+   delete[] fDistanceToBefore;
    delete[] isbegin;
    delete[] Impurity;
 }
@@ -21,19 +21,19 @@ XY::~XY()
 void XY::Create(double steplength)
 {
    X::Create(steplength);
-   E2=new double[n];
-   C2=new double[n];
-   StepLeft=new double[n];
-   StepRight=new double[n];
+   fE2=new double[n];
+   fC2=new double[n];
+   fDistanceToLeft=new double[n];
+   fDistanceToRight=new double[n];
    for (int i=0;i<n;i++) {
-      if(i>x-1)C2[i]=C2[i-x]+steplength;
-      else C2[i]=0;
-      if(i%x==0)C1[i]=0;
-      else C1[i]=C1[i-1]+steplength;
+      if(i>n1-1)fC2[i]=fC2[i-n1]+steplength;
+      else fC2[i]=0;
+      if(i%n1==0)fC1[i]=0;
+      else fC1[i]=fC1[i-1]+steplength;
 
-      E2[i]=0;
-      StepLeft[i]=steplength;
-      StepRight[i]=steplength;
+      fE2[i]=0;
+      fDistanceToLeft[i]=steplength;
+      fDistanceToRight[i]=steplength;
    }
 }
 
@@ -41,55 +41,55 @@ void XY::Update(int idx)
 {//need update
    if (isbegin[idx])return;
    double density=Impurity[idx]*1.6e12;
-   double h2=StepBefore[idx];
-   double h3=StepNext[idx];
-   double h4=StepLeft[idx];
-   double h1=StepRight[idx];
+   double h2=fDistanceToBefore[idx];
+   double h3=fDistanceToNext[idx];
+   double h4=fDistanceToLeft[idx];
+   double h1=fDistanceToRight[idx];
    double Pym1,Pyp1,Pxm1,Pxp1;
-   if(idx>=x)Pym1=P[idx-x];
-   else Pym1=P[idx];
-   if(idx>=n-x)Pyp1=P[idx];
-   else Pyp1=P[idx+x];
-   if(idx%x==0)Pxm1=P[idx];
-   else Pxm1=P[idx-1];
-   if(idx%x==x-1)Pxp1=P[idx];
-   else Pxp1=P[idx+1];
+   if(idx>=n1)Pym1=fPotential[idx-n1];
+   else Pym1=fPotential[idx];
+   if(idx>=n-n1)Pyp1=fPotential[idx];
+   else Pyp1=fPotential[idx+n1];
+   if(idx%n1==0)Pxm1=fPotential[idx];
+   else Pxm1=fPotential[idx-1];
+   if(idx%n1==n1-1)Pxp1=fPotential[idx];
+   else Pxp1=fPotential[idx+1];
    double tmp=((h1+h4)*(h1*h2*h4*Pxp1+h1*h3*h4*Pxm1)+(h2+h3)*(h1*h2*h3*Pyp1+h2*h3*h4*Pym1)-density/(E0*ER)*(h1+h4)*(h2+h3)*h1*h2*h3*h4)/((h1+h4)*(h1*h2*h4+h1*h3*h4)+(h2+h3)*(h1*h2*h3+h2*h3*h4));
-   P[idx]=Csor*(tmp-P[idx])+P[idx];
-   E1[idx]=(Pxp1-Pxm1)/(h2+h3);
-   E2[idx]=(Pyp1-Pym1)/(h1+h4);
+   fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
+   fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
+   fE2[idx]=(Pyp1-Pym1)/(h1+h4);
 }
 
 int XY::FindIdx(double tarx,double tary ,int ybegin,int yend)
 {
-   if(ybegin>=yend)return X::FindIdx(tarx,ybegin,ybegin+x-1);
-   int mid=((ybegin/x+yend/x)/2)*x;
-   if(C2[mid]>=tary)return FindIdx(tarx,tary,ybegin,mid);
+   if(ybegin>=yend)return X::FindIdx(tarx,ybegin,ybegin+n1-1);
+   int mid=((ybegin/n1+yend/n1)/2)*n1;
+   if(fC2[mid]>=tary)return FindIdx(tarx,tary,ybegin,mid);
    else return FindIdx(tarx,tary,mid+1,yend);
 }
 
 double XY::GetData(double tarx, double tary, int thing)
 {
    int idx=FindIdx(tarx,tary,0,n);
-   double ab=(tarx-C1[idx])/StepNext[idx];
+   double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
    double aa=1-ab;
-   double ba=(tary-C2[idx])/StepRight[idx];
+   double ba=(tary-fC2[idx])/fDistanceToRight[idx];
    double bb=1-ba;
    double tar0,tar1,tar2,tar3,*tar=NULL;
    switch(thing)
    {
       case 0:tar= Impurity;break;
-      case 1:tar= P;break;
-      case 2:tar= E1;break;
-      case 3:tar= E2;break;
+      case 1:tar= fPotential;break;
+      case 2:tar= fE1;break;
+      case 3:tar= fE2;break;
    }
    tar3=-1;
    tar0=tar[idx];
-   if(idx/x+1==x){tar1=0;tar3=0;}
+   if(idx/n1+1==n1){tar1=0;tar3=0;}
    else {tar1=tar[idx+1];}
-   if(idx>n-x){tar2=0;tar3=0;}
-   else {tar2=tar[idx+x];}
-   if (tar3==-1)tar3=tar[idx+x+1];
+   if(idx>n-n1){tar2=0;tar3=0;}
+   else {tar2=tar[idx+n1];}
+   if (tar3==-1)tar3=tar[idx+n1+1];
    return (tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb;
 }
 void XY::Save(const char * fout)
@@ -97,15 +97,15 @@ void XY::Save(const char * fout)
    X::Save(fout);
    TFile *file=new TFile(fout,"update");
    TVectorD  v=*(TVectorD*)file->Get("v");
-   v[8]=(double)y;
+   v[8]=(double)n2;
    v.Write();
    TTree * tree=(TTree*)file->Get("t");
    double E2s,C2s;
    tree->Branch("e2",&E2s,"e2/D"); // Electric field in y
    tree->Branch("c2",&C2s,"c2/D"); // persition in y
    for(int i=0;i<n;i++) {
-      E2s=E2[i];
-      C2s=C2[i];
+      E2s=fE2[i];
+      C2s=fC2[i];
       tree->Fill();
    }
    file->Write();
@@ -119,7 +119,7 @@ void XY::Load(const char * fin)
    TFile *file=new TFile(fin);
    TVectorD *v1=(TVectorD*)file->Get("v");
    double * v=v1->GetMatrixArray();
-   y		=(int)	v[8];
+   n2		=(int)	v[8];
 
    TChain *t =new TChain("t");
    t->Add(fin);
@@ -127,13 +127,13 @@ void XY::Load(const char * fin)
    t->SetBranchAddress("c2",&fPy);
    t->SetBranchAddress("e2",&fEy);
 
-   E2=new double[n];
-   C2=new double[n];
+   fE2=new double[n];
+   fC2=new double[n];
 
    for (int i=0;i<n;i++) {
       t->GetEntry(i);
-      E2[i]=fEy;
-      C2[i]=fPy;
+      fE2[i]=fEy;
+      fC2[i]=fPy;
    }
    file->Close();
    delete file;
@@ -141,6 +141,6 @@ void XY::Load(const char * fin)
 void XY::SetImpurity(TF2 * Im)
 {
    for(int i=n;i-->0;) {
-      Impurity[i]=Im->Eval((double)C1[i],(double)C2[i]);
+      Impurity[i]=Im->Eval((double)fC1[i],(double)fC2[i]);
    }
 }

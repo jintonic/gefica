@@ -9,11 +9,10 @@ namespace GEFICA { class XY; }
 class GEFICA::XY : public GEFICA::X
 {
    public:
-      unsigned short y; // number of steps along the 2nd axis
-      double *E2,*C2,*StepLeft,*StepRight;//left and right are for y axis
+      unsigned short n2; // number of steps along the 2nd axis
 
    public:
-      XY(unsigned short x=0, unsigned short y=0): X(x), y(y) {n=x*y;}
+      XY(unsigned short x=0, unsigned short y=0): X(n1), y(n2) {n=n1*n2;}
       virtual ~XY();
 
       virtual void Create(double steplength);
@@ -28,6 +27,8 @@ class GEFICA::XY : public GEFICA::X
       ClassDef(XY,1);
 
    protected:
+
+      double *fE2,*fC2,*fDistanceToLeft,*fDistanceToRight;//left and right are for y axis
       virtual int FindIdx(double tarx,double tary
             ,int ybegin,int yend);
 };

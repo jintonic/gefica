@@ -5,14 +5,14 @@ void PlanarXY::SetVoltage(double dVoltage)
 {
    if(isx) {
       for(int i=0;i<x;i++) {
-         isbegin[i]=true;
-         isbegin[n-i-1]=true;
+         fIsFixed[i]=true;
+         fIsFixed[n-i-1]=true;
          P[i]=dVoltage;
       }
    } else {
       for(int i=0;i<y;i++) {
-         isbegin[i*x]=true;
-         isbegin[(i+1)*x-1]=true;
+         fIsFixed[i*x]=true;
+         fIsFixed[(i+1)*x-1]=true;
          P[i*x]=dVoltage;
       }
    }

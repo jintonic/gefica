@@ -12,7 +12,7 @@ namespace GEFICA {
 class GEFICA::X: public TObject 
 {
    public:
-      int x; // number of steps along the 1st axis
+      int n1; // number of steps along the 1st axis
       int MaxIterations;
       int n; // n = n1*n2*n3
       double Csor;

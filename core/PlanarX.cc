@@ -3,7 +3,7 @@ using namespace GEFICA;
 
 void PlanarX::SetVoltage(double Voltage)
 {
-   isbegin[0]=true;
-   isbegin[n-1]=true;
+   fIsFixed[0]=true;
+   fIsFixed[n-1]=true;
    P[n-1]=Voltage;
 }

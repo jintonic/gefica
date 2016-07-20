@@ -8,20 +8,20 @@ using namespace GEFICA;
 
 Spherical::~Spherical()
 {
-   delete[] E1;
-   delete[] E2;
-   delete[] E3;
-   delete[] C1;
-   delete[] C2;
-   delete[] C3;
-   delete[] P;
-   delete[] StepNext;
-   delete[] StepBefore;
-   delete[] StepLeft;
-   delete[] StepRight;
-   delete[] StepUp;
-   delete[] StepDown;
-   delete[] isbegin;
+   delete[] fE1;
+   delete[] fE2;
+   delete[] fE3;
+   delete[] fC1;
+   delete[] fC2;
+   delete[] fC3;
+   delete[] fPtotential;
+   delete[] fDistanceToNext;
+   delete[] fDistanceToBefore;
+   delete[] fDistanceToLeft;
+   delete[] fDistanceToRight;
+   delete[] fDistanceToUp;
+   delete[] fDistanceToDown;
+   delete[] fIsFixed;
    delete[] Impurity;
 }
 
@@ -30,57 +30,57 @@ void Spherical::Create(double steplength)
    z=2*z;
    n=x*y*z;
    XY::Create(steplength);
-   E3=new double[n];
-   C3=new double[n];
-   StepUp=new double[n];
-   StepDown=new double[n];
+   fE3=new double[n];
+   fC3=new double[n];
+   fDistanceToUp=new double[n];
+   fDistanceToDown=new double[n];
    for (int i=0;i<n;i++) {
-      if(i/(x*y)==0)C3[i]=-3.1415926;
-      else C3[i]=C3[i-x*y]+3.14159265*2/z;
-      if((i%(x*y))/x!=0)C2[i]=C2[i-x]-3.1415926/(2*y-1);
-      else C2[i]=3.14159265;
-      if(i%x==0)C1[i]=0;
-      else C1[i]=C1[i-1]+steplength;
+      if(i/(x*y)==0)fC3[i]=-3.1415926;
+      else fC3[i]=fC3[i-x*y]+3.14159265*2/z;
+      if((i%(x*y))/x!=0)fC2[i]=fC2[i-x]-3.1415926/(2*y-1);
+      else fC2[i]=3.14159265;
+      if(i%x==0)fC1[i]=0;
+      else fC1[i]=fC1[i-1]+steplength;
 
-      E3[i]=0;
-      StepLeft[i]=3.14159265/z;
-      StepRight[i]=3.14159265/z;
-      StepUp[i]=3.14159265/(y*2-1);
-      StepDown[i]=3.14159265/(y*2-1);
+      fE3[i]=0;
+      fDistanceToLeft[i]=3.14159265/z;
+      fDistanceToRight[i]=3.14159265/z;
+      fDistanceToUp[i]=3.14159265/(y*2-1);
+      fDistanceToDown[i]=3.14159265/(y*2-1);
    }
 }
 
 void Spherical::Update(int idx)
 {//need update
-   if (isbegin[idx])return;
+   if (fIsFixed[idx])return;
    double density=Impurity[idx]*1.6e12;
-   double h2=StepBefore[idx];
-   double h3=StepNext[idx];
-   double h4=StepLeft[idx];
-   double h1=StepRight[idx];
-   double h0=StepDown[idx];
-   double h5=StepUp[idx];
+   double h2=fDistanceToBefore[idx];
+   double h3=fDistanceToNext[idx];
+   double h4=fDistanceToLeft[idx];
+   double h1=fDistanceToRight[idx];
+   double h0=fDistanceToDown[idx];
+   double h5=fDistanceToUp[idx];
    double Pym1,Pyp1,Pxm1,Pxp1,Pzp1,Pzm1;
-   if(idx<x*y)Pzm1=P[idx+n-x*y];
-   else Pzm1=P[idx-x*y];
-   if(idx>=n-x*y)Pzp1=P[idx-(n-x*y)];
-   else Pzp1=P[idx+x*y];
+   if(idx<x*y)Pzm1=fPtotential[idx+n-x*y];
+   else Pzm1=fPtotential[idx-x*y];
+   if(idx>=n-x*y)Pzp1=fPtotential[idx-(n-x*y)];
+   else Pzp1=fPtotential[idx+x*y];
    if(idx%(x*y)>(x*y)-x-1)
    {
-      if(idx<n/2)Pyp1=P[idx+n/2];
-      else Pyp1=P[idx-n/2];
+      if(idx<n/2)Pyp1=fPtotential[idx+n/2];
+      else Pyp1=fPtotential[idx-n/2];
    }
-   else Pyp1=P[idx+x];
+   else Pyp1=fPtotential[idx+x];
    if(idx%(x*y)<x)
    {
-      if(idx<n/2)Pym1=P[idx+n/2];
-      else Pym1=P[idx-n/2];
+      if(idx<n/2)Pym1=fPtotential[idx+n/2];
+      else Pym1=fPtotential[idx-n/2];
    }
-   else Pym1=P[idx-x];
-   if((idx%(x*y))%x==x-1)Pxp1=P[idx];
-   else Pxp1=P[idx+1];
-   if((idx%(x*y))%x==0)Pxm1=P[idx];
-   else Pxm1=P[idx-1];
+   else Pym1=fPtotential[idx-x];
+   if((idx%(x*y))%x==x-1)Pxp1=fPtotential[idx];
+   else Pxp1=fPtotential[idx+1];
+   if((idx%(x*y))%x==0)Pxm1=fPtotential[idx];
+   else Pxm1=fPtotential[idx-1];
 
    double tmp= (
          -density/(E0*ER)*h0*h1*h2*h3*h4*h5*(h1+h4)*(h2+h3)*(h0+h5)
@@ -90,37 +90,37 @@ void Spherical::Update(int idx)
          )
       /((h0+h5)*(h1+h4)*(h2+h3)*(h0*h1*h4*h5+h0*h2*h3*h5+h1*h2*h3*h4));
 
-   P[idx]=Csor*(tmp-P[idx])+P[idx];
-   E1[idx]=(Pxp1-Pxm1)/(h2+h3);
-   E2[idx]=(Pyp1-Pym1)/(h1+h4);
-   E3[idx]=(Pzp1-Pzm1)/(h0+h5);
+   fPtotential[idx]=Csor*(tmp-fPtotential[idx])+fPtotential[idx];
+   fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
+   fE2[idx]=(Pyp1-Pym1)/(h1+h4);
+   fE3[idx]=(Pzp1-Pzm1)/(h0+h5);
 }
 
 int Spherical::FindIdx(double tarx,double tary ,double tarz,int begin,int end)
 {
    if(begin>=end)return XY::FindIdx(tarx,tary,begin,begin+x*y-1);
    int mid=((begin/(x*y)+end/(x*y))/2)*x*y;
-   if(C3[mid]>=tarz)return FindIdx(tarx,tary,tarz,begin,mid);
+   if(fC3[mid]>=tarz)return FindIdx(tarx,tary,tarz,begin,mid);
    else return FindIdx(tarx,tary,tarz,mid+1,end);
 }
 
 double Spherical::GetData(double tarx, double tary, double tarz,int thing)
 {
    int idx=FindIdx(tarx,tary,tarz,0,n);
-   double ab=(tarx-C1[idx])/StepNext[idx];
+   double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
    double aa=1-ab;
-   double ba=(tary-C2[idx])/StepRight[idx];
+   double ba=(tary-fC2[idx])/fDistanceToRight[idx];
    double bb=1-ba;
-   double ac=(tarz-C3[idx])/StepUp[idx];
+   double ac=(tarz-fC3[idx])/fDistanceToUp[idx];
    double ca=1-ac;
    double tar0,tar1,tar2,tar3,tar4,tar5,tar6,tar7,*tar=NULL;
    switch(thing)
    {
       case 0:tar= Impurity;break;
-      case 1:tar= P;break;
-      case 2:tar= E1;break;
-      case 3:tar= E2;break;
-      case 4:tar=E3;break;
+      case 1:tar= fPtotential;break;
+      case 2:tar= fE1;break;
+      case 3:tar= fE2;break;
+      case 4:tar=fE3;break;
    }
    if(tary==0)return (tar[x*y-1]+tar[x*y-1+n/2])/2;
    tar3=-1;
@@ -152,8 +152,8 @@ void Spherical::Save(const char * fout)
    tree->Branch("e3",&E3s,"e3/D"); // Electric field in z
    tree->Branch("c3",&C3s,"c3/D"); // persition in z
    for(int i=0;i<n;i++) {
-      E3s=E3[i];
-      C3s=C3[i];
+      E3s=fE3[i];
+      C3s=fC3[i];
       tree->Fill();
    }
    file->Write();
@@ -175,13 +175,13 @@ void Spherical::Load(const char * fin)
    t->SetBranchAddress("c3",&fPz);
    t->SetBranchAddress("e3",&fEz);
 
-   E3=new double[n];
-   C3=new double[n];
+   fE3=new double[n];
+   fC3=new double[n];
 
    for (int i=0;i<n;i++) {
       t->GetEntry(i);
-      E3[i]=fEz;
-      C3[i]=fPz;
+      fE3[i]=fEz;
+      fC3[i]=fPz;
    }
    file->Close();
    delete file;
@@ -190,6 +190,6 @@ void Spherical::Load(const char * fin)
 void Spherical::SetImpurity(TF3 * Im)
 {
    for(int i=n;i-->0;) {
-      Impurity[i]=Im->Eval((double)C1[i],(double)C2[i],(double)C3[i]);
+      Impurity[i]=Im->Eval((double)fC1[i],(double)fC2[i],(double)fC3[i]);
    }
 }
