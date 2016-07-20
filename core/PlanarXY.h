@@ -14,7 +14,7 @@ class GEFICA::PlanarXY : public GEFICA::XY
       PlanarXY(int ix,int iy) : XY(ix,iy) {};
       void SetVoltage(double voltage); 
 
-      ClassDef(PlanarXY,1);
+      double GetWidth() { return fC2[n]; }
 };
 
 #endif

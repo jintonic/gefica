@@ -9,7 +9,8 @@ class GEFICA::PlanarX : public GEFICA::X
 {
    public :
       PlanarX(int nx=11) : X(nx) {};
-      void SetVoltage(double voltage); 
+      double GetThickness() { return fC1[n]; }
+      void SetVoltage(double anode_voltage, double cathode_voltage); 
 };
 
 #endif

@@ -4,17 +4,19 @@
 #include <TObject.h>
 class TF1;
 
-namespace GEFICA { class X; }
+namespace GEFICA { 
+   class X;
+   static const double epsilon = 16*;
+}
 
 class GEFICA::X: public TObject 
 {
    public:
       int x; // number of steps along the 1st axis
       int MaxIterations;
-      int n;
-      bool * isbegin;
-      double *E1, *P,*C1,*StepNext,*StepBefore,*Impurity,Csor,E0,ER;
-      double XUpSum,XDownSum,Xlimit;
+      int n; // n = n1*n2*n3
+      double Csor;
+      double Precision;
 
    public:
       X(int nx=101);
@@ -34,6 +36,9 @@ class GEFICA::X: public TObject
       ClassDef(X,1);
 
    protected:
+      bool * isbegin;
+      double *E1, *P,*C1,*StepNext,*StepBefore,*Impurity;
+
       virtual void Update(int idx); 
       virtual int FindIdx(double tarx,int begin,int end);
 };

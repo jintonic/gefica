@@ -11,12 +11,12 @@ using namespace std;
 using namespace GEFICA;
 
 X::X(int nx) : TObject(), 
-   isbegin(0), E1(0), P(0), C1(0), StepNext(0), StepBefore(0), Impurity(0)
+   isbegin(0), fE1(0), P(0), C1(0), StepNext(0), StepBefore(0), Impurity(0)
 { n=nx;x=nx; }
 
 X::~X()
 {
-   if (E1) delete[] E1;
+   if (fE1) delete[] fE1;
    if (P) delete[] P;
    if (C1) delete[] C1;
    if (StepNext) delete[] StepNext;
@@ -29,7 +29,7 @@ void X::Create(double steplength)
 {
    E0=8.854;ER=16;Csor=1;Xlimit=0.0000001;
 
-   E1=new double[n];
+   fE1=new double[n];
    C1=new double[n];
    P=new double[n];
    isbegin=new bool[n];
@@ -38,7 +38,7 @@ void X::Create(double steplength)
    Impurity=new double[n];
    for (int i=n;i-->0;) {
       isbegin[i]=false;
-      E1[i]=0;
+      fE1[i]=0;
       C1[i]=i*steplength;
       P[i]=0;
       StepNext[i]=steplength;
@@ -76,7 +76,7 @@ void X::Update(int idx)
    double h3=StepNext[idx];
    double tmp=density/(E0*ER)*h2*h3+(h3*P[idx-1]+h2*P[idx+1])/(h2+h3);
    P[idx]=Csor*(tmp-P[idx])+P[idx];
-   E1[idx]=(P[idx+1]-P[idx-1])/(h2+h3);
+   fE1[idx]=(P[idx+1]-P[idx-1])/(h2+h3);
 }
 
 int X::FindIdx(double tarx,int begin,int end)
@@ -95,7 +95,7 @@ double X::GetData(double tarx,int thing)
       switch (thing)
       {
          case 0:return Impurity[idx];
-         case 1:return E1[idx];
+         case 1:return fE1[idx];
          case 2:return P[idx];
       }
    }
@@ -103,7 +103,7 @@ double X::GetData(double tarx,int thing)
    double aa=1-ab;
    switch(thing)
    {
-      case 2:return E1[idx]*ab+E1[idx+1]*aa;
+      case 2:return fE1[idx]*ab+fE1[idx+1]*aa;
       case 1:return P[idx]*ab+C1[idx+1]*aa;
       case 0:return Impurity[idx]*ab+Impurity[idx+1]*aa;
    }
@@ -139,7 +139,7 @@ void X::Save(const char * fout)
    tree->Branch("im",&impuritys,"impurity/D"); // Impurity
    for(int i=0;i<n;i++) {
       impuritys=Impurity[i];
-      E1s=E1[i];
+      E1s=fE1[i];
       C1s=C1[i];
       Ps=P[i];
       StepNexts=StepNext[i];
@@ -168,7 +168,7 @@ void X::Load(const char * fin)
    TChain *t =new TChain("t");
    t->Add(fin);
    bool fisbegin;
-   double fE1,fC1,fP,fStepNext,fStepBefore,fimpurity;
+   double E1,fC1,fP,fStepNext,fStepBefore,fimpurity;
    t->SetBranchAddress("c1",&fC1);
    t->SetBranchAddress("p",&fP);
    t->SetBranchAddress("sn",&fStepNext);
@@ -177,7 +177,7 @@ void X::Load(const char * fin)
    t->SetBranchAddress("ib",&fisbegin);
    t->SetBranchAddress("im",&fimpurity);
 
-   E1=new double[n];
+   fE1=new double[n];
    C1=new double[n];
    P=new double[n];
    isbegin=new bool[n];
@@ -187,7 +187,7 @@ void X::Load(const char * fin)
 
    for (int i=0;i<n;i++) {
       t->GetEntry(i);
-      E1[i]=fE1;
+      fE1[i]=E1;
       C1[i]=fC1;
       P[i]=fP;
       isbegin[i]=fisbegin;  
