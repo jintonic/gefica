@@ -54,6 +54,13 @@ bool X::CalculateField(EMethod method)
    else return RK2();
 }
 
+bool X::Analyic()
+{
+   for (int i=0; i<n; i++) {
+      fPotential[i] = fImpurity[i]/2/epsilon*C1[i]*C1[i];
+   }
+}
+
 bool X::RK2()
 {
    int cnt=0,looptime=MaxIterations;
