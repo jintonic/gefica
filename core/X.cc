@@ -10,7 +10,7 @@ using namespace std;
 #include "X.h"
 using namespace GEFICA;
 
-X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),
+X::X(int nx) : TObject(), MaxIterations(1e5), Csor(1), Precision(1e-7),
    fIsFixed(0), fE1(0), fPotential(0), fC1(0), fDistanceToNext(0), fDistanceToPrevious(0), fImpurity(0)
 { n=nx;n1=nx; }
 
@@ -71,7 +71,6 @@ bool X::RK2()
          else XDownSum-=old;
          if(fPotential[i]-old>0)XUpSum+=(fPotential[i]-old);
          else XUpSum+=-(fPotential[i]-old);
-         //cout<<i<<", "<<fPotential[i]-old<<endl;
       }
       if(cnt%1000==0)
          cout<<cnt<<"  "<<XUpSum/XDownSum<<endl;
