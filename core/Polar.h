@@ -8,10 +8,10 @@ namespace GEFICA { class Polar; }
 class GEFICA::Polar : public GEFICA::XY
 {
    public:
-      Polar(unsigned short x=0, unsigned short y=0): XY(x,y) {} 
-      virtual ~Polar();
+      Polar(unsigned short r=101, unsigned short phi=101): XY(r,phi) {} 
+      virtual ~Polar() {};
 
-      virtual void Create(double steplength); 
+      virtual void CreateGridWithFixedStepLength(double steplength); 
 
       virtual double GetData(double tarx,double tary,int thing);
 

@@ -3,15 +3,15 @@ using namespace GEFICA;
 
 void PointContactXY::SetVoltage(double dVoltage,double topbegin,double topend)
 {
-   for(int i=n;i-->n-x;) {
+   for(int i=n;i-->n-n1;) {
       fIsFixed[i]=true;
-      P[i]=dVoltage;
-      if(C1[n-i]>=topbegin&&C1[n-i]<=topend) fIsFixed[n-i]=true;
+      fPotential[i]=dVoltage;
+      if(fC1[n-i]>=topbegin&&fC1[n-i]<=topend) fIsFixed[n-i]=true;
    }
-   for(int i=0;i<n-x;i=i+x) {
+   for(int i=0;i<n-n1;i=i+n1) {
       fIsFixed[i]=true;
-      fIsFixed[i+x-1]=true;
-      P[i]=dVoltage;
-      P[i+x-1]=dVoltage;
+      fIsFixed[i+n1-1]=true;
+      fPotential[i]=dVoltage;
+      fPotential[i+n1-1]=dVoltage;
    }
 }

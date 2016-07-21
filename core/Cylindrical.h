@@ -12,7 +12,7 @@ class GEFICA::Cylindrical : public GEFICA::XYZ
       Cylindrical(unsigned short n1, unsigned short n2,unsigned short n3): XYZ(n1,n2,n3) {};
       virtual ~Cylindrical(){};
 
-      virtual void Create(double steplength);
+      virtual void CreateGridWithFixedStepLength(double steplength);
       virtual void Update(int idx); 
 
       virtual void Save(const char *fout=NULL);

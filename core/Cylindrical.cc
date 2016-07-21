@@ -6,9 +6,9 @@
 #include "Cylindrical.h"
 using namespace GEFICA;
 
-void Cylindrical::Create(double steplength)
+void Cylindrical::CreateGridWithFixedStepLength(double steplength)
 {
-   XY::Create(steplength);
+   XY::CreateGridWithFixedStepLength(steplength);
    fE3=new double[n];
    fC3=new double[n];
    fDistanceToUp=new double[n];

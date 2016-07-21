@@ -3,7 +3,12 @@ using namespace GEFICA;
 
 void PlanarX::SetVoltage(double anode_voltage, double cathode_voltage)
 {
+   double stepLength=Thickness/n;
+   CreateGridWithFixedStepLength(stepLength);
    fIsFixed[0]=true;
    fIsFixed[n-1]=true;
-   fPotential[n-1]=(anode_voltage-cathode_voltage);
+   double slope = (cathode_voltage-anode_voltage)/n;
+   for (int i=0; i<n; i++) {
+      fPotential[i]=anode_voltage+slope*i;
+   }
 }
