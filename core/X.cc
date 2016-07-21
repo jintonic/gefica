@@ -24,10 +24,15 @@ X::~X()
    if (fIsFixed) delete[] fIsFixed;
    if (fImpurity) delete[] fImpurity;
 }
+bool X::Analyic()
+{
+  cout<<"no method can use"<<endl;
+  return false; 
+}
 
 void X::CreateGridWithFixedStepLength(double steplength)
 {
-   Csor=1;Precision=1e-7;
+   Csor=1;Precision=1e-7;MaxIterations=100000;
 
    fE1=new double[n];
    fC1=new double[n];
@@ -54,16 +59,10 @@ bool X::CalculateField(EMethod method)
    else return RK2();
 }
 
-bool X::Analyic()
-{
-   for (int i=0; i<n; i++) {
-      fPotential[i] = fImpurity[i]/2/epsilon*C1[i]*C1[i];
-   }
-}
-
 bool X::RK2()
 {
    int cnt=0,looptime=MaxIterations;
+   cout<<"aaaaa"<<endl;
    while (cnt++<looptime) {
       double XUpSum=0;
       double XDownSum=0;
@@ -75,7 +74,7 @@ bool X::RK2()
          if(fPotential[i]-tmp>0)XUpSum=XUpSum+fPotential[i]-tmp;
          else XUpSum=XUpSum+tmp-fPotential[i];
       }
-      if(cnt%1000==0)cout<<cnt<<"  "<<XUpSum/XDownSum<<endl;
+      /*if(cnt%1==0)*/cout<<cnt<<"  "<<XUpSum/XDownSum<<endl;
       if (XUpSum/XDownSum<Precision){return true;}
    }
    return false;

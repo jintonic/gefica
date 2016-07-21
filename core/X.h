@@ -5,11 +5,20 @@
 class TF1;
 
 namespace GEFICA { 
+   enum EMethod {
+      kAnalytic,
+      kRK2,
+      kRK4,
+   };
+
    class X;
    static const double epsilon = 16*8.854187817e-12;
+   static const int cm =1;
+   static const int volt=1;
+   static const int cm3=cm*cm*cm;
 }
 
-class GEFICA::X: public TObject 
+class GEFICA::X : public TObject 
 {
    public:
       int n1; // number of steps along the 1st axis
@@ -17,12 +26,6 @@ class GEFICA::X: public TObject
       int n; // n = n1*n2*n3
       double Csor;
       double Precision;
-
-      enum EMethod {
-         kAnalytic,
-         kRK2,
-         kRK4,
-      }
 
    public:
       X(int nx=101);
@@ -47,7 +50,8 @@ class GEFICA::X: public TObject
       virtual void Update(int idx); 
       virtual int FindIdx(double tarx,int begin,int end);
 
-      virtual bool Analyic(); // Analyic calculation
+      virtual bool Analyic();
+      // Analyic calculation
       virtual bool RK2(); // 2nd-order Runge-Kutta Successive Over-Relaxation
       virtual bool RK4() {return true; } // 4th-order Runge-Kutta Successive Over-Relaxation
 };

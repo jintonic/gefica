@@ -12,3 +12,11 @@ void PlanarX::SetVoltage(double anode_voltage, double cathode_voltage)
       fPotential[i]=anode_voltage+slope*i;
    }
 }
+bool PlanarX::Analyic()
+{
+   for (int i=0; i<n; i++) {
+      fPotential[i] = fImpurity[i]/2/epsilon*fC1[i]*fC1[i];
+      fE1[i]=(fPotential[i+1]-fPotential[i-1])/(fDistanceToNext[i]+fDistanceToPrevious[i]);
+   }
+   return true;
+}
