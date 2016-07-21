@@ -108,9 +108,9 @@ double Cylindrical::GetData(double tarx, double tary, double tarz,int thing)
    return ((tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb)*ac+((tar4*aa+tar5*ab)*ba+(tar6*aa+tar7*ab)*bb)*ca;
 }
 
-void Cylindrical::Save(const char * fout)
+void Cylindrical::SaveField(const char * fout)
 {
-   XY::Save(fout);
+   XY::SaveField(fout);
    TFile *file=new TFile(fout,"update");
    TVectorD  v=*(TVectorD*)file->Get("v");
    v[9]=(double)n3;
@@ -130,9 +130,9 @@ void Cylindrical::Save(const char * fout)
 
 }
 
-void Cylindrical::Load(const char * fin)
+void Cylindrical::LoadField(const char * fin)
 {
-   XY::Load(fin);
+   XY::LoadField(fin);
    TFile *file=new TFile(fin);
    TVectorD *v1=(TVectorD*)file->Get("v");
    double * v=v1->GetMatrixArray();

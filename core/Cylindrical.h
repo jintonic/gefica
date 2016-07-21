@@ -15,8 +15,8 @@ class GEFICA::Cylindrical : public GEFICA::XYZ
       virtual void CreateGridWithFixedStepLength(double steplength);
       virtual void Update(int idx); 
 
-      virtual void Save(const char *fout=NULL);
-      virtual void Load(const char *fin=NULL);
+      virtual void SaveField(const char *fout=NULL);
+      virtual void LoadField(const char *fin=NULL);
 
       virtual double GetData(double tarx,double tary,double tarz,int thing);
       virtual void SetImpurity(TF3 * Im);

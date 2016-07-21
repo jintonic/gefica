@@ -119,9 +119,9 @@ double XYZ::GetData(double tarx, double tary, double tarz,int thing)
    if(tar7==-1)tar7=tar[idx+n1*n2+n1+1];
    return ((tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb)*ac+((tar4*aa+tar5*ab)*ba+(tar6*aa+tar7*ab)*bb)*ca;
 }
-void XYZ::Save(const char * fout)
+void XYZ::SaveField(const char * fout)
 {
-   XY::Save(fout);
+   XY::SaveField(fout);
    TFile *file=new TFile(fout,"update");
    TVectorD  v=*(TVectorD*)file->Get("v");
    v[9]=(double)n3;
@@ -140,9 +140,9 @@ void XYZ::Save(const char * fout)
    delete file;
 
 }
-void XYZ::Load(const char * fin)
+void XYZ::LoadField(const char * fin)
 {
-   XY::Load(fin);
+   XY::LoadField(fin);
    TFile *file=new TFile(fin);
    TVectorD *v1=(TVectorD*)file->Get("v");
    double * v=v1->GetMatrixArray();

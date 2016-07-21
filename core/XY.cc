@@ -91,9 +91,9 @@ double XY::GetData(double tarx, double tary, int thing)
    if (tar3==-1)tar3=tar[idx+n1+1];
    return (tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb;
 }
-void XY::Save(const char * fout)
+void XY::SaveField(const char * fout)
 {
-   X::Save(fout);
+   X::SaveField(fout);
    TFile *file=new TFile(fout,"update");
    TVectorD  v=*(TVectorD*)file->Get("v");
    v[8]=(double)n2;
@@ -112,9 +112,9 @@ void XY::Save(const char * fout)
    delete file;
 
 }
-void XY::Load(const char * fin)
+void XY::LoadField(const char * fin)
 {
-   X::Load(fin);
+   X::LoadField(fin);
    TFile *file=new TFile(fin);
    TVectorD *v1=(TVectorD*)file->Get("v");
    double * v=v1->GetMatrixArray();

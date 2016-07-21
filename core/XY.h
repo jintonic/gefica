@@ -18,8 +18,8 @@ class GEFICA::XY : public GEFICA::X
       virtual void CreateGridWithFixedStepLength(double steplength);
       virtual void Update(int idx); 
 
-      virtual void Save(const char *fout=NULL);
-      virtual void Load(const char *fin=NULL);
+      virtual void SaveField(const char *fout=NULL);
+      virtual void LoadField(const char *fin=NULL);
 
       virtual double GetData(double tarx,double tary,int thing);
       virtual void SetImpurity(TF2 * Im);
