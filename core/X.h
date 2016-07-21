@@ -48,12 +48,11 @@ class GEFICA::X : public TObject
       bool * fIsFixed;
       double *fE1, *fPotential,*fC1,*fDistanceToNext,*fDistanceToPrevious,*fImpurity;
 
-      virtual void Update(int idx); 
       virtual int FindIdx(double tarx,int begin,int end);
 
       virtual bool Analyic(); // Analyic calculation
-      virtual bool RK2(); // 2nd-order Runge-Kutta Successive Over-Relaxation
-      virtual bool RK4() {return true; } // 4th-order Runge-Kutta Successive Over-Relaxation
+      virtual void RK2(int idx); // 2nd-order Runge-Kutta Successive Over-Relaxation
+      virtual void RK4(int idx); // 4th-order Runge-Kutta Successive Over-Relaxation
 };
 
 #endif
