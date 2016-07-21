@@ -13,7 +13,7 @@ class GEFICA::PlanarX : public GEFICA::X
    public :
       PlanarX(int nx=101) : X(nx) {};
       void SetVoltage(double anode_voltage, double cathode_voltage); 
-      virtual bool Analyic();
+      bool Analyic();
       
       ClassDef(PlanarX, 1);
 };

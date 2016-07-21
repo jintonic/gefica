@@ -24,10 +24,11 @@ X::~X()
    if (fIsFixed) delete[] fIsFixed;
    if (fImpurity) delete[] fImpurity;
 }
+
 bool X::Analyic()
 {
-  cout<<"no method can use"<<endl;
-  return false; 
+   cout<<"no method can use"<<endl;
+   return false; 
 }
 
 void X::CreateGridWithFixedStepLength(double steplength)

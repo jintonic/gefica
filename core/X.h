@@ -12,6 +12,7 @@ namespace GEFICA {
    };
 
    class X;
+
    static const double epsilon = 16*8.854187817e-12;
    static const double cm =1;
    static const double volt=1;
@@ -50,8 +51,7 @@ class GEFICA::X : public TObject
       virtual void Update(int idx); 
       virtual int FindIdx(double tarx,int begin,int end);
 
-      virtual bool Analyic();
-      // Analyic calculation
+      virtual bool Analyic(); // Analyic calculation
       virtual bool RK2(); // 2nd-order Runge-Kutta Successive Over-Relaxation
       virtual bool RK4() {return true; } // 4th-order Runge-Kutta Successive Over-Relaxation
 };

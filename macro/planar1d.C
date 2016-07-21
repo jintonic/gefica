@@ -2,7 +2,7 @@ using namespace GEFICA;
 
 void planar1d()
 {
-   PlanarX *detector = new PlanarX;
+   PlanarX *detector = new PlanarX(10001);
    detector->Thickness=10*cm;
    detector->SetVoltage(0*volt, 2000*volt);
    detector->SetImpurity(1e10/cm3);

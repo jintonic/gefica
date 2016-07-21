@@ -12,6 +12,7 @@ void PlanarX::SetVoltage(double anode_voltage, double cathode_voltage)
       fPotential[i]=anode_voltage+slope*i;
    }
 }
+
 bool PlanarX::Analyic()
 {
      double dddddd=fPotential[0];
