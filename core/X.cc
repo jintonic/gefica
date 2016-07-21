@@ -10,7 +10,7 @@ using namespace std;
 #include "X.h"
 using namespace GEFICA;
 
-X::X(int nx) : TObject(), 
+X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),
    fIsFixed(0), fE1(0), fPotential(0), fC1(0), fDistanceToNext(0), fDistanceToPrevious(0), fImpurity(0)
 { n=nx;n1=nx; }
 
@@ -33,8 +33,6 @@ bool X::Analyic()
 
 void X::CreateGridWithFixedStepLength(double steplength)
 {
-   Csor=1;Precision=1e-7;MaxIterations=100000;
-
    fE1=new double[n];
    fC1=new double[n];
    fPotential=new double[n];
@@ -62,20 +60,22 @@ bool X::CalculateField(EMethod method)
 
 bool X::RK2()
 {
-   int cnt=0,looptime=MaxIterations;
-   while (cnt++<looptime) {
+   int cnt=0;
+   while (cnt++<MaxIterations) {
       double XUpSum=0;
       double XDownSum=0;
       for (int i=0;i<n;i++) {
-         double tmp=fPotential[i];
+         double old=fPotential[i];
          Update(i);
-         if(tmp>0)XDownSum+=tmp;
-         else XDownSum=XDownSum-tmp;
-         if(fPotential[i]-tmp>0)XUpSum=XUpSum+fPotential[i]-tmp;
-         else XUpSum=XUpSum+tmp-fPotential[i];
+         if(old>0)XDownSum+=old;
+         else XDownSum-=old;
+         if(fPotential[i]-old>0)XUpSum+=(fPotential[i]-old);
+         else XUpSum+=-(fPotential[i]-old);
+         //cout<<i<<", "<<fPotential[i]-old<<endl;
       }
-      if(cnt%1000==0)cout<<cnt<<"  "<<XUpSum/XDownSum<<endl;
-      if (XUpSum/XDownSum<Precision){return true;}
+      if(cnt%1000==0)
+         cout<<cnt<<"  "<<XUpSum/XDownSum<<endl;
+      if (XUpSum/XDownSum<Precision) return true;
    }
    return false;
 }
@@ -88,6 +88,7 @@ void X::Update(int idx)
    double h3=fDistanceToNext[idx];
    double tmp=-density/epsilon*h2*h3+(h3*fPotential[idx-1]+h2*fPotential[idx+1])/(h2+h3);
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
+
    fE1[idx]=(fPotential[idx+1]-fPotential[idx-1])/(h2+h3);
 }
 
