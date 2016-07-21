@@ -12,10 +12,10 @@ class GEFICA::XY : public GEFICA::X
       unsigned short n2; // number of steps along the 2nd axis
 
    public:
-      XY(unsigned short x=0, unsigned short y=0): X(n1), y(n2) {n=n1*n2;}
+      XY(unsigned short n1=101, unsigned short n2=101);
       virtual ~XY();
 
-      virtual void Create(double steplength);
+      virtual void CreateGridWithFixedStepLength(double steplength);
       virtual void Update(int idx); 
 
       virtual void Save(const char *fout=NULL);

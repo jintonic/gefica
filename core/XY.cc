@@ -5,22 +5,21 @@
 #include "XY.h"
 using namespace GEFICA;
 
+XY::XY(unsigned short n1, unsigned short n2): X(n1), n2(n2),
+   fE2(0), fC2(0), fDistanceToLeft(0), fDistanceToRight(0)
+{n=n1*n2;}
+
 XY::~XY()
 {
-   delete[] fE1;
-   delete[] fE2;
-   delete[] fC1;
-   delete[] fC2;
-   delete[] fPotential;
-   delete[] fDistanceToNext;
-   delete[] fDistanceToBefore;
-   delete[] isbegin;
-   delete[] Impurity;
+   if (fE2) delete[] fE2;
+   if (fC2) delete[] fC2;
+   if (fDistanceToLeft) delete[] fDistanceToLeft;
+   if (fDistanceToRight) delete[] fDistanceToRight;
 }
 
-void XY::Create(double steplength)
+void XY::CreateGridWithFixedStepLength(double steplength)
 {
-   X::Create(steplength);
+   X::CreateGridWithFixedStepLength(steplength);
    fE2=new double[n];
    fC2=new double[n];
    fDistanceToLeft=new double[n];
@@ -39,9 +38,9 @@ void XY::Create(double steplength)
 
 void XY::Update(int idx)
 {//need update
-   if (isbegin[idx])return;
-   double density=Impurity[idx]*1.6e12;
-   double h2=fDistanceToBefore[idx];
+   if (fIsFixed[idx])return;
+   double density=fImpurity[idx]*1.6e12;
+   double h2=fDistanceToPrevious[idx];
    double h3=fDistanceToNext[idx];
    double h4=fDistanceToLeft[idx];
    double h1=fDistanceToRight[idx];
@@ -54,7 +53,7 @@ void XY::Update(int idx)
    else Pxm1=fPotential[idx-1];
    if(idx%n1==n1-1)Pxp1=fPotential[idx];
    else Pxp1=fPotential[idx+1];
-   double tmp=((h1+h4)*(h1*h2*h4*Pxp1+h1*h3*h4*Pxm1)+(h2+h3)*(h1*h2*h3*Pyp1+h2*h3*h4*Pym1)-density/(E0*ER)*(h1+h4)*(h2+h3)*h1*h2*h3*h4)/((h1+h4)*(h1*h2*h4+h1*h3*h4)+(h2+h3)*(h1*h2*h3+h2*h3*h4));
+   double tmp=((h1+h4)*(h1*h2*h4*Pxp1+h1*h3*h4*Pxm1)+(h2+h3)*(h1*h2*h3*Pyp1+h2*h3*h4*Pym1)-density/epsilon*(h1+h4)*(h2+h3)*h1*h2*h3*h4)/((h1+h4)*(h1*h2*h4+h1*h3*h4)+(h2+h3)*(h1*h2*h3+h2*h3*h4));
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
    fE2[idx]=(Pyp1-Pym1)/(h1+h4);
@@ -78,7 +77,7 @@ double XY::GetData(double tarx, double tary, int thing)
    double tar0,tar1,tar2,tar3,*tar=NULL;
    switch(thing)
    {
-      case 0:tar= Impurity;break;
+      case 0:tar= fImpurity;break;
       case 1:tar= fPotential;break;
       case 2:tar= fE1;break;
       case 3:tar= fE2;break;
@@ -141,6 +140,6 @@ void XY::Load(const char * fin)
 void XY::SetImpurity(TF2 * Im)
 {
    for(int i=n;i-->0;) {
-      Impurity[i]=Im->Eval((double)fC1[i],(double)fC2[i]);
+      fImpurity[i]=Im->Eval((double)fC1[i],(double)fC2[i]);
    }
 }

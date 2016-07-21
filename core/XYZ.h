@@ -13,10 +13,10 @@ class GEFICA::XYZ : public GEFICA::XY
       unsigned short n3; // number of steps along the 3nd axis
 
    public:
-      XYZ(unsigned short x=0, unsigned short y=0,unsigned short z=0): XY(x,y) {n=n1*n2*n3;}
+      XYZ(unsigned short n1=101, unsigned short n2=11,unsigned short n3=11);
       virtual ~XYZ();
 
-      virtual void Create(double steplength);
+      virtual void CreateGridWithFixedStepLength(double steplength);
       virtual void Update(int idx); 
 
       virtual void Save(const char *fout=NULL);
