@@ -2,7 +2,7 @@
 #define GEFICA_XY_H
 
 #include "X.h"
-#include <TF2.h>
+class TF2;
 
 namespace GEFICA { class XY; }
 

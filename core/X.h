@@ -13,9 +13,9 @@ namespace GEFICA {
 
    class X;
    static const double epsilon = 16*8.854187817e-12;
-   static const int cm =1;
-   static const int volt=1;
-   static const int cm3=cm*cm*cm;
+   static const double cm =1;
+   static const double volt=1;
+   static const double cm3=cm*cm*cm;
 }
 
 class GEFICA::X : public TObject 
