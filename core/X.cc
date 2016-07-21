@@ -62,7 +62,6 @@ bool X::CalculateField(EMethod method)
 bool X::RK2()
 {
    int cnt=0,looptime=MaxIterations;
-   cout<<"aaaaa"<<endl;
    while (cnt++<looptime) {
       double XUpSum=0;
       double XDownSum=0;
@@ -74,7 +73,7 @@ bool X::RK2()
          if(fPotential[i]-tmp>0)XUpSum=XUpSum+fPotential[i]-tmp;
          else XUpSum=XUpSum+tmp-fPotential[i];
       }
-      /*if(cnt%1==0)*/cout<<cnt<<"  "<<XUpSum/XDownSum<<endl;
+      if(cnt%1000==0)cout<<cnt<<"  "<<XUpSum/XDownSum<<endl;
       if (XUpSum/XDownSum<Precision){return true;}
    }
    return false;
@@ -86,7 +85,7 @@ void X::Update(int idx)
    double density=fImpurity[idx]*1.6e-19;
    double h2=fDistanceToPrevious[idx];
    double h3=fDistanceToNext[idx];
-   double tmp=density/epsilon*h2*h3+(h3*fPotential[idx-1]+h2*fPotential[idx+1])/(h2+h3);
+   double tmp=-density/epsilon*h2*h3+(h3*fPotential[idx-1]+h2*fPotential[idx+1])/(h2+h3);
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    fE1[idx]=(fPotential[idx+1]-fPotential[idx-1])/(h2+h3);
 }
