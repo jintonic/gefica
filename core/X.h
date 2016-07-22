@@ -51,8 +51,8 @@ class GEFICA::X : public TObject
       virtual int FindIdx(double tarx,int begin,int end);
 
       virtual bool Analyic(); // Analyic calculation
-      virtual void RK2(int idx,double old); // 2nd-order Runge-Kutta Successive Over-Relaxation
-      virtual void RK4(int idx,double old1,double old2); // 4th-order Runge-Kutta Successive Over-Relaxation
+      virtual void RK2(int idx); // 2nd-order Runge-Kutta Successive Over-Relaxation
+      virtual void RK4(int idx); // 4th-order Runge-Kutta Successive Over-Relaxation
 };
 
 #endif

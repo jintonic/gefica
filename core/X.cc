@@ -59,16 +59,10 @@ bool X::CalculateField(EMethod method)
    while (cnt++<MaxIterations) {
       double XUpSum=0;
       double XDownSum=0;
-      double old1=fPotential[0];
-      double old2=fPotential[0];
-      double old3=fPotential[1];
       for (int i=1;i<n-1;i++) {
          double old=fPotential[i];
-	 old3=fPotential[i];
-         if (method==kRK4) RK4(i,old1,old2);
-         else RK2(i,old2);
-	 old1=old2;
-	 old2=old3;
+         if (method==kRK4) RK4(i);
+         else RK2(i);
          if(old>0)XDownSum+=old;
          else XDownSum-=old;
          if(fPotential[i]-old>0)XUpSum+=(fPotential[i]-old);
@@ -81,20 +75,20 @@ bool X::CalculateField(EMethod method)
    return false;
 }
 
-void X::RK2(int idx,double old)
+void X::RK2(int idx)
 {
    if (fIsFixed[idx])return ;
    double density=fImpurity[idx]*1.6e-19;
    double h2=fDistanceToPrevious[idx];
    double h3=fDistanceToNext[idx];
-   double tmp=-density/epsilon*h2*h3/2+(h3*old+h2*fPotential[idx+1])/(h2+h3);
+   double tmp=-density/epsilon*h2*h3/2+(h3*fPotential[idx-1]+h2*fPotential[idx+1])/(h2+h3);
    // over-relaxation if Csor>1
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
 
    fE1[idx]=(fPotential[idx+1]-fPotential[idx-1])/(h2+h3);
 }
 
-void X::RK4(int idx,double old1,double old2)
+void X::RK4(int idx)
 { 
   if (fIsFixed[idx])return;
 
@@ -104,12 +98,12 @@ void X::RK4(int idx,double old1,double old2)
    double h1=h2;
    double h4=h3;
    double xp2,xm2,xm1,xp1;
-   xm1=old2;
+   xm1=fPotential[idx-1];
    xp1=fPotential[idx+1];
-   if(idx>1)xm2=old2;
-   else {RK2(idx,old2);return; } 
+   if(idx>1)xm2=fPotential[idx-2];
+   else {RK2(idx);return; } 
    if(idx<n-2)xp2=fPotential[idx+2];
-   else {RK2(idx,old2);return;}
+   else {RK2(idx);return;}
    double tmp=(-1/12*xp2+4/3*xp1+4/3*xm1-1/12*xm2-density/epsilon*h1*h1)*2/5;
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
 
