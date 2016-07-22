@@ -102,10 +102,11 @@ void X::RK4(int idx)
    xm1=fPotential[idx-1];
    xp1=fPotential[idx+1];
    if(idx>1)xm2=fPotential[idx-2];
-   else xm2=fPotential[idx-1];
+   else {RK2(idx);return; } 
    if(idx<n-2)xp2=fPotential[idx+2];
-   else xp2=fPotential[idx+1];
+   else {RK2(idx);return;}
    double tmp=(-(-1/12*xp2+4/3*xp1+4/3*xm1-1/12*xm2)-density/epsilon*h1*h1)*2/5;
+   if (idx%100==0)cout<<tmp<<endl;
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
 
    fE1[idx]=(fPotential[idx+1]-fPotential[idx-1])/(h2+h3);
