@@ -33,6 +33,7 @@ bool X::Analyic()
 
 void X::CreateGridWithFixedStepLength(double steplength)
 {
+   if (n<10) { n=11; n1=11; }
    fE1=new double[n];
    fC1=new double[n];
    fPotential=new double[n];
@@ -53,7 +54,7 @@ void X::CreateGridWithFixedStepLength(double steplength)
 
 bool X::CalculateField(EMethod method)
 {
-   if (method==kAnalytic) Analyic();
+   if (method==kAnalytic) return Analyic();
    int cnt=0;
    while (cnt++<MaxIterations) {
       double XUpSum=0;
@@ -74,17 +75,20 @@ bool X::CalculateField(EMethod method)
    }
    return false;
 }
+
 void X::RK2(int idx)
 {
    if (fIsFixed[idx])return ;
    double density=fImpurity[idx]*1.6e-19;
    double h2=fDistanceToPrevious[idx];
    double h3=fDistanceToNext[idx];
-   double tmp=-density/epsilon*h2*h3+(h3*fPotential[idx-1]+h2*fPotential[idx+1])/(h2+h3);
+   double tmp=-density/epsilon*h2*h3/2+(h3*fPotential[idx-1]+h2*fPotential[idx+1])/(h2+h3);
+   // over-relaxation if Csor>1
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
 
    fE1[idx]=(fPotential[idx+1]-fPotential[idx-1])/(h2+h3);
 }
+
 void X::RK4(int idx)
 { 
   if (fIsFixed[idx])return;
@@ -106,6 +110,7 @@ void X::RK4(int idx)
 
    fE1[idx]=(fPotential[idx+1]-fPotential[idx-1])/(h2+h3);
 }
+
 int X::FindIdx(double tarx,int begin,int end)
 {
    if (begin>=end)return begin;
