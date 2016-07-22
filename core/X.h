@@ -49,7 +49,7 @@ class GEFICA::X : public TObject
       double *fE1, *fPotential,*fC1,*fDistanceToNext,*fDistanceToPrevious,*fImpurity;
 
       virtual int FindIdx(double tarx,int begin,int end);
-
+  public:
       virtual bool Analyic(); // Analyic calculation
       virtual void RK2(int idx); // 2nd-order Runge-Kutta Successive Over-Relaxation
       virtual void RK4(int idx); // 4th-order Runge-Kutta Successive Over-Relaxation
