@@ -2,7 +2,7 @@ using namespace GEFICA;
 
 void planar1d()
 {
-   PlanarX *detector = new PlanarX(5001);
+   PlanarX *detector = new PlanarX(11);
    detector->Thickness=10*cm;
    detector->MaxIterations=1e6;
    detector->Csor=1.9;

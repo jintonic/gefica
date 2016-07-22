@@ -67,10 +67,9 @@ bool X::CalculateField(EMethod method)
          else XDownSum-=old;
          if(fPotential[i]-old>0)XUpSum+=(fPotential[i]-old);
          else XUpSum+=-(fPotential[i]-old);
-         //cout<<i<<", "<<fPotential[i]-old<<endl;
       }
-      if(cnt%1000==0)
-         cout<<cnt<<"  "<<XUpSum/XDownSum<<endl;
+      //if(cnt%1000==0)
+         cout<<cnt<<"  "<<XUpSum/XDownSum<<" down: "<<XDownSum<<", up: "<<XUpSum<<endl;
       if (XUpSum/XDownSum<Precision) return true;
    }
    return false;
@@ -105,8 +104,7 @@ void X::RK4(int idx)
    else {RK2(idx);return; } 
    if(idx<n-2)xp2=fPotential[idx+2];
    else {RK2(idx);return;}
-   double tmp=(-(-1/12*xp2+4/3*xp1+4/3*xm1-1/12*xm2)-density/epsilon*h1*h1)*2/5;
-   if (idx%100==0)cout<<tmp<<endl;
+   double tmp=(-1/12*xp2+4/3*xp1+4/3*xm1-1/12*xm2-density/epsilon*h1*h1)*2/5;
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
 
    fE1[idx]=(fPotential[idx+1]-fPotential[idx-1])/(h2+h3);
