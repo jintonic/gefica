@@ -7,7 +7,7 @@ void polar1d()
    detector->MaxIterations=1e5;
    detector->Csor=1;
    detector->Create(0.3,3);
-   detector->SetVoltage(0*volt, 2000*volt);
+   detector->SetVoltage(2000*volt, 000*volt);
    detector->SetImpurity(1e10/cm3);
    detector->CalculateField(EMethod::kRK2);
    detector->SaveField("planar1dRK2.root");
