@@ -13,8 +13,8 @@ class GEFICA::Polar1d : public GEFICA::R
    public :
       Polar1d(int nx=101) : R(nx) {};
       void SetVoltage(double anode_voltage, double cathode_voltage); 
-//      bool Analyic();
-      
+      bool Analyic();
+      void Create(double r0,double r1);
       ClassDef(Polar1d, 1);
 };
 
