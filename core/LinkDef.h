@@ -7,6 +7,8 @@
 #pragma link C++ class GEFICA::Polar+;
 #pragma link C++ class GEFICA::Polar1d+;
 #pragma link C++ class GEFICA::Spherical+;
+#pragma link C++ class GEFICA::TrueC2d+;
+#pragma link C++ class GEFICA::TrueC+;
 #pragma link C++ class GEFICA::Cylindrical+;
 #pragma link C++ class GEFICA::PlanarX+;
 #pragma link C++ class GEFICA::PlanarXY+;

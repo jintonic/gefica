@@ -18,7 +18,7 @@ void R::RK2(int idx)
    double h2=fDistanceToPrevious[idx];
    double h3=fDistanceToNext[idx];
    //double tmp=-density/epsilon*h2*h3/2+(fPotential[idx-1]-fPotential[idx+1])/fC1[idx]*h2*h3/(h2+h3)+(h3*fPotential[idx-1]+h2*fPotential[idx+1])/(h2+h3);
-   double tmp=(-density/epsilon*(h2+h3)+0.5/fC1[idx]*(fPotential[idx+1]-fPotential[idx-1])+fPotential[idx+1]/h2+fPotential[idx-1]/h3)/(1/h2+1/h3);
+   double tmp=(-density/epsilon*(h2+h3)*0.5+0.5/fC1[idx]*(fPotential[idx+1]-fPotential[idx-1])+fPotential[idx+1]/h2+fPotential[idx-1]/h3)/(1/h2+1/h3);
    // over-relaxation if Csor>1
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
 

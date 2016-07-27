@@ -15,7 +15,7 @@ class GEFICA::Spherical : public GEFICA::XYZ
       virtual ~Spherical() {};
 
       virtual void CreateGridWithFixedStepLength(double steplength);
-      virtual void Update(int idx); 
+      virtual void RK2(int idx); 
 
       virtual void SaveField(const char *fout=NULL);
       virtual void LoadField(const char *fin=NULL);

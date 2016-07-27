@@ -14,6 +14,7 @@ class GEFICA::Polar : public GEFICA::XY
       virtual void CreateGridWithFixedStepLength(double steplength); 
 
       virtual double GetData(double tarx,double tary,int thing);
+      void RK2(int idx);
 
       ClassDef(Polar,1);
 };

@@ -54,7 +54,7 @@ void XY::Update(int idx)
    else Pxm1=fPotential[idx-1];
    if(idx%n1==n1-1)Pxp1=fPotential[idx];
    else Pxp1=fPotential[idx+1];
-   double tmp=((h1+h4)*(h1*h2*h4*Pxp1+h1*h3*h4*Pxm1)+(h2+h3)*(h1*h2*h3*Pyp1+h2*h3*h4*Pym1)-density/epsilon*(h1+h4)*(h2+h3)*h1*h2*h3*h4)/((h1+h4)*(h1*h2*h4+h1*h3*h4)+(h2+h3)*(h1*h2*h3+h2*h3*h4));
+   double tmp=((h1+h4)*(h1*h2*h4*Pxp1+h1*h3*h4*Pxm1)+(h2+h3)*(h1*h2*h3*Pyp1+h2*h3*h4*Pym1)-0.5*density/epsilon*(h1+h4)*(h2+h3)*h1*h2*h3*h4)/((h1+h4)*(h1*h2*h4+h1*h3*h4)+(h2+h3)*(h1*h2*h3+h2*h3*h4));
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
    fE2[idx]=(Pyp1-Pym1)/(h1+h4);

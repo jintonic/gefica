@@ -30,8 +30,8 @@ void Spherical::CreateGridWithFixedStepLength(double steplength)
       fDistanceToDown[i]=3.14159265/(n2*2-1);
    }
 }
-
-void Spherical::Update(int idx)
+#include <math.h>
+void Spherical::RK2(int idx)
 {//need update
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*1.6e12;
@@ -62,14 +62,15 @@ void Spherical::Update(int idx)
    else Pxp1=fPotential[idx+1];
    if((idx%(n1*n2))%n1==0)Pxm1=fPotential[idx];
    else Pxm1=fPotential[idx-1];
-
-   double tmp= (
-         -density/epsilon*h0*h1*h2*h3*h4*h5*(h1+h4)*(h2+h3)*(h0+h5)
-         +(Pxp1*h3+Pxm1*h2)*h0*h1*h4*h5*(h1+h4)*(h0+h5)
-         +(Pyp1*h4+Pym1*h1)*h0*h2*h3*h5*(h0+h5)*(h2+h3)
-         +(Pzp1*h5+Pzm1*h0)*h1*h2*h3*h4*(h1+h4)*(h2+h3)	
-         )
-      /((h0+h5)*(h1+h4)*(h2+h3)*(h0*h1*h4*h5+h0*h2*h3*h5+h1*h2*h3*h4));
+   double r=fC1[idx];
+   double O=fC2[idx];
+   double tmp= (-density/epsilon/2
+       +(Pxp1-Pxm1)/2/r/r/(h2+h3)
+       +(Pyp1-Pym1)/2/r/r/sin(O)/(h1+h4)
+       +Pxp1/(h3+h2)/h3+Pxm1/(h3+h2)/h2
+       +Pyp1/r/r/(h4+h1)/h4+Pym1/r/r/(h1+h4)/h1
+       +Pzp1/r/r/sin(O)/sin(O)/(h0+h5)/h5+Pzm1/r/r/sin(O)/sin(O)/(h0+h5)/h0)
+     /(1/(h2+h3)/h3+1/(h2+h3)/h2+1/r/r/h1/(h1+h4)+1/r/r/h4/(h1+h4)+1/r/r/sin(O)/sin(O)/h0/(h0+h5)+1/r/r/sin(O)/sin(O)/h5/(h0+h5));
 
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
