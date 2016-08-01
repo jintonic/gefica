@@ -16,18 +16,18 @@ void Spherical::CreateGridWithFixedStepLength(double steplength)
    fDistanceToUp=new double[n];
    fDistanceToDown=new double[n];
    for (int i=0;i<n;i++) {
-      if(i/(n1*n2)==0)fC3[i]=-3.1415926;
+      if(i/(n1*n2)==0)fC3[i]=-3.14159265;
       else fC3[i]=fC3[i-n1*n2]+3.14159265*2/n3;
-      if((i%(n1*n2))/n1!=0)fC2[i]=fC2[i-n1]-3.1415926/(2*n2-1);
-      else fC2[i]=3.14159265;
+      if((i%(n1*n2))/n1!=0)fC2[i]=fC2[i-n1]-3.14159265/(2*n2-1);
+      else fC2[i]=3.14159265-3.14159265/n2/2;
       if(i%n1==0)fC1[i]=0;
       else fC1[i]=fC1[i-1]+steplength;
 
       fE3[i]=0;
-      fDistanceToLeft[i]=3.14159265/n3;
-      fDistanceToRight[i]=3.14159265/n3;
-      fDistanceToUp[i]=3.14159265/(n2*2-1);
-      fDistanceToDown[i]=3.14159265/(n2*2-1);
+      fDistanceToLeft[i]=3.14159265/(n2);
+      fDistanceToRight[i]=3.14159265/n2;
+      fDistanceToUp[i]=3.14159265/(n3);
+      fDistanceToDown[i]=3.14159265/(n3);
    }
 }
 #include <math.h>
@@ -65,13 +65,12 @@ void Spherical::RK2(int idx)
    double r=fC1[idx];
    double O=fC2[idx];
    double tmp= (-density/epsilon/2
-       +(Pxp1-Pxm1)/2/r/r/(h2+h3)
-       +(Pyp1-Pym1)/2/r/r/sin(O)/(h1+h4)
+       +(Pxp1-Pxm1)/1/r/(h2+h3)
+       +(Pyp1-Pym1)/r/r/(h1+h4)/2
        +Pxp1/(h3+h2)/h3+Pxm1/(h3+h2)/h2
        +Pyp1/r/r/(h4+h1)/h4+Pym1/r/r/(h1+h4)/h1
        +Pzp1/r/r/sin(O)/sin(O)/(h0+h5)/h5+Pzm1/r/r/sin(O)/sin(O)/(h0+h5)/h0)
      /(1/(h2+h3)/h3+1/(h2+h3)/h2+1/r/r/h1/(h1+h4)+1/r/r/h4/(h1+h4)+1/r/r/sin(O)/sin(O)/h0/(h0+h5)+1/r/r/sin(O)/sin(O)/h5/(h0+h5));
-
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
    fE2[idx]=(Pyp1-Pym1)/(h1+h4);

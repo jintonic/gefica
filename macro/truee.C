@@ -23,6 +23,6 @@ void truee()
    t1->Add ("planar1dRK2.root");
    TChain *t2=new TChain("t");
    t2->Add("planar1dTrue.root");
-   t1->Draw("p:c1","c1<1e3&&c3==0");
+   t1->Draw("p:c1"/*,"c1<1e3&&c3==0"*/);
    t2->Draw("p:c1","","same");
 }
