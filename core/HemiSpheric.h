@@ -1,19 +1,21 @@
 #ifndef GEFICA_HEMISPHERIC_H
 #define GEFICA_HEMISPHERIC_H
 
-#include "Spherical.h"
+#include "Rho.h"
 
 namespace GEFICA { class HemiSpheric; }
 
-class GEFICA::HemiSpheric : public GEFICA::Spherical
+class GEFICA::HemiSpheric : public GEFICA::Rho
 {
    public :
-      double Radius, PointContactR;
+      double Thickness; // Thickness of the planar detector
 
-      HemiSpheric(int n_rho,int n_theta,int n_phi) : Spherical(n_rho, n_theta, n_phi) {};
-      void SetVoltage(double voltage,double r); 
-
-      ClassDef(HemiSpheric,1);
+   public :
+      HemiSpheric(int nx=101) : Rho(nx) {};
+      void SetVoltage(double anode_voltage, double cathode_voltage); 
+      bool Analyic();
+      void Create(double r0,double r1);
+      ClassDef(HemiSpheric, 1);
 };
 
 #endif

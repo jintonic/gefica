@@ -1,7 +1,7 @@
-#include "PlanarX.h"
+#include "Planar1D.h"
 using namespace GEFICA;
 
-void PlanarX::SetVoltage(double anode_voltage, double cathode_voltage)
+void Planar1D::SetVoltage(double anode_voltage, double cathode_voltage)
 {
    double stepLength=Thickness/(n-1);
    CreateGridWithFixedStepLength(stepLength);
@@ -11,7 +11,7 @@ void PlanarX::SetVoltage(double anode_voltage, double cathode_voltage)
    for (int i=0; i<n; i++) fPotential[i]=anode_voltage+slope*i;
 }
 
-bool PlanarX::Analyic()
+bool Planar1D::Analyic()
 {
    double cnst1=fPotential[0];
    double cnst2=(fPotential[n-1]-fImpurity[n-1]*1.6e-19/2/epsilon*Thickness*Thickness-cnst1)/Thickness;

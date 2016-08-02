@@ -1,21 +1,21 @@
-#ifndef GEFICA_POLAR1D_H
-#define GEFICA_POLAR1D_H
+#ifndef GEFICA_TRUECOAXIAL1D_H
+#define GEFICA_TRUECOAXIAL1D_H
 
 #include "R.h"
 
-namespace GEFICA { class Polar1d; }
+namespace GEFICA { class TrueCoaxial1D; }
 
-class GEFICA::Polar1d : public GEFICA::R
+class GEFICA::TrueCoaxial1D : public GEFICA::R
 {
    public :
       double Thickness; // Thickness of the planar detector
 
    public :
-      Polar1d(int nx=101) : R(nx) {};
+      TrueCoaxial1D(int nx=101) : R(nx) {};
       void SetVoltage(double anode_voltage, double cathode_voltage); 
       bool Analyic();
       void Create(double r0,double r1);
-      ClassDef(Polar1d, 1);
+      ClassDef(TrueCoaxial1D, 1);
 };
 
 #endif

@@ -3,10 +3,10 @@
 #include <TChain.h>
 #include <TVectorD.h>
 
-#include "Spherical.h"
+#include "RThetaPhi.h"
 using namespace GEFICA;
 
-void Spherical::CreateGridWithFixedStepLength(double steplength)
+void RThetaPhi::CreateGridWithFixedStepLength(double steplength)
 {
    n3=2*n3;
    n=n1*n2*n3;
@@ -31,7 +31,7 @@ void Spherical::CreateGridWithFixedStepLength(double steplength)
    }
 }
 #include <math.h>
-void Spherical::RK2(int idx,bool elec)
+void RThetaPhi::RK2(int idx,bool elec)
 {//need update
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*1.6e12;
@@ -85,7 +85,7 @@ void Spherical::RK2(int idx,bool elec)
    }
 }
 
-int Spherical::FindIdx(double tarx,double tary ,double tarz,int begin,int end)
+int RThetaPhi::FindIdx(double tarx,double tary ,double tarz,int begin,int end)
 {
    if(begin>=end)return XY::FindIdx(tarx,tary,begin,begin+n1*n2-1);
    int mid=((begin/(n1*n2)+end/(n1*n2))/2)*n1*n2;
@@ -93,7 +93,7 @@ int Spherical::FindIdx(double tarx,double tary ,double tarz,int begin,int end)
    else return FindIdx(tarx,tary,tarz,mid+1,end);
 }
 
-double Spherical::GetData(double tarx, double tary, double tarz,int thing)
+double RThetaPhi::GetData(double tarx, double tary, double tarz,int thing)
 {
    int idx=FindIdx(tarx,tary,tarz,0,n);
    double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
@@ -129,7 +129,7 @@ double Spherical::GetData(double tarx, double tary, double tarz,int thing)
    return ((tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb)*ac+((tar4*aa+tar5*ab)*ba+(tar6*aa+tar7*ab)*bb)*ca;
 }
 
-void Spherical::SaveField(const char * fout)
+void RThetaPhi::SaveField(const char * fout)
 {
    XY::SaveField(fout);
    TFile *file=new TFile(fout,"update");
@@ -150,7 +150,7 @@ void Spherical::SaveField(const char * fout)
    delete file;
 }
 
-void Spherical::LoadField(const char * fin)
+void RThetaPhi::LoadField(const char * fin)
 {
    XY::LoadField(fin);
    TFile *file=new TFile(fin);
@@ -176,7 +176,7 @@ void Spherical::LoadField(const char * fin)
    delete file;
 }
 
-void Spherical::SetImpurity(TF3 * Im)
+void RThetaPhi::SetImpurity(TF3 * Im)
 {
    for(int i=n;i-->0;) {
       fImpurity[i]=Im->Eval((double)fC1[i],(double)fC2[i],(double)fC3[i]);

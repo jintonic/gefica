@@ -3,10 +3,10 @@
 #include <TChain.h>
 #include <TVectorD.h>
 
-#include "Cylindrical.h"
+#include "RhoPhiZ.h"
 using namespace GEFICA;
 using namespace std;
-void Cylindrical::CreateGridWithFixedStepLength(double steplength)
+void RhoPhiZ::CreateGridWithFixedStepLength(double steplength)
 {
    XY::CreateGridWithFixedStepLength(steplength);
    fE3=new double[n];
@@ -29,7 +29,7 @@ void Cylindrical::CreateGridWithFixedStepLength(double steplength)
    }
 }
 
-void Cylindrical::RK2(int idx,bool elec)
+void RhoPhiZ::RK2(int idx,bool elec)
 {//need update
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*1.6e12;
@@ -64,7 +64,7 @@ void Cylindrical::RK2(int idx,bool elec)
    }
 }
 
-int Cylindrical::FindIdx(double tarx,double tary ,double tarz,int begin,int end)
+int RhoPhiZ::FindIdx(double tarx,double tary ,double tarz,int begin,int end)
 {
    if(begin>=end)return XY::FindIdx(tarx,tary,begin,begin+n1*n2-1);
    int mid=((begin/(n1*n2)+end/(n1*n2))/2)*n1*n2;
@@ -72,7 +72,7 @@ int Cylindrical::FindIdx(double tarx,double tary ,double tarz,int begin,int end)
    else return FindIdx(tarx,tary,tarz,mid+1,end);
 }
 
-double Cylindrical::GetData(double tarx, double tary, double tarz,int thing)
+double RhoPhiZ::GetData(double tarx, double tary, double tarz,int thing)
 {
    int idx=FindIdx(tarx,tary,tarz,0,n);
    double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
@@ -107,7 +107,7 @@ double Cylindrical::GetData(double tarx, double tary, double tarz,int thing)
    return ((tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb)*ac+((tar4*aa+tar5*ab)*ba+(tar6*aa+tar7*ab)*bb)*ca;
 }
 
-void Cylindrical::SaveField(const char * fout)
+void RhoPhiZ::SaveField(const char * fout)
 {
    XY::SaveField(fout);
    TFile *file=new TFile(fout,"update");
@@ -129,7 +129,7 @@ void Cylindrical::SaveField(const char * fout)
 
 }
 
-void Cylindrical::LoadField(const char * fin)
+void RhoPhiZ::LoadField(const char * fin)
 {
    XY::LoadField(fin);
    TFile *file=new TFile(fin);
@@ -155,7 +155,7 @@ void Cylindrical::LoadField(const char * fin)
    delete file;
 }
 
-void Cylindrical::SetImpurity(TF3 * Im)
+void RhoPhiZ::SetImpurity(TF3 * Im)
 {
    for(int i=n;i-->0;) {
       fImpurity[i]=Im->Eval((double)fC1[i],(double)fC2[i],(double)fC3[i]);

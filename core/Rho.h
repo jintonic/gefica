@@ -1,5 +1,5 @@
-#ifndef GEFICA_RHO_H
-#define GEFICA_RHO_H
+#ifndef GEFICA_Rho_H
+#define GEFICA_Rho_H
 
 #include "X.h"
 

@@ -1,10 +1,10 @@
-#include "Polar1d.h"
+#include "TrueCoaxial1D.h"
 #include "iostream"
 using namespace GEFICA;
 using namespace std;
 
 
-void Polar1d::SetVoltage(double anode_voltage, double cathode_voltage)
+void TrueCoaxial1D::SetVoltage(double anode_voltage, double cathode_voltage)
 {
    //double stepLength=Thickness/(n-1);
    //CreateGridWithFixedStepLength(stepLength);
@@ -16,7 +16,7 @@ void Polar1d::SetVoltage(double anode_voltage, double cathode_voltage)
    }
 }
 #include  <cmath>
-bool Polar1d::Analyic()
+bool TrueCoaxial1D::Analyic()
 {
   double density=fImpurity[1]*1.6e-19;
    double cnst1=(fPotential[n-1]-fPotential[0]-density*(fC1[n-1]*fC1[n-1]-fC1[0]*fC1[0])/epsilon/4)/(log(fC1[n-1]/fC1[0]));
@@ -27,7 +27,7 @@ bool Polar1d::Analyic()
    }
    return true;
 }
-void Polar1d::Create(double r0,double r1)
+void TrueCoaxial1D::Create(double r0,double r1)
 {
   X::CreateGridWithFixedStepLength((r1-r0)/(n-1));
   for(int i=0;i<n;i++)

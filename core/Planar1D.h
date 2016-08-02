@@ -1,21 +1,21 @@
-#ifndef GEFICA_PLANARX_H
-#define GEFICA_PLANARX_H
+#ifndef GEFICA_PLANAR1D_H
+#define GEFICA_PLANAR1D_H
 
 #include "X.h"
 
-namespace GEFICA { class PlanarX; }
+namespace GEFICA { class Planar1D; }
 
-class GEFICA::PlanarX : public GEFICA::X
+class GEFICA::Planar1D : public GEFICA::X
 {
    public :
       double Thickness; // Thickness of the planar detector
 
    public :
-      PlanarX(int nx=101) : X(nx) {};
+      Planar1D(int nx=101) : X(nx) {};
       void SetVoltage(double anode_voltage, double cathode_voltage); 
       bool Analyic();
       
-      ClassDef(PlanarX, 1);
+      ClassDef(Planar1D, 1);
 };
 
 #endif

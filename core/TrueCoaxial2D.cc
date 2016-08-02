@@ -1,14 +1,14 @@
-#include "TrueC.h"
+#include "TrueCoaxial2D.h"
 using namespace GEFICA;
-void TrueC::Create(double r0,double r1)
+void TrueCoaxial2D::Create(double r0,double r1)
 {
-  Cylindrical::CreateGridWithFixedStepLength((r1-r0)/(n1-1));
+  RhoPhi::CreateGridWithFixedStepLength((r1-r0)/(n1-1));
   for (int i=0;i<n;i++)
   {
     fC1[i]+=r0;
   }
 }
-void TrueC::SetVoltage(double v1,double v2)
+void TrueCoaxial2D::SetVoltage(double v1,double v2)
 {
   for (int i=0;i<n;i=i+n1)
   {

@@ -1,7 +1,7 @@
-#include "Polar.h"
+#include "RhoPhi.h"
 using namespace GEFICA;
 
-void Polar::RK2(int idx,bool elec)
+void RhoPhi::RK2(int idx,bool elec)
 {//need update
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*1.6e12;
@@ -31,7 +31,7 @@ void Polar::RK2(int idx,bool elec)
      fE2[idx]=(Pyp1-Pym1)/(h1+h4);
    }
 }
-void Polar::CreateGridWithFixedStepLength(double steplength)
+void RhoPhi::CreateGridWithFixedStepLength(double steplength)
 {
    XY::CreateGridWithFixedStepLength(steplength);
    for (int i=0;i<n;i++) {
@@ -46,7 +46,7 @@ void Polar::CreateGridWithFixedStepLength(double steplength)
    }
 }
 
-double Polar::GetData(double tarx, double tary, int thing)
+double RhoPhi::GetData(double tarx, double tary, int thing)
 {
    int idx=FindIdx(tarx,tary,0,n);
    double ab=(tarx-fC1[idx])/fDistanceToNext[idx];

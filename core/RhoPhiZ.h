@@ -1,18 +1,16 @@
-#ifndef GEFICA_HALFBALL_H
-#define GEFICA_HALFBALL_H
+#ifndef GEFICA_RHOPHIZ_H
+#define GEFICA_RHOPHIZ_H
 
 #include "XYZ.h"
+class TF3;
 
-namespace GEFICA { class Spherical; }
+namespace GEFICA { class RhoPhiZ; }
 
-class GEFICA::Spherical : public GEFICA::XYZ
+class GEFICA::RhoPhiZ : public GEFICA::XYZ
 {
    public:
-
-   public:
-      Spherical(unsigned short n_r=0, unsigned short n_theta=0,unsigned short n_phi=0): 
-         XYZ(n_r, n_theta, n_phi) {}
-      virtual ~Spherical() {};
+      RhoPhiZ(unsigned short n1, unsigned short n2,unsigned short n3): XYZ(n1,n2,n3) {};
+      virtual ~RhoPhiZ(){};
 
       virtual void CreateGridWithFixedStepLength(double steplength);
       virtual void RK2(int idx,bool elec); 
@@ -23,11 +21,11 @@ class GEFICA::Spherical : public GEFICA::XYZ
       virtual double GetData(double tarx,double tary,double tarz,int thing);
       virtual void SetImpurity(TF3 * Im);
 
-      ClassDef(Spherical,1);
+      ClassDef(RhoPhiZ,1);
 
    protected:
       virtual int FindIdx(double tarx,double tary,
-            double tarz,int zbegin,int zend);
+            double tarz,int begin,int end);
 };
 
 #endif
