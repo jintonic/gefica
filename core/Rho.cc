@@ -7,11 +7,11 @@ using namespace std;
 #include <TVectorD.h>
 #include <TF1.h>
 
-#include "R.h"
+#include "Rho.h"
 using namespace GEFICA;
 
 
-void R::RK2(int idx,bool elec)
+void Rho::RK2(int idx,bool elec)
 {
    if (fIsFixed[idx])return ;
    double density=fImpurity[idx]*1.6e-19;
@@ -25,7 +25,7 @@ void R::RK2(int idx,bool elec)
    if(elec)fE1[idx]=(fPotential[idx+1]-fPotential[idx-1])/(h2+h3);
 }
 
-void R::RK4(int idx)
+void Rho::RK4(int idx)
 { 
   if (fIsFixed[idx])return;
 

@@ -62,7 +62,7 @@ bool X::CalculateField(EMethod method)
       for (int i=1;i<n-1;i++) {
          double old=fPotential[i];
          if (method==kRK4) RK4(i);
-         else RK2(i);
+         else RK2(i,0);
          if(old>0)XDownSum+=old;
          else XDownSum-=old;
          if(fPotential[i]-old>0)XUpSum+=(fPotential[i]-old);
@@ -70,12 +70,15 @@ bool X::CalculateField(EMethod method)
       }
       //if(cnt%1000==0)
          cout<<cnt<<"  "<<XUpSum/XDownSum<<" down: "<<XDownSum<<", up: "<<XUpSum<<endl;
-      if (XUpSum/XDownSum<Precision) return true;
+      if (XUpSum/XDownSum<Precision){
+	for(int idx=0;idx-->n;)RK2(idx,1);
+	  return true;
+      }
    }
    return false;
 }
 
-void X::RK2(int idx)
+void X::RK2(int idx,bool elec)
 {
    if (fIsFixed[idx])return ;
    double density=fImpurity[idx]*1.6e-19;
@@ -85,7 +88,7 @@ void X::RK2(int idx)
    // over-relaxation if Csor>1
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
 
-   fE1[idx]=(fPotential[idx+1]-fPotential[idx-1])/(h2+h3);
+   if(elec)fE1[idx]=(fPotential[idx+1]-fPotential[idx-1])/(h2+h3);
 }
 
 void X::RK4(int idx)
@@ -101,9 +104,9 @@ void X::RK4(int idx)
    xm1=fPotential[idx-1];
    xp1=fPotential[idx+1];
    if(idx>1)xm2=fPotential[idx-2];
-   else {RK2(idx);return; } 
+   else {RK2(idx,0);return; } 
    if(idx<n-2)xp2=fPotential[idx+2];
-   else {RK2(idx);return;}
+   else {RK2(idx,0);return;}
    double tmp=(-1/12*xp2+4/3*xp1+4/3*xm1-1/12*xm2-density/epsilon*h1*h1)*2/5;
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
 
@@ -161,7 +164,7 @@ void X::SaveField(const char * fout)
    tree->Branch("c1",&C1s,"c1/D"); // persition in x
    tree->Branch("p",&Ps,"p/D"); // electric potential
    tree->Branch("sn",&StepNexts,"StepNext/D"); // Step length to next point in x
-   tree->Branch("sb",&StepBefores,"StepBefore/D"); // Step length to before point in x
+   tree->Branch("sb",&StepBefores,"Step)Before/D"); // Step length to before point in x
    tree->Branch("ib",&fIsFixeds,"fIsFixed/O"); // check is initial point
    tree->Branch("im",&impuritys,"impurity/D"); // Impurity
    for(int i=0;i<n;i++) {

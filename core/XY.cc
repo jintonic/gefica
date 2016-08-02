@@ -37,7 +37,7 @@ void XY::CreateGridWithFixedStepLength(double steplength)
    }
 }
 
-void XY::Update(int idx)
+void XY::RK2(int idx,bool elec)
 {//need update
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*1.6e12;
@@ -56,8 +56,11 @@ void XY::Update(int idx)
    else Pxp1=fPotential[idx+1];
    double tmp=((h1+h4)*(h1*h2*h4*Pxp1+h1*h3*h4*Pxm1)+(h2+h3)*(h1*h2*h3*Pyp1+h2*h3*h4*Pym1)-0.5*density/epsilon*(h1+h4)*(h2+h3)*h1*h2*h3*h4)/((h1+h4)*(h1*h2*h4+h1*h3*h4)+(h2+h3)*(h1*h2*h3+h2*h3*h4));
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
-   fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
-   fE2[idx]=(Pyp1-Pym1)/(h1+h4);
+   if(elec)
+   {
+     fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
+     fE2[idx]=(Pyp1-Pym1)/(h1+h4);
+   }
 }
 
 int XY::FindIdx(double tarx,double tary ,int ybegin,int yend)

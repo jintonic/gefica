@@ -13,7 +13,7 @@ class GEFICA::Cylindrical : public GEFICA::XYZ
       virtual ~Cylindrical(){};
 
       virtual void CreateGridWithFixedStepLength(double steplength);
-      virtual void RK2(int idx); 
+      virtual void RK2(int idx,bool elec); 
 
       virtual void SaveField(const char *fout=NULL);
       virtual void LoadField(const char *fin=NULL);

@@ -1,17 +1,17 @@
-#ifndef GEFICA_R_H
-#define GEFICA_R_H
+#ifndef GEFICA_RHO_H
+#define GEFICA_RHO_H
 
 #include "X.h"
 
 namespace GEFICA { 
-   class R;
+   class Rho;
 }
 
-class GEFICA::R : public X 
+class GEFICA::Rho : public X 
 {
    public:
-      R(int nx=101): X(nx){};
-      ClassDef(R,1);
+      Rho(int nx=101): X(nx){};
+      ClassDef(Rho,1);
 
    protected:
 

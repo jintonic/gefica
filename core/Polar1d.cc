@@ -19,10 +19,10 @@ void Polar1d::SetVoltage(double anode_voltage, double cathode_voltage)
 bool Polar1d::Analyic()
 {
   double density=fImpurity[1]*1.6e-19;
-   double cnst1=(fPotential[n-1]-fPotential[0])/(pow(fC1[n-1],0.5)-pow(fC1[0],0.5));//(fPotential[n-1]-fPotential[0]-density*(fC1[n-1]*fC1[n-1]-fC1[0]*fC1[0])/epsilon/4)/(log(fC1[n-1]/fC1[0]));
-   double cnst2=fPotential[0]-cnst1*pow(fC1[0],0.5);//fPotential[0]-density*fC1[0]*fC1[0]/epsilon/4-cnst1*log(fC1[0]);
+   double cnst1=(fPotential[n-1]-fPotential[0]-density*(fC1[n-1]*fC1[n-1]-fC1[0]*fC1[0])/epsilon/4)/(log(fC1[n-1]/fC1[0]));
+   double cnst2=fPotential[0]-density*fC1[0]*fC1[0]/epsilon/4-cnst1*log(fC1[0]);
    for (int i=0; i<n; i++) {
-      fPotential[i] = fImpurity[i]*1.6e-19/4/epsilon*fC1[i]*fC1[i]+cnst1*pow(fC1[i],0.5)-cnst2;
+      fPotential[i] = fImpurity[i]*1.6e-19/4/epsilon*fC1[i]*fC1[i]+cnst1*log(fC1[i])-cnst2;
       fE1[i]=(fPotential[i+1]-fPotential[i-1])/(fDistanceToNext[i]+fDistanceToPrevious[i]);
    }
    return true;

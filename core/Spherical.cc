@@ -31,7 +31,7 @@ void Spherical::CreateGridWithFixedStepLength(double steplength)
    }
 }
 #include <math.h>
-void Spherical::RK2(int idx)
+void Spherical::RK2(int idx,bool elec)
 {//need update
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*1.6e12;
@@ -66,15 +66,23 @@ void Spherical::RK2(int idx)
    double O=fC2[idx];
    double tmp= (-density/epsilon/2
        +(Pxp1-Pxm1)/1/r/(h2+h3)
-       +(Pyp1-Pym1)/r/r/(h1+h4)/2
+       +(Pyp1-Pym1)/r/r/(h1+h4)/sin(O)*cos(O)/2
        +Pxp1/(h3+h2)/h3+Pxm1/(h3+h2)/h2
        +Pyp1/r/r/(h4+h1)/h4+Pym1/r/r/(h1+h4)/h1
        +Pzp1/r/r/sin(O)/sin(O)/(h0+h5)/h5+Pzm1/r/r/sin(O)/sin(O)/(h0+h5)/h0)
-     /(1/(h2+h3)/h3+1/(h2+h3)/h2+1/r/r/h1/(h1+h4)+1/r/r/h4/(h1+h4)+1/r/r/sin(O)/sin(O)/h0/(h0+h5)+1/r/r/sin(O)/sin(O)/h5/(h0+h5));
+     /(1/(h2+h3)/h3
+	 +1/(h2+h3)/h2
+	 +1/r/r/h1/(h1+h4)
+	 +1/r/r/h4/(h1+h4)
+	 +1/r/r/sin(O)/sin(O)/h0/(h0+h5)
+	 +1/r/r/sin(O)/sin(O)/h5/(h0+h5));
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
-   fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
-   fE2[idx]=(Pyp1-Pym1)/(h1+h4);
-   fE3[idx]=(Pzp1-Pzm1)/(h0+h5);
+   if(elec)
+   {
+     fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
+     fE2[idx]=(Pyp1-Pym1)/(h1+h4);
+     fE3[idx]=(Pzp1-Pzm1)/(h0+h5);
+   }
 }
 
 int Spherical::FindIdx(double tarx,double tary ,double tarz,int begin,int end)

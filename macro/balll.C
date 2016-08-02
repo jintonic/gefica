@@ -10,8 +10,7 @@ void balll()
    detector->CalculateField(EMethod::kRK2);
    detector->SaveField("planar1dRK2.root");
 
-   Polar1d *detector2 = new Polar1d(11);
-   detector2->Thickness=10*cm;
+   Sph *detector2 = new Sph(110);
    detector2->MaxIterations=1e5;
    detector2->Csor=1.9;
    detector2->Create(0.3,3);
@@ -23,6 +22,6 @@ void balll()
    t1->Add ("planar1dRK2.root");
    TChain *t2=new TChain("t");
    t2->Add("planar1dTrue.root");
-   t1->Draw("p:c1","c1<1e3");
+   t1->Draw("p:c1");
    t2->Draw("p:c1","","same");
 }

@@ -39,7 +39,7 @@ void XYZ::CreateGridWithFixedStepLength(double steplength)
    }
 }
 
-void XYZ::Update(int idx)
+void XYZ::RK2(int idx,bool elec)
 {//need update
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*1.6e12;
@@ -72,9 +72,12 @@ void XYZ::Update(int idx)
       /((h0+h5)*(h1+h4)*(h2+h3)*(h0*h1*h4*h5+h0*h2*h3*h5+h1*h2*h3*h4));
 
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
-   fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
-   fE2[idx]=(Pyp1-Pym1)/(h1+h4);
-   fE3[idx]=(Pzp1-Pzm1)/(h0+h5);
+   if(elec)
+   {
+     fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
+     fE2[idx]=(Pyp1-Pym1)/(h1+h4);
+     fE3[idx]=(Pzp1-Pzm1)/(h0+h5);
+   }
 }
 
 int XYZ::FindIdx(double tarx, double tary ,double tarz,int begin,int end)

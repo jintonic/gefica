@@ -17,7 +17,7 @@ class GEFICA::XYZ : public GEFICA::XY
       virtual ~XYZ();
 
       virtual void CreateGridWithFixedStepLength(double steplength);
-      virtual void Update(int idx); 
+      virtual void RK2(int idx,bool elec); 
 
       virtual void SaveField(const char *fout=NULL);
       virtual void LoadField(const char *fin=NULL);

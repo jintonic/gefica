@@ -1,7 +1,7 @@
 #include "Polar.h"
 using namespace GEFICA;
 
-void Polar::RK2(int idx)
+void Polar::RK2(int idx,bool elec)
 {//need update
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*1.6e12;
@@ -25,8 +25,11 @@ void Polar::RK2(int idx)
        /(1/h3/(h2+h3)+1/h2/(h2+h3)
         +1/r/r/h1/(h1+h4)+1/r/r/h4/(h1+h4));
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
-   fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
-   fE2[idx]=(Pyp1-Pym1)/(h1+h4);
+   if(elec)
+   {
+     fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
+     fE2[idx]=(Pyp1-Pym1)/(h1+h4);
+   }
 }
 void Polar::CreateGridWithFixedStepLength(double steplength)
 {
