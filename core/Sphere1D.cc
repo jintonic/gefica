@@ -4,16 +4,6 @@ using namespace std;
 #include "Sphere1D.h"
 using namespace GEFICA;
 
-void Sphere1D::SetVoltage(double anode_voltage, double cathode_voltage)
-{
-   fIsFixed[0]=true;
-   fIsFixed[n-1]=true;
-   double slope = (cathode_voltage-anode_voltage)/(n-1);
-   for (int i=0; i<n; i++) {
-      fPotential[i]=anode_voltage+slope*i;
-   }
-}
-
 #include  <cmath>
 bool Sphere1D::Analyic()
 {
@@ -29,23 +19,3 @@ bool Sphere1D::Analyic()
    return true;
 }
 
-void Sphere1D::CreateGridWithFixedStepLength()
-{
-   // The step length is calculated with the following equation:
-   // BEGIN_HTML
-   // <pre>
-   //      double stepLength=(OuterRadius-InnerRadius)/(n-1);
-   // </pre>
-   // END_HTML
-   // If the inner radius is not larger than the outer radius,
-   // no grid will be created
-   if (InnerRadius>=OuterRadius) {
-      Warning("CreateGridWithFixedStepLength",
-            "Inner radius (%f) >= outer radius (%f)! No grid is created!",
-            InnerRadius, OuterRadius);
-      return;
-   }
-   double stepLength=(OuterRadius-InnerRadius)/(n-1);
-   X::CreateGridWithFixedStepLength(stepLength);
-   for(int i=0;i<n;i++) fC1[i]=fC1[i]+r0;
-}

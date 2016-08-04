@@ -13,8 +13,6 @@ class GEFICA::TrueCoaxial1D : public GEFICA::Rho
 
    public :
       TrueCoaxial1D(int nx=101) : Rho(nx) {};
-      void SetVoltage(double anode_voltage, double cathode_voltage); 
-      void CreateGridWithFixedStepLength();
 
       ClassDef(TrueCoaxial1D, 1);
 

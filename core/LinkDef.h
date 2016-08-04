@@ -6,7 +6,7 @@
 #pragma link C++ class GEFICA::XY+;
 #pragma link C++ class GEFICA::XYZ+;
 #pragma link C++ class GEFICA::RhoPhi+;
-#pragma link C++ class GEFICA::Spheric+;
+#pragma link C++ class GEFICA::Sphere+;
 #pragma link C++ class GEFICA::TrueCoaxial1D+;
 #pragma link C++ class GEFICA::RThetaPhi+;
 #pragma link C++ class GEFICA::TrueCoaxial2D+;
@@ -14,5 +14,5 @@
 #pragma link C++ class GEFICA::Planar1D+;
 #pragma link C++ class GEFICA::Planar2D+;
 #pragma link C++ class GEFICA::PointContactXY+;
-#pragma link C++ class GEFICA::HemiSpheric+;
+#pragma link C++ class GEFICA::Sphere1D+;
 #endif

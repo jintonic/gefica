@@ -41,23 +41,23 @@ class GEFICA::X : public TObject
 
    public:
       X(int nx=101);
-      //_________
-      //claim a 1D field with nx grid
+
       virtual ~X();
 
       virtual void CreateGridWithFixedStepLength(double steplength);
+      virtual void CreateGridWithFixedStepLength(double LowerBound,double UpperBound);
       virtual bool CalculateField(EMethod method=kRK2);
-      //___________
-      //do calculate
+      virtual void SetVoltage(double anode_voltage, double cathode_voltage);
 
+      
       virtual void SaveField(const char *fout=NULL);
       virtual void LoadField(const char *fin=NULL);
       virtual void SetImpurity(double density);
       virtual void SetImpurity(TF1 * Im);
 
       virtual double GetData(double tarx,int thing); 
-      //__________________
-      // ask thingwith number: 1:Ex 2:f 0:Impurty
+      
+      
 
       ClassDef(X,1);
 
@@ -68,10 +68,10 @@ class GEFICA::X : public TObject
       virtual int FindIdx(double tarx,int begin,int end);
 
       virtual bool Analyic();
-      //_________________
-      // Analyic calculation
-      virtual void RK2(int idx,bool elec); // 2nd-order Runge-Kutta Successive Over-Relaxation
-      virtual void RK4(int idx); // 4th-order Runge-Kutta Successive Over-Relaxation
+      
+      
+      virtual void RK2(int idx,bool elec); 
+      virtual void RK4(int idx); 
 };
 
 #endif

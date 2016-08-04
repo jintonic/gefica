@@ -12,7 +12,9 @@ using namespace GEFICA;
 
 X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),
    fIsFixed(0), fE1(0), fPotential(0), fC1(0), fDistanceToNext(0), fDistanceToPrevious(0), fImpurity(0)
-{ n=nx;n1=nx; }
+{ //claim a 1D field with nx grid
+  n=nx;n1=nx; }
+      
 
 X::~X()
 {
@@ -26,7 +28,7 @@ X::~X()
 }
 
 bool X::Analyic()
-{
+{// Analyic calculation
    cout<<"no method can use"<<endl;
    return false; 
 }
@@ -51,9 +53,40 @@ void X::CreateGridWithFixedStepLength(double steplength)
       fImpurity[i]=0;
    }
 }
+void X::CreateGridWithFixedStepLength(double LowerBound,double UpperBound)
+{
+   // The step length is calculated with the following equation:
+   // BEGIN_HTML
+   // <pre>
+   //      double stepLength=(UpperBound-LowerBound)/(n-1);
+   // </pre>
+   // END_HTML
+   // If the inner radius is not larger than the outer radius,
+   // no grid will be created
+   if (LowerBound>=UpperBound) {
+      Warning("CreateGridWithFixedStepLength",
+            "Lower bound (%f) >= upper bound (%f)! No grid is created!",
+            LowerBound, UpperBound);
+      return;
+   }
+   double stepLength=(UpperBound-LowerBound)/(n-1);
+   CreateGridWithFixedStepLength(stepLength);
+   for(int i=0;i<n;i++) fC1[i]=fC1[i]+LowerBound;
+}
+
+void X::SetVoltage(double anode_voltage, double cathode_voltage)
+{
+   fIsFixed[0]=true;
+   fIsFixed[n-1]=true;
+   double slope = (cathode_voltage-anode_voltage)/(n-1);
+   for (int i=0; i<n; i++) {
+      fPotential[i]=anode_voltage+slope*i;
+   }
+}
 
 bool X::CalculateField(EMethod method)
-{
+{//do calculate
+
    if (method==kAnalytic) return Analyic();
    int cnt=0;
    while (cnt++<MaxIterations) {
@@ -79,7 +112,7 @@ bool X::CalculateField(EMethod method)
 }
 
 void X::RK2(int idx,bool elec)
-{
+{// 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return ;
    double density=fImpurity[idx]*1.6e-19;
    double h2=fDistanceToPrevious[idx];
@@ -92,7 +125,7 @@ void X::RK2(int idx,bool elec)
 }
 
 void X::RK4(int idx)
-{ 
+{ // 4th-order Runge-Kutta Successive Over-Relaxation
   if (fIsFixed[idx])return;
 
    double density=fImpurity[idx]*1.6e-19;
@@ -122,7 +155,7 @@ int X::FindIdx(double tarx,int begin,int end)
 }
 
 double X::GetData(double tarx,int thing)
-{
+{// ask thingwith number: 1:Ex 2:f 0:Impurty
    int idx=FindIdx(tarx,0,n-1);
    if (idx==n)
    {
