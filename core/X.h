@@ -1,14 +1,3 @@
-/////////////////////////////
-//X                        //
-//                         //
-//1D field                 //
-//BEGIN_HTML               
-//<html>                   
-//<a href="../../macro/test.C" target="_blank">example macro file</a>            
-//</html>                
-//END_HTML                
-//../macro/test.C           
-/////////////////////////////
 #ifndef GEFICA_X_H
 #define GEFICA_X_H
 
@@ -30,6 +19,11 @@ namespace GEFICA {
    static const double cm3=cm*cm*cm;
 }
 
+//______________________________________________________________________________
+// Create grid for 1-D field calculation.
+// begin_macro
+// planar1d.C           
+// end_macro
 class GEFICA::X : public TObject 
 {
    public:

@@ -9,7 +9,8 @@ using namespace GEFICA;
 XYZ::XYZ(unsigned short n1, unsigned short n2,unsigned short n3): 
    XY(n1,n2), n3(n3), fE3(0), fC3(0), fDistanceToUp(0), fDistanceToDown(0)
 { 
-  //claim a field with n1*n2*n3 gridsn=n1*n2*n3;}
+   //claim a field with n1*n2*n3 gridsn=n1*n2*n3;
+}
 
 XYZ::~XYZ()
 {
@@ -76,9 +77,9 @@ void XYZ::RK2(int idx,bool elec)
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    if(elec)
    {
-     fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
-     fE2[idx]=(Pyp1-Pym1)/(h1+h4);
-     fE3[idx]=(Pzp1-Pzm1)/(h0+h5);
+      fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
+      fE2[idx]=(Pyp1-Pym1)/(h1+h4);
+      fE3[idx]=(Pzp1-Pzm1)/(h0+h5);
    }
 }
 
@@ -92,7 +93,7 @@ int XYZ::FindIdx(double tarx, double tary ,double tarz,int begin,int end)
 
 double XYZ::GetData(double tarx, double tary, double tarz,int thing)
 {
-  //get item with number: 0:Impurity 1:Potential 2: Ex 3:Ey 4:Ez
+   //get item with number: 0:Impurity 1:Potential 2: Ex 3:Ey 4:Ez
 
    int idx=FindIdx(tarx,tary,tarz,0,n);
    double ab=(tarx-fC1[idx])/fDistanceToNext[idx];

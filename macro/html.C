@@ -11,5 +11,6 @@ void html()
   html.SetInputDir("../core");
   html.SetOutputDir("../doc/html");
   html.MakeAll();
+  cout<<html.GetMacroPath()<<endl;
 }
 
