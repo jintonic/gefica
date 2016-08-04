@@ -19,8 +19,7 @@ class GEFICA::XYZ : public GEFICA::XY
 
    public:
       XYZ(unsigned short n1=101, unsigned short n2=11,unsigned short n3=11);
-      //______________________
-      //claim a field with n1*n2*n3 grids
+      
       virtual ~XYZ();
 
       virtual void CreateGridWithFixedStepLength(double steplength);
@@ -30,9 +29,7 @@ class GEFICA::XYZ : public GEFICA::XY
       virtual void LoadField(const char *fin=NULL);
 
       virtual double GetData(double tarx,double tary,double tarz,int thing);
-      //_____________________
-      //get item with number: 0:Impurity 1:Potential 2: Ex 3:Ey 4:Ez
-      virtual void SetImpurity(TF3 * Im);
+            virtual void SetImpurity(TF3 * Im);
       
       ClassDef(XYZ,1);
 

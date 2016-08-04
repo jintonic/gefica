@@ -3,7 +3,7 @@
 //XY                 //
 //                   //
 //2D Field based on X//
-//                   //
+//it will create a 2D Field using cartesian coordinate and calculate the result
 ///////////////////////
 #ifndef GEFICA_XY_H
 #define GEFICA_XY_H
@@ -20,8 +20,7 @@ class GEFICA::XY : public GEFICA::X
 
    public:
       XY(unsigned short n1=101, unsigned short n2=101);
-      //_______________
-      //claim a 2D field with n1*n2 Grid
+      
       virtual ~XY();
 
       virtual void CreateGridWithFixedStepLength(double steplength);
@@ -31,9 +30,8 @@ class GEFICA::XY : public GEFICA::X
       virtual void LoadField(const char *fin=NULL);
 
       virtual double GetData(double tarx,double tary,int thing);
-      //__________________________
-      //ask thing with coordinate and item number: 1:Impurity 2:Potential 3:E1 4:E2
-      virtual void SetImpurity(TF2 * Im);
+   
+            virtual void SetImpurity(TF2 * Im);
 
       ClassDef(XY,1);
 

@@ -20,6 +20,7 @@ XY::~XY()
 
 void XY::CreateGridWithFixedStepLength(double steplength)
 {
+  //claim a 2D field with n1*n2 Grid
    X::CreateGridWithFixedStepLength(steplength);
    fE2=new double[n];
    fC2=new double[n];
@@ -73,6 +74,8 @@ int XY::FindIdx(double tarx,double tary ,int ybegin,int yend)
 
 double XY::GetData(double tarx, double tary, int thing)
 {
+  //ask thing with coordinate and item number: 1:Impurity 2:Potential 3:E1 4:E2
+
    int idx=FindIdx(tarx,tary,0,n);
    double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
    double aa=1-ab;

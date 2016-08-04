@@ -12,6 +12,7 @@ XYZ::XYZ(unsigned short n1, unsigned short n2,unsigned short n3):
 
 XYZ::~XYZ()
 {
+  //claim a field with n1*n2*n3 grids
    if (fE3) delete[] fE3;
    if (fC3) delete[] fC3;
    if (fDistanceToUp) delete[] fDistanceToUp;
@@ -40,7 +41,7 @@ void XYZ::CreateGridWithFixedStepLength(double steplength)
 }
 
 void XYZ::RK2(int idx,bool elec)
-{//need update
+{
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*1.6e12;
    double h2=fDistanceToPrevious[idx];
@@ -90,6 +91,8 @@ int XYZ::FindIdx(double tarx, double tary ,double tarz,int begin,int end)
 
 double XYZ::GetData(double tarx, double tary, double tarz,int thing)
 {
+  //get item with number: 0:Impurity 1:Potential 2: Ex 3:Ey 4:Ez
+
    int idx=FindIdx(tarx,tary,tarz,0,n);
    double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
    double aa=1-ab;
