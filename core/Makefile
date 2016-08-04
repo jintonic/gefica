@@ -221,4 +221,7 @@ uninstall:
 	$(RM) -r $(PREFIX)/include/$(LIBNAME)
 	$(RM) -r $(PREFIX)/lib/lib$(LIBNAME).so
 
-.PHONY: all info tags clean install uninstall
+doc:
+	root -l -b -q ../macro/html.C
+
+.PHONY: all info tags clean install uninstall doc
