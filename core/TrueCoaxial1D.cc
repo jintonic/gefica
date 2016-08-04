@@ -1,13 +1,11 @@
-#include "TrueCoaxial1D.h"
-#include "iostream"
-using namespace GEFICA;
+#include <iostream>
 using namespace std;
 
+#include "TrueCoaxial1D.h"
+using namespace GEFICA;
 
 void TrueCoaxial1D::SetVoltage(double anode_voltage, double cathode_voltage)
 {
-   //double stepLength=Thickness/(n-1);
-   //CreateGridWithFixedStepLength(stepLength);
    fIsFixed[0]=true;
    fIsFixed[n-1]=true;
    double slope = (cathode_voltage-anode_voltage)/(n-1);
@@ -15,10 +13,11 @@ void TrueCoaxial1D::SetVoltage(double anode_voltage, double cathode_voltage)
       fPotential[i]=anode_voltage+slope*i;
    }
 }
+
 #include  <cmath>
 bool TrueCoaxial1D::Analyic()
 {
-  double density=fImpurity[1]*1.6e-19;
+   double density=fImpurity[1]*1.6e-19;
    double cnst1=(fPotential[n-1]-fPotential[0]-density*(fC1[n-1]*fC1[n-1]-fC1[0]*fC1[0])/epsilon/4)/(log(fC1[n-1]/fC1[0]));
    double cnst2=fPotential[0]-density*fC1[0]*fC1[0]/epsilon/4-cnst1*log(fC1[0]);
    for (int i=0; i<n; i++) {
@@ -27,11 +26,24 @@ bool TrueCoaxial1D::Analyic()
    }
    return true;
 }
-void TrueCoaxial1D::Create(double r0,double r1)
+
+void TrueCoaxial1D::CreateGridWithFixedStepLength()
 {
-  X::CreateGridWithFixedStepLength((r1-r0)/(n-1));
-  for(int i=0;i<n;i++)
-  {
-    fC1[i]=fC1[i]+r0;
-  }
+   // The step length is calculated with the following equation:
+   // BEGIN_HTML
+   // <pre>
+   //      double stepLength=(OuterRadius-InnerRadius)/(n-1);
+   // </pre>
+   // END_HTML
+   // If the inner radius is not larger than the outer radius,
+   // no grid will be created
+   if (InnerRadius>=OuterRadius) {
+      Warning("CreateGridWithFixedStepLength",
+            "Inner radius (%f) >= outer radius (%f)! No grid is created!",
+            InnerRadius, OuterRadius);
+      return;
+   }
+   double stepLength=(OuterRadius-InnerRadius)/(n-1);
+   X::CreateGridWithFixedStepLength(stepLength);
+   for(int i=0;i<n;i++) fC1[i]=fC1[i]+r0;
 }
