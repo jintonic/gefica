@@ -222,6 +222,8 @@ uninstall:
 	$(RM) -r $(PREFIX)/lib/lib$(LIBNAME).so
 
 doc:
+	$(RM) -r ../doc/html
 	root -l -b -q ../macro/html.C
+	xdg-open ../doc/html/index.html
 
 .PHONY: all info tags clean install uninstall doc
