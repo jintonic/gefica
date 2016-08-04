@@ -8,11 +8,12 @@ using namespace GEFICA;
 
 XYZ::XYZ(unsigned short n1, unsigned short n2,unsigned short n3): 
    XY(n1,n2), n3(n3), fE3(0), fC3(0), fDistanceToUp(0), fDistanceToDown(0)
-{n=n1*n2*n3;}
+{ 
+  //claim a field with n1*n2*n3 gridsn=n1*n2*n3;}
 
 XYZ::~XYZ()
 {
-  //claim a field with n1*n2*n3 grids
+
    if (fE3) delete[] fE3;
    if (fC3) delete[] fC3;
    if (fDistanceToUp) delete[] fDistanceToUp;
