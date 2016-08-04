@@ -66,7 +66,7 @@ class GEFICA::X : public TObject
       double *fE1, *fPotential,*fC1,*fDistanceToNext,*fDistanceToPrevious,*fImpurity;
 
       virtual int FindIdx(double tarx,int begin,int end);
-  public:
+
       virtual bool Analyic();
       //_________________
       // Analyic calculation
