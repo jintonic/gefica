@@ -9,10 +9,16 @@ using namespace std;
 
 #include "X.h"
 using namespace GEFICA;
-
+//______________________________________________________________________________
+// Create grid for 1-D field calculation.
+// begin_macro
+// planar1d.C           
+// end_macro
+ClassImp(X)
 X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),
    fIsFixed(0), fE1(0), fPotential(0), fC1(0), fDistanceToNext(0), fDistanceToPrevious(0), fImpurity(0)
-{ //claim a 1D field with nx grid
+{ 
+  //claim a 1D field with nx grid
   n=nx;n1=nx; }
       
 
@@ -28,7 +34,8 @@ X::~X()
 }
 
 bool X::Analyic()
-{// Analyic calculation
+{
+  // Analyic calculation
    cout<<"no method can use"<<endl;
    return false; 
 }
@@ -85,7 +92,8 @@ void X::SetVoltage(double anode_voltage, double cathode_voltage)
 }
 
 bool X::CalculateField(EMethod method)
-{//do calculate
+{
+  //do calculate
 
    if (method==kAnalytic) return Analyic();
    int cnt=0;
@@ -112,7 +120,8 @@ bool X::CalculateField(EMethod method)
 }
 
 void X::RK2(int idx,bool elec)
-{// 2nd-order Runge-Kutta Successive Over-Relaxation
+{
+  // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return ;
    double density=fImpurity[idx]*1.6e-19;
    double h2=fDistanceToPrevious[idx];
@@ -125,7 +134,8 @@ void X::RK2(int idx,bool elec)
 }
 
 void X::RK4(int idx)
-{ // 4th-order Runge-Kutta Successive Over-Relaxation
+{ 
+  // 4th-order Runge-Kutta Successive Over-Relaxation
   if (fIsFixed[idx])return;
 
    double density=fImpurity[idx]*1.6e-19;
