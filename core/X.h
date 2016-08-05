@@ -7,8 +7,8 @@ class TF1;
 namespace GEFICA { 
    enum EMethod {
       kAnalytic,
-      kRK2,
-      kRK4,
+      kSOR2,
+      kSOR4,
    };
 
    class X;
@@ -40,7 +40,7 @@ class GEFICA::X : public TObject
 
       virtual void CreateGridWithFixedStepLength(double steplength);
       virtual void CreateGridWithFixedStepLength(double LowerBound,double UpperBound);
-      virtual bool CalculateField(EMethod method=kRK2);
+      virtual bool CalculateField(EMethod method=kSOR2);
       virtual void SetVoltage(double anode_voltage, double cathode_voltage);
 
       
@@ -64,8 +64,8 @@ class GEFICA::X : public TObject
       virtual bool Analyic();
       
       
-      virtual void RK2(int idx,bool elec); 
-      virtual void RK4(int idx); 
+      virtual void SOR2(int idx,bool elec); 
+      virtual void SOR4(int idx); 
 };
 
 #endif

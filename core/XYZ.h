@@ -1,8 +1,3 @@
-/////////////////////////
-//
-//XYZ                  //
-//
-//
 #ifndef GEFICA_XYZ_H
 #define GEFICA_XYZ_H
 
@@ -23,7 +18,6 @@ class GEFICA::XYZ : public GEFICA::XY
       virtual ~XYZ();
 
       virtual void CreateGridWithFixedStepLength(double steplength);
-      virtual void RK2(int idx,bool elec); 
 
       virtual void SaveField(const char *fout=NULL);
       virtual void LoadField(const char *fin=NULL);
@@ -38,6 +32,7 @@ class GEFICA::XYZ : public GEFICA::XY
       double *fE3,*fC3,*fDistanceToUp,*fDistanceToDown;//left and right are for y axis
       virtual int FindIdx(double tarx,double tary,
             double tarz,int begin,int end);
+      virtual void SOR2(int idx,bool elec); 
 };
 
 #endif

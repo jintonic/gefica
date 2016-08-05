@@ -6,6 +6,8 @@
 #include "XYZ.h"
 using namespace GEFICA;
 
+ClassImp(XYZ)
+
 XYZ::XYZ(unsigned short n1, unsigned short n2,unsigned short n3): 
    XY(n1,n2), n3(n3), fE3(0), fC3(0), fDistanceToUp(0), fDistanceToDown(0)
 { 
@@ -42,7 +44,7 @@ void XYZ::CreateGridWithFixedStepLength(double steplength)
    }
 }
 
-void XYZ::RK2(int idx,bool elec)
+void XYZ::SOR2(int idx,bool elec)
 {
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*1.6e12;

@@ -102,8 +102,8 @@ bool X::CalculateField(EMethod method)
       double XDownSum=0;
       for (int i=1;i<n-1;i++) {
          double old=fPotential[i];
-         if (method==kRK4) RK4(i);
-         else RK2(i,0);
+         if (method==kSOR4) SOR4(i);
+         else SOR2(i,0);
          if(old>0)XDownSum+=old;
          else XDownSum-=old;
          if(fPotential[i]-old>0)XUpSum+=(fPotential[i]-old);
@@ -112,14 +112,14 @@ bool X::CalculateField(EMethod method)
       //if(cnt%1000==0)
          cout<<cnt<<"  "<<XUpSum/XDownSum<<" down: "<<XDownSum<<", up: "<<XUpSum<<endl;
       if (XUpSum/XDownSum<Precision){
-	for(int idx=0;idx-->n;)RK2(idx,1);
+	for(int idx=0;idx-->n;)SOR2(idx,1);
 	  return true;
       }
    }
    return false;
 }
 
-void X::RK2(int idx,bool elec)
+void X::SOR2(int idx,bool elec)
 {
   // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return ;
@@ -133,7 +133,7 @@ void X::RK2(int idx,bool elec)
    if(elec)fE1[idx]=(fPotential[idx+1]-fPotential[idx-1])/(h2+h3);
 }
 
-void X::RK4(int idx)
+void X::SOR4(int idx)
 { 
   // 4th-order Runge-Kutta Successive Over-Relaxation
   if (fIsFixed[idx])return;
@@ -147,9 +147,9 @@ void X::RK4(int idx)
    xm1=fPotential[idx-1];
    xp1=fPotential[idx+1];
    if(idx>1)xm2=fPotential[idx-2];
-   else {RK2(idx,0);return; } 
+   else {SOR2(idx,0);return; } 
    if(idx<n-2)xp2=fPotential[idx+2];
-   else {RK2(idx,0);return;}
+   else {SOR2(idx,0);return;}
    double tmp=(-1/12*xp2+4/3*xp1+4/3*xm1-1/12*xm2-density/epsilon*h1*h1)*2/5;
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
 
