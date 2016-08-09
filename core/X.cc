@@ -126,7 +126,6 @@ void X::SOR4(int idx)
    double h2=fDistanceToPrevious[idx];
    double h3=fDistanceToNext[idx];
    double h1=h2;
-   double h4=h3;
    double xp2,xm2,xm1,xp1;
    xm1=fPotential[idx-1];
    xp1=fPotential[idx+1];

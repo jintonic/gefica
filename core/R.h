@@ -19,8 +19,8 @@ class GEFICA::R : public X
 
    protected:
 
-      virtual void RK2(int idx,bool elec); // 2nd-order Runge-Kutta Successive Over-Relaxation
-      virtual void RK4(int idx); // 4th-order Runge-Kutta Successive Over-Relaxation
+      virtual void SOR2(int idx,bool elec); // 2nd-order Runge-Kutta Successive Over-Relaxation
+      virtual void SOR4(int idx); // 4th-order Runge-Kutta Successive Over-Relaxation
 };
 
 #endif

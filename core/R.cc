@@ -11,7 +11,7 @@ using namespace std;
 using namespace GEFICA;
 
 
-void R::RK2(int idx,bool elec)
+void R::SOR2(int idx,bool elec)
 {
    if (fIsFixed[idx])return ;
    double density=fImpurity[idx]*1.6e-19;
@@ -25,7 +25,7 @@ void R::RK2(int idx,bool elec)
    if(elec)fE1[idx]=(fPotential[idx+1]-fPotential[idx-1])/(h2+h3);
 }
 
-void R::RK4(int idx)
+void R::SOR4(int idx)
 { 
   if (fIsFixed[idx])return;
 
@@ -33,14 +33,13 @@ void R::RK4(int idx)
    double h2=fDistanceToPrevious[idx];
    double h3=fDistanceToNext[idx];
    double h1=h2;
-   double h4=h3;
    double xp2,xm2,xm1,xp1;
    xm1=fPotential[idx-1];
    xp1=fPotential[idx+1];
    if(idx>1)xm2=fPotential[idx-2];
-   else {RK2(idx,0);return; } 
+   else {SOR2(idx,0);return; } 
    if(idx<n-2)xp2=fPotential[idx+2];
-   else {RK2(idx,0);return;}
+   else {SOR2(idx,0);return;}
    double tmp=(-1/12*xp2+4/3*xp1+4/3*xm1-1/12*xm2-density/epsilon*h1*h1)*2/5;
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
 
