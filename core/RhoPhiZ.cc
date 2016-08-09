@@ -6,30 +6,8 @@
 #include "RhoPhiZ.h"
 using namespace GEFICA;
 using namespace std;
-void RhoPhiZ::CreateGridWithFixedStepLength(double steplength)
-{
-   XY::CreateGridWithFixedStepLength(steplength);
-   fE3=new double[n];
-   fC3=new double[n];
-   fDistanceToUp=new double[n];
-   fDistanceToDown=new double[n];
-   for (int i=0;i<n;i++) {
-      if(i/n1*n2==0)fC3[i]=0;
-      else fC3[i]=fC3[i-n1*n2]+steplength;
-      if((i%(n1*n2))/n1!=0)fC2[i]=fC2[i-n1]+3.14159265*2/(n2-1);
-      else fC2[i]=0;
-      if(i%n1==0)fC1[i]=0;
-      else fC1[i]=fC1[i-1]+steplength;
 
-      fE3[i]=0;
-      fDistanceToLeft[i]=3.14159265*2/(n2-1);
-      fDistanceToRight[i]=3.14159265*2/(n2-1);
-      fDistanceToUp[i]=steplength;
-      fDistanceToDown[i]=steplength;
-   }
-}
-
-void RhoPhiZ::RK2(int idx,bool elec)
+void RhoPhiZ::SOR2(int idx,bool elec)
 {//need update
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*1.6e12;
@@ -66,6 +44,7 @@ void RhoPhiZ::RK2(int idx,bool elec)
 
 double RhoPhiZ::GetData(double tarx, double tary, double tarz,int thing)
 {
+  //0:Impurity 1:Potential 2:E1 3:E2 3:E3
    int idx=FindIdx(tarx,tary,tarz,0,n);
    double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
    double aa=1-ab;

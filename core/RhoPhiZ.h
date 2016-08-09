@@ -12,8 +12,7 @@ class GEFICA::RhoPhiZ : public GEFICA::XYZ
       RhoPhiZ(unsigned short n1, unsigned short n2,unsigned short n3): XYZ(n1,n2,n3) {};
       virtual ~RhoPhiZ(){};
 
-      virtual void CreateGridWithFixedStepLength(double steplength);
-      virtual void RK2(int idx,bool elec); 
+      virtual void SOR2(int idx,bool elec); 
 
       virtual void SaveField(const char *fout=NULL);
       virtual void LoadField(const char *fin=NULL);

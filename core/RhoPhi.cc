@@ -1,8 +1,11 @@
 #include "RhoPhi.h"
 using namespace GEFICA;
+//______________________________________________________________________________
+// Create grid for 1-D field calculation.
+ClassImp(X)
+void RhoPhi::SOR2(int idx,bool elec)
+{
 
-void RhoPhi::RK2(int idx,bool elec)
-{//need update
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*1.6e12;
    double h2=fDistanceToPrevious[idx];
@@ -31,23 +34,9 @@ void RhoPhi::RK2(int idx,bool elec)
      fE2[idx]=(Pyp1-Pym1)/(h1+h4);
    }
 }
-void RhoPhi::CreateGridWithFixedStepLength(double steplength)
-{
-   XY::CreateGridWithFixedStepLength(steplength);
-   for (int i=0;i<n;i++) {
-      if(i>n1-1)fC2[i]=(double)(int)(i/n1)*2*3.1415926/n2;
-      else fC2[i]=0;
-      if(i%n1==0)fC1[i]=0;
-      else fC1[i]=fC1[i-1]+steplength;
-
-      fE2[i]=0;
-      fDistanceToLeft[i]=2*3.1415926/n2;
-      fDistanceToRight[i]=2*3.1415926/n2;
-   }
-}
-
 double RhoPhi::GetData(double tarx, double tary, int thing)
 {
+  //0:Impurity 1:Potential 2:E1 3:E2
    int idx=FindIdx(tarx,tary,0,n);
    double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
    double aa=1-ab;

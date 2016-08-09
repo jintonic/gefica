@@ -7,11 +7,16 @@ namespace GEFICA { class PointContactXY; }
 
 class GEFICA::PointContactXY : public GEFICA::XY
 {
+  public:
+    double cathode_voltage,annode_voltage;
+    double XUpperBound,XLowerBound,YUpperBound,YLowerBound,PointBegin,PointEnd;//bounds for X and Y and point start and end
    public :
-      PointContactXY(int ix,int iy) : XY(ix,iy) {};
-      void SetVoltage(double voltage,double topbegin,double topend); 
+     PointContactXY(int ix,int iy) : XY(ix,iy), YUpperBound(10),YLowerBound(1),XUpperBound(10),XLowerBound(1),cathode_voltage(2000),annode_voltage(0) {};
 
-      ClassDef(PointContactXY,1);
+     void initialize();
+     bool CalculateField(EMethod method=kRK2);
+
+     ClassDef(PointContactXY,1);
 };
 
 #endif

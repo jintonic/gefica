@@ -18,8 +18,18 @@ ClassImp(X)
 X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),
    fIsFixed(0), fE1(0), fPotential(0), fC1(0), fDistanceToNext(0), fDistanceToPrevious(0), fImpurity(0)
 { 
-  //claim a 1D field with nx grid
-  n=nx;n1=nx; }
+  //claim a 1D field with nx grisd
+   n=nx;
+   n1=nx; 
+   if (n<10) { n=11; n1=11; }
+   fE1=new double[n];
+   fC1=new double[n];
+   fPotential=new double[n];
+   fIsFixed=new bool[n];
+   fDistanceToNext=new double[n];
+   fDistanceToPrevious=new double[n];
+   fImpurity=new double[n];
+}
       
 
 X::~X()
@@ -40,16 +50,9 @@ bool X::Analyic()
    return false; 
 }
 
-void X::CreateGridWithFixedStepLength(double steplength)
+void X::SetStepLength(double steplength)
 {
-   if (n<10) { n=11; n1=11; }
-   fE1=new double[n];
-   fC1=new double[n];
-   fPotential=new double[n];
-   fIsFixed=new bool[n];
-   fDistanceToNext=new double[n];
-   fDistanceToPrevious=new double[n];
-   fImpurity=new double[n];
+//set field step length
    for (int i=n;i-->0;) {
       fIsFixed[i]=false;
       fE1[i]=0;
@@ -60,26 +63,7 @@ void X::CreateGridWithFixedStepLength(double steplength)
       fImpurity[i]=0;
    }
 }
-void X::CreateGridWithFixedStepLength(double LowerBound,double UpperBound)
-{
-   // The step length is calculated with the following equation:
-   // BEGIN_HTML
-   // <pre>
-   //      double stepLength=(UpperBound-LowerBound)/(n-1);
-   // </pre>
-   // END_HTML
-   // If the inner radius is not larger than the outer radius,
-   // no grid will be created
-   if (LowerBound>=UpperBound) {
-      Warning("CreateGridWithFixedStepLength",
-            "Lower bound (%f) >= upper bound (%f)! No grid is created!",
-            LowerBound, UpperBound);
-      return;
-   }
-   double stepLength=(UpperBound-LowerBound)/(n-1);
-   CreateGridWithFixedStepLength(stepLength);
-   for(int i=0;i<n;i++) fC1[i]=fC1[i]+LowerBound;
-}
+
 
 void X::SetVoltage(double anode_voltage, double cathode_voltage)
 {
@@ -102,17 +86,17 @@ bool X::CalculateField(EMethod method)
       double XDownSum=0;
       for (int i=1;i<n-1;i++) {
          double old=fPotential[i];
-         if (method==kSOR4) SOR4(i);
+         if (method==kRK4) SOR4(i);
          else SOR2(i,0);
          if(old>0)XDownSum+=old;
          else XDownSum-=old;
          if(fPotential[i]-old>0)XUpSum+=(fPotential[i]-old);
          else XUpSum+=-(fPotential[i]-old);
       }
-      //if(cnt%1000==0)
+      if(cnt%1000==0)
          cout<<cnt<<"  "<<XUpSum/XDownSum<<" down: "<<XDownSum<<", up: "<<XUpSum<<endl;
       if (XUpSum/XDownSum<Precision){
-	for(int idx=0;idx-->n;)SOR2(idx,1);
+
 	  return true;
       }
    }
@@ -158,6 +142,7 @@ void X::SOR4(int idx)
 
 int X::FindIdx(double tarx,int begin,int end)
 {
+  //search using binary search
    if (begin>=end)return begin;
    int mid=(begin+end)/2;
    if(fC1[mid]>=tarx)return FindIdx(tarx,begin,mid);
@@ -165,7 +150,8 @@ int X::FindIdx(double tarx,int begin,int end)
 }
 
 double X::GetData(double tarx,int thing)
-{// ask thingwith number: 1:Ex 2:f 0:Impurty
+{
+  // ask thingwith number: 1:Ex 2:f 0:Impurty
    int idx=FindIdx(tarx,0,n-1);
    if (idx==n)
    {
@@ -267,6 +253,7 @@ void X::LoadField(const char * fin)
    }
    file->Close();
    delete file;
+   for(int idx=0;idx-->n;)SOR2(idx,1);
 }
 
 void X::SetImpurity(double density)

@@ -11,11 +11,10 @@ class GEFICA::RThetaPhi : public GEFICA::XYZ
 
    public:
       RThetaPhi(unsigned short n_r=0, unsigned short n_theta=0,unsigned short n_phi=0): 
-         XYZ(n_r, n_theta, n_phi) {}
+         XYZ(n_r, n_theta, n_phi*2) {}
       virtual ~RThetaPhi() {};
 
-      virtual void CreateGridWithFixedStepLength(double steplength);
-      virtual void RK2(int idx,bool elec); 
+      virtual void SOR2(int idx,bool elec); 
 
       virtual void SaveField(const char *fout=NULL);
       virtual void LoadField(const char *fin=NULL);

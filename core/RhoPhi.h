@@ -11,10 +11,9 @@ class GEFICA::RhoPhi : public GEFICA::XY
       RhoPhi(unsigned short r=101, unsigned short phi=101): XY(r,phi) {} 
       virtual ~RhoPhi() {};
 
-      virtual void CreateGridWithFixedStepLength(double steplength); 
 
       virtual double GetData(double tarx,double tary,int thing);
-      void RK2(int idx,bool elec);
+      void SOR2(int idx,bool elec);
 
       ClassDef(RhoPhi,1);
 };

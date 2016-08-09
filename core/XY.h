@@ -23,8 +23,8 @@ class GEFICA::XY : public GEFICA::X
       
       virtual ~XY();
 
-      virtual void CreateGridWithFixedStepLength(double steplength);
-      virtual void RK2(int idx,bool elec); 
+      virtual void SetStepLength(double steplength1,double steplength2);
+      virtual void SOR2(int idx,bool elec); 
 
       virtual void SaveField(const char *fout=NULL);
       virtual void LoadField(const char *fin=NULL);
@@ -32,6 +32,7 @@ class GEFICA::XY : public GEFICA::X
       virtual double GetData(double tarx,double tary,int thing);
    
             virtual void SetImpurity(TF2 * Im);
+            virtual void SetImpurity(double density);
 
       ClassDef(XY,1);
 

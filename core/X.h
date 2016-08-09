@@ -7,8 +7,8 @@ class TF1;
 namespace GEFICA { 
    enum EMethod {
       kAnalytic,
-      kSOR2,
-      kSOR4,
+      kRK2,
+      kRK4,
    };
 
    class X;
@@ -19,11 +19,7 @@ namespace GEFICA {
    static const double cm3=cm*cm*cm;
 }
 
-//______________________________________________________________________________
-// Create grid for 1-D field calculation.
-// begin_macro
-// planar1d.C           
-// end_macro
+
 class GEFICA::X : public TObject 
 {
    public:
@@ -38,9 +34,9 @@ class GEFICA::X : public TObject
 
       virtual ~X();
 
-      virtual void CreateGridWithFixedStepLength(double steplength);
-      virtual void CreateGridWithFixedStepLength(double LowerBound,double UpperBound);
-      virtual bool CalculateField(EMethod method=kSOR2);
+      virtual void SetStepLength(double steplength);
+
+      virtual bool CalculateField(EMethod method=kRK2);
       virtual void SetVoltage(double anode_voltage, double cathode_voltage);
 
       

@@ -5,10 +5,18 @@
 
 #include "XY.h"
 using namespace GEFICA;
-
+//______________________________________________________________________________
+// Create grid for 2-D field calculation.
+ClassImp(XY)
 XY::XY(unsigned short n1, unsigned short n2): X(n1), n2(n2),
    fE2(0), fC2(0), fDistanceToLeft(0), fDistanceToRight(0)
-{n=n1*n2;}
+{
+  //claim a 2D field with n1*n2 Grid
+   n=n1*n2; 
+   fE2=new double[n];
+   fC2=new double[n];
+   fDistanceToLeft=new double[n];
+   fDistanceToRight=new double[n];}
 
 XY::~XY()
 {
@@ -18,27 +26,23 @@ XY::~XY()
    if (fDistanceToRight) delete[] fDistanceToRight;
 }
 
-void XY::CreateGridWithFixedStepLength(double steplength)
+void XY::SetStepLength(double steplength1,double steplength2)
 {
-  //claim a 2D field with n1*n2 Grid
-   X::CreateGridWithFixedStepLength(steplength);
-   fE2=new double[n];
-   fC2=new double[n];
-   fDistanceToLeft=new double[n];
-   fDistanceToRight=new double[n];
+//set field step length
+   X::SetStepLength(steplength1);
    for (int i=0;i<n;i++) {
-      if(i>n1-1)fC2[i]=fC2[i-n1]+steplength;
+      if(i>n1-1)fC2[i]=fC2[i-n1]+steplength2;
       else fC2[i]=0;
       if(i%n1==0)fC1[i]=0;
-      else fC1[i]=fC1[i-1]+steplength;
+      else fC1[i]=fC1[i-1]+steplength1;
 
       fE2[i]=0;
-      fDistanceToLeft[i]=steplength;
-      fDistanceToRight[i]=steplength;
+      fDistanceToLeft[i]=steplength2;
+      fDistanceToRight[i]=steplength2;
    }
 }
 
-void XY::RK2(int idx,bool elec)
+void XY::SOR2(int idx,bool elec)
 {//need update
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*1.6e12;
@@ -66,6 +70,7 @@ void XY::RK2(int idx,bool elec)
 
 int XY::FindIdx(double tarx,double tary ,int ybegin,int yend)
 {
+  //search using binary search
    if(ybegin>=yend)return X::FindIdx(tarx,ybegin,ybegin+n1-1);
    int mid=((ybegin/n1+yend/n1)/2)*n1;
    if(fC2[mid]>=tary)return FindIdx(tarx,tary,ybegin,mid);
@@ -149,4 +154,8 @@ void XY::SetImpurity(TF2 * Im)
    for(int i=n;i-->0;) {
       fImpurity[i]=Im->Eval((double)fC1[i],(double)fC2[i]);
    }
+}
+void XY::SetImpurity(double density)
+{
+   for(int i=n;i-->0;) fImpurity[i]=density;
 }
