@@ -157,8 +157,8 @@ double X::GetData(double tarx,int thing)
       switch (thing)
       {
          case 0:return fImpurity[idx];
-         case 1:return fE1[idx];
-         case 2:return fPotential[idx];
+         case 2:return fE1[idx];
+         case 1:return fPotential[idx];
       }
    }
    double ab=(tarx-fC1[idx])/fDistanceToNext[idx];

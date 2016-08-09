@@ -14,17 +14,10 @@ class GEFICA::RhoPhiZ : public GEFICA::XYZ
 
       virtual void SOR2(int idx,bool elec); 
 
-      virtual void SaveField(const char *fout=NULL);
-      virtual void LoadField(const char *fin=NULL);
-
       virtual double GetData(double tarx,double tary,double tarz,int thing);
-      virtual void SetImpurity(TF3 * Im);
 
       ClassDef(RhoPhiZ,1);
 
-   protected:
-      virtual int FindIdx(double tarx,double tary,
-            double tarz,int begin,int end);
 };
 
 #endif

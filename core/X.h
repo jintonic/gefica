@@ -46,7 +46,9 @@ class GEFICA::X : public TObject
       virtual void SetImpurity(TF1 * Im);
 
       virtual double GetData(double tarx,int thing); 
-      
+      virtual double GetE1(double tarx){return GetData(tarx,2);}; 
+      virtual double GetImpurity(double tarx){return GetData(tarx,0);}; 
+      virtual double GetPotential(double tarx){return GetData(tarx,1);}; 
       
 
       ClassDef(X,1);
