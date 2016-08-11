@@ -46,6 +46,6 @@ bool Sphere1D::Analyic()
 }
 bool Sphere1D::CalculateField(EMethod method)
 {
-  initialize();
+  if(!floaded)initialize();
   return R::CalculateField(method);
 }

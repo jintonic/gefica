@@ -15,7 +15,7 @@ class GEFICA::TrueCoaxial1D : public GEFICA::Rho
    public :
       TrueCoaxial1D(int nx=101) : Rho(nx),OuterRadius(10),InnerRadius(0), cathode_voltage(2000),annode_voltage(0) {};
       void initialize();
-      bool CalculateField(EMethod method=kRK2);
+      bool CalculateField(EMethod method=kSOR2);
       ClassDef(TrueCoaxial1D, 1);
 
    protected:

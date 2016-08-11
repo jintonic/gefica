@@ -33,6 +33,6 @@ void Sphere::initialize()
 }
 bool Sphere::CalculateField(EMethod method)
 {
-  initialize();
+  if(!floaded)initialize();
   return RThetaPhi::CalculateField(method);
 }

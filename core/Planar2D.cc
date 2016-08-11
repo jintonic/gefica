@@ -31,6 +31,6 @@ void Planar2D::initialize()
 }
 bool Planar2D::CalculateField(EMethod method)
 {
-  initialize();
+  if(!floaded)initialize();
   return XY::CalculateField(method);
 }

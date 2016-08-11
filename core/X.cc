@@ -21,6 +21,7 @@ X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),
   //claim a 1D field with nx grisd
    n=nx;
    n1=nx; 
+   floaded=false;
    if (n<10) { n=11; n1=11; }
    fE1=new double[n];
    fC1=new double[n];
@@ -79,6 +80,8 @@ bool X::CalculateField(EMethod method)
 {
   //do calculate
 
+  floaded=true;
+
    if (method==kAnalytic) return Analyic();
    int cnt=0;
    while (cnt++<MaxIterations) {
@@ -86,7 +89,7 @@ bool X::CalculateField(EMethod method)
       double XDownSum=0;
       for (int i=1;i<n-1;i++) {
          double old=fPotential[i];
-         if (method==kRK4) SOR4(i);
+         if (method==kSOR4) SOR4(i);
          else SOR2(i,0);
          if(old>0)XDownSum+=old;
          else XDownSum-=old;
@@ -210,6 +213,7 @@ void X::SaveField(const char * fout)
 }
 void X::LoadField(const char * fin)
 {
+  floaded=true;
    TFile *file=new TFile(fin);
    TVectorD *v1=(TVectorD*)file->Get("v");
    double * v=v1->GetMatrixArray();

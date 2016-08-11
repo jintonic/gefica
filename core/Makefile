@@ -69,7 +69,7 @@ ROOTIFIED_OBJECT := $(ROOTIFIED_SOURCE:.cc=.o)
 LINKDEF = LinkDef.h
 
 SOURCES = $(filter-out $(ROOTIFIED_SOURCE), $(wildcard *.cc))
-HEADERS = $(filter-out $(ROOTIFIED_SOURCE) $(LINKDEF), $(wildcard *.h))
+HEADERS = $(filter-out $(ROOTIFIED_HEADER) $(LINKDEF), $(wildcard *.h))
 OBJECTS = $(SOURCES:.cc=.o)
 DEPFILE = $(SOURCES:.cc=.d)
 

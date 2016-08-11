@@ -41,6 +41,6 @@ bool Planar1D::Analyic()
 }
 bool Planar1D::CalculateField(EMethod method)
 {
-  initialize();
+  if(!floaded)initialize();
   return X::CalculateField(method);
 }

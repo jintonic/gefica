@@ -17,7 +17,7 @@ class GEFICA::Planar1D : public GEFICA::X
       
       void initialize(); 
       bool Analyic();
-      bool CalculateField(EMethod method=kRK2);
+      bool CalculateField(EMethod method=kSOR2);
       ClassDef(Planar1D, 1);
 };
 

@@ -23,17 +23,15 @@ class GEFICA::XY : public GEFICA::X
       
       virtual ~XY();
 
-      virtual void SetStepLength(double steplength1,double steplength2);
       virtual void SOR2(int idx,bool elec); 
 
       virtual void SaveField(const char *fout=NULL);
       virtual void LoadField(const char *fin=NULL);
 
-      virtual double GetData(double tarx,double tary,int thing);
-      virtual double GetPotential(double tarx,double tary){return GetData(tarx,tary,1);};
-      virtual double GetE1(double tarx,double tary){return GetData(tarx,tary,2);};
-      virtual double GetE2(double tarx,double tary){return GetData(tarx,tary,3);};
-      virtual double GetImpurity(double tarx,double tary){return GetData(tarx,tary,0);};
+      virtual double GetPotential(double x,double y){return GetData(x,y,1);};
+      virtual double GetE1(double x,double y){return GetData(x,y,2);};
+      virtual double GetE2(double x,double y){return GetData(x,y,3);};
+      virtual double GetImpurity(double x,double y){return GetData(x,y,0);};
 
    
       virtual void SetImpurity(TF2 * Im);
@@ -46,6 +44,9 @@ class GEFICA::XY : public GEFICA::X
       double *fE2,*fC2,*fDistanceToLeft,*fDistanceToRight;//left and right are for y axis
       virtual int FindIdx(double tarx,double tary
             ,int ybegin,int yend);
-};
 
+
+      double GetData(double tarx,double tary,int thing);
+      virtual void SetStepLength(double steplength1,double steplength2);
+};
 #endif

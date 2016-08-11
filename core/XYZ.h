@@ -17,23 +17,23 @@ class GEFICA::XYZ : public GEFICA::XY
       
       virtual ~XYZ();
 
-      virtual void SetStepLength(double steplength1,double steplength2,double steplength3);
 
       virtual void SaveField(const char *fout=NULL);
       virtual void LoadField(const char *fin=NULL);
 
-      virtual double GetData(double tarx,double tary,double tarz,int thing);
             virtual void SetImpurity(TF3 * Im);
       
-      virtual double GetPotential(double tarx,double tary,double tarz){return GetData(tarx,tary,tarz,1);};
-      virtual double GetE1(double tarx,double tary,double tarz){return GetData(tarx,tary,tarz,2);};
-      virtual double GetE2(double tarx,double tary,double tarz){return GetData(tarx,tary,tarz,3);};
-      virtual double GetE3(double tarx,double tary,double tarz){return GetData(tarx,tary,tarz,4);};
-      virtual double GetImpurity(double tarx,double tary,double tarz){return GetData(tarx,tary,tarz,0);};
+      virtual double GetPotential(double x,double y,double z){return GetData(x,y,z,1);};
+      virtual double GetE1(double x,double y,double z){return GetData(x,y,z,2);};
+      virtual double GetE2(double x,double y,double z){return GetData(x,y,z,3);};
+      virtual double GetE3(double x,double y,double z){return GetData(x,y,z,4);};
+      virtual double GetImpurity(double x,double y,double z){return GetData(x,y,z,0);};
       ClassDef(XYZ,1);
 
    protected:
 
+      virtual double GetData(double tarx,double tary,double tarz,int thing);
+      virtual void SetStepLength(double steplength1,double steplength2,double steplength3);
       double *fE3,*fC3,*fDistanceToUp,*fDistanceToDown;//left and right are for y axis
       virtual int FindIdx(double tarx,double tary,
             double tarz,int begin,int end);

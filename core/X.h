@@ -7,8 +7,8 @@ class TF1;
 namespace GEFICA { 
    enum EMethod {
       kAnalytic,
-      kRK2,
-      kRK4,
+      kSOR2,
+      kSOR4,
    };
 
    class X;
@@ -27,7 +27,7 @@ class GEFICA::X : public TObject
       int MaxIterations; // Iteration cuts
       int n; // n = n1*n2*n3
       double Csor; // boost Iteration speed
-      double Precision;
+      double Precision; // X limit
 
    public:
       X(int nx=101);
@@ -36,8 +36,7 @@ class GEFICA::X : public TObject
 
       virtual void SetStepLength(double steplength);
 
-      virtual bool CalculateField(EMethod method=kRK2);
-      virtual void SetVoltage(double anode_voltage, double cathode_voltage);
+      virtual bool CalculateField(EMethod method=kSOR2);
 
       
       virtual void SaveField(const char *fout=NULL);
@@ -45,23 +44,22 @@ class GEFICA::X : public TObject
       virtual void SetImpurity(double density);
       virtual void SetImpurity(TF1 * Im);
 
-      virtual double GetData(double tarx,int thing); 
-      virtual double GetE1(double tarx){return GetData(tarx,2);}; 
-      virtual double GetImpurity(double tarx){return GetData(tarx,0);}; 
-      virtual double GetPotential(double tarx){return GetData(tarx,1);}; 
-      
+      virtual double GetE1(double x){return GetData(x,2);}; 
+      virtual double GetImpurity(double x){return GetData(x,0);}; 
+      virtual double GetPotential(double x){return GetData(x,1);}; 
 
       ClassDef(X,1);
 
    protected:
-      bool * fIsFixed;
+      bool * fIsFixed,floaded;
       double *fE1, *fPotential,*fC1,*fDistanceToNext,*fDistanceToPrevious,*fImpurity;
 
       virtual int FindIdx(double tarx,int begin,int end);
 
       virtual bool Analyic();
       
-      
+      virtual double GetData(double tarx,int thing); 
+      virtual void SetVoltage(double anode_voltage, double cathode_voltage);
       virtual void SOR2(int idx,bool elec); 
       virtual void SOR4(int idx); 
 };

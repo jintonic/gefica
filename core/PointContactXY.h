@@ -14,7 +14,7 @@ class GEFICA::PointContactXY : public GEFICA::XY
      PointContactXY(int ix,int iy) : XY(ix,iy),cathode_voltage(2000),annode_voltage(0), XUpperBound(10),XLowerBound(1),YUpperBound(10),YLowerBound(1) {};
 
      void initialize();
-     bool CalculateField(EMethod method=kRK2);
+     bool CalculateField(EMethod method=kSOR2);
 
      ClassDef(PointContactXY,1);
 };
