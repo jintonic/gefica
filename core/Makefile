@@ -159,7 +159,6 @@ $(ROOTIFIED_SOURCE): $(HEADERS) $(LINKDEF)
 	@echo "* Rootifying files:" 
 	@rm -f $(ROOTIFIED_SOURCE) $(ROOTIFIED_HEADER) 
 	$(ROOTCINT) -f $(ROOTIFIED_SOURCE) -c -p $(CXXFLAGS) $(HEADERS) $(LINKDEF)
-	#@rootcint -v -f GEFICA.cc -c -p -Wall -fPIC -I/include -pthread -Wno-deprecated-declarations -m64 -I/home/rdlab/Downloads/root/include  TrueCoaxial.h Detector.h Field.h Planar.h Planar1D.h LinkDef.h
 	@echo 
 	@echo "* Creating object files:" 
 
