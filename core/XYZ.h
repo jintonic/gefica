@@ -25,6 +25,11 @@ class GEFICA::XYZ : public GEFICA::XY
       virtual double GetData(double tarx,double tary,double tarz,int thing);
             virtual void SetImpurity(TF3 * Im);
       
+      virtual double GetPotential(double tarx,double tary,double tarz){return GetData(tarx,tary,tarz,1);};
+      virtual double GetE1(double tarx,double tary,double tarz){return GetData(tarx,tary,tarz,2);};
+      virtual double GetE2(double tarx,double tary,double tarz){return GetData(tarx,tary,tarz,3);};
+      virtual double GetE3(double tarx,double tary,double tarz){return GetData(tarx,tary,tarz,4);};
+      virtual double GetImpurity(double tarx,double tary,double tarz){return GetData(tarx,tary,tarz,0);};
       ClassDef(XYZ,1);
 
    protected:

@@ -30,9 +30,14 @@ class GEFICA::XY : public GEFICA::X
       virtual void LoadField(const char *fin=NULL);
 
       virtual double GetData(double tarx,double tary,int thing);
+      virtual double GetPotential(double tarx,double tary){return GetData(tarx,tary,1);};
+      virtual double GetE1(double tarx,double tary){return GetData(tarx,tary,2);};
+      virtual double GetE2(double tarx,double tary){return GetData(tarx,tary,3);};
+      virtual double GetImpurity(double tarx,double tary){return GetData(tarx,tary,0);};
+
    
-            virtual void SetImpurity(TF2 * Im);
-            virtual void SetImpurity(double density);
+      virtual void SetImpurity(TF2 * Im);
+      virtual void SetImpurity(double density);
 
       ClassDef(XY,1);
 

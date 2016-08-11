@@ -7,7 +7,6 @@ namespace GEFICA { class RThetaPhi; }
 
 class GEFICA::RThetaPhi : public GEFICA::XYZ
 {
-   public:
 
    public:
       RThetaPhi(unsigned short n_r=0, unsigned short n_theta=0,unsigned short n_phi=0): 

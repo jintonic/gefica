@@ -3,7 +3,33 @@ using namespace std;
 
 #include "TrueCoaxial1D.h"
 using namespace GEFICA;
-
+//____________________________________________________
+//a Planar detector under 1D coordinate system with analyic
+ClassImp(TrueCoaxial1D)
+void TrueCoaxial1D::initialize()
+{
+   // The step length is calculated with the following equation:
+   // BEGIN_HTML
+   // <pre>
+   //      double stepLength=(OuterRadius-InnerRadius)/(n-1);
+   // </pre>
+   // END_HTML
+   // If the inner radius is not larger than the outer radius,
+   // no grid will be created
+   if (InnerRadius>=OuterRadius) {
+      Warning("CreateGridWithFixedStepLength",
+            "Lower bound (%f) >= upper bound (%f)! No grid is created!",
+            InnerRadius, OuterRadius);
+      return;
+   }
+   double steplength=(OuterRadius-InnerRadius)/(n-1);
+   SetStepLength(steplength);
+   for(int i=n;i-->0;)fC1[i]=fC1[i]+InnerRadius;
+   fIsFixed[0]=true;
+   fIsFixed[n-1]=true;
+   double slope = (cathode_voltage-annode_voltage)/(n-1);
+   for (int i=0; i<n; i++) fPotential[i]=annode_voltage+slope*i;
+}
 
 #include  <cmath>
 bool TrueCoaxial1D::Analyic()
@@ -18,4 +44,8 @@ bool TrueCoaxial1D::Analyic()
    return true;
 }
 
-
+bool TrueCoaxial1D::CalculateField(EMethod method)
+{
+  initialize();
+  return Rho::CalculateField(method);
+}

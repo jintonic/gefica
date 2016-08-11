@@ -12,7 +12,7 @@ class GEFICA::Planar2D : public GEFICA::XY
 
       double cathode_voltage,annode_voltage;
    public :
-      Planar2D(int ix,int iy) : XY(ix,iy) {};
+      Planar2D(int ix,int iy) : XY(ix,iy),XUpperBound(10),XLowerBound(0),YUpperBound(10),YLowerBound(0), cathode_voltage(2000),annode_voltage(0){};
       void initialize();
       bool CalculateField(EMethod method=kRK2);
 
