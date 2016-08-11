@@ -120,27 +120,6 @@ void X::SOR2(int idx,bool elec)
    if(elec)fE1[idx]=(fPotential[idx+1]-fPotential[idx-1])/(h2+h3);
 }
 
-void X::SOR4(int idx)
-{ 
-  // 4th-order Runge-Kutta Successive Over-Relaxation
-  if (fIsFixed[idx])return;
-
-   double density=fImpurity[idx]*1.6e-19;
-   double h2=fDistanceToPrevious[idx];
-   double h3=fDistanceToNext[idx];
-   double h1=h2;
-   double xp2,xm2,xm1,xp1;
-   xm1=fPotential[idx-1];
-   xp1=fPotential[idx+1];
-   if(idx>1)xm2=fPotential[idx-2];
-   else {SOR2(idx,0);return; } 
-   if(idx<n-2)xp2=fPotential[idx+2];
-   else {SOR2(idx,0);return;}
-   double tmp=(-1/12*xp2+4/3*xp1+4/3*xm1-1/12*xm2-density/epsilon*h1*h1)*2/5;
-   fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
-
-   fE1[idx]=(fPotential[idx+1]-fPotential[idx-1])/(h2+h3);
-}
 
 int X::FindIdx(double tarx,int begin,int end)
 {

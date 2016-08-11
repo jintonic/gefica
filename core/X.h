@@ -23,9 +23,9 @@ namespace GEFICA {
 class GEFICA::X : public TObject 
 {
    public:
-      int n1; // number of steps along the 1st axis
-      int MaxIterations; // Iteration cuts
-      int n; // n = n1*n2*n3
+      int n1; // number of grid along the 1st axis
+      int MaxIterations; // max one turn Iteration number
+      int n; // n = n1 total number of grid
       double Csor; // boost Iteration speed
       double Precision; // X limit
 
@@ -34,13 +34,11 @@ class GEFICA::X : public TObject
 
       virtual ~X();
 
-      virtual void SetStepLength(double steplength);
 
       virtual bool CalculateField(EMethod method=kSOR2);
-
       
-      virtual void SaveField(const char *fout=NULL);
-      virtual void LoadField(const char *fin=NULL);
+      virtual void SaveField(const char *fout);
+      virtual void LoadField(const char *fin);
       virtual void SetImpurity(double density);
       virtual void SetImpurity(TF1 * Im);
 
@@ -51,17 +49,22 @@ class GEFICA::X : public TObject
       ClassDef(X,1);
 
    protected:
-      bool * fIsFixed,floaded;
-      double *fE1, *fPotential,*fC1,*fDistanceToNext,*fDistanceToPrevious,*fImpurity;
+      bool * fIsFixed; // will this grid calculate
+      bool fLoaded; // is this grid calculated before
+      double *fE1; // Electric field under first direction 
+      double  *fPotential; // Potential in this grid
+      double *fC1; // the location under first direction
+      double *fDistanceToNext,*fDistanceToPrevious,*fImpurity;
 
+      virtual void SetStepLength(double steplength);
       virtual int FindIdx(double tarx,int begin,int end);
 
       virtual bool Analyic();
       
       virtual double GetData(double tarx,int thing); 
       virtual void SetVoltage(double anode_voltage, double cathode_voltage);
-      virtual void SOR2(int idx,bool elec); 
-      virtual void SOR4(int idx); 
+      virtual void SOR2(int idx,bool calculateElectricField); 
+      
 };
 
 #endif

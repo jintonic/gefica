@@ -23,7 +23,6 @@ class GEFICA::XY : public GEFICA::X
       
       virtual ~XY();
 
-      virtual void SOR2(int idx,bool elec); 
 
       virtual void SaveField(const char *fout=NULL);
       virtual void LoadField(const char *fin=NULL);
@@ -41,6 +40,7 @@ class GEFICA::XY : public GEFICA::X
 
    protected:
 
+      virtual void SOR2(int idx,bool elec); 
       double *fE2,*fC2,*fDistanceToLeft,*fDistanceToRight;//left and right are for y axis
       virtual int FindIdx(double tarx,double tary
             ,int ybegin,int yend);
