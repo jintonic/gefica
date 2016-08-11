@@ -11,6 +11,7 @@ using namespace std;
 using namespace GEFICA;
 //______________________________________________________________________________
 // Create grid for 1-D field calculation.
+// it is using success Over-Relaxation to calculate the grid. it will have some error compare with actual data but should be close. For 1D field it also have analist method to compare
 // begin_macro
 // planar1d.C           
 // end_macro
