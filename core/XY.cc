@@ -43,7 +43,9 @@ void XY::SetStepLength(double steplength1,double steplength2)
 }
 
 void XY::SOR2(int idx,bool elec)
-{//need update
+{
+  
+  // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*1.6e12;
    double h2=fDistanceToPrevious[idx];
@@ -126,6 +128,7 @@ void XY::SaveField(const char * fout)
 }
 void XY::LoadField(const char * fin)
 {
+  //will calculate electric field after load
    X::LoadField(fin);
    TFile *file=new TFile(fin);
    TVectorD *v1=(TVectorD*)file->Get("v");

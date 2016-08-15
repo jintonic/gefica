@@ -62,7 +62,6 @@ class GEFICA::X : public TObject
       virtual bool Analyic();
       
       virtual double GetData(double tarx,int thing); 
-      virtual void SetVoltage(double anode_voltage, double cathode_voltage);
       virtual void SOR2(int idx,bool calculateElectricField); 
       
 };

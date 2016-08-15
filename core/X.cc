@@ -67,16 +67,6 @@ void X::SetStepLength(double steplength)
 }
 
 
-void X::SetVoltage(double anode_voltage, double cathode_voltage)
-{
-   fIsFixed[0]=true;
-   fIsFixed[n-1]=true;
-   double slope = (cathode_voltage-anode_voltage)/(n-1);
-   for (int i=0; i<n; i++) {
-      fPotential[i]=anode_voltage+slope*i;
-   }
-}
-
 bool X::CalculateField(EMethod method)
 {
   //do calculate
@@ -133,7 +123,7 @@ int X::FindIdx(double tarx,int begin,int end)
 
 double X::GetData(double tarx,int thing)
 {
-  // ask thingwith number: 1:Ex 2:f 0:Impurty
+  // ask thingwith number: 1:Potential 2:E1 0:Impurty
    int idx=FindIdx(tarx,0,n-1);
    if (idx==n)
    {
@@ -193,6 +183,7 @@ void X::SaveField(const char * fout)
 }
 void X::LoadField(const char * fin)
 {
+  //will calculate electric field after load
   floaded=true;
    TFile *file=new TFile(fin);
    TVectorD *v1=(TVectorD*)file->Get("v");
