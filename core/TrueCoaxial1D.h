@@ -19,7 +19,7 @@ class GEFICA::TrueCoaxial1D : public GEFICA::Rho
       ClassDef(TrueCoaxial1D, 1);
 
    protected:
-      bool Analyic();
+      bool Analytic();
 };
 
 #endif

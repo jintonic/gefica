@@ -32,7 +32,7 @@ void TrueCoaxial1D::initialize()
 }
 
 #include  <cmath>
-bool TrueCoaxial1D::Analyic()
+bool TrueCoaxial1D::Analytic()
 {
    double density=fImpurity[1]*1.6e-19;
    double cnst1=(fPotential[n-1]-fPotential[0]-density*(fC1[n-1]*fC1[n-1]-fC1[0]*fC1[0])/epsilon/4)/(log(fC1[n-1]/fC1[0]));

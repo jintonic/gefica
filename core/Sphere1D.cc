@@ -31,7 +31,7 @@ void Sphere1D::initialize()
    for (int i=0; i<n; i++) fPotential[i]=annode_voltage+slope*i;
 }
 #include  <cmath>
-bool Sphere1D::Analyic()
+bool Sphere1D::Analytic()
 {
    double density=fImpurity[1]*1.6e-19;
    double cnst1=(fPotential[n-1]-fPotential[0]+density/epsilon/6*(fC1[n-1]*fC1[n-1]-fC1[0]*fC1[0]))/(pow(fC1[n-1],-1)-pow(fC1[0],-1));

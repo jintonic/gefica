@@ -28,7 +28,7 @@ void Planar1D::initialize()
    for (int i=0; i<n; i++) fPotential[i]=annode_voltage+slope*i;
 }
 
-bool Planar1D::Analyic()
+bool Planar1D::Analytic()
 {
   double Thickness=UpperBound-LowerBound;
    double cnst1=fPotential[0];

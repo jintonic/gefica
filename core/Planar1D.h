@@ -16,7 +16,7 @@ class GEFICA::Planar1D : public GEFICA::X
 	UpperBound(10),LowerBound(1),cathode_voltage(2000),annode_voltage(0) {};
       
       void initialize(); 
-      bool Analyic();
+      bool Analytic();
       bool CalculateField(EMethod method=kSOR2);
       ClassDef(Planar1D, 1);
 };

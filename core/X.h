@@ -59,7 +59,7 @@ class GEFICA::X : public TObject
       virtual void SetStepLength(double steplength);
       virtual int FindIdx(double tarx,int begin,int end);
 
-      virtual bool Analyic();
+      virtual bool Analytic();
       
       virtual double GetData(double tarx,int thing); 
       virtual void SOR2(int idx,bool calculateElectricField); 

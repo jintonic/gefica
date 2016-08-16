@@ -17,7 +17,7 @@ class GEFICA::Sphere1D : public GEFICA::R
       void initialize();      
       bool CalculateField(EMethod method=kSOR2);
    protected:
-      bool Analyic();
+      bool Analytic();
 };
 
 #endif

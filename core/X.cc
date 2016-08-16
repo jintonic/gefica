@@ -10,11 +10,11 @@ using namespace std;
 #include "X.h"
 using namespace GEFICA;
 //______________________________________________________________________________
-// Create grid for 1-D field calculation.
-// it is using success Over-Relaxation to calculate the grid. it will have some error compare with actual data but should be close. For 1D field it also have analist method to compare
-// begin_macro
-// planar1d.C           
-// end_macro
+// Calculation of 1D static electronic potential and field.
+// Successive Over-Relaxation (SOR) method is used to calculate the field in a
+// grid. Please refer to https://mediatum.ub.tum.de/node?id=969435 for detailed
+// description of SOR method. It will have some error compared with actual data
+// but should be close.  Analytic solution is also provided for comparison.
 ClassImp(X)
 X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),
    fIsFixed(0), fE1(0), fPotential(0), fC1(0), fDistanceToNext(0), fDistanceToPrevious(0), fImpurity(0)
@@ -45,9 +45,9 @@ X::~X()
    if (fImpurity) delete[] fImpurity;
 }
 
-bool X::Analyic()
+bool X::Analytic()
 {
-  // Analyic calculation
+  // Analytic calculation
    cout<<"no method can use"<<endl;
    return false; 
 }
@@ -73,7 +73,7 @@ bool X::CalculateField(EMethod method)
 
   fIsLoaded=true;
 
-   if (method==kAnalytic) return Analyic();
+   if (method==kAnalytic) return Analytic();
    int cnt=0;
    while (cnt++<MaxIterations) {
       double XUpSum=0;
