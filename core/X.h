@@ -50,7 +50,7 @@ class GEFICA::X : public TObject
 
    protected:
       bool * fIsFixed; // will this grid calculate
-      bool fLoaded; // is this grid calculated before
+      bool fIsLoaded; // is this grid calculated before
       double *fE1; // Electric field under first direction 
       double  *fPotential; // Potential in this grid
       double *fC1; // the location under first direction
