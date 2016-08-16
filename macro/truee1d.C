@@ -1,15 +1,11 @@
 using namespace GEFICA;
 
-void polar1d()
+void truee1d()
 {
-   Polar1d *detector = new Polar1d(1001);
-   detector->Thickness=10*cm;
+   TrueCoaxial1D *detector = new TrueCoaxial1D(1001);
    detector->MaxIterations=1e5;
    detector->Csor=1.9;
-   detector->Create(0.3,3);
-   detector->SetVoltage(2000*volt, 000*volt);
-   detector->SetImpurity(1e10/cm3);
-   detector->CalculateField(EMethod::kRK2);
+   detector->CalculateField(EMethod::kSOR2);
    detector->SaveField("planar1dRK2.root");
    detector->CalculateField(EMethod::kAnalytic);
    detector->SaveField("planar1dTrue.root");

@@ -1,26 +1,18 @@
-#include <TFile.h>
-#include <Planar1D.h>
 using namespace GEFICA;
 
-void planar(const char* fin="input.root")
+void planar2d()
 {
-   detector->field = new Field2D(10);
-   field->Load(fin);
+   Planar2D *detector = new Planar2D(101,101);
+   detector->MaxIterations=1e5;
+   detector->Csor=1;
+   detector->CalculateField(EMethod::kSOR2);
+   detector->SaveField("planar1dRK2.root");
 
-   Planar *detector = new Planar;
-   detector->voltage = -2000;
-   detector->impurity = new TF1("impurity","3*x+1",0,10);
-   detector->height = 1;
+   TCanvas *c = new TCanvas;
+   TChain *t1 = new TChain("t");
+   t1->Add("planar1dRK2.root");
+   t1->Draw("p:c1:c2");
+   return c;
 
-   detector->SetNumericalMethod("asjdfkas");
-   detector->UpdateField();
-   field->Write("output.root");
 
-   TFile *out = new TFile("output.root","recreate");
-   TTree *t = new TTree("t","weighting potential");
-   t->Branch("x",x,"x[n1]/D");
-
-   for (unsigned short i=0; i<n1; i++) {
-      t->Fill();
-   }
 }

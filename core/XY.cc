@@ -8,11 +8,12 @@ using namespace GEFICA;
 //______________________________________________________________________________
 // Create grid for 2-D field calculation.
 ClassImp(XY)
-XY::XY(unsigned short n1, unsigned short n2): X(n1), n2(n2),
+XY::XY(unsigned short nx, unsigned short ny): X(nx*ny), n2(ny),
    fE2(0), fC2(0), fDistanceToLeft(0), fDistanceToRight(0)
 {
   //claim a 2D field with n1*n2 Grid
-   n=n1*n2; 
+   n=nx*ny; 
+   n1=nx;
    fE2=new double[n];
    fC2=new double[n];
    fDistanceToLeft=new double[n];
