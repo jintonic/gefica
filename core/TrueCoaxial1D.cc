@@ -46,6 +46,6 @@ bool TrueCoaxial1D::Analyic()
 
 bool TrueCoaxial1D::CalculateField(EMethod method)
 {
-  if(!floaded)initialize();
+  if(!fLoaded)initialize();
   return Rho::CalculateField(method);
 }
