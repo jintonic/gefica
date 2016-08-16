@@ -8,10 +8,12 @@ using namespace GEFICA;
 
 ClassImp(XYZ)
 
-XYZ::XYZ(unsigned short n1, unsigned short n2,unsigned short n3): 
-   XY(n1,n2), n3(n3), fE3(0), fC3(0), fDistanceToUp(0), fDistanceToDown(0)
+XYZ::XYZ(unsigned short nx, unsigned short ny,unsigned short nz): 
+   XY(nx,ny*nz), n3(nz), fE3(0), fC3(0), fDistanceToUp(0), fDistanceToDown(0)
 { 
-   //claim a field with n1*n2*n3 grids n=n1*n2*n3;
+   //claim a field with n1*n2*n3 grids 
+   n=n1*n2*n3;
+   n2=ny;
    fE3=new double[n];
    fC3=new double[n];
    fDistanceToUp=new double[n];
