@@ -1,11 +1,11 @@
-#ifndef GEFICA_TRUECOAXIAL2D_H
-#define GEFICA_TRUECOAXIAL2D_H
+#ifndef GeFiCa_TRUECOAXIAL2D_H
+#define GeFiCa_TRUECOAXIAL2D_H
 
 #include "RhoPhi.h"
 
-namespace GEFICA { class TrueCoaxial2D; }
+namespace GeFiCa { class TrueCoaxial2D; }
 
-class GEFICA::TrueCoaxial2D : public GEFICA::RhoPhi
+class GeFiCa::TrueCoaxial2D : public GeFiCa::RhoPhi
 {
    public :
       double InnerRadius,OuterRadius;

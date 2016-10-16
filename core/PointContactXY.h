@@ -1,11 +1,11 @@
-#ifndef GEFICA_POINTCONTACTXY_H
-#define GEFICA_POINTCONTACTXY_H
+#ifndef GeFiCa_POINTCONTACTXY_H
+#define GeFiCa_POINTCONTACTXY_H
 
 #include "XY.h"
 
-namespace GEFICA { class PointContactXY; }
+namespace GeFiCa { class PointContactXY; }
 
-class GEFICA::PointContactXY : public GEFICA::XY
+class GeFiCa::PointContactXY : public GeFiCa::XY
 {
   public:
     double cathode_voltage,annode_voltage;

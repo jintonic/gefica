@@ -1,5 +1,5 @@
 #include "PointContactXY.h"
-using namespace GEFICA;
+using namespace GeFiCa;
 //_______________________________
 //
 //it look like this:

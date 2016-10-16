@@ -1,10 +1,10 @@
-#ifndef GEFICA_X_H
-#define GEFICA_X_H
+#ifndef GeFiCa_X_H
+#define GeFiCa_X_H
 
 #include <TObject.h>
 class TF1;
 
-namespace GEFICA { 
+namespace GeFiCa { 
    enum EMethod {
       kAnalytic,
       kSOR2,
@@ -20,7 +20,7 @@ namespace GEFICA {
 }
 
 
-class GEFICA::X : public TObject 
+class GeFiCa::X : public TObject 
 {
    public:
       int n1; // number of grid along the 1st axis

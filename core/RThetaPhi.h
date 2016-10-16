@@ -1,11 +1,11 @@
-#ifndef GEFICA_RTHETAPHI_H
-#define GEFICA_RTHETAPHI_H
+#ifndef GeFiCa_RTHETAPHI_H
+#define GeFiCa_RTHETAPHI_H
 
 #include "XYZ.h"
 
-namespace GEFICA { class RThetaPhi; }
+namespace GeFiCa { class RThetaPhi; }
 
-class GEFICA::RThetaPhi : public GEFICA::XYZ
+class GeFiCa::RThetaPhi : public GeFiCa::XYZ
 {
 
    public:

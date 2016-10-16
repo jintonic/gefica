@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['r',['R',['../classGEFICA_1_1R.html',1,'GEFICA']]],
-  ['rho',['Rho',['../classGEFICA_1_1Rho.html',1,'GEFICA']]],
-  ['rhophi',['RhoPhi',['../classGEFICA_1_1RhoPhi.html',1,'GEFICA']]],
-  ['rhophiz',['RhoPhiZ',['../classGEFICA_1_1RhoPhiZ.html',1,'GEFICA']]],
-  ['rthetaphi',['RThetaPhi',['../classGEFICA_1_1RThetaPhi.html',1,'GEFICA']]]
+  ['r',['R',['../classGeFiCa_1_1R.html',1,'GeFiCa']]],
+  ['rho',['Rho',['../classGeFiCa_1_1Rho.html',1,'GeFiCa']]],
+  ['rhophi',['RhoPhi',['../classGeFiCa_1_1RhoPhi.html',1,'GeFiCa']]],
+  ['rhophiz',['RhoPhiZ',['../classGeFiCa_1_1RhoPhiZ.html',1,'GeFiCa']]],
+  ['rthetaphi',['RThetaPhi',['../classGeFiCa_1_1RThetaPhi.html',1,'GeFiCa']]]
 ];

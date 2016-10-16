@@ -1,12 +1,12 @@
-#ifndef GEFICA_RHOPHIZ_H
-#define GEFICA_RHOPHIZ_H
+#ifndef GeFiCa_RHOPHIZ_H
+#define GeFiCa_RHOPHIZ_H
 
 #include "XYZ.h"
 class TF3;
 
-namespace GEFICA { class RhoPhiZ; }
+namespace GeFiCa { class RhoPhiZ; }
 
-class GEFICA::RhoPhiZ : public GEFICA::XYZ
+class GeFiCa::RhoPhiZ : public GeFiCa::XYZ
 {
    public:
       RhoPhiZ(unsigned short n1, unsigned short n2,unsigned short n3): XYZ(n1,n2,n3) {};

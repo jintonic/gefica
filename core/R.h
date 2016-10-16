@@ -2,16 +2,16 @@
 //R
 //1D Field under Polar co
 
-#ifndef GEFICA_R_H
-#define GEFICA_R_H
+#ifndef GeFiCa_R_H
+#define GeFiCa_R_H
 
 #include "X.h"
 
-namespace GEFICA { 
+namespace GeFiCa { 
    class R;
 }
 
-class GEFICA::R : public X 
+class GeFiCa::R : public X 
 {
    public:
       R(int nx=101): X(nx){};

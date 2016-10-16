@@ -1,11 +1,11 @@
-#ifndef GEFICA_RHOPHI_H
-#define GEFICA_RHOPHI_H
+#ifndef GeFiCa_RHOPHI_H
+#define GeFiCa_RHOPHI_H
 
 #include "XY.h"
 
-namespace GEFICA { class RhoPhi; }
+namespace GeFiCa { class RhoPhi; }
 
-class GEFICA::RhoPhi : public GEFICA::XY
+class GeFiCa::RhoPhi : public GeFiCa::XY
 {
    public:
       RhoPhi(unsigned short r=101, unsigned short phi=101): XY(r,phi) {} 

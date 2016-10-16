@@ -1,7 +1,0 @@
-<map id="GEFICA::XYZ" name="GEFICA::XYZ">
-<area shape="rect" href="$classGEFICA_1_1RhoPhiZ.html" title="GEFICA::RhoPhiZ" alt="" coords="7,305,137,332" />
-<area shape="rect" href="$classGEFICA_1_1RThetaPhi.html" title="GEFICA::RThetaPhi" alt="" coords="161,305,303,332" />
-<area shape="rect" href="$classGEFICA_1_1XY.html" title="GEFICA::XY" alt="" coords="104,156,200,183" />
-<area shape="rect" href="$classGEFICA_1_1X.html" title="GEFICA::X" alt="" coords="108,81,196,108" />
-<area shape="rect" href="$classGEFICA_1_1Sphere.html" title="GEFICA::Sphere" alt="" coords="171,380,293,407" />
-</map>

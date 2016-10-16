@@ -1,5 +1,5 @@
 #include "RhoPhi.h"
-using namespace GEFICA;
+using namespace GeFiCa;
 //______________________________________________________________________________
 // Create grid for 1-D field calculation.
 ClassImp(X)

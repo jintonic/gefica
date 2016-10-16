@@ -1,11 +1,11 @@
-#ifndef GEFICA_PLANAR2D_H
-#define GEFICA_PLANAR2D_H
+#ifndef GeFiCa_PLANAR2D_H
+#define GeFiCa_PLANAR2D_H
 
 #include "XY.h"
 
-namespace GEFICA { class Planar2D; }
+namespace GeFiCa { class Planar2D; }
 
-class GEFICA::Planar2D : public GEFICA::XY
+class GeFiCa::Planar2D : public GeFiCa::XY
 {
    public :
       double XUpperBound,XLowerBound,YUpperBound,YLowerBound; 

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['x',['X',['../classGEFICA_1_1X.html',1,'GEFICA']]],
-  ['xy',['XY',['../classGEFICA_1_1XY.html',1,'GEFICA']]],
-  ['xyz',['XYZ',['../classGEFICA_1_1XYZ.html',1,'GEFICA']]]
+  ['x',['X',['../classGeFiCa_1_1X.html',1,'GeFiCa']]],
+  ['xy',['XY',['../classGeFiCa_1_1XY.html',1,'GeFiCa']]],
+  ['xyz',['XYZ',['../classGeFiCa_1_1XYZ.html',1,'GeFiCa']]]
 ];

@@ -1,5 +1,5 @@
 #include "Planar2D.h"
-using namespace GEFICA;
+using namespace GeFiCa;
 //____________________________________________________
 //a Planar detector under 2D coordinate system
 ClassImp(Planar2D)

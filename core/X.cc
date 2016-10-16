@@ -8,7 +8,7 @@ using namespace std;
 #include <TF1.h>
 
 #include "X.h"
-using namespace GEFICA;
+using namespace GeFiCa;
 //______________________________________________________________________________
 // Calculation of 1D static electronic potential and field.
 // Successive Over-Relaxation (SOR) method is used to calculate the field in a

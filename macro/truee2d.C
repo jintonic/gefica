@@ -1,4 +1,4 @@
-using namespace GEFICA;
+using namespace GeFiCa;
 
 void truee2d()
 {

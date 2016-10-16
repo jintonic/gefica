@@ -1,13 +1,13 @@
-#ifndef GEFICA_XYZ_H
-#define GEFICA_XYZ_H
+#ifndef GeFiCa_XYZ_H
+#define GeFiCa_XYZ_H
 
 class TF3;
 
 #include "XY.h"
 
-namespace GEFICA { class XYZ; }
+namespace GeFiCa { class XYZ; }
 
-class GEFICA::XYZ : public GEFICA::XY
+class GeFiCa::XYZ : public GeFiCa::XY
 {
    public:
       unsigned short n3; // number of steps along the 3nd axis

@@ -1,5 +1,5 @@
 #include "Sphere.h"
-using namespace GEFICA;
+using namespace GeFiCa;
 //____________________________________________________
 //a Sphere detector under 3D RThetaPhi coordinate system
 ClassImp(Sphere)

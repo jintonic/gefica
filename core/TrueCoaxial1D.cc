@@ -2,7 +2,7 @@
 using namespace std;
 
 #include "TrueCoaxial1D.h"
-using namespace GEFICA;
+using namespace GeFiCa;
 //____________________________________________________
 //a Planar detector under 1D coordinate system with analyic
 ClassImp(TrueCoaxial1D)

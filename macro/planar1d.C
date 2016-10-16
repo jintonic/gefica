@@ -1,4 +1,4 @@
-using namespace GEFICA;
+using namespace GeFiCa;
 
 TCanvas* planar1d()
 {

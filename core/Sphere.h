@@ -1,11 +1,11 @@
-#ifndef GEFICA_SPHERE_H
-#define GEFICA_SPHERE_H
+#ifndef GeFiCa_SPHERE_H
+#define GeFiCa_SPHERE_H
 
 #include "RThetaPhi.h"
 
-namespace GEFICA { class Sphere;}
+namespace GeFiCa { class Sphere;}
 
-class GEFICA::Sphere: public GEFICA::RThetaPhi
+class GeFiCa::Sphere: public GeFiCa::RThetaPhi
 {
    public :
      double UpperBound,LowerBound; // boundary of the planar detector   

@@ -8,7 +8,7 @@ using namespace std;
 #include <TF1.h>
 
 #include "Rho.h"
-using namespace GEFICA;
+using namespace GeFiCa;
 
 
 void Rho::SOR2(int idx,bool elec)

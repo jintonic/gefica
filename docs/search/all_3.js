@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['sphere',['Sphere',['../classGEFICA_1_1Sphere.html',1,'GEFICA']]],
-  ['sphere1d',['Sphere1D',['../classGEFICA_1_1Sphere1D.html',1,'GEFICA']]]
+  ['truecoaxial1d',['TrueCoaxial1D',['../classGeFiCa_1_1TrueCoaxial1D.html',1,'GeFiCa']]],
+  ['truecoaxial2d',['TrueCoaxial2D',['../classGeFiCa_1_1TrueCoaxial2D.html',1,'GeFiCa']]]
 ];

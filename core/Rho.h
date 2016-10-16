@@ -1,13 +1,13 @@
-#ifndef GEFICA_Rho_H
-#define GEFICA_Rho_H
+#ifndef GeFiCa_Rho_H
+#define GeFiCa_Rho_H
 
 #include "X.h"
 
-namespace GEFICA { 
+namespace GeFiCa { 
    class Rho;
 }
 
-class GEFICA::Rho : public X 
+class GeFiCa::Rho : public X 
 {
    public:
       Rho(int nx=101): X(nx){};

@@ -1,21 +1,18 @@
 var indexSectionsWithContent =
 {
-  0: "gprstx",
-  1: "prstx",
-  2: "g"
+  0: "prstx",
+  1: "prstx"
 };
 
 var indexSectionNames =
 {
   0: "all",
-  1: "classes",
-  2: "pages"
+  1: "classes"
 };
 
 var indexSectionLabels =
 {
   0: "All",
-  1: "Classes",
-  2: "Pages"
+  1: "Classes"
 };
 

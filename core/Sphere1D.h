@@ -1,11 +1,11 @@
-#ifndef GEFICA_SPHERE1D_H
-#define GEFICA_SPHERE1D_H
+#ifndef GeFiCa_SPHERE1D_H
+#define GeFiCa_SPHERE1D_H
 
 #include "R.h"
 
-namespace GEFICA { class Sphere1D; }
+namespace GeFiCa { class Sphere1D; }
 
-class GEFICA::Sphere1D : public GEFICA::R
+class GeFiCa::Sphere1D : public GeFiCa::R
 {
   public:
       double innerR,outterR; // boundary of the planar detector

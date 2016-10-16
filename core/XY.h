@@ -5,15 +5,15 @@
 //2D Field based on X//
 //it will create a 2D Field using cartesian coordinate and calculate the result
 ///////////////////////
-#ifndef GEFICA_XY_H
-#define GEFICA_XY_H
+#ifndef GeFiCa_XY_H
+#define GeFiCa_XY_H
 
 #include "X.h"
 class TF2;
 
-namespace GEFICA { class XY; }
+namespace GeFiCa { class XY; }
 
-class GEFICA::XY : public GEFICA::X
+class GeFiCa::XY : public GeFiCa::X
 {
    public:
       unsigned short n2; // number of steps along the 2nd axis

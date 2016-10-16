@@ -1,5 +1,5 @@
 #include "TrueCoaxial2D.h"
-using namespace GEFICA;
+using namespace GeFiCa;
 //____________________________________________________
 //a True Coaxial detector under 2D coordinate system
 ClassImp(TrueCoaxial2D)

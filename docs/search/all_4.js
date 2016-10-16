@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['truecoaxial1d',['TrueCoaxial1D',['../classGEFICA_1_1TrueCoaxial1D.html',1,'GEFICA']]],
-  ['truecoaxial2d',['TrueCoaxial2D',['../classGEFICA_1_1TrueCoaxial2D.html',1,'GEFICA']]]
+  ['x',['X',['../classGeFiCa_1_1X.html',1,'GeFiCa']]],
+  ['xy',['XY',['../classGeFiCa_1_1XY.html',1,'GeFiCa']]],
+  ['xyz',['XYZ',['../classGeFiCa_1_1XYZ.html',1,'GeFiCa']]]
 ];

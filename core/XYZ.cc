@@ -4,7 +4,7 @@
 #include <TVectorD.h>
 
 #include "XYZ.h"
-using namespace GEFICA;
+using namespace GeFiCa;
 
 ClassImp(XYZ)
 

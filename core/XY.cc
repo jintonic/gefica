@@ -4,7 +4,7 @@
 #include <TVectorD.h>
 
 #include "XY.h"
-using namespace GEFICA;
+using namespace GeFiCa;
 //______________________________________________________________________________
 // Create grid for 2-D field calculation.
 ClassImp(XY)

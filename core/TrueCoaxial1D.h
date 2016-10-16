@@ -1,11 +1,11 @@
-#ifndef GEFICA_TRUECOAXIAL1D_H
-#define GEFICA_TRUECOAXIAL1D_H
+#ifndef GeFiCa_TRUECOAXIAL1D_H
+#define GeFiCa_TRUECOAXIAL1D_H
 
 #include "Rho.h"
 
-namespace GEFICA { class TrueCoaxial1D; }
+namespace GeFiCa { class TrueCoaxial1D; }
 
-class GEFICA::TrueCoaxial1D : public GEFICA::Rho
+class GeFiCa::TrueCoaxial1D : public GeFiCa::Rho
 {
    public :
       double OuterRadius; // Outer radius of the detector

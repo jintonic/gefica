@@ -1,11 +1,11 @@
-#ifndef GEFICA_PLANAR1D_H
-#define GEFICA_PLANAR1D_H
+#ifndef GeFiCa_PLANAR1D_H
+#define GeFiCa_PLANAR1D_H
 
 #include "X.h"
 
-namespace GEFICA { class Planar1D; }
+namespace GeFiCa { class Planar1D; }
 
-class GEFICA::Planar1D : public GEFICA::X
+class GeFiCa::Planar1D : public GeFiCa::X
 {
    public :
       double UpperBound,LowerBound; // boundary of the planar detector

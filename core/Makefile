@@ -1,6 +1,6 @@
 PREFIX=$(HOME)
 
-LIBNAME=GEFICA
+LIBNAME=GeFiCa
 
 # Define CXX, CXXFLAGS, SOFLAGS & LIBS
 # ====================================

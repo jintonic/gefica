@@ -4,7 +4,7 @@
 #include <TVectorD.h>
 
 #include "RThetaPhi.h"
-using namespace GEFICA;
+using namespace GeFiCa;
 
 #include <math.h>
 void RThetaPhi::SOR2(int idx,bool elec)
