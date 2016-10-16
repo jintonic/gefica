@@ -63,7 +63,16 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>GeFiCa stands for Ge detector Field Calculator.</p>
-<h1>references</h1>
+<h1>Documentation</h1>
+<ul>
+<li><a href="http://www.physino.xyz/gefica">http://www.physino.xyz/gefica</a></li>
+</ul>
+<h2>Get started</h2>
+<ol type="1">
+<li>Make sure that <a href="https://root.cern.ch">ROOT</a> is installed.</li>
+<li>Execute the following commands in a terminal:</li>
+</ol>
+<div class="fragment"><div class="line">git clone https://github.com/jintonic/gefica.git</div><div class="line">cd gefica/core</div><div class="line">make install</div><div class="line">export LD_LIBRARY_PATH=~/lib:$LD_LIBRARY_PATH</div><div class="line">cd ../macro</div><div class="line">root planar1d.C</div></div><!-- fragment --><h2>References</h2>
 <ul>
 <li>Overview: <a href="https://mediatum.ub.tum.de/node?id=701884">https://mediatum.ub.tum.de/node?id=701884</a></li>
 <li>Field calculation: <a href="https://mediatum.ub.tum.de/node?id=969435">https://mediatum.ub.tum.de/node?id=969435</a></li>
