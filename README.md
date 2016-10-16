@@ -1,5 +1,4 @@
-# gefica
-gefica - germanium detector field calculator
+GeFiCa stands for Ge detector Field Calculator.
 
 # references
 

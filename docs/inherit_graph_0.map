@@ -1,0 +1,17 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" href="$classGEFICA_1_1X.html" title="GEFICA::X" alt="" coords="31,83,119,110" />
+<area shape="rect" href="$classGEFICA_1_1Planar1D.html" title="GEFICA::Planar1D" alt="" coords="168,7,301,34" />
+<area shape="rect" href="$classGEFICA_1_1R.html" title="GEFICA::R" alt="" coords="191,58,279,84" />
+<area shape="rect" href="$classGEFICA_1_1Rho.html" title="GEFICA::Rho" alt="" coords="183,108,287,135" />
+<area shape="rect" href="$classGEFICA_1_1XY.html" title="GEFICA::XY" alt="" coords="187,210,283,236" />
+<area shape="rect" href="$classGEFICA_1_1Sphere1D.html" title="GEFICA::Sphere1D" alt="" coords="368,58,507,84" />
+<area shape="rect" href="$classGEFICA_1_1TrueCoaxial1D.html" title="GEFICA::TrueCoaxial1D" alt="" coords="355,108,520,135" />
+<area shape="rect" href="$classGEFICA_1_1Planar2D.html" title="GEFICA::Planar2D" alt="" coords="371,159,504,186" />
+<area shape="rect" href="$classGEFICA_1_1PointContactXY.html" title="GEFICA::PointContactXY" alt="" coords="351,210,524,236" />
+<area shape="rect" href="$classGEFICA_1_1RhoPhi.html" title="GEFICA::RhoPhi" alt="" coords="376,260,499,287" />
+<area shape="rect" href="$classGEFICA_1_1XYZ.html" title="GEFICA::XYZ" alt="" coords="385,311,489,338" />
+<area shape="rect" href="$classGEFICA_1_1TrueCoaxial2D.html" title="GEFICA::TrueCoaxial2D" alt="" coords="573,260,739,287" />
+<area shape="rect" href="$classGEFICA_1_1RhoPhiZ.html" title="GEFICA::RhoPhiZ" alt="" coords="591,311,721,338" />
+<area shape="rect" href="$classGEFICA_1_1RThetaPhi.html" title="GEFICA::RThetaPhi" alt="" coords="585,362,727,388" />
+<area shape="rect" href="$classGEFICA_1_1Sphere.html" title="GEFICA::Sphere" alt="" coords="788,362,911,388" />
+</map>
