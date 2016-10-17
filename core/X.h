@@ -19,15 +19,17 @@ namespace GeFiCa {
    static const double cm3=cm*cm*cm;
 }
 
-
+/**
+ * 1 D grid for field calculation.
+ */
 class GeFiCa::X : public TObject 
 {
    public:
-      int n1; // number of grid along the 1st axis
-      int MaxIterations; // max one turn Iteration number
-      int n; // n = n1 total number of grid
-      double Csor; // boost Iteration speed
-      double Precision; // X limit
+      int n1; ///< number of grid along the 1st axis
+      int MaxIterations; ///< max one turn Iteration number
+      int n; ///< n = n1 total number of grid
+      double Csor; ///< boost Iteration speed
+      double Precision; ///< X limit
 
    public:
       X(int nx=101);
