@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['r',['R',['../classGeFiCa_1_1R.html',1,'GeFiCa']]],
-  ['rho',['Rho',['../classGeFiCa_1_1Rho.html',1,'GeFiCa']]],
-  ['rhophi',['RhoPhi',['../classGeFiCa_1_1RhoPhi.html',1,'GeFiCa']]],
-  ['rhophiz',['RhoPhiZ',['../classGeFiCa_1_1RhoPhiZ.html',1,'GeFiCa']]],
-  ['rthetaphi',['RThetaPhi',['../classGeFiCa_1_1RThetaPhi.html',1,'GeFiCa']]]
+  ['g_5f_5fcpp_5fsetup_5finitgefica',['G__cpp_setup_initGeFiCa',['../classG____cpp__setup__initGeFiCa.html',1,'']]],
+  ['g_5f_5fsizep2memfuncgefica',['G__Sizep2memfuncGeFiCa',['../classG____Sizep2memfuncGeFiCa.html',1,'']]]
 ];
