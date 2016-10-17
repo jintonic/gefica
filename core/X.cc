@@ -120,6 +120,12 @@ int X::FindIdx(double tarx,int begin,int end)
    else return FindIdx(tarx,mid+1,end);
 }
 
+double X::GetXEdge(bool beginorend)
+{
+  //true if end, false if end
+  if(beginorend)return fC1[n1-1];
+  if(!beginorend)return fC1[0];
+}
 double X::GetData(double tarx,int thing)
 {
   // ask thingwith number: 1:Potential 2:E1 0:Impurty
@@ -240,3 +246,5 @@ void X::SetImpurity(TF1 * Im)
       fImpurity[i]=Im->Eval((double)fC1[i]);
    }
 }
+
+

@@ -45,6 +45,7 @@ class GeFiCa::X : public TObject
       virtual double GetE1(double x){return GetData(x,2);}; 
       virtual double GetImpurity(double x){return GetData(x,0);}; 
       virtual double GetPotential(double x){return GetData(x,1);}; 
+      virtual double GetXEdge(bool beginorend); 
 
       ClassDef(X,1);
 
