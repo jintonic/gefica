@@ -19,7 +19,7 @@ ClassImp(X)
 X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),
    fIsFixed(0), fE1(0), fPotential(0), fC1(0), fDistanceToNext(0), fDistanceToPrevious(0), fImpurity(0)
 { 
-  //claim a 1D field with nx grisd
+  //claim a 1D field with nx grids
    n=nx;
    n1=nx; 
    fIsLoaded=false;
