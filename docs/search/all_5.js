@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['setimpurity',['SetImpurity',['../classGeFiCa_1_1X.html#a2dbada6f622a0b3c8c2b4389620c3585',1,'GeFiCa::X::SetImpurity()'],['../classGeFiCa_1_1XY.html#acefd9d103f8b4bb46b789d5f8c9b191f',1,'GeFiCa::XY::SetImpurity()']]],
-  ['sphere',['Sphere',['../classGeFiCa_1_1Sphere.html',1,'GeFiCa']]],
-  ['sphere1d',['Sphere1D',['../classGeFiCa_1_1Sphere1D.html',1,'GeFiCa']]]
+  ['r',['R',['../classGeFiCa_1_1R.html',1,'GeFiCa']]],
+  ['rho',['Rho',['../classGeFiCa_1_1Rho.html',1,'GeFiCa']]],
+  ['rhophi',['RhoPhi',['../classGeFiCa_1_1RhoPhi.html',1,'GeFiCa']]],
+  ['rhophiz',['RhoPhiZ',['../classGeFiCa_1_1RhoPhiZ.html',1,'GeFiCa']]],
+  ['rthetaphi',['RThetaPhi',['../classGeFiCa_1_1RThetaPhi.html',1,'GeFiCa']]]
 ];

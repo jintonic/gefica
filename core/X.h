@@ -42,13 +42,19 @@ class GeFiCa::X : public TObject
       X(int nx=101);
 
       virtual ~X();
-
-
+	  /**
+	  * Function for deciding which method to use for the field calculation. 
+	  * Current methods are kAnalytic and kSOR2.
+      */
       virtual bool CalculateField(EMethod method=kSOR2);
-      
+      /**
+	  * This function creates a new TFile and TTree and fills it from data created by X::CalculateField.    
+	  */
       virtual void SaveField(const char *fout);
-      virtual void LoadField(const char *fin);
-	  
+      /**
+	  * calculate electric field after load
+	  */
+	  virtual void LoadField(const char *fin);
 	  /*! \brief Ionizing impurity level method
 	  * 
 	  * This function takes an argument for the variable density.

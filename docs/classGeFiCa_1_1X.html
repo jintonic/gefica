@@ -106,14 +106,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa3817680a2d63fe5b3af36d54244555c"><td class="memItemLeft" align="right" valign="top"><a id="aa3817680a2d63fe5b3af36d54244555c"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>X</b> (int nx=101)</td></tr>
 <tr class="separator:aa3817680a2d63fe5b3af36d54244555c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acec5ab1e264d0682ee3ce78e1d0aef8d"><td class="memItemLeft" align="right" valign="top"><a id="acec5ab1e264d0682ee3ce78e1d0aef8d"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>CalculateField</b> (EMethod method=kSOR2)</td></tr>
+<tr class="memitem:acec5ab1e264d0682ee3ce78e1d0aef8d"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeFiCa_1_1X.html#acec5ab1e264d0682ee3ce78e1d0aef8d">CalculateField</a> (EMethod method=kSOR2)</td></tr>
 <tr class="separator:acec5ab1e264d0682ee3ce78e1d0aef8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78a21f1be5deb6dd0492f156eac96f69"><td class="memItemLeft" align="right" valign="top"><a id="a78a21f1be5deb6dd0492f156eac96f69"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>SaveField</b> (const char *fout)</td></tr>
+<tr class="memitem:a78a21f1be5deb6dd0492f156eac96f69"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeFiCa_1_1X.html#a78a21f1be5deb6dd0492f156eac96f69">SaveField</a> (const char *fout)</td></tr>
 <tr class="separator:a78a21f1be5deb6dd0492f156eac96f69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7c44551193de5891627cc2ebfab64e6"><td class="memItemLeft" align="right" valign="top"><a id="ac7c44551193de5891627cc2ebfab64e6"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>LoadField</b> (const char *fin)</td></tr>
+<tr class="memitem:ac7c44551193de5891627cc2ebfab64e6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeFiCa_1_1X.html#ac7c44551193de5891627cc2ebfab64e6">LoadField</a> (const char *fin)</td></tr>
 <tr class="separator:ac7c44551193de5891627cc2ebfab64e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2dbada6f622a0b3c8c2b4389620c3585"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeFiCa_1_1X.html#a2dbada6f622a0b3c8c2b4389620c3585">SetImpurity</a> (double density)</td></tr>
 <tr class="memdesc:a2dbada6f622a0b3c8c2b4389620c3585"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ionizing impurity level method.  <a href="#a2dbada6f622a0b3c8c2b4389620c3585">More...</a><br /></td></tr>
@@ -208,6 +205,93 @@ double *&#160;</td><td class="memItemRight" valign="bottom"><b>fImpurity</b></td
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>1 D grid for field calculation. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="acec5ab1e264d0682ee3ce78e1d0aef8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acec5ab1e264d0682ee3ce78e1d0aef8d">&sect;&nbsp;</a></span>CalculateField()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool X::CalculateField </td>
+          <td>(</td>
+          <td class="paramtype">EMethod&#160;</td>
+          <td class="paramname"><em>method</em> = <code>kSOR2</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Function for deciding which method to use for the field calculation. Current methods are kAnalytic and kSOR2. </p>
+
+<p>Reimplemented in <a class="el" href="classGeFiCa_1_1Planar1D.html#acde619700c2c2d7fb450053e43b15294">GeFiCa::Planar1D</a>, <a class="el" href="classGeFiCa_1_1Sphere1D.html#a5aa412fb08544eb1fd6d9dbd020caaeb">GeFiCa::Sphere1D</a>, <a class="el" href="classGeFiCa_1_1TrueCoaxial1D.html#aa15c03ed604b48656172eb2113f094c4">GeFiCa::TrueCoaxial1D</a>, <a class="el" href="classGeFiCa_1_1TrueCoaxial2D.html#add73cdd75b39827a1a89f0cad8d9d602">GeFiCa::TrueCoaxial2D</a>, <a class="el" href="classGeFiCa_1_1Planar2D.html#a5d7f84ffd06fb5786041914243ed5a4e">GeFiCa::Planar2D</a>, <a class="el" href="classGeFiCa_1_1PointContactXY.html#a5d8cea9ac81e0fd2d451a985bc36d63f">GeFiCa::PointContactXY</a>, and <a class="el" href="classGeFiCa_1_1Sphere.html#a391019307e8036a2a7203db1743f041a">GeFiCa::Sphere</a>.</p>
+
+</div>
+</div>
+<a id="ac7c44551193de5891627cc2ebfab64e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7c44551193de5891627cc2ebfab64e6">&sect;&nbsp;</a></span>LoadField()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void X::LoadField </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fin</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>calculate electric field after load </p>
+
+<p>Reimplemented in <a class="el" href="classGeFiCa_1_1XY.html#a2d7158c680a1e954a69e56b8149fb63a">GeFiCa::XY</a>, and <a class="el" href="classGeFiCa_1_1XYZ.html#a3617e8b087d1e66b3fb1c29d4a577f2a">GeFiCa::XYZ</a>.</p>
+
+</div>
+</div>
+<a id="a78a21f1be5deb6dd0492f156eac96f69"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78a21f1be5deb6dd0492f156eac96f69">&sect;&nbsp;</a></span>SaveField()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void X::SaveField </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fout</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This function creates a new TFile and TTree and fills it from data created by <a class="el" href="classGeFiCa_1_1X.html#acec5ab1e264d0682ee3ce78e1d0aef8d">X::CalculateField</a>. </p>
+
+<p>Reimplemented in <a class="el" href="classGeFiCa_1_1XY.html#a47dbf3e56dd4e627a571e774bd1f452f">GeFiCa::XY</a>, and <a class="el" href="classGeFiCa_1_1XYZ.html#af2b69b49b11f5fed77f03027b8bacafe">GeFiCa::XYZ</a>.</p>
+
+</div>
+</div>
 <a id="a2dbada6f622a0b3c8c2b4389620c3585"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2dbada6f622a0b3c8c2b4389620c3585">&sect;&nbsp;</a></span>SetImpurity()</h2>
 

@@ -102,11 +102,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5fab80a691a3cb1def4288bda3bba6eb"><td class="memItemLeft" align="right" valign="top"><a id="a5fab80a691a3cb1def4288bda3bba6eb"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>XY</b> (unsigned short <a class="el" href="classGeFiCa_1_1X.html#a01735529e79baaa805f1330c4c876161">n1</a>=101, unsigned short n2=101)</td></tr>
 <tr class="separator:a5fab80a691a3cb1def4288bda3bba6eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47dbf3e56dd4e627a571e774bd1f452f"><td class="memItemLeft" align="right" valign="top"><a id="a47dbf3e56dd4e627a571e774bd1f452f"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>SaveField</b> (const char *fout=NULL)</td></tr>
+<tr class="memitem:a47dbf3e56dd4e627a571e774bd1f452f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeFiCa_1_1XY.html#a47dbf3e56dd4e627a571e774bd1f452f">SaveField</a> (const char *fout=NULL)</td></tr>
 <tr class="separator:a47dbf3e56dd4e627a571e774bd1f452f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d7158c680a1e954a69e56b8149fb63a"><td class="memItemLeft" align="right" valign="top"><a id="a2d7158c680a1e954a69e56b8149fb63a"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>LoadField</b> (const char *fin=NULL)</td></tr>
+<tr class="memitem:a2d7158c680a1e954a69e56b8149fb63a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeFiCa_1_1XY.html#a2d7158c680a1e954a69e56b8149fb63a">LoadField</a> (const char *fin=NULL)</td></tr>
 <tr class="separator:a2d7158c680a1e954a69e56b8149fb63a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4565e5eec1c6a1ee6d23dbce10d2790a"><td class="memItemLeft" align="right" valign="top"><a id="a4565e5eec1c6a1ee6d23dbce10d2790a"></a>
 virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>GetPotential</b> (double x, double y)</td></tr>
@@ -133,8 +131,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>SetImpurity</
 <tr class="memitem:aa3817680a2d63fe5b3af36d54244555c inherit pub_methods_classGeFiCa_1_1X"><td class="memItemLeft" align="right" valign="top"><a id="aa3817680a2d63fe5b3af36d54244555c"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>X</b> (int nx=101)</td></tr>
 <tr class="separator:aa3817680a2d63fe5b3af36d54244555c inherit pub_methods_classGeFiCa_1_1X"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acec5ab1e264d0682ee3ce78e1d0aef8d inherit pub_methods_classGeFiCa_1_1X"><td class="memItemLeft" align="right" valign="top"><a id="acec5ab1e264d0682ee3ce78e1d0aef8d"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>CalculateField</b> (EMethod method=kSOR2)</td></tr>
+<tr class="memitem:acec5ab1e264d0682ee3ce78e1d0aef8d inherit pub_methods_classGeFiCa_1_1X"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeFiCa_1_1X.html#acec5ab1e264d0682ee3ce78e1d0aef8d">CalculateField</a> (EMethod method=kSOR2)</td></tr>
 <tr class="separator:acec5ab1e264d0682ee3ce78e1d0aef8d inherit pub_methods_classGeFiCa_1_1X"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3c0b43e60f814ed936c25571a37ac06 inherit pub_methods_classGeFiCa_1_1X"><td class="memItemLeft" align="right" valign="top"><a id="ad3c0b43e60f814ed936c25571a37ac06"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>SetImpurity</b> (TF1 *Im)</td></tr>
@@ -251,6 +248,68 @@ double *&#160;</td><td class="memItemRight" valign="bottom"><b>fImpurity</b></td
 <tr class="separator:a9eebbdcd3c1dc8586d1d62f70ab199d7 inherit pro_attribs_classGeFiCa_1_1X"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a2d7158c680a1e954a69e56b8149fb63a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d7158c680a1e954a69e56b8149fb63a">&sect;&nbsp;</a></span>LoadField()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void XY::LoadField </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fin</em> = <code>NULL</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>calculate electric field after load </p>
+
+<p>Reimplemented from <a class="el" href="classGeFiCa_1_1X.html#ac7c44551193de5891627cc2ebfab64e6">GeFiCa::X</a>.</p>
+
+<p>Reimplemented in <a class="el" href="classGeFiCa_1_1XYZ.html#a3617e8b087d1e66b3fb1c29d4a577f2a">GeFiCa::XYZ</a>.</p>
+
+</div>
+</div>
+<a id="a47dbf3e56dd4e627a571e774bd1f452f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47dbf3e56dd4e627a571e774bd1f452f">&sect;&nbsp;</a></span>SaveField()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void XY::SaveField </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fout</em> = <code>NULL</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This function creates a new TFile and TTree and fills it from data created by <a class="el" href="classGeFiCa_1_1X.html#acec5ab1e264d0682ee3ce78e1d0aef8d">X::CalculateField</a>. </p>
+
+<p>Reimplemented from <a class="el" href="classGeFiCa_1_1X.html#a78a21f1be5deb6dd0492f156eac96f69">GeFiCa::X</a>.</p>
+
+<p>Reimplemented in <a class="el" href="classGeFiCa_1_1XYZ.html#af2b69b49b11f5fed77f03027b8bacafe">GeFiCa::XYZ</a>.</p>
+
+</div>
+</div>
 <a id="acefd9d103f8b4bb46b789d5f8c9b191f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acefd9d103f8b4bb46b789d5f8c9b191f">&sect;&nbsp;</a></span>SetImpurity()</h2>
 
