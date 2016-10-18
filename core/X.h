@@ -16,7 +16,7 @@ namespace GeFiCa {
    static const double epsilon = 16*8.854187817e-12;
    static const double cm =1;
    static const double volt=1;
-   static const double cm3=cm*cm*cm;
+   static const double cm3=cm*cm*cm; 
 }
 
 /**
@@ -41,6 +41,12 @@ class GeFiCa::X : public TObject
       
       virtual void SaveField(const char *fout);
       virtual void LoadField(const char *fin);
+	  
+	  /*! \brief Ionizing impurity level method
+	  * 
+	  * This function takes an argument for the variable density.
+	  * It is usualy in the form of 1e10/cm3 or some variation.
+	  */
       virtual void SetImpurity(double density);
       virtual void SetImpurity(TF1 * Im);
 
