@@ -5,15 +5,22 @@
 class TF1;
 
 namespace GeFiCa { 
+
+	/**
+	* EMethod is a namespace with three different methods of field calculation.
+	*/
    enum EMethod {
-      kAnalytic,
-      kSOR2,
-      kSOR4,
+      kAnalytic,	/**< Analytical method*/
+      kSOR2,		/**< Successove over-relaxation method to the 2nd order*/
+      kSOR4,		/**< Successove over-relaxation method to the 4th order*/
    };
 
+   /**
+   * X is a member of GeFiCa.
+   */
    class X;
 
-   static const double epsilon = 16*8.854187817e-12;
+   static const double epsilon = 16*8.854187817e-12; 
    static const double cm =1;
    static const double volt=1;
    static const double cm3=cm*cm*cm; 
