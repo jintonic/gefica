@@ -62,7 +62,22 @@ $(function() {
 <div class="title">GeFiCa Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>GeFiCa stands for Ge detector Field Calculator.</p>
+<div class="textblock"><p>GeFiCa stands for Ge detector Field Calculator. It provides classes to calculate static electric field and potential in various Ge detectors using various coordinates in up to three dimensions. The field potential values together with their grid coordinates are saved in a <a href="https://root.cern.ch">ROOT</a> <a href="https://root.cern.ch/root/htmldoc/guides/users-guide/Trees.html">tree</a> to take the advantage of the file compression and the <a href="https://root.cern.ch/doc/master/classTTree.html#a73450649dc6e54b5b94516c468523e45">Draw</a> function provided by the <a href="https://root.cern.ch">ROOT</a> <a href="https://root.cern.ch/doc/master/classTTree.html">TTree</a> class. GeFiCa is provided as a shared library that can be directly loaded by <a href="https://root.cern.ch">ROOT</a>. All GeFiCa classes can be used directly in a <a href="https://root.cern.ch">ROOT</a> interactive session.</p>
+<table class="doxtable">
+<tr>
+<th>Directory </th><th>Contents  </th></tr>
+<tr>
+<td>core </td><td>source code </td></tr>
+<tr>
+<td>docs </td><td>documentation generated using <a href="http://www.stack.nl/~dimitri/doxygen/index.html">Doxygen</a> </td></tr>
+<tr>
+<td>macro </td><td><a href="https://root.cern.ch">ROOT</a> macros showing usages of some classes </td></tr>
+</table>
+<p>The calculation is done using Poisson's equation:</p>
+<p class="formulaDsp">
+<img class="formulaDsp" alt="\[ \nabla^2\varphi(\mathbf{x}) = - \rho(\mathbf{x})/\epsilon_0/\epsilon_R, \]" src="form_3.png"/>
+</p>
+<p>where <img class="formulaInl" alt="$\varphi$" src="form_4.png"/> is the electric potential, <img class="formulaInl" alt="$\rho$" src="form_5.png"/> is the ionized impurity concentration, <img class="formulaInl" alt="$\mathbf{x}$" src="form_6.png"/> denotes the coordinates, and <img class="formulaInl" alt="$\epsilon_0,\epsilon_R$" src="form_7.png"/> are the permittivity of vacuum and relative permittivity of Ge, respectively.</p>
 <h1>Documentation</h1>
 <ul>
 <li><a href="http://www.physino.xyz/gefica">http://www.physino.xyz/gefica</a></li>

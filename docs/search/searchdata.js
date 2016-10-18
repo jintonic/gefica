@@ -1,7 +1,7 @@
 var indexSectionsWithContent =
 {
-  0: "cgmnprstx",
-  1: "gprstx",
+  0: "cmnprstx",
+  1: "prstx",
   2: "cmnp"
 };
 

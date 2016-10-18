@@ -1,0 +1,8 @@
+\form#0:\[ \Delta^2\phi(\mathbf{x}) = - \rho(\mathbf{x})/\epsilon_0/\epsilon_R \]
+\form#1:\[ \nabla^2\phi(\mathbf{x}) = - \rho(\mathbf{x})/\epsilon_0/\epsilon_R \]
+\form#2:\[ \nabla^2\varphi(\mathbf{x}) = - \rho(\mathbf{x})/\epsilon_0/\epsilon_R \]
+\form#3:\[ \nabla^2\varphi(\mathbf{x}) = - \rho(\mathbf{x})/\epsilon_0/\epsilon_R, \]
+\form#4:$\varphi$
+\form#5:$\rho$
+\form#6:$\mathbf{x}$
+\form#7:$\epsilon_0,\epsilon_R$
