@@ -6,13 +6,7 @@ core      | source code
 docs      | documentation generated using [Doxygen][]
 macro     | [ROOT][] macros showing usages of some classes
 
-The calculation is done using Poisson's equation:
-
-\f[
-\nabla^2\varphi(\mathbf{x}) = - \rho(\mathbf{x})/\epsilon_0/\epsilon_R,
-\f]
-
-where \f$\varphi\f$ is the electric potential, \f$\rho\f$ is the ionized impurity concentration, \f$\mathbf{x}\f$ denotes the coordinates, and \f$\epsilon_0,\epsilon_R\f$ are the permittivity of vacuum and relative permittivity of Ge, respectively.
+The electric potential \f$\varphi\f$ can be calculated using Poisson's equation \f$ \nabla^2 \varphi(\mathbf{x}) = - \rho(\mathbf{x})/\epsilon_0/\epsilon_R \f$, where \f$\rho\f$ is the ionized impurity concentration, \f$\mathbf{x}\f$ denotes the coordinates, and \f$\epsilon_0,\epsilon_R\f$ are the permittivity of vacuum and relative permittivity of Ge, respectively. The equation can be simplified to \f$ \mathrm{d}^2\varphi/\mathrm{d}x^2 = - \rho/\epsilon_0/\epsilon_R \f$ in 1D. The second-order derivative \f$ \mathrm{d}^2\varphi/\mathrm{d}x^2 \f$ can be calculated numerically as \f$ \mathrm{d}^2 \varphi / \mathrm{d} x^2 = [\varphi(x_{i-1}) - 2\varphi(x_i) + \varphi(x_{i+1})]/\Delta x^2 \f$, where \f$ x_i \f$ is the coordinate of the _i_-th point in a grid, and \f$ \Delta x \f$ is the step length of the grid. The numerical calculation of the second-order derivative with higher orders of accuracy can be done using the [table][] of Finite difference coefficient in Wikipedia.
 
 # Documentation
 
@@ -43,3 +37,4 @@ root planar1d.C
 [Draw]:https://root.cern.ch/doc/master/classTTree.html#a73450649dc6e54b5b94516c468523e45
 [TTree]:https://root.cern.ch/doc/master/classTTree.html
 [Doxygen]:http://www.stack.nl/~dimitri/doxygen/index.html
+[table]:https://en.wikipedia.org/wiki/Finite_difference_coefficient

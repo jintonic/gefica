@@ -73,11 +73,7 @@ $(function() {
 <tr>
 <td>macro </td><td><a href="https://root.cern.ch">ROOT</a> macros showing usages of some classes </td></tr>
 </table>
-<p>The calculation is done using Poisson's equation:</p>
-<p class="formulaDsp">
-<img class="formulaDsp" alt="\[ \nabla^2\varphi(\mathbf{x}) = - \rho(\mathbf{x})/\epsilon_0/\epsilon_R, \]" src="form_3.png"/>
-</p>
-<p>where <img class="formulaInl" alt="$\varphi$" src="form_4.png"/> is the electric potential, <img class="formulaInl" alt="$\rho$" src="form_5.png"/> is the ionized impurity concentration, <img class="formulaInl" alt="$\mathbf{x}$" src="form_6.png"/> denotes the coordinates, and <img class="formulaInl" alt="$\epsilon_0,\epsilon_R$" src="form_7.png"/> are the permittivity of vacuum and relative permittivity of Ge, respectively.</p>
+<p>The electric potential <img class="formulaInl" alt="$\varphi$" src="form_4.png"/> can be calculated using Poisson's equation <img class="formulaInl" alt="$ \nabla^2 \varphi(\mathbf{x}) = - \rho(\mathbf{x})/\epsilon_0/\epsilon_R $" src="form_8.png"/>, where <img class="formulaInl" alt="$\rho$" src="form_5.png"/> is the ionized impurity concentration, <img class="formulaInl" alt="$\mathbf{x}$" src="form_6.png"/> denotes the coordinates, and <img class="formulaInl" alt="$\epsilon_0,\epsilon_R$" src="form_7.png"/> are the permittivity of vacuum and relative permittivity of Ge, respectively. The equation can be simplified to <img class="formulaInl" alt="$ \mathrm{d}^2\varphi/\mathrm{d}x^2 = - \rho/\epsilon_0/\epsilon_R $" src="form_9.png"/> in 1D. The second-order derivative <img class="formulaInl" alt="$ \mathrm{d}^2\varphi/\mathrm{d}x^2 $" src="form_10.png"/> can be calculated numerically as <img class="formulaInl" alt="$ \mathrm{d}^2 \varphi / \mathrm{d} x^2 = [\varphi(x_{i-1}) - 2\varphi(x_i) + \varphi(x_{i+1})]/\Delta x^2 $" src="form_12.png"/>, where <img class="formulaInl" alt="$ x_i $" src="form_13.png"/> is the coordinate of the <em>i</em>-th point in a grid, and <img class="formulaInl" alt="$ \Delta x $" src="form_15.png"/> is the step length of the grid. The numerical calculation of the second-order derivative with higher orders of accuracy can be done using the <a href="https://en.wikipedia.org/wiki/Finite_difference_coefficient">table</a> of Finite difference coefficient in Wikipedia.</p>
 <h1>Documentation</h1>
 <ul>
 <li><a href="http://www.physino.xyz/gefica">http://www.physino.xyz/gefica</a></li>
