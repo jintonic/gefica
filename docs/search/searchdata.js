@@ -2,20 +2,23 @@ var indexSectionsWithContent =
 {
   0: "cmnprstx",
   1: "prstx",
-  2: "cmnp"
+  2: "s",
+  3: "cmnp"
 };
 
 var indexSectionNames =
 {
   0: "all",
   1: "classes",
-  2: "variables"
+  2: "functions",
+  3: "variables"
 };
 
 var indexSectionLabels =
 {
   0: "All",
   1: "Classes",
-  2: "Variables"
+  2: "Functions",
+  3: "Variables"
 };
 
