@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['x',['X',['../classGeFiCa_1_1X.html',1,'GeFiCa']]],
-  ['xy',['XY',['../classGeFiCa_1_1XY.html',1,'GeFiCa']]],
-  ['xyz',['XYZ',['../classGeFiCa_1_1XYZ.html',1,'GeFiCa']]]
+  ['r',['R',['../classGeFiCa_1_1R.html',1,'GeFiCa']]],
+  ['rho',['Rho',['../classGeFiCa_1_1Rho.html',1,'GeFiCa']]],
+  ['rhophi',['RhoPhi',['../classGeFiCa_1_1RhoPhi.html',1,'GeFiCa']]],
+  ['rhophiz',['RhoPhiZ',['../classGeFiCa_1_1RhoPhiZ.html',1,'GeFiCa']]],
+  ['rthetaphi',['RThetaPhi',['../classGeFiCa_1_1RThetaPhi.html',1,'GeFiCa']]]
 ];

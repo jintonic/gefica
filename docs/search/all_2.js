@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['maxiterations',['MaxIterations',['../classGeFiCa_1_1X.html#a1a71e36f90c88469a269f899989c63ec',1,'GeFiCa::X']]]
+  ['findidx',['FindIdx',['../classGeFiCa_1_1X.html#a869cb3781a37d65d716ccb9a4f6ed689',1,'GeFiCa::X']]]
 ];
