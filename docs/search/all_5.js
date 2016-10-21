@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['maxiterations',['MaxIterations',['../classGeFiCa_1_1X.html#a1a71e36f90c88469a269f899989c63ec',1,'GeFiCa::X']]]
+  ['loadfield',['LoadField',['../classGeFiCa_1_1X.html#ac7c44551193de5891627cc2ebfab64e6',1,'GeFiCa::X::LoadField()'],['../classGeFiCa_1_1XY.html#a2d7158c680a1e954a69e56b8149fb63a',1,'GeFiCa::XY::LoadField()'],['../classGeFiCa_1_1XYZ.html#a3617e8b087d1e66b3fb1c29d4a577f2a',1,'GeFiCa::XYZ::LoadField()']]],
+  ['lowerbound',['LowerBound',['../classGeFiCa_1_1Planar1D.html#aa7a32553a73536f9f1a665908d36acc3',1,'GeFiCa::Planar1D']]]
 ];

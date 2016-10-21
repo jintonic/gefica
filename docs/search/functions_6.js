@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['x',['X',['../classGeFiCa_1_1X.html#aa3817680a2d63fe5b3af36d54244555c',1,'GeFiCa::X']]]
+  ['planar1d',['Planar1D',['../classGeFiCa_1_1Planar1D.html#a39759aed0df3c12a01ddfb0fe81f940a',1,'GeFiCa::Planar1D']]]
 ];

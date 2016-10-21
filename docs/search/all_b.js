@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['x',['X',['../classGeFiCa_1_1X.html',1,'GeFiCa']]],
-  ['x',['X',['../classGeFiCa_1_1X.html#aa3817680a2d63fe5b3af36d54244555c',1,'GeFiCa::X']]],
-  ['xy',['XY',['../classGeFiCa_1_1XY.html',1,'GeFiCa']]],
-  ['xyz',['XYZ',['../classGeFiCa_1_1XYZ.html',1,'GeFiCa']]]
+  ['truecoaxial1d',['TrueCoaxial1D',['../classGeFiCa_1_1TrueCoaxial1D.html',1,'GeFiCa']]],
+  ['truecoaxial2d',['TrueCoaxial2D',['../classGeFiCa_1_1TrueCoaxial2D.html',1,'GeFiCa']]]
 ];

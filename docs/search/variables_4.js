@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['precision',['Precision',['../classGeFiCa_1_1X.html#ac3171dd60cabdf37e5e41ec00ae4660e',1,'GeFiCa::X']]]
+  ['maxiterations',['MaxIterations',['../classGeFiCa_1_1X.html#a1a71e36f90c88469a269f899989c63ec',1,'GeFiCa::X']]]
 ];
