@@ -40,8 +40,10 @@ class GeFiCa::X : public TObject
 
    public:
    
-      //constructor, if given a number, no input is needed
-      X(int nx=101);
+      /**
+	  * X is a constructor, if given a number, no input is needed
+	  */
+      X(int nx=101 /**< Number of grid lines. */);
 
       virtual ~X();
 	   /**
@@ -59,12 +61,12 @@ class GeFiCa::X : public TObject
 	   virtual void LoadField(const char *fin);
 	   /*! \brief Ionizing impurity level method
 	   * 
-	   * This function takes an argument for the variable density.
-	   * It is usualy in the form of 1e10/cm3 or some variation.
+	   * This function takes an argument for the variable density. It can be used if you consider impurity to be constant.
+	   * It is usualy in the form of 1e10/cm3 or some variation where cm3 is defined in the namespace GeFiCa.
 	   */
       virtual void SetImpurity(double density); // If you can consider impurity to e constant
       /**
-      * Another Important method involved in setting the impurity.
+      * Another Important method involved in setting the impurity. This is used for a variable impurity level that changes with x.
       */
       virtual void SetImpurity(TF1 * Im); // Used for the real change in impurity over x 
       /**
@@ -83,19 +85,21 @@ class GeFiCa::X : public TObject
       * Returns the location under the first directions.
       */ 
       virtual double GetXEdge(bool beginorend); 
-
+	  /**
+	  *This defines the class for the cint dictionary.
+	  */
       ClassDef(X,1);
 
    protected:
-      bool * fIsFixed; // will this grid calculate Is used to check if a value is fixed, used to check 
-                       // boundary conditions
-      bool fIsLoaded; // is this grid calculated before
-      //fIsLoaded, it is used to check if points in the grid have a value or not, if it is loaded, the 
-      //the points have value and you do not need to initialize, otherwise you do.
-      double *fE1; // Electric field under first coordinated(x, r, rho)  direction 
-      double  *fPotential; // Potential in this grid
-      double *fC1; // the location under first coordinate () direction
-      double *fDistanceToNext,*fDistanceToPrevious,*fImpurity;
+      bool * fIsFixed; ///< Is used to check if a value is fixed or if it can be modified. It is usally used to check boundary conditions and find out if you are on the edge.
+      bool fIsLoaded; ///< fIsLoaded is used to check if points in the grid have a value or not. If fIsLoaded returns true, the the points if the grid have value and you do not need to initialize, if it returns false you do.
+      double *fE1; ///< Electric field under the first coordinate (x, r, or rho) direction 
+      double  *fPotential; ///< Potential in the referenced grid
+      double *fC1; ///< the location under the first coordinate (x, r, or rho) direction
+      double *fDistanceToNext;///< Distance to the next point under the current coordinate direction
+	  double *fDistanceToPrevious;///< Distance to the previous point under the current coordinate direction
+	  double *fImpurity; ///< Value of the impurity level at a point on the grid
+	  
       /**
       * Sets the field step length.
       */
