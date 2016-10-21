@@ -14,7 +14,13 @@ namespace GeFiCa {
 class GeFiCa::R : public X 
 {
    public:
+      /**
+	  * R is a constructor, if given a number, no input is needed
+	  */
       R(int nx=101): X(nx){};
+	  /**
+	  * This defines the class R for the cint dictionary.
+	  */
       ClassDef(R,1);
 
       virtual double GetPotential(double r){return GetData(r,1);};
@@ -23,7 +29,7 @@ class GeFiCa::R : public X
    protected:
 
       virtual void SOR2(int idx,bool elec); // 2nd-order Runge-Kutta Successive Over-Relaxation
-      virtual void SOR4(int idx); // 4th-order Runge-Kutta Successive Over-Relaxation
+      virtual void SOR4(int idx); ///< 4th-order Runge-Kutta Successive Over-Relaxation
 };
 
 #endif
