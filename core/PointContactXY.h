@@ -13,7 +13,7 @@ class GeFiCa::PointContactXY : public GeFiCa::XY
    public :
      PointContactXY(int ix,int iy) : XY(ix,iy),cathode_voltage(2000),annode_voltage(0), XUpperBound(10),XLowerBound(1),YUpperBound(10),YLowerBound(1) {};
 
-     void initialize();
+     void Initialize();
      bool CalculateField(EMethod method=kSOR2);
 
      ClassDef(PointContactXY,1);

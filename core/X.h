@@ -28,6 +28,11 @@ namespace GeFiCa {
 
 /**
  * 1 D grid for field calculation.
+ *
+ * Successive Over-Relaxation (SOR) method is used to calculate the field in a
+ * grid. Please refer to https://mediatum.ub.tum.de/node?id=969435 for detailed
+ * description of SOR method. It will have some error compared with actual data
+ * but should be close.  Analytic solution is also provided for comparison.
  */
 class GeFiCa::X : public TObject 
 {

@@ -27,7 +27,7 @@ class GeFiCa::Planar1D : public GeFiCa::X
       /**
        *Calculates the step length for the detector
        */
-      void initialize(); 
+      void Initialize(); 
       bool Analytic();
       bool CalculateField(EMethod method=kSOR2);
       /**
