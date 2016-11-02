@@ -1,9 +1,7 @@
 #include "Planar2D.h"
 using namespace GeFiCa;
-//____________________________________________________
-//a Planar detector under 2D coordinate system
-ClassImp(Planar2D)
-void Planar2D::initialize()
+
+void Planar2D::Initialize()
 {
      // The step length is calculated with the following equation:
    // BEGIN_HTML
@@ -29,8 +27,10 @@ void Planar2D::initialize()
       fPotential[(i+1)*n1-1]=annode_voltage;
    }
 }
+//_____________________________________________________________________________
+//
 bool Planar2D::CalculateField(EMethod method)
 {
-  if(!fIsLoaded)initialize();
+  if(!fIsLoaded)Initialize();
   return XY::CalculateField(method);
 }

@@ -1,7 +1,7 @@
 #include "PointContactXY.h"
 using namespace GeFiCa;
 
-void PointContactXY::initialize()
+void PointContactXY::Initialize()
 {
    // The step length is calculated with the following equation:
    // BEGIN_HTML
@@ -12,7 +12,7 @@ void PointContactXY::initialize()
    // If the inner radius is not larger than the outer radius,
    // no grid will be created
    if (XLowerBound>=XUpperBound||YLowerBound>=YUpperBound) {
-      Warning("initialize",
+      Warning("Initialize",
             "Lower bound (%f) >= upper bound (%f)! No grid is created!",
             XLowerBound, XUpperBound);
       return;
@@ -36,9 +36,10 @@ void PointContactXY::initialize()
       fPotential[i+n1-1]=annode_voltage;
    }
 }
-
+//_____________________________________________________________________________
+//
 bool PointContactXY::CalculateField(EMethod method)
 {
-   if(!fIsLoaded)initialize();
+   if(!fIsLoaded)Initialize();
    return CalculateField(method);
 }

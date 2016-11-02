@@ -5,20 +5,20 @@
 
 #include "XY.h"
 using namespace GeFiCa;
-//______________________________________________________________________________
-// Create grid for 2-D field calculation.
-ClassImp(XY)
+
 XY::XY(unsigned short nx, unsigned short ny): X(nx*ny), n2(ny),
    fE2(0), fC2(0), fDistanceToLeft(0), fDistanceToRight(0)
 {
-  //claim a 2D field with n1*n2 Grid
+   //claim a 2D field with n1*n2 Grid
    n=nx*ny; 
    n1=nx;
    fE2=new double[n];
    fC2=new double[n];
    fDistanceToLeft=new double[n];
-   fDistanceToRight=new double[n];}
-
+   fDistanceToRight=new double[n];
+}
+//_____________________________________________________________________________
+//
 XY::~XY()
 {
    if (fE2) delete[] fE2;
@@ -26,10 +26,11 @@ XY::~XY()
    if (fDistanceToLeft) delete[] fDistanceToLeft;
    if (fDistanceToRight) delete[] fDistanceToRight;
 }
-
+//_____________________________________________________________________________
+//
 void XY::SetStepLength(double steplength1,double steplength2)
 {
-//set field step length
+   //set field step length
    X::SetStepLength(steplength1);
    for (int i=0;i<n;i++) {
       if(i>n1-1)fC2[i]=fC2[i-n1]+steplength2;
@@ -42,11 +43,12 @@ void XY::SetStepLength(double steplength1,double steplength2)
       fDistanceToRight[i]=steplength2;
    }
 }
-
+//_____________________________________________________________________________
+//
 void XY::SOR2(int idx,bool elec)
 {
-  
-  // 2nd-order Runge-Kutta Successive Over-Relaxation
+
+   // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*1.6e12;
    double h2=fDistanceToPrevious[idx];
@@ -66,23 +68,25 @@ void XY::SOR2(int idx,bool elec)
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    if(elec)
    {
-     fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
-     fE2[idx]=(Pyp1-Pym1)/(h1+h4);
+      fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
+      fE2[idx]=(Pyp1-Pym1)/(h1+h4);
    }
 }
-
+//_____________________________________________________________________________
+//
 int XY::FindIdx(double tarx,double tary ,int ybegin,int yend)
 {
-  //search using binary search
+   //search using binary search
    if(ybegin>=yend)return X::FindIdx(tarx,ybegin,ybegin+n1-1);
    int mid=((ybegin/n1+yend/n1)/2)*n1;
    if(fC2[mid]>=tary)return FindIdx(tarx,tary,ybegin,mid);
    else return FindIdx(tarx,tary,mid+1,yend);
 }
-
+//_____________________________________________________________________________
+//
 double XY::GetData(double tarx, double tary, int thing)
 {
-  //ask thing with coordinate and item number: 1:Impurity 2:Potential 3:E1 4:E2
+   //ask thing with coordinate and item number: 1:Impurity 2:Potential 3:E1 4:E2
 
    int idx=FindIdx(tarx,tary,0,n);
    double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
@@ -106,6 +110,8 @@ double XY::GetData(double tarx, double tary, int thing)
    if (tar3==-1)tar3=tar[idx+n1+1];
    return (tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb;
 }
+//_____________________________________________________________________________
+//
 void XY::SaveField(const char * fout)
 {
    X::SaveField(fout);
@@ -127,9 +133,11 @@ void XY::SaveField(const char * fout)
    delete file;
 
 }
+//_____________________________________________________________________________
+//
 void XY::LoadField(const char * fin)
 {
-  //will calculate electric field after load
+   //will calculate electric field after load
    X::LoadField(fin);
    TFile *file=new TFile(fin);
    TVectorD *v1=(TVectorD*)file->Get("v");
@@ -153,12 +161,16 @@ void XY::LoadField(const char * fin)
    file->Close();
    delete file;
 }
+//_____________________________________________________________________________
+//
 void XY::SetImpurity(TF2 * Im)
 {
    for(int i=n;i-->0;) {
       fImpurity[i]=Im->Eval((double)fC1[i],(double)fC2[i]);
    }
 }
+//_____________________________________________________________________________
+//
 void XY::SetImpurity(double density)
 {
    for(int i=n;i-->0;) fImpurity[i]=density;

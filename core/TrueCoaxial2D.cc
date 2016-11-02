@@ -1,11 +1,9 @@
 #include "TrueCoaxial2D.h"
 using namespace GeFiCa;
-//____________________________________________________
-//a True Coaxial detector under 2D coordinate system
-ClassImp(TrueCoaxial2D)
-void TrueCoaxial2D::initialize()
+
+void TrueCoaxial2D::Initialize()
 {
-  // The step length is calculated with the following equation:
+   // The step length is calculated with the following equation:
    // BEGIN_HTML
    // <pre>
    //      double stepLength=(OuterRadius-InnerRadius)/(n-1);
@@ -22,16 +20,18 @@ void TrueCoaxial2D::initialize()
    double steplength=(OuterRadius-InnerRadius)/(n1-1);
    SetStepLength(steplength,3.14159265/n2);
 
-  for (int i=0;i<n;i=i+n1)
-  {
-    fPotential[i]=cathode_voltage;
-    fPotential[i+n1-1]=anode_voltage;
-    fIsFixed[i]=true;
-    fIsFixed[i+n1-1]=true;
-  }
+   for (int i=0;i<n;i=i+n1)
+   {
+      fPotential[i]=cathode_voltage;
+      fPotential[i+n1-1]=anode_voltage;
+      fIsFixed[i]=true;
+      fIsFixed[i+n1-1]=true;
+   }
 }
+//_____________________________________________________________________________
+//
 bool TrueCoaxial2D::CalculateField(EMethod method)
 {
-  if(!fIsLoaded)initialize();
-  return RhoPhi::CalculateField(method);
+   if(!fIsLoaded)Initialize();
+   return RhoPhi::CalculateField(method);
 }

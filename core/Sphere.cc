@@ -1,10 +1,7 @@
 #include "Sphere.h"
 using namespace GeFiCa;
-//____________________________________________________
-//a Sphere detector under 3D RThetaPhi coordinate system
-ClassImp(Sphere)
 
-void Sphere::initialize()
+void Sphere::Initialize()
 {
    // The step length is calculated with the following equation:
    // BEGIN_HTML
@@ -31,8 +28,10 @@ void Sphere::initialize()
     fIsFixed[i+n1-1]=true;
   }
 }
+//_____________________________________________________________________________
+//
 bool Sphere::CalculateField(EMethod method)
 {
-  if(!fIsLoaded)initialize();
+  if(!fIsLoaded)Initialize();
   return RThetaPhi::CalculateField(method);
 }

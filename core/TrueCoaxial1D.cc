@@ -3,10 +3,8 @@ using namespace std;
 
 #include "TrueCoaxial1D.h"
 using namespace GeFiCa;
-//____________________________________________________
-//a Planar detector under 1D coordinate system with analyic
-ClassImp(TrueCoaxial1D)
-void TrueCoaxial1D::initialize()
+
+void TrueCoaxial1D::Initialize()
 {
    // The step length is calculated with the following equation:
    // BEGIN_HTML
@@ -30,7 +28,8 @@ void TrueCoaxial1D::initialize()
    double slope = (cathode_voltage-annode_voltage)/(n-1);
    for (int i=0; i<n; i++) fPotential[i]=annode_voltage+slope*i;
 }
-
+//_____________________________________________________________________________
+//
 #include  <cmath>
 bool TrueCoaxial1D::Analytic()
 {
@@ -43,9 +42,10 @@ bool TrueCoaxial1D::Analytic()
    }
    return true;
 }
-
+//_____________________________________________________________________________
+//
 bool TrueCoaxial1D::CalculateField(EMethod method)
 {
-  if(!fIsLoaded)initialize();
-  return Rho::CalculateField(method);
+   if(!fIsLoaded)Initialize();
+   return Rho::CalculateField(method);
 }

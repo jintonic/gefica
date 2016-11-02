@@ -3,10 +3,8 @@ using namespace std;
 
 #include "Sphere1D.h"
 using namespace GeFiCa;
-//____________________________________________________
-//a Planar detector under 1D coordinate system with analyic
-ClassImp(Sphere1D)
-void Sphere1D::initialize()
+
+void Sphere1D::Initialize()
 {
    // The step length is calculated with the following equation:
    // BEGIN_HTML
@@ -30,6 +28,8 @@ void Sphere1D::initialize()
    double slope = (cathode_voltage-annode_voltage)/(n-1);
    for (int i=0; i<n; i++) fPotential[i]=annode_voltage+slope*i;
 }
+//_____________________________________________________________________________
+//
 #include  <cmath>
 bool Sphere1D::Analytic()
 {
@@ -44,8 +44,10 @@ bool Sphere1D::Analytic()
    }
    return true;
 }
+//_____________________________________________________________________________
+//
 bool Sphere1D::CalculateField(EMethod method)
 {
-  if(!fIsLoaded)initialize();
-  return R::CalculateField(method);
+   if(!fIsLoaded)Initialize();
+   return R::CalculateField(method);
 }

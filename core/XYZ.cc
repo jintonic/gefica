@@ -6,8 +6,6 @@
 #include "XYZ.h"
 using namespace GeFiCa;
 
-ClassImp(XYZ)
-
 XYZ::XYZ(unsigned short nx, unsigned short ny,unsigned short nz): 
    XY(nx,ny*nz), n3(nz), fE3(0), fC3(0), fDistanceToUp(0), fDistanceToDown(0)
 { 
@@ -19,7 +17,8 @@ XYZ::XYZ(unsigned short nx, unsigned short ny,unsigned short nz):
    fDistanceToUp=new double[n];
    fDistanceToDown=new double[n];
 }
-
+//_____________________________________________________________________________
+//
 XYZ::~XYZ()
 {
 
@@ -28,7 +27,8 @@ XYZ::~XYZ()
    if (fDistanceToUp) delete[] fDistanceToUp;
    if (fDistanceToDown) delete[] fDistanceToDown; 
 }
-
+//_____________________________________________________________________________
+//
 void XYZ::SetStepLength(double steplength1,double steplength2,double steplength3)
 {
   XY::SetStepLength(steplength1,steplength2); 
@@ -45,7 +45,8 @@ void XYZ::SetStepLength(double steplength1,double steplength2,double steplength3
       fDistanceToRight[i]=steplength3;
    }
 }
-
+//_____________________________________________________________________________
+//
 void XYZ::SOR2(int idx,bool elec)
 {
    if (fIsFixed[idx])return;
@@ -86,7 +87,8 @@ void XYZ::SOR2(int idx,bool elec)
       fE3[idx]=(Pzp1-Pzm1)/(h0+h5);
    }
 }
-
+//_____________________________________________________________________________
+//
 int XYZ::FindIdx(double tarx, double tary ,double tarz,int begin,int end)
 {
  //search using binary search
@@ -95,7 +97,8 @@ int XYZ::FindIdx(double tarx, double tary ,double tarz,int begin,int end)
    if(fC3[mid]>=tarz)return FindIdx(tarx,tary,tarz,begin,mid);
    else return FindIdx(tarx,tary,tarz,mid+1,end);
 }
-
+//_____________________________________________________________________________
+//
 double XYZ::GetData(double tarx, double tary, double tarz,int thing)
 {
    //get item with number: 0:Impurity 1:Potential 2: Ex 3:Ey 4:Ez
@@ -132,6 +135,8 @@ double XYZ::GetData(double tarx, double tary, double tarz,int thing)
    if(tar7==-1)tar7=tar[idx+n1*n2+n1+1];
    return ((tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb)*ac+((tar4*aa+tar5*ab)*ba+(tar6*aa+tar7*ab)*bb)*ca;
 }
+//_____________________________________________________________________________
+//
 void XYZ::SaveField(const char * fout)
 {
    XY::SaveField(fout);
@@ -153,6 +158,8 @@ void XYZ::SaveField(const char * fout)
    delete file;
 
 }
+//_____________________________________________________________________________
+//
 void XYZ::LoadField(const char * fin)
 {
    XY::LoadField(fin);
@@ -178,6 +185,8 @@ void XYZ::LoadField(const char * fin)
    file->Close();
    delete file;
 }
+//_____________________________________________________________________________
+//
 void XYZ::SetImpurity(TF3 * Im)
 {
    for(int i=n;i-->0;) {

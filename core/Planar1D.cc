@@ -1,9 +1,7 @@
 #include "Planar1D.h"
 using namespace GeFiCa;
-//____________________________________________________
-//a Planar detector under 1D coordinate system with analyic
-ClassImp(Planar1D)
-void Planar1D::initialize()
+
+void Planar1D::Initialize()
 {
    // The step length is calculated with the following equation:
    // BEGIN_HTML
@@ -27,7 +25,8 @@ void Planar1D::initialize()
    double slope = (cathode_voltage-annode_voltage)/(n-1);
    for (int i=0; i<n; i++) fPotential[i]=annode_voltage+slope*i;
 }
-
+//_____________________________________________________________________________
+//
 bool Planar1D::Analytic()
 {
   double Thickness=UpperBound-LowerBound;
@@ -39,8 +38,10 @@ bool Planar1D::Analytic()
    }
    return true;
 }
+//_____________________________________________________________________________
+//
 bool Planar1D::CalculateField(EMethod method)
 {
-  if(!fIsLoaded)initialize();
+  if(!fIsLoaded)Initialize();
   return X::CalculateField(method);
 }

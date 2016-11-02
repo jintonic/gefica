@@ -1,8 +1,6 @@
 #include "RhoPhi.h"
 using namespace GeFiCa;
-//______________________________________________________________________________
-// Create grid for 1-D field calculation.
-ClassImp(X)
+
 void RhoPhi::SOR2(int idx,bool elec)
 {
 
@@ -23,20 +21,22 @@ void RhoPhi::SOR2(int idx,bool elec)
    else Pxp1=fPotential[idx+1];
    double r=fC1[idx];
    double tmp = (Pxp1/(h3*(h2+h3))+Pxm1/(h2*(h2+h3))
-        +Pyp1/r/r/h4/(h1+h4)+Pym1/r/r/h1/(h1+h4)
-        -density/epsilon/2+(Pxp1-Pxm1)/2/r/(h2+h3))
-       /(1/h3/(h2+h3)+1/h2/(h2+h3)
-        +1/r/r/h1/(h1+h4)+1/r/r/h4/(h1+h4));
+         +Pyp1/r/r/h4/(h1+h4)+Pym1/r/r/h1/(h1+h4)
+         -density/epsilon/2+(Pxp1-Pxm1)/2/r/(h2+h3))
+      /(1/h3/(h2+h3)+1/h2/(h2+h3)
+            +1/r/r/h1/(h1+h4)+1/r/r/h4/(h1+h4));
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    if(elec)
    {
-     fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
-     fE2[idx]=(Pyp1-Pym1)/(h1+h4);
+      fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
+      fE2[idx]=(Pyp1-Pym1)/(h1+h4);
    }
 }
+//_____________________________________________________________________________
+//
 double RhoPhi::GetData(double tarx, double tary, int thing)
 {
-  //0:Impurity 1:Potential 2:E1 3:E2
+   //0:Impurity 1:Potential 2:E1 3:E2
    int idx=FindIdx(tarx,tary,0,n);
    double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
    double aa=1-ab;

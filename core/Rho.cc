@@ -10,7 +10,6 @@ using namespace std;
 #include "Rho.h"
 using namespace GeFiCa;
 
-
 void Rho::SOR2(int idx,bool elec)
 {
    if (fIsFixed[idx])return ;
@@ -24,7 +23,8 @@ void Rho::SOR2(int idx,bool elec)
 
    if(elec)fE1[idx]=(fPotential[idx+1]-fPotential[idx-1])/(h2+h3);
 }
-
+//_____________________________________________________________________________
+//
 void Rho::SOR4(int idx)
 { 
   if (fIsFixed[idx])return;
