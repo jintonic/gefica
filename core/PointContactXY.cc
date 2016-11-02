@@ -41,5 +41,5 @@ void PointContactXY::Initialize()
 bool PointContactXY::CalculateField(EMethod method)
 {
    if(!fIsLoaded)Initialize();
-   return CalculateField(method);
+   return XY::CalculateField(method);
 }
