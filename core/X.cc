@@ -15,11 +15,11 @@ using namespace GeFiCa;
 // grid. Please refer to https://mediatum.ub.tum.de/node?id=969435 for detailed
 // description of SOR method. It will have some error compared with actual data
 // but should be close.  Analytic solution is also provided for comparison.
-ClassImp(X)
+   ClassImp(X)
 X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),
    fIsFixed(0), fE1(0), fPotential(0), fC1(0), fDistanceToNext(0), fDistanceToPrevious(0), fImpurity(0)
 { 
-  //claim a 1D field with nx grids
+   //claim a 1D field with nx grids
    n=nx;
    n1=nx; 
    fIsLoaded=false;
@@ -32,7 +32,7 @@ X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),
    fDistanceToPrevious=new double[n];
    fImpurity=new double[n];
 }
-      
+
 
 X::~X()
 {
@@ -47,14 +47,14 @@ X::~X()
 
 bool X::Analytic()
 {
-  // Analytic calculation
+   // Analytic calculation
    cout<<"no method can use"<<endl;
    return false; 
 }
 
 void X::SetStepLength(double steplength)
 {
-//set field step length
+   //set field step length
    for (int i=n;i-->0;) {
       fIsFixed[i]=false;
       fE1[i]=0;
@@ -66,12 +66,9 @@ void X::SetStepLength(double steplength)
    }
 }
 
-
 bool X::CalculateField(EMethod method)
 {
-  //do calculate
-
-  fIsLoaded=true;
+   fIsLoaded=true;
 
    if (method==kAnalytic) return Analytic();
    int cnt=0;
@@ -88,17 +85,14 @@ bool X::CalculateField(EMethod method)
       }
       if(cnt%1000==0)
          cout<<cnt<<"  "<<XUpSum/XDownSum<<" down: "<<XDownSum<<", up: "<<XUpSum<<endl;
-      if (XUpSum/XDownSum<Precision){
-
-	  return true;
-      }
+      if (XUpSum/XDownSum<Precision) return true;
    }
    return false;
 }
 
 void X::SOR2(int idx,bool elec)
 {
-  // 2nd-order Runge-Kutta Successive Over-Relaxation
+   // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return ;
    double density=fImpurity[idx]*1.6e-19;
    double h2=fDistanceToPrevious[idx];
@@ -113,7 +107,7 @@ void X::SOR2(int idx,bool elec)
 
 int X::FindIdx(double tarx,int begin,int end)
 {
-  //search using binary search
+   //search using binary search
    if (begin>=end)return begin;
    int mid=(begin+end)/2;
    if(fC1[mid]>=tarx)return FindIdx(tarx,begin,mid);
@@ -122,13 +116,13 @@ int X::FindIdx(double tarx,int begin,int end)
 
 double X::GetXEdge(bool beginorend)
 {
-  //true if end, false if end
-  if(beginorend)return fC1[n1-1];
-  if(!beginorend)return fC1[0];
+   //true if end, false if end
+   if(beginorend)return fC1[n1-1];
+   if(!beginorend)return fC1[0];
 }
 double X::GetData(double tarx,int thing)
 {
-  // ask thingwith number: 1:Potential 2:E1 0:Impurty
+   // ask thingwith number: 1:Potential 2:E1 0:Impurty
    int idx=FindIdx(tarx,0,n-1);
    if (idx==n)
    {
@@ -188,8 +182,8 @@ void X::SaveField(const char * fout)
 }
 void X::LoadField(const char * fin)
 {
-  //will calculate electric field after load
-  fIsLoaded=true;
+   //will calculate electric field after load
+   fIsLoaded=true;
    TFile *file=new TFile(fin);
    TVectorD *v1=(TVectorD*)file->Get("v");
    double * v=v1->GetMatrixArray();
