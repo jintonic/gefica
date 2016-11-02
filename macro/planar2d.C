@@ -1,19 +1,12 @@
-using namespace GeFiCa;
-
-void planar2d()
 {
-   Planar2D *detector = new Planar2D(101,101);
+   GeFiCa::Planar2D *detector = new GeFiCa::Planar2D(101,101);
    detector->MaxIterations=1e5;
-   detector->Csor=1;
-   detector->SetImpurity(1e10/cm3);
-   detector->CalculateField(EMethod::kSOR2);
-   detector->SaveField("planar1dRK2.root");
+   detector->Csor=1.9;
+   detector->SetImpurity(1e10/GeFiCa::cm3);
+   detector->CalculateField(GeFiCa::kSOR2);
+   detector->SaveField("planar2d.root");
 
-   TCanvas *c = new TCanvas;
-   TChain *t1 = new TChain("t");
-   t1->Add("planar1dRK2.root");
-   t1->Draw("p:c1:c2");
-
-
-
+   TChain *t = new TChain("t");
+   t->Add("planar2d.root");
+   t->Draw("p:c1:c2");
 }
