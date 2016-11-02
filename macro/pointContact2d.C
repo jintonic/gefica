@@ -3,6 +3,8 @@
    detector->MaxIterations=1e5;
    detector->Csor=1.9;
    detector->SetImpurity(1e10/GeFiCa::cm3);
+   detector->Initialize();
+
    detector->CalculateField(GeFiCa::kSOR2);
    detector->SaveField("pointContact2d.root");
 
