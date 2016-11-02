@@ -32,7 +32,8 @@ void PointContactXY::initialize()
    }
   double steplength1=(XUpperBound-XLowerBound)/n1;
   double steplength2=(YUpperBound-YLowerBound)/n2;
-  SetStepLength(steplength1,steplength2);
+  XY::SetStepLength(steplength1,steplength2);
+  //might have a problem here
   for(int i=n;i-->n-n1;) {
       fIsFixed[i]=true;
       fPotential[i]=annode_voltage;
@@ -52,5 +53,5 @@ void PointContactXY::initialize()
 bool PointContactXY::CalculateField(EMethod method)
 {
   if(!fIsLoaded)initialize();
-  return X::CalculateField(method);
+  return XY::CalculateField(method);
 }
