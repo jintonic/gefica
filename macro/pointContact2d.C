@@ -4,9 +4,9 @@
    detector->Csor=1.9;
    detector->SetImpurity(1e10/GeFiCa::cm3);
    detector->CalculateField(GeFiCa::kSOR2);
-   detector->SaveField("pcXY.root");
+   detector->SaveField("pointContact2d.root");
 
    TChain *t = new TChain("t");
-   t->Add("pcXY.root");
+   t->Add("pointContact2d.root");
    t->Draw("p:c1:c2");
 }
