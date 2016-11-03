@@ -105,8 +105,8 @@ Collaboration diagram for GeFiCa::X:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa3817680a2d63fe5b3af36d54244555c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeFiCa_1_1X.html#aa3817680a2d63fe5b3af36d54244555c">X</a> (int nx=101)</td></tr>
-<tr class="separator:aa3817680a2d63fe5b3af36d54244555c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80ffb7e5f090060e494a2e0d42b4a2e4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeFiCa_1_1X.html#a80ffb7e5f090060e494a2e0d42b4a2e4">X</a> (int nx=101)</td></tr>
+<tr class="separator:a80ffb7e5f090060e494a2e0d42b4a2e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acec5ab1e264d0682ee3ce78e1d0aef8d"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeFiCa_1_1X.html#acec5ab1e264d0682ee3ce78e1d0aef8d">CalculateField</a> (EMethod method=kSOR2)</td></tr>
 <tr class="separator:acec5ab1e264d0682ee3ce78e1d0aef8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78a21f1be5deb6dd0492f156eac96f69"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeFiCa_1_1X.html#a78a21f1be5deb6dd0492f156eac96f69">SaveField</a> (const char *fout)</td></tr>
@@ -201,16 +201,17 @@ double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 <tr class="separator:a344057da2d7aca95f9506d90e4f939fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>1 D grid for field calculation. </p>
+<div class="textblock"><p>1 D grid for field calculation.</p>
+<p>Successive Over-Relaxation (SOR) method is used to calculate the field in a grid. Please refer to <a href="https://mediatum.ub.tum.de/node?id=969435">https://mediatum.ub.tum.de/node?id=969435</a> for detailed description of SOR method. It will have some error compared with actual data but should be close. Analytic solution is also provided for comparison. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aa3817680a2d63fe5b3af36d54244555c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3817680a2d63fe5b3af36d54244555c">&sect;&nbsp;</a></span>X()</h2>
+<a id="a80ffb7e5f090060e494a2e0d42b4a2e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80ffb7e5f090060e494a2e0d42b4a2e4">&sect;&nbsp;</a></span>X()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GeFiCa::X::X </td>
+          <td class="memname">X::X </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>nx</em> = <code>101</code></td><td>)</td>
@@ -282,7 +283,7 @@ double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 </div><div class="memdoc">
 <p>Function for deciding which method to use for the field calculation. Current methods are kAnalytic and kSOR2. </p>
 
-<p>Reimplemented in <a class="el" href="classGeFiCa_1_1Planar1D.html#acde619700c2c2d7fb450053e43b15294">GeFiCa::Planar1D</a>, <a class="el" href="classGeFiCa_1_1Sphere1D.html#a5aa412fb08544eb1fd6d9dbd020caaeb">GeFiCa::Sphere1D</a>, <a class="el" href="classGeFiCa_1_1TrueCoaxial1D.html#aa15c03ed604b48656172eb2113f094c4">GeFiCa::TrueCoaxial1D</a>, <a class="el" href="classGeFiCa_1_1TrueCoaxial2D.html#add73cdd75b39827a1a89f0cad8d9d602">GeFiCa::TrueCoaxial2D</a>, <a class="el" href="classGeFiCa_1_1Planar2D.html#a5d7f84ffd06fb5786041914243ed5a4e">GeFiCa::Planar2D</a>, <a class="el" href="classGeFiCa_1_1PointContactXY.html#a5d8cea9ac81e0fd2d451a985bc36d63f">GeFiCa::PointContactXY</a>, and <a class="el" href="classGeFiCa_1_1Sphere.html#a391019307e8036a2a7203db1743f041a">GeFiCa::Sphere</a>.</p>
+<p>Reimplemented in <a class="el" href="classGeFiCa_1_1Planar1D.html#acde619700c2c2d7fb450053e43b15294">GeFiCa::Planar1D</a>, <a class="el" href="classGeFiCa_1_1Sphere.html#a391019307e8036a2a7203db1743f041a">GeFiCa::Sphere</a>, <a class="el" href="classGeFiCa_1_1Sphere1D.html#a5aa412fb08544eb1fd6d9dbd020caaeb">GeFiCa::Sphere1D</a>, <a class="el" href="classGeFiCa_1_1TrueCoaxial1D.html#aa15c03ed604b48656172eb2113f094c4">GeFiCa::TrueCoaxial1D</a>, <a class="el" href="classGeFiCa_1_1TrueCoaxial2D.html#add73cdd75b39827a1a89f0cad8d9d602">GeFiCa::TrueCoaxial2D</a>, <a class="el" href="classGeFiCa_1_1Planar2D.html#a5d7f84ffd06fb5786041914243ed5a4e">GeFiCa::Planar2D</a>, and <a class="el" href="classGeFiCa_1_1PointContactXY.html#a5d8cea9ac81e0fd2d451a985bc36d63f">GeFiCa::PointContactXY</a>.</p>
 
 </div>
 </div>
@@ -687,7 +688,7 @@ double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 </div><div class="memdoc">
 <p>Uses Second order Successive Over-Relaxation method to calculate the field. </p>
 
-<p>Reimplemented in <a class="el" href="classGeFiCa_1_1XY.html#ac18afdb8086c0d9ee4c706b24fc9a7a2">GeFiCa::XY</a>, <a class="el" href="classGeFiCa_1_1XYZ.html#ac3342a01a695e9abb6e3bf751d6fa61c">GeFiCa::XYZ</a>, <a class="el" href="classGeFiCa_1_1R.html#a6d5ca9b74a6674028db1ff92bae6ab75">GeFiCa::R</a>, <a class="el" href="classGeFiCa_1_1Rho.html#a23e3d79b824e80a7bc7f4f40e04f286e">GeFiCa::Rho</a>, <a class="el" href="classGeFiCa_1_1RThetaPhi.html#a5abb6c0ec6b7f57a641402eb8b20056f">GeFiCa::RThetaPhi</a>, <a class="el" href="classGeFiCa_1_1RhoPhi.html#a2013289a6b34fe1bdc940ecce129df14">GeFiCa::RhoPhi</a>, and <a class="el" href="classGeFiCa_1_1RhoPhiZ.html#ad38e5931c3ce1e38afedd0e610cfd1f1">GeFiCa::RhoPhiZ</a>.</p>
+<p>Reimplemented in <a class="el" href="classGeFiCa_1_1XY.html#ac18afdb8086c0d9ee4c706b24fc9a7a2">GeFiCa::XY</a>, <a class="el" href="classGeFiCa_1_1XYZ.html#ac3342a01a695e9abb6e3bf751d6fa61c">GeFiCa::XYZ</a>, <a class="el" href="classGeFiCa_1_1R.html#a6d5ca9b74a6674028db1ff92bae6ab75">GeFiCa::R</a>, <a class="el" href="classGeFiCa_1_1Rho.html#a23e3d79b824e80a7bc7f4f40e04f286e">GeFiCa::Rho</a>, <a class="el" href="classGeFiCa_1_1RThetaPhi.html#a5abb6c0ec6b7f57a641402eb8b20056f">GeFiCa::RThetaPhi</a>, <a class="el" href="classGeFiCa_1_1RhoPhi.html#afa6a24427f2da3d96f9290c247eacd25">GeFiCa::RhoPhi</a>, and <a class="el" href="classGeFiCa_1_1RhoPhiZ.html#ad38e5931c3ce1e38afedd0e610cfd1f1">GeFiCa::RhoPhiZ</a>.</p>
 
 </div>
 </div>
