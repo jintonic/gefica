@@ -10,5 +10,5 @@
 
    TChain *t = new TChain("t");
    t->Add("pointContact2d.root");
-   t->Draw("p:c1:c2");
+   t->Draw("c2:c1:p", "", "colz");
 }
