@@ -82,5 +82,5 @@ class GeFiCa::XY : public GeFiCa::X
       double GetData(double tarx,double tary,int thing); 
       virtual void SetStepLength(double steplength1,double steplength2); 
 };
-
 #endif 
+

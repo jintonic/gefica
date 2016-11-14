@@ -237,7 +237,7 @@ void X::LoadField(const char * fin)
 //
 void X::SetImpurity(double density)
 {
-   for(int i=n;i-->0;) fImpurity[i]=density;
+   for(int i=0;i<n;i++) fImpurity[i]=density;
 }
 //_____________________________________________________________________________
 //

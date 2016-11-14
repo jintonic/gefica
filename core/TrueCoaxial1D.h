@@ -10,10 +10,10 @@ class GeFiCa::TrueCoaxial1D : public GeFiCa::Rho
    public :
       double OuterRadius; // Outer radius of the detector
       double InnerRadius; // Inner radius of the detector
-      double cathode_voltage,annode_voltage;
+      double Vpos,Vneg;
 
    public :
-      TrueCoaxial1D(int nx=101) : Rho(nx),OuterRadius(10),InnerRadius(0), cathode_voltage(2000),annode_voltage(0) {};
+      TrueCoaxial1D(int nx=101) : Rho(nx),OuterRadius(10),InnerRadius(0), Vpos(2000),Vneg(0) {};
       void Initialize();
       bool CalculateField(EMethod method=kSOR2);
       ClassDef(TrueCoaxial1D, 1);
@@ -21,5 +21,5 @@ class GeFiCa::TrueCoaxial1D : public GeFiCa::Rho
    protected:
       bool Analytic();
 };
-
 #endif
+
