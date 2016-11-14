@@ -22,8 +22,8 @@ void Sphere::Initialize()
 
   for (int i=0;i<n;i=i+n1)
   {
-    fPotential[i]=cathode_voltage;
-    fPotential[i+n1-1]=anode_voltage;
+    fPotential[i]=Vpos;
+    fPotential[i+n1-1]=Vneg;
     fIsFixed[i]=true;
     fIsFixed[i+n1-1]=true;
   }

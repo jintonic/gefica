@@ -25,8 +25,8 @@ void Sphere1D::Initialize()
    for(int i=n;i-->0;)fC1[i]=fC1[i]+outterR;
    fIsFixed[0]=true;
    fIsFixed[n-1]=true;
-   double slope = (cathode_voltage-annode_voltage)/(n-1);
-   for (int i=0; i<n; i++) fPotential[i]=annode_voltage+slope*i;
+   double slope = (Vpos-Vneg)/(n-1);
+   for (int i=0; i<n; i++) fPotential[i]=Vneg+slope*i;
 }
 //_____________________________________________________________________________
 //
