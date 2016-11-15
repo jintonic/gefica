@@ -36,20 +36,21 @@ void Planar1D::Initialize()
 // b=(Vneg-Vpos-a(LowerBound^2-UpperBound^2))/(LowerBound-UpperBound)
 // c=Vneg-a*LowerBound^2-LowerBound(Vneg-Vpos-a*(LowerBound^2-UpperBound^2))/(LowerBound-UpperBound)
 
-
+// Potential problem could be resulting from the deffinition of volt and impurity.
+//Impurity is in cm while the SI unit of volt invlolves meters.
 
 // bool Planar1D::Analytic()
 // {
-//    double d=LowerBound-UpperBound;
-//    double dSquare=LowerBound*lowerBound-UpperBound*UpperBound;
-//    double Aconst=fImpurity[i]*Qe/2/epsilon;
-//    double Bconst=(Vneg-Vpos-Aconst*dSquare)/d;
-//    double Cconst=Vneg-Aconst*LowerBound*LowerBound-LowerBound*(Vneg-Vpos-Aconst*dSquare)/d;
-//    for (int i=0; i<n; i++) {
-//      fPotential[i] = Aconst*fC1[i]*fC1[i]+Bconst*fC1[i]+Cconst;
-//      fE1[i]=(fPotential[i+1]-fPotential[i-1])/(fDistanceToNext[i]+fDistanceToPrevious[i]);
-//    }
-//   return true;
+   // double d=LowerBound-UpperBound;
+   // double dSquare=LowerBound*LowerBound-UpperBound*UpperBound;
+   // double Aconst=fImpurity[0]*Qe/2/epsilon;
+   // double Bconst=(Vneg-Vpos-Aconst*dSquare)/d;
+   // double Cconst=Vneg-Aconst*LowerBound*LowerBound-LowerBound*(Vneg-Vpos-Aconst*dSquare)/d;
+   // for (int i=0; i<n; i++) {
+     // fPotential[i] = Aconst*fC1[i]*fC1[i]+Bconst*fC1[i]+Cconst;
+     // fE1[i]=(fPotential[i+1]-fPotential[i-1])/(fDistanceToNext[i]+fDistanceToPrevious[i]);
+   // }
+  // return true;
 // }
 
 
