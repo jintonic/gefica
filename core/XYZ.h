@@ -39,5 +39,4 @@ class GeFiCa::XYZ : public GeFiCa::XY
             double tarz,int begin,int end);
       virtual void SOR2(int idx,bool elec); 
 };
-
 #endif
