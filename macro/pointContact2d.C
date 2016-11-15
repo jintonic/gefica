@@ -1,5 +1,5 @@
 {
-   GeFiCa::PointContactXY *detector = new GeFiCa::PointContactXY(1001,1001);
+   GeFiCa::PointContactXY *detector = new GeFiCa::PointContactXY(101,101);
    detector->MaxIterations=1e5;
    detector->Csor=1.9;
    detector->SetImpurity(1e10/GeFiCa::cm3);
