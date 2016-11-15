@@ -27,6 +27,33 @@ void Planar1D::Initialize()
 }
 //_____________________________________________________________________________
 //
+//Here we calculate the field analytically using the fomrula (d^2 phi/d phi^2) = rho/epsilon.
+//Rho in this case is just the impurity density. This gives us a differential equation 
+//the type phi(x)= ax^2 + bx + c . We can find a, b, and c by evaluating this equation
+//at the boundary conditions where we know the potential
+// we know:
+// a=rho/(2*epsilon)
+// b=(Vneg-Vpos-a(LowerBound^2-UpperBound^2))/(LowerBound-UpperBound)
+// c=Vneg-a*LowerBound^2-LowerBound(Vneg-Vpos-a*(LowerBound^2-UpperBound^2))/(LowerBound-UpperBound)
+
+
+
+// bool Planar1D::Analytic()
+// {
+//    double d=LowerBound-UpperBound;
+//    double dSquare=LowerBound*lowerBound-UpperBound*UpperBound;
+//    double Aconst=fImpurity[i]*Qe/2/epsilon;
+//    double Bconst=(Vneg-Vpos-Aconst*dSquare)/d;
+//    double Cconst=Vneg-Aconst*LowerBound*LowerBound-LowerBound*(Vneg-Vpos-Aconst*dSquare)/d;
+//    for (int i=0; i<n; i++) {
+//      fPotential[i] = Aconst*fC1[i]*fC1[i]+Bconst*fC1[i]+Cconst;
+//      fE1[i]=(fPotential[i+1]-fPotential[i-1])/(fDistanceToNext[i]+fDistanceToPrevious[i]);
+//    }
+//   return true;
+// }
+
+
+
 bool Planar1D::Analytic()
 {
    double d=UpperBound-LowerBound;//thickness or depth of the detector
