@@ -1,4 +1,7 @@
 #include "Planar1D.h"
+#include <iostream>
+using namespace std;
+
 using namespace GeFiCa;
 
 void Planar1D::Initialize()
@@ -19,11 +22,13 @@ void Planar1D::Initialize()
    }
    double steplength=(UpperBound-LowerBound)/(n-1);
    SetStepLength(steplength);
-   for (int i=0; i<n; i++) fC1[i]=fC1[i]+LowerBound;
+   for (int i=n; i-->0;) fC1[i]=fC1[i]+LowerBound;
    fIsFixed[0]=true;
    fIsFixed[n-1]=true;
    double slope = (Vpos-Vneg)/(n-1);
-   for (int i=0; i<n; i++) fPotential[i]=Vneg+slope*i;
+   for (int i=0; i<n; i++) {
+	   fPotential[i]=Vneg+slope*i;
+   }
 }
 //_____________________________________________________________________________
 //
@@ -41,16 +46,20 @@ void Planar1D::Initialize()
 #include  <cmath>
 bool Planar1D::Analytic()
 {
-   double density=fImpurity[1]*1.6e-19;
+   double density=-fImpurity[1]*1.6e-19;
    double d=LowerBound-UpperBound;
    double dSquare=LowerBound*LowerBound-UpperBound*UpperBound;
    double Aconst=density/2/epsilon;
    double Bconst=(fPotential[0]-fPotential[n-1]-Aconst*dSquare)/d;
    double Cconst=fPotential[0]-Aconst*LowerBound*LowerBound-LowerBound*(fPotential[0]-fPotential[n-1]-Aconst*dSquare)/d;
    for (int i=0; i<n; i++) {
-     fPotential[i] = fImpurity[i]*1.6e-19/2/epsilon*fC1[i]*fC1[i]+Bconst*fC1[i]+Cconst;
+     fPotential[i] = -fImpurity[i]*1.6e-19/2/epsilon*fC1[i]*fC1[i]+Bconst*fC1[i]+Cconst;
      fE1[i]=(fPotential[i+1]-fPotential[i-1])/(fDistanceToNext[i]+fDistanceToPrevious[i]);
    }
+   cout<<"Aconst= "<<Aconst<<endl;
+   cout<<"Bconst= "<<Bconst<<endl;
+   cout<<"Cconst= "<<Cconst<<endl;
+
   return true;
 }
 
