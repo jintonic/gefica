@@ -41,13 +41,14 @@ void Planar1D::Initialize()
 #include  <cmath>
 bool Planar1D::Analytic()
 {
+   double density=fImpurity[1]*1.6e-19;
    double d=LowerBound-UpperBound;
    double dSquare=LowerBound*LowerBound-UpperBound*UpperBound;
-   double Aconst=fImpurity[0]*Qe/2/epsilon;
-   double Bconst=(Vneg-Vpos-Aconst*dSquare)/d;
-   double Cconst=Vneg-Aconst*LowerBound*LowerBound-LowerBound*(Vneg-Vpos-Aconst*dSquare)/d;
+   double Aconst=density/2/epsilon;
+   double Bconst=(fPotential[0]-fPotential[n-1]-Aconst*dSquare)/d;
+   double Cconst=fPotential[0]-Aconst*LowerBound*LowerBound-LowerBound*(fPotential[0]-fPotential[n-1]-Aconst*dSquare)/d;
    for (int i=0; i<n; i++) {
-     fPotential[i] = Aconst*fC1[i]*fC1[i]+Bconst*fC1[i]+Cconst;
+     fPotential[i] = fImpurity[i]*1.6e-19/2/epsilon*fC1[i]*fC1[i]+Bconst*fC1[i]+Cconst;
      fE1[i]=(fPotential[i+1]-fPotential[i-1])/(fDistanceToNext[i]+fDistanceToPrevious[i]);
    }
   return true;
