@@ -38,34 +38,34 @@ void Planar1D::Initialize()
 
 // Potential problem could be resulting from the deffinition of volt and impurity.
 //Impurity is in cm while the SI unit of volt invlolves meters.
+#include  <cmath>
+bool Planar1D::Analytic()
+{
+   double d=LowerBound-UpperBound;
+   double dSquare=LowerBound*LowerBound-UpperBound*UpperBound;
+   double Aconst=fImpurity[0]*Qe/2/epsilon;
+   double Bconst=(Vneg-Vpos-Aconst*dSquare)/d;
+   double Cconst=Vneg-Aconst*LowerBound*LowerBound-LowerBound*(Vneg-Vpos-Aconst*dSquare)/d;
+   for (int i=0; i<n; i++) {
+     fPotential[i] = Aconst*fC1[i]*fC1[i]+Bconst*fC1[i]+Cconst;
+     fE1[i]=(fPotential[i+1]-fPotential[i-1])/(fDistanceToNext[i]+fDistanceToPrevious[i]);
+   }
+  return true;
+}
+
+
 
 // bool Planar1D::Analytic()
 // {
-   // double d=LowerBound-UpperBound;
-   // double dSquare=LowerBound*LowerBound-UpperBound*UpperBound;
-   // double Aconst=fImpurity[0]*Qe/2/epsilon;
-   // double Bconst=(Vneg-Vpos-Aconst*dSquare)/d;
-   // double Cconst=Vneg-Aconst*LowerBound*LowerBound-LowerBound*(Vneg-Vpos-Aconst*dSquare)/d;
+   // double d=UpperBound-LowerBound;//thickness or depth of the detector
+   // double cnst1=fPotential[0];
+   // double cnst2=(fPotential[n-1]-fImpurity[n-1]*Qe/2/epsilon*d*d-cnst1)/d;
    // for (int i=0; i<n; i++) {
-     // fPotential[i] = Aconst*fC1[i]*fC1[i]+Bconst*fC1[i]+Cconst;
-     // fE1[i]=(fPotential[i+1]-fPotential[i-1])/(fDistanceToNext[i]+fDistanceToPrevious[i]);
+      // fPotential[i] = fImpurity[i]*Qe/2/epsilon*fC1[i]*fC1[i]+cnst2*fC1[i]+cnst1;
+      // fE1[i]=(fPotential[i+1]-fPotential[i-1])/(fDistanceToNext[i]+fDistanceToPrevious[i]);
    // }
-  // return true;
+   // return true;
 // }
-
-
-
-bool Planar1D::Analytic()
-{
-   double d=UpperBound-LowerBound;//thickness or depth of the detector
-   double cnst1=fPotential[0];
-   double cnst2=(fPotential[n-1]-fImpurity[n-1]*Qe/2/epsilon*d*d-cnst1)/d;
-   for (int i=0; i<n; i++) {
-      fPotential[i] = fImpurity[i]*Qe/2/epsilon*fC1[i]*fC1[i]+cnst2*fC1[i]+cnst1;
-      fE1[i]=(fPotential[i+1]-fPotential[i-1])/(fDistanceToNext[i]+fDistanceToPrevious[i]);
-   }
-   return true;
-}
 //_____________________________________________________________________________
 //
 bool Planar1D::CalculateField(EMethod method)
