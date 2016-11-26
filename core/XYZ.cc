@@ -16,6 +16,8 @@ XYZ::XYZ(unsigned short nx, unsigned short ny,unsigned short nz):
    fC3=new double[n];
    fDistanceToUp=new double[n];
    fDistanceToDown=new double[n];
+   d=3;
+   t=1;
 }
 //_____________________________________________________________________________
 //

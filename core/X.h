@@ -42,6 +42,7 @@ class GeFiCa::X : public TObject
       int n; ///< n = n1 total number of grid
       double Csor; ///< boost Iteration speed
       double Precision; ///< X limit
+      int t,d;
 
    public:
    

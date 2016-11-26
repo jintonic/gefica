@@ -15,6 +15,8 @@ X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),
    fDistanceToPrevious(0), fImpurity(0)
 { 
    //claim a 1D field with nx grids
+   t=1;
+   d=1;
    n=nx;
    n1=nx; 
    fIsLoaded=false;

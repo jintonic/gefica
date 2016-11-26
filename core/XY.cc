@@ -16,6 +16,8 @@ XY::XY(unsigned short nx, unsigned short ny): X(nx*ny), n2(ny),
    fC2=new double[n];
    fDistanceToLeft=new double[n];
    fDistanceToRight=new double[n];
+   t=1;
+   d=2;
 }
 //_____________________________________________________________________________
 //

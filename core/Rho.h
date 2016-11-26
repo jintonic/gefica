@@ -13,7 +13,7 @@ class GeFiCa::Rho : public X
       /**
 	  * Rho is a constructor, if given a number, no input is needed
 	  */
-      Rho(int nx=101): X(nx){};
+      Rho(int nx=101): X(nx){t=2,d=1;};
 	  /**
 	  * This defines the class R for the cint dictionary.
 	  */

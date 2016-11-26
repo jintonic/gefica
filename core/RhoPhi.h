@@ -8,7 +8,7 @@ namespace GeFiCa { class RhoPhi; }
 class GeFiCa::RhoPhi : public GeFiCa::XY
 {
    public:
-      RhoPhi(unsigned short r=101, unsigned short phi=101): XY(r,phi) {} 
+      RhoPhi(unsigned short r=101, unsigned short phi=101): XY(r,phi) {t=2,d=2;}; 
       virtual ~RhoPhi() {};
 
       virtual double GetPotential(double rho,double phi){return GetData(rho,phi,1);};
