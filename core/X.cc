@@ -56,12 +56,9 @@ void X::SetStepLength(double steplength)
    //set field step length
    for (int i=n;i-->0;) {
       fIsFixed[i]=false;
-      fE1[i]=0;
       fC1[i]=i*steplength;
-      fPotential[i]=0;
       fDistanceToNext[i]=steplength;
       fDistanceToPrevious[i]=steplength;
-      fImpurity[i]=0;
    }
 }
 //_____________________________________________________________________________
@@ -69,7 +66,7 @@ void X::SetStepLength(double steplength)
 bool X::CalculateField(EMethod method)
 {
    fIsLoaded=true;
-
+   Printf("3 impur: %f",fImpurity[0]);
    if (method==kAnalytic) return Analytic();
    int cnt=0;
    while (cnt++<MaxIterations) {
@@ -239,7 +236,9 @@ void X::LoadField(const char * fin)
 //
 void X::SetImpurity(double density)
 {
-   for(int i=n;i-->0;) fImpurity[i]=density;
+   for(int i=0;i<n;i++) {
+	   fImpurity[i]=density;
+   }
 }
 //_____________________________________________________________________________
 //

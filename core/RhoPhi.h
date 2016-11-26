@@ -21,5 +21,5 @@ class GeFiCa::RhoPhi : public GeFiCa::XY
 
       ClassDef(RhoPhi,1);
 };
-
 #endif
+

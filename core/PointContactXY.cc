@@ -23,17 +23,17 @@ void PointContactXY::Initialize()
    // set potential for electrodes
    for(int i=n-1;i>=n-n1;i--) {
       fIsFixed[i]=true;
-      fPotential[i]=annode_voltage;
+      fPotential[i]=Vneg;
       if(fC1[n-1-i]>=PointBegin&&fC1[n-1-i]<=PointEnd) {
-         fPotential[n-1-i]=cathode_voltage;
+         fPotential[n-1-i]=Vpos;
          fIsFixed[n-1-i]=true;
       }
    }
    for(int i=0;i<n-n1;i=i+n1) {
       fIsFixed[i]=true;
       fIsFixed[i+n1-1]=true;
-      fPotential[i]=annode_voltage;
-      fPotential[i+n1-1]=annode_voltage;
+      fPotential[i]=Vneg;
+      fPotential[i+n1-1]=Vneg;
    }
 }
 //_____________________________________________________________________________

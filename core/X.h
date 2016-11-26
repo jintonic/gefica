@@ -15,15 +15,16 @@ namespace GeFiCa {
       kSOR4,		/**< Successove over-relaxation method to the 4th order*/
    };
 
-   /**
-   * X is a member of GeFiCa.
-   */
    class X;
 
-   static const double epsilon = 16*8.854187817e-12; 
+
+   static const double Coulomb=1;
+   static const double Qe = 1.6e-19;  ///< electron charge in Coulomb
    static const double cm =1;
-   static const double volt=1;
    static const double cm3=cm*cm*cm; 
+   static const double meter=100*cm;
+   static const double volt=1;
+   static const double epsilon = 16*8.854187817e-12*Coulomb/volt/meter; ///< dielectric constant of Ge
 }
 
 /**
@@ -131,5 +132,5 @@ class GeFiCa::X : public TObject
       virtual void SOR2(int idx,bool calculateElectricField); 
       
 };
-
 #endif
+

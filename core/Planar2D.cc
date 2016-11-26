@@ -23,8 +23,8 @@ void Planar2D::Initialize()
    for(int i=0;i<n2;i++) {
       fIsFixed[i*n1]=true;
       fIsFixed[(i+1)*n1-1]=true;
-      fPotential[i*n1]=cathode_voltage;
-      fPotential[(i+1)*n1-1]=annode_voltage;
+      fPotential[i*n1]=Vpos;
+      fPotential[(i+1)*n1-1]=Vneg;
    }
 }
 //_____________________________________________________________________________

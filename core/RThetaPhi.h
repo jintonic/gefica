@@ -24,5 +24,5 @@ class GeFiCa::RThetaPhi : public GeFiCa::XYZ
       ClassDef(RThetaPhi,1);
 
 };
-
 #endif
+

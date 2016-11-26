@@ -8,10 +8,10 @@ namespace GeFiCa { class PointContactXY; }
 class GeFiCa::PointContactXY : public GeFiCa::XY
 {
   public:
-    double cathode_voltage,annode_voltage;
+    double Vpos,Vneg;
     double XUpperBound,XLowerBound,YUpperBound,YLowerBound,PointBegin,PointEnd;//bounds for X and Y and point start and end
    public :
-     PointContactXY(int ix,int iy) : XY(ix,iy),cathode_voltage(2000),annode_voltage(0), XUpperBound(10),XLowerBound(1),YUpperBound(10),YLowerBound(1), PointBegin(4),PointEnd(6){};
+     PointContactXY(int ix,int iy) : XY(ix,iy),Vpos(2000),Vneg(0), XUpperBound(10),XLowerBound(1),YUpperBound(10),YLowerBound(1), PointBegin(4),PointEnd(6){};
 
      void Initialize();
      bool CalculateField(EMethod method=kSOR2);
