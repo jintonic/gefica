@@ -19,7 +19,7 @@ class GeFiCa::Rho : public X
 	  */
       ClassDef(Rho,1);
       virtual double GetPotential(double rho){return GetData(rho,1);};
-      virtual double GetE1(double rho){return GetData(rho,2);};
+      virtual double GetE1(double rho,double phi,double z){return GetData(rho,2);};
       virtual double GetImpurity(double rho){return GetData(rho,0);};
    protected:
 

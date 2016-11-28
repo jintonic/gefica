@@ -79,7 +79,9 @@ class GeFiCa::X : public TObject
       /**
       * Returns the value for E under the first direction.
       */
-      virtual double GetE1(double x){return GetData(x,2);};
+      virtual double GetE1(double x,double y,double z){return GetData(x,2);};
+      virtual double GetE2(double x,double y,double z){return 0;};
+      virtual double GetE3(double x,double y,double z){return 0;};
       /**
       * Returns the impurity level.
       */ 

@@ -24,7 +24,7 @@ class GeFiCa::R : public X
       ClassDef(R,1);
 
       virtual double GetPotential(double r){return GetData(r,1);};
-      virtual double GetE1(double r){return GetData(r,2);};
+      virtual double GetE1(double r,double theta,double phi){return GetData(r,2);};
       virtual double GetImpurity(double r){return GetData(r,0);};
    protected:
 

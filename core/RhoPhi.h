@@ -12,8 +12,8 @@ class GeFiCa::RhoPhi : public GeFiCa::XY
       virtual ~RhoPhi() {};
 
       virtual double GetPotential(double rho,double phi){return GetData(rho,phi,1);};
-      virtual double GetE1(double rho,double phi){return GetData(rho,phi,2);};
-      virtual double GetE2(double rho,double phi){return GetData(rho,phi,3);};
+      virtual double GetE1(double rho,double phi,double z){return GetData(rho,phi,2);};
+      virtual double GetE2(double rho,double phi,double z){return GetData(rho,phi,3);};
       virtual double GetImpurity(double rho,double phi){return GetData(rho,phi,0);};
    protected:
       virtual double GetData(double tarx,double tary,int thing);

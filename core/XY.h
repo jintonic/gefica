@@ -34,11 +34,11 @@ class GeFiCa::XY : public GeFiCa::X
       /**
       * Returns the value for the electric field under the first direction
       */
-      virtual double GetE1(double x,double y){return GetData(x,y,2);};
+      virtual double GetE1(double x,double y,double z){return GetData(x,y,2);};
       /**
       * Returns the value for the electic field under the second direction
       */
-      virtual double GetE2(double x,double y){return GetData(x,y,3);};
+      virtual double GetE2(double x,double y,double z){return GetData(x,y,3);};
       /**
       * Returns the two dimensional impurity
       */
