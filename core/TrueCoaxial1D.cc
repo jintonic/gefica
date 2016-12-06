@@ -2,6 +2,7 @@
 using namespace std;
 
 #include "TrueCoaxial1D.h"
+#include "Units.h"
 using namespace GeFiCa;
 
 void TrueCoaxial1D::Initialize()

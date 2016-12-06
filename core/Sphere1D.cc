@@ -2,6 +2,7 @@
 using namespace std;
 
 #include "Sphere1D.h"
+#include "Units.h"
 using namespace GeFiCa;
 
 void Sphere1D::Initialize()

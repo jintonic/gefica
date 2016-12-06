@@ -8,6 +8,7 @@ using namespace std;
 #include <TF1.h>
 
 #include "X.h"
+#include "Units.h"
 using namespace GeFiCa;
 
 X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),
@@ -66,7 +67,6 @@ void X::SetStepLength(double steplength)
 bool X::CalculateField(EMethod method)
 {
    fIsLoaded=true;
-   Printf("3 impur: %f",fImpurity[0]);
    if (method==kAnalytic) return Analytic();
    int cnt=0;
    while (cnt++<MaxIterations) {

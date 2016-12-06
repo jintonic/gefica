@@ -4,6 +4,7 @@
 #include <TVectorD.h>
 
 #include "XY.h"
+#include "Units.h"
 using namespace GeFiCa;
 
 XY::XY(unsigned short nx, unsigned short ny): X(nx*ny), n2(ny),
