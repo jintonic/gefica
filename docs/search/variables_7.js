@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['upperbound',['UpperBound',['../classGeFiCa_1_1Planar1D.html#a4835a0cca405170cd6b782e6355c1cd3',1,'GeFiCa::Planar1D']]]
+  ['vneg',['Vneg',['../classGeFiCa_1_1Planar1D.html#a0f2e190343d7cc66676f1c28396fbb47',1,'GeFiCa::Planar1D']]],
+  ['vpos',['Vpos',['../classGeFiCa_1_1Planar1D.html#a33594492b8063b14b0adcbb60ea3f6ca',1,'GeFiCa::Planar1D']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['annode_5fvoltage',['annode_voltage',['../classGeFiCa_1_1Planar1D.html#afa44ed2839029766c99e85ff0bed7162',1,'GeFiCa::Planar1D']]]
+  ['csor',['Csor',['../classGeFiCa_1_1X.html#a338e0b92b46549727339bd1bc8c3dfa3',1,'GeFiCa::X']]]
 ];

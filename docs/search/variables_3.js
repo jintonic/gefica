@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['lowerbound',['LowerBound',['../classGeFiCa_1_1Planar1D.html#aa7a32553a73536f9f1a665908d36acc3',1,'GeFiCa::Planar1D']]]
+  ['maxiterations',['MaxIterations',['../classGeFiCa_1_1X.html#a1a71e36f90c88469a269f899989c63ec',1,'GeFiCa::X']]]
 ];
