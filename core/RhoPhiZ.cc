@@ -4,8 +4,8 @@
 #include <TVectorD.h>
 
 #include "RhoPhiZ.h"
+#include "Units.h"
 using namespace GeFiCa;
-using namespace std;
 
 void RhoPhiZ::SOR2(int idx,bool elec)
 {//need update

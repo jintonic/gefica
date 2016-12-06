@@ -1,4 +1,5 @@
 #include "PointContactXY.h"
+#include "Units.h"
 using namespace GeFiCa;
 
 void PointContactXY::Initialize()
