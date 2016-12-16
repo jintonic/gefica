@@ -1,6 +1,6 @@
 <map id="GeFiCa::RThetaPhi" name="GeFiCa::RThetaPhi">
-<area shape="rect" id="node6" href="$classGeFiCa_1_1Sphere.html" title="GeFiCa::Sphere" alt="" coords="16,379,132,405"/>
-<area shape="rect" id="node2" href="$classGeFiCa_1_1XYZ.html" title="GeFiCa::XYZ" alt="" coords="23,229,125,256"/>
-<area shape="rect" id="node3" href="$classGeFiCa_1_1XY.html" title="GeFiCa::XY" alt="" coords="27,155,121,181"/>
-<area shape="rect" id="node4" href="$classGeFiCa_1_1X.html" title="GeFiCa::X" alt="" coords="32,80,116,107"/>
+<area shape="rect" href="$classGeFiCa_1_1Sphere.html" title="GeFiCa::Sphere" alt="" coords="16,380,133,407" />
+<area shape="rect" href="$classGeFiCa_1_1XYZ.html" title="GeFiCa::XYZ" alt="" coords="24,231,125,257" />
+<area shape="rect" href="$classGeFiCa_1_1XY.html" title="GeFiCa::XY" alt="" coords="28,156,121,183" />
+<area shape="rect" href="$classGeFiCa_1_1X.html" title="GeFiCa::X" alt="" coords="33,81,116,108" />
 </map>

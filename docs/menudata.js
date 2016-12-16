@@ -18,6 +18,7 @@ var menudata={children:[
 {text:'r',url:'functions.html#index_r'},
 {text:'s',url:'functions.html#index_s'},
 {text:'u',url:'functions.html#index_u'},
+{text:'v',url:'functions.html#index_v'},
 {text:'x',url:'functions.html#index_x'}]},
 {text:'Functions',url:'functions_func.html',children:[
 {text:'a',url:'functions_func.html#index_a'},
@@ -26,7 +27,6 @@ var menudata={children:[
 {text:'g',url:'functions_func.html#index_g'},
 {text:'i',url:'functions_func.html#index_i'},
 {text:'l',url:'functions_func.html#index_l'},
-{text:'p',url:'functions_func.html#index_p'},
 {text:'r',url:'functions_func.html#index_r'},
 {text:'s',url:'functions_func.html#index_s'},
 {text:'x',url:'functions_func.html#index_x'}]},

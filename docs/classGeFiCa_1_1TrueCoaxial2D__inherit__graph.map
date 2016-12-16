@@ -1,5 +1,5 @@
 <map id="GeFiCa::TrueCoaxial2D" name="GeFiCa::TrueCoaxial2D">
-<area shape="rect" id="node2" href="$classGeFiCa_1_1RhoPhi.html" title="GeFiCa::RhoPhi" alt="" coords="27,229,146,256"/>
-<area shape="rect" id="node3" href="$classGeFiCa_1_1XY.html" title="GeFiCa::XY" alt="" coords="40,155,133,181"/>
-<area shape="rect" id="node4" href="$classGeFiCa_1_1X.html" title="GeFiCa::X" alt="" coords="45,80,129,107"/>
+<area shape="rect" href="$classGeFiCa_1_1RhoPhi.html" title="GeFiCa::RhoPhi" alt="" coords="29,231,147,258" />
+<area shape="rect" href="$classGeFiCa_1_1XY.html" title="GeFiCa::XY" alt="" coords="41,156,135,183" />
+<area shape="rect" href="$classGeFiCa_1_1X.html" title="GeFiCa::X" alt="" coords="47,82,129,108" />
 </map>

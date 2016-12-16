@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['vneg',['Vneg',['../classGeFiCa_1_1Planar1D.html#a0f2e190343d7cc66676f1c28396fbb47',1,'GeFiCa::Planar1D']]],
-  ['vpos',['Vpos',['../classGeFiCa_1_1Planar1D.html#a33594492b8063b14b0adcbb60ea3f6ca',1,'GeFiCa::Planar1D']]]
+  ['vneg',['Vneg',['../classGeFiCa_1_1X.html#afa9e3ab1b21aa5cdae5f70d78edd5698',1,'GeFiCa::X']]],
+  ['vpos',['Vpos',['../classGeFiCa_1_1X.html#a2b5496f5210411349c32cfa684ddf5c7',1,'GeFiCa::X']]]
 ];
