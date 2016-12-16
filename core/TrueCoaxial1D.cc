@@ -34,6 +34,13 @@ void TrueCoaxial1D::Initialize()
 #include  <cmath>
 bool TrueCoaxial1D::Analytic()
 {
+  bool isimpuritygood=true;
+  for(int i=0;i+1<n;i++)if(fImpurity[i]!=fImpurity[i+1])isimpuritygood=false;
+  if(!isimpuritygood)
+  {
+    cout<<"cant handle changeing impurity,quit"<<endl;
+    return false;
+  }
    double density=fImpurity[1]*1.6e-19;
    double cnst1=(fPotential[n-1]-fPotential[0]-density*(fC1[n-1]*fC1[n-1]-fC1[0]*fC1[0])/epsilon/4)/(log(fC1[n-1]/fC1[0]));
    double cnst2=fPotential[0]-density*fC1[0]*fC1[0]/epsilon/4-cnst1*log(fC1[0]);

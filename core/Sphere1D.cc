@@ -34,6 +34,13 @@ void Sphere1D::Initialize()
 #include  <cmath>
 bool Sphere1D::Analytic()
 {
+  bool isimpuritygood=true;
+  for(int i=0;i+1<n;i++)if(fImpurity[i]!=fImpurity[i+1])isimpuritygood=false;
+  if(!isimpuritygood)
+  {
+    cout<<"cant handle changeing impurity,quit"<<endl;
+    return false;
+  }
    double density=fImpurity[1]*1.6e-19;
    double cnst1=(fPotential[n-1]-fPotential[0]+density/epsilon/6*(fC1[n-1]*fC1[n-1]-fC1[0]*fC1[0]))/(pow(fC1[n-1],-1)-pow(fC1[0],-1));
    cout<<fPotential[0]<<endl;

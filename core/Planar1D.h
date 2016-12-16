@@ -19,12 +19,10 @@ class GeFiCa::Planar1D : public GeFiCa::X
    public :
       double UpperBound;///< upper boundary of the planar detector
       double LowerBound;///< lower boundary of the planar detector
-      double Vpos;///< Volage of the cathode
-      double Vneg;///< Voltage of the anode
 
    public :
-      Planar1D(int nx=101) : X(nx), UpperBound(1), LowerBound(0), 
-      Vpos(0), Vneg(2000){}; 
+      Planar1D(int nx=101) : X(nx), UpperBound(1), LowerBound(0) 
+      {}; 
 
       /**
        * Calculate the step length of the grid.

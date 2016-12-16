@@ -33,6 +33,9 @@ class GeFiCa::X : public TObject
       double Precision; ///< X limit
       int t,d;
 
+      double Vpos;///< Volage of the cathode
+      double Vneg;///< Voltage of the anode
+
    public:
 
       /**

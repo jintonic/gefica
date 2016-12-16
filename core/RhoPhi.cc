@@ -6,7 +6,7 @@ void RhoPhi::SOR2(int idx,bool elec)
 {
 
    if (fIsFixed[idx])return;
-   double density=fImpurity[idx]*1.6e12;
+   double density=-fImpurity[idx]*1.6e12;
    double h2=fDistanceToPrevious[idx];
    double h3=fDistanceToNext[idx];
    double h4=fDistanceToLeft[idx];

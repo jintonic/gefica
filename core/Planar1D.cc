@@ -28,6 +28,13 @@ void Planar1D::Initialize()
 #include  <cmath>
 bool Planar1D::Analytic()
 {
+  bool isimpuritygood=true;
+  for(int i=0;i+1<n;i++)if(fImpurity[i]!=fImpurity[i+1])isimpuritygood=false;
+  if(!isimpuritygood)
+  {
+    cout<<"cant handle changeing impurity,quit"<<endl;
+    return false;
+  }
    double d=UpperBound-LowerBound;//thickness or depth of the detector
    double a=-fImpurity[n-1]*Qe/2/epsilon;
    double b=(fPotential[n-1]-fPotential[0]-a*d*d)/d;

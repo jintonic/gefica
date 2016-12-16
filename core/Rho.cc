@@ -14,7 +14,7 @@ using namespace GeFiCa;
 void Rho::SOR2(int idx,bool elec)
 {
    if (fIsFixed[idx])return ;
-   double density=fImpurity[idx]*1.6e-19;
+   double density=-fImpurity[idx]*1.6e-19;
    double h2=fDistanceToPrevious[idx];
    double h3=fDistanceToNext[idx];
    //double tmp=-density/epsilon*h2*h3/2+(fPotential[idx-1]-fPotential[idx+1])/fC1[idx]*h2*h3/(h2+h3)+(h3*fPotential[idx-1]+h2*fPotential[idx+1])/(h2+h3);

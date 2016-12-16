@@ -13,7 +13,7 @@ using namespace GeFiCa;
 
 X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),
    fIsFixed(0), fE1(0), fPotential(0), fC1(0), fDistanceToNext(0),
-   fDistanceToPrevious(0), fImpurity(0)
+   fDistanceToPrevious(0), fImpurity(0),Vpos(0), Vneg(2000)
 { 
    //claim a 1D field with nx grids
    t=1;
@@ -92,7 +92,7 @@ void X::SOR2(int idx,bool elec)
 {
    // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return ;
-   double density=fImpurity[idx]*1.6e-19;
+   double density=-fImpurity[idx]*1.6e-19;
    double h2=fDistanceToPrevious[idx];
    double h3=fDistanceToNext[idx];
    double tmp=-density/epsilon*h2*h3/2+(h3*fPotential[idx-1]+h2*fPotential[idx+1])/(h2+h3);
