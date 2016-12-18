@@ -16,3 +16,23 @@
 #pragma link C++ class GeFiCa::PointContactXY+;
 #pragma link C++ class GeFiCa::Sphere1D+;
 #endif
+/**
+ * \example planar1d.C
+ * ROOT macro showing the usage of GeFiCa::Planar1D class.
+ * The numerical result is compared to analytic calculation.
+ *
+ * \example planar2d.C
+ * ROOT macro showing the usage of GeFiCa::Planar2D class.
+ *
+ * \example trueCoaxial1d.C
+ * ROOT macro showing the usage of GeFiCa::TrueCoaxial1D class.
+ *
+ * \example trueCoaxial2d.C
+ * ROOT macro showing the usage of GeFiCa::TrueCoaxial2D class.
+ *
+ * \example pointContact2d.C
+ * ROOT macro showing the usage of GeFiCa::PointContactXY class.
+ *
+ * \example sphere.C
+ * ROOT macro showing the usage of GeFiCa::Sphere class.
+ */
