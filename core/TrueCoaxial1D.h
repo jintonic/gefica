@@ -13,6 +13,13 @@ class GeFiCa::TrueCoaxial1D : public GeFiCa::Rho
 
    public :
       TrueCoaxial1D(int nx=50) : Rho(nx),OuterRadius(3),InnerRadius(0.5) {};
+      /**
+       * Initialize grid points.
+       * The step length is calculated with the following equation:
+       *      double stepLength=(OuterRadius-InnerRadius)/(n-1);
+       * If the inner radius is not larger than the outer radius, no grid will
+       * be created.
+       */
       void Initialize();
       bool CalculateField(EMethod method=kSOR2);
       ClassDef(TrueCoaxial1D, 1);
