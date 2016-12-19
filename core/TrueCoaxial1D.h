@@ -12,12 +12,28 @@ class GeFiCa::TrueCoaxial1D : public GeFiCa::Rho
       double InnerRadius; // Inner radius of the detector
 
    public :
-      TrueCoaxial1D(int nx=101) : Rho(nx),OuterRadius(10),InnerRadius(0) {};
+      TrueCoaxial1D(int nx=50) : Rho(nx),OuterRadius(3),InnerRadius(0.5) {};
       void Initialize();
       bool CalculateField(EMethod method=kSOR2);
       ClassDef(TrueCoaxial1D, 1);
 
    protected:
+      /**
+       * Analytic calculation of 1D field in cylindrical coordinates with fixed
+       * impurity concentration.
+       *
+       * In case of fixed impurity, according to
+       * https://www.wolframalpha.com/input/?i=1%2Fx*+%28x*f%28x%29%27%29%27%3Da
+       * potential(r)=a + b log(r) - rho/4/epsilon*r^2 with boundary conditions:
+       *
+       * - potential(rinner) = Vneg,
+       * - potential(router) = Vpos,
+       *
+       * So, 
+       *
+       * - a = - rho/2/epsilon
+       * - b = [rho/4/epsilon*(router^2-rinner^2)+(Vpos-Vneg)]/log(router/rinner)
+       */
       bool Analytic();
 };
 #endif
