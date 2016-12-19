@@ -7,14 +7,6 @@ using namespace GeFiCa;
 
 void TrueCoaxial1D::Initialize()
 {
-   // The step length is calculated with the following equation:
-   // BEGIN_HTML
-   // <pre>
-   //      double stepLength=(OuterRadius-InnerRadius)/(n-1);
-   // </pre>
-   // END_HTML
-   // If the inner radius is not larger than the outer radius,
-   // no grid will be created
    if (InnerRadius>=OuterRadius) {
       Warning("Initialize",
             "Lower bound (%f) >= upper bound (%f)! No grid is created!",
@@ -48,7 +40,6 @@ bool TrueCoaxial1D::Analytic()
    double a=fPotential[0]+density*fC1[0]*fC1[0]/epsilon/4-b*log(fC1[0]);
    for (int i=0; i<n; i++) {
       fPotential[i] = a+b*log(fC1[i])-density/4/epsilon*fC1[i]*fC1[i];
-      cout<<log(fC1[0])<<" aaa"<<endl;
 
       fE1[i]=(fPotential[i+1]-fPotential[i-1])
          /(fDistanceToNext[i]+fDistanceToPrevious[i]);
