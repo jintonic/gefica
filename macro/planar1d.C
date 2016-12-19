@@ -3,8 +3,8 @@
    GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(101);
    detector->MaxIterations=1e5;
    detector->Csor=1.95;
-   detector->Vpos=2000*GeFiCa::volt;
-   detector->Vneg=0*GeFiCa::volt;
+   detector->V1=2000*GeFiCa::volt;
+   detector->V0=0*GeFiCa::volt;
    detector->SetImpurity(1e10/GeFiCa::cm3);
    detector->CalculateField(GeFiCa::kSOR2);
    detector->SaveField("planar1dSOR2.root");

@@ -4,7 +4,7 @@ using namespace GeFiCa;
 void Sphere::Initialize()
 {
    if (LowerBound>=UpperBound) {
-      Warning("CreateGridWithFixedStepLength",
+      Warning("Initialize",
             "Lower bound (%f) >= upper bound (%f)! No grid is created!",
             LowerBound, UpperBound);
       return;
@@ -14,8 +14,8 @@ void Sphere::Initialize()
 
   for (int i=0;i<n;i=i+n1)
   {
-    fPotential[i]=Vpos;
-    fPotential[i+n1-1]=Vneg;
+    fPotential[i]=V1;
+    fPotential[i+n1-1]=V0;
     fIsFixed[i]=true;
     fIsFixed[i+n1-1]=true;
   }

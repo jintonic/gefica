@@ -1,7 +1,7 @@
 {
    GeFiCa::TrueCoaxial1D *detector = new GeFiCa::TrueCoaxial1D(101);
-   detector->Vpos=0*GeFiCa::volt;
-   detector->Vneg=3000*GeFiCa::volt;
+   detector->V1=0*GeFiCa::volt;
+   detector->V0=3000*GeFiCa::volt;
    detector->MaxIterations=1e5;
    detector->SetImpurity(1e10/GeFiCa::cm3);
    detector->Csor=1.95;

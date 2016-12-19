@@ -2,8 +2,8 @@
   GeFiCa::Sphere1D *detector=new GeFiCa::Sphere1D(101);
   detector->MaxIterations=1e5;
   detector->Csor=1.95;
-  detector->Vpos=2000*GeFiCa::volt;
-  detector->Vneg=0*GeFiCa::volt;
+  detector->V1=0*GeFiCa::volt;
+  detector->V0=4000*GeFiCa::volt;
   detector->SetImpurity(1e10/GeFiCa::cm3);
   detector->CalculateField(GeFiCa::kSOR2);
   detector->SaveField("sphere1dSOR2.root");

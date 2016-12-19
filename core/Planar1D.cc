@@ -8,7 +8,7 @@ using namespace GeFiCa;
 void Planar1D::Initialize()
 {
    if (LowerBound>=UpperBound) {
-      Warning("CreateGridWithFixedStepLength",
+      Warning("Initialize",
             "Lower bound (%f) >= upper bound (%f)! No grid is created!",
             LowerBound, UpperBound);
       return;
@@ -18,9 +18,9 @@ void Planar1D::Initialize()
    for (int i=n; i-->0;) fC1[i]=fC1[i]+LowerBound;
    fIsFixed[0]=true;
    fIsFixed[n-1]=true;
-   double slope = (Vpos-Vneg)/(n-1);
+   double slope = (V1-V0)/(n-1);
    for (int i=0; i<n; i++) {
-	   fPotential[i]=Vneg+slope*i;
+      fPotential[i]=V0+slope*i;
    }
 }
 //_____________________________________________________________________________
@@ -28,13 +28,13 @@ void Planar1D::Initialize()
 #include  <cmath>
 bool Planar1D::Analytic()
 {
-  bool isimpuritygood=true;
-  for(int i=0;i+1<n;i++)if(fImpurity[i]!=fImpurity[i+1])isimpuritygood=false;
-  if(!isimpuritygood)
-  {
-    cout<<"cant handle changeing impurity,quit"<<endl;
-    return false;
-  }
+   bool isConstantImpurity=true;
+   for(int i=0;i+1<n;i++)
+      if (fImpurity[i]!=fImpurity[i+1]) isConstantImpurity=false;
+   if(!isConstantImpurity) {
+      Warning("Analytic","can't handle changing impurity! Return false.");
+      return false;
+   }
    double d=UpperBound-LowerBound;//thickness or depth of the detector
    double a=-fImpurity[n-1]*Qe/2/epsilon;
    double b=(fPotential[n-1]-fPotential[0]-a*d*d)/d;

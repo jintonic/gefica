@@ -12,7 +12,7 @@ void Planar2D::Initialize()
    // If the inner radius is not larger than the outer radius,
    // no grid will be created
    if (XLowerBound>=XUpperBound||YLowerBound>=YUpperBound) {
-      Warning("CreateGridWithFixedStepLength",
+      Warning("Initialize",
             "Lower bound (%f) >= upper bound (%f)! No grid is created!",
             XLowerBound, XUpperBound);
       return;
@@ -23,8 +23,8 @@ void Planar2D::Initialize()
    for(int i=0;i<n2;i++) {
       fIsFixed[i*n1]=true;
       fIsFixed[(i+1)*n1-1]=true;
-      fPotential[i*n1]=Vpos;
-      fPotential[(i+1)*n1-1]=Vneg;
+      fPotential[i*n1]=V1;
+      fPotential[(i+1)*n1-1]=V0;
    }
 }
 //_____________________________________________________________________________

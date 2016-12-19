@@ -33,13 +33,13 @@ class GeFiCa::TrueCoaxial1D : public GeFiCa::Rho
        * https://www.wolframalpha.com/input/?i=1%2Fx*+%28x*f%28x%29%27%29%27%3Da
        * potential(r)=a + b log(r) - rho/4/epsilon*r^2 with boundary conditions:
        *
-       * - potential(rinner) = Vneg,
-       * - potential(router) = Vpos,
+       * - potential(rinner) = V0,
+       * - potential(router) = V1,
        *
        * So, 
        *
        * - a = - rho/2/epsilon
-       * - b = [rho/4/epsilon*(router^2-rinner^2)+(Vpos-Vneg)]/log(router/rinner)
+       * - b = [rho/4/epsilon*(router^2-rinner^2)+(V1-V0)]/log(router/rinner)
        */
       bool Analytic();
 };
