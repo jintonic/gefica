@@ -31,6 +31,13 @@ class GeFiCa::Planar1D : public GeFiCa::X
        */
       void Initialize(); 
 
+      bool CalculateField(EMethod method=kSOR2);
+      /**
+       *This defines the class Planar1D for the cint dictionary.
+       */
+      ClassDef(Planar1D, 1);
+
+   protected:
       /**
        * Analytic calculation of 1D field with fixed impurity concentration.
        *
@@ -51,11 +58,6 @@ class GeFiCa::Planar1D : public GeFiCa::X
        * - c = Vneg
        */
       bool Analytic();
-      bool CalculateField(EMethod method=kSOR2);
-      /**
-       *This defines the class Planar1D for the cint dictionary.
-       */
-      ClassDef(Planar1D, 1);
 };
 #endif
 
