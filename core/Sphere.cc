@@ -3,14 +3,6 @@ using namespace GeFiCa;
 
 void Sphere::Initialize()
 {
-   // The step length is calculated with the following equation:
-   // BEGIN_HTML
-   // <pre>
-   //      double stepLength=(UpperBound-LowerBound)/(n-1);
-   // </pre>
-   // END_HTML
-   // If the inner radius is not larger than the outer radius,
-   // no grid will be created
    if (LowerBound>=UpperBound) {
       Warning("CreateGridWithFixedStepLength",
             "Lower bound (%f) >= upper bound (%f)! No grid is created!",
@@ -33,5 +25,5 @@ void Sphere::Initialize()
 bool Sphere::CalculateField(EMethod method)
 {
   if(!fIsLoaded)Initialize();
-  return RThetaPhi::CalculateField(method);
+  return X::CalculateField(method);
 }
