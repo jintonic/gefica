@@ -17,7 +17,7 @@ class GeFiCa::R : public X
       /**
 	  * R is a constructor, if given a number, no input is needed
 	  */
-      R(int nx=101): X(nx){t=3,d=1;};
+      R(int nx=101): X(nx){};
 	  /**
 	  * This defines the class R for the cint dictionary.
 	  */

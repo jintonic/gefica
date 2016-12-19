@@ -28,6 +28,9 @@ void Sphere1D::Initialize()
    fIsFixed[n-1]=true;
    double slope = (Vpos-Vneg)/(n-1);
    for (int i=0; i<n; i++) fPotential[i]=Vneg+slope*i;
+   for (int i=0; i<n; i++) cout<<fC1[i]<<endl;
+   t=3;
+   d=1;
 }
 //_____________________________________________________________________________
 //

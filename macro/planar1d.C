@@ -5,7 +5,7 @@
    detector->Csor=1.95;
    detector->Vpos=2000*GeFiCa::volt;
    detector->Vneg=0*GeFiCa::volt;
-   detector->SetImpurity(1e11/GeFiCa::cm3);
+   detector->SetImpurity(1e10/GeFiCa::cm3);
    detector->CalculateField(GeFiCa::kSOR2);
    detector->SaveField("planar1dSOR2.root");
    detector->CalculateField(GeFiCa::kAnalytic);
@@ -24,6 +24,8 @@
 
    // make final plot
    gn->SetMarkerColor(kBlue);
+   gn->SetMarkerStyle(6);
+   gn->SetMarkerSize(0.8);
    ga->SetLineColor(kRed);
    gn->SetTitle(";Thickness [cm];Potential [V]");
    gn->Draw("ap");
