@@ -1,5 +1,7 @@
 #include "Sphere.h"
+#include <iostream>
 using namespace GeFiCa;
+using namespace std;
 
 void Sphere::Initialize()
 {
@@ -10,7 +12,9 @@ void Sphere::Initialize()
       return;
    }
    double steplength=(UpperBound-LowerBound)/(n1-1);
+   cout<<steplength<<"   "<<n2<<"   "<<n3<<endl;
    SetStepLength(steplength,180/n2,360/(n3));
+   cout<<steplength<<"   "<<n2<<"   "<<n3<<endl;
 
   for (int i=0;i<n;i=i+n1)
   {
@@ -24,6 +28,7 @@ void Sphere::Initialize()
 //
 bool Sphere::CalculateField(EMethod method)
 {
+  cout<<"ddddd"<<endl;
   if(!fIsLoaded)Initialize();
   return X::CalculateField(method);
 }

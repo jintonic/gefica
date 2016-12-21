@@ -36,8 +36,8 @@ void XYZ::SetStepLength(double steplength1,double steplength2,double steplength3
 {
   XY::SetStepLength(steplength1,steplength2); 
    for (int i=0;i<n;i++) {
-      if(i/n1*n2==0)fC3[i]=0;
-      else fC3[i]=fC3[i-9]+steplength3;
+      if(i/(n1*n2)==0)fC3[i]=0;
+      else fC3[i]=fC3[i-1]+steplength3;
       if((i%(n1*n2))/n1!=0)fC2[i]=fC2[i-n1]+steplength2;
       else fC2[i]=0;
       if(i%n1==0)fC1[i]=0;

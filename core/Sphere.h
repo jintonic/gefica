@@ -14,7 +14,7 @@ class GeFiCa::Sphere: public GeFiCa::RThetaPhi
       double UpperBound,LowerBound;
    public:
       Sphere(int r,int O,int a) : RThetaPhi(r, O, a),
-      UpperBound(10),LowerBound(0) {};
+      UpperBound(3),LowerBound(0.3) {};
 
       void Initialize();
       bool CalculateField(EMethod method=kSOR2);

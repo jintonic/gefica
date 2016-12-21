@@ -8,19 +8,13 @@
   detector->CalculateField(GeFiCa::kAnalytic);
   detector->SaveField("sphere1dTrue.root");
 
-  GeFiCa::Sphere *detector2=new GeFiCa::Sphere(101,10,10);
-  detector2->MaxIterations=1e5;
-  detector2->Csor=1.999;
-  detector2->V1=0*GeFiCa::volt;
-  detector2->V0=2000*GeFiCa::volt;
-  //detector2->SetImpurity(1e10/GeFiCa::cm3);
-  detector2->CalculateField(GeFiCa::kSOR2);
-  detector2->SaveField("sphere.root");
+  detector->CalculateField(GeFiCa::kSOR2);
+  detector->SaveField("sphere1sSOR2.root");
 
 
    // generate graphics
    TChain *tn = new TChain("t");
-   tn->Add("sphere.root");
+   tn->Add("sphere1dSOR2.root");
    tn->Draw("p:c1");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
 
