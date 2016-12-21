@@ -16,8 +16,6 @@ X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),
    fDistanceToNext(0), fDistanceToPrevious(0), fImpurity(0)
 { 
    //claim a 1D field with nx grids
-   t=1;
-   d=1;
    n=nx;
    n1=nx; 
    fIsLoaded=false;
@@ -231,14 +229,6 @@ void X::LoadField(const char * fin)
    file->Close();
    delete file;
    for(int idx=0;idx-->n;)SOR2(idx,1);
-}
-//_____________________________________________________________________________
-//
-void X::SetImpurity(double density)
-{
-   for(int i=0;i<n;i++) {
-	   fImpurity[i]=density;
-   }
 }
 //_____________________________________________________________________________
 //

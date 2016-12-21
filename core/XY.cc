@@ -17,8 +17,6 @@ XY::XY(unsigned short nx, unsigned short ny): X(nx*ny), n2(ny),
    fC2=new double[n];
    fDistanceToLeft=new double[n];
    fDistanceToRight=new double[n];
-   t=1;
-   d=2;
 }
 //_____________________________________________________________________________
 //
@@ -171,10 +169,4 @@ void XY::SetImpurity(TF2 * Im)
    for(int i=n;i-->0;) {
       fImpurity[i]=Im->Eval((double)fC1[i],(double)fC2[i]);
    }
-}
-//_____________________________________________________________________________
-//
-void XY::SetImpurity(double density)
-{
-   for(int i=n;i-->0;) fImpurity[i]=density;
 }
