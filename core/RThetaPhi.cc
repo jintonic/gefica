@@ -15,7 +15,7 @@ void RThetaPhi::SOR2(int idx,bool elec)
 {
    if (fIsFixed[idx])return;
 
-   double density=-fImpurity[idx]*Qe;
+   double density=fImpurity[idx]*Qe;
    double h2=fDistanceToPrevious[idx];
    double h3=fDistanceToNext[idx];
    double h4=fDistanceToLeft[idx];
