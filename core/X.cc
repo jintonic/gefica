@@ -90,7 +90,7 @@ void X::SOR2(int idx,bool elec)
 {
    // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return ;
-   double density=-fImpurity[idx]*1.6e-19;
+   double density=-fImpurity[idx]*Qe;
    double h2=fDistanceToPrevious[idx];
    double h3=fDistanceToNext[idx];
    double tmp=-density/epsilon*h2*h3/2+(h3*fPotential[idx-1]+h2*fPotential[idx+1])/(h2+h3);

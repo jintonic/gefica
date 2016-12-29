@@ -32,18 +32,18 @@ XYZ::~XYZ()
 //
 void XYZ::SetStepLength(double steplength1,double steplength2,double steplength3)
 {
-  XY::SetStepLength(steplength1,steplength2); 
+   XY::SetStepLength(steplength1,steplength2); 
    for (int i=0;i<n;i++) {
-      if(i/(n1*n2)==0)fC3[i]=0;
-      else fC3[i]=fC3[i-1]+steplength3;
+      if(i/(n1*n2)==0) fC3[i]=0;
+      else fC3[i]=fC3[i-n1*n2]+steplength3;
       if((i%(n1*n2))/n1!=0)fC2[i]=fC2[i-n1]+steplength2;
       else fC2[i]=0;
       if(i%n1==0)fC1[i]=0;
       else fC1[i]=fC1[i-1]+steplength1;
 
       fE3[i]=0;
-      fDistanceToLeft[i]=steplength3;
-      fDistanceToRight[i]=steplength3;
+      fDistanceToUp[i]=steplength3;
+      fDistanceToDown[i]=steplength3;
    }
 }
 //_____________________________________________________________________________
@@ -92,7 +92,7 @@ void XYZ::SOR2(int idx,bool elec)
 //
 int XYZ::FindIdx(double tarx, double tary ,double tarz,int begin,int end)
 {
- //search using binary search
+   //search using binary search
    if(begin>=end)return XY::FindIdx(tarx,tary,begin,begin+n1*n2-1);
    int mid=((begin/(n1*n2)+end/(n1*n2))/2)*n1*n2;
    if(fC3[mid]>=tarz)return FindIdx(tarx,tary,tarz,begin,mid);

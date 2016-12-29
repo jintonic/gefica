@@ -1,25 +1,25 @@
 {
-  GeFiCa::Sphere1D *sphere1d=new GeFiCa::Sphere1D(101);
-  sphere1d->MaxIterations=1e5;
-  sphere1d->Csor=1.9;
-  sphere1d->V1=0*GeFiCa::volt;
-  sphere1d->V0=2000*GeFiCa::volt;
-  sphere1d->SetImpurity(1e10/GeFiCa::cm3);
-  sphere1d->CalculateField(GeFiCa::kAnalytic);
-  sphere1d->SaveField("sphere1dTrue.root");
+   GeFiCa::Sphere1D *sphere1d=new GeFiCa::Sphere1D(101);
+   sphere1d->MaxIterations=1e5;
+   sphere1d->Csor=1.9;
+   sphere1d->V1=0*GeFiCa::volt;
+   sphere1d->V0=2000*GeFiCa::volt;
+   sphere1d->InnerRadius=0.5*GeFiCa::cm;
+   sphere1d->OuterRadius=2.5*GeFiCa::cm;
+   sphere1d->SetImpurity(1e10/GeFiCa::cm3);
+   sphere1d->CalculateField(GeFiCa::kAnalytic);
+   sphere1d->SaveField("sphere1dTrue.root");
 
-  GeFiCa::Sphere *sphere3d=new GeFiCa::Sphere(101,10,10);
-  sphere3d->MaxIterations=1e5;
-  sphere3d->Csor=1.999;
-  sphere3d->V1=0*GeFiCa::volt;
-  sphere3d->V0=2000*GeFiCa::volt;
-  cout<<sphere3d->n<<endl;
-  cout<<sphere3d->n1<<endl;
-  cout<<sphere3d->n2<<endl;
-  cout<<sphere3d->n3<<endl;
-  sphere3d->SetImpurity(1e10/GeFiCa::cm3);
-  sphere3d->CalculateField(GeFiCa::kSOR2);
-  sphere3d->SaveField("sphere3dSOR2.root");
+   GeFiCa::Sphere *sphere3d=new GeFiCa::Sphere(101,10,10);
+   sphere3d->MaxIterations=1e5;
+   sphere3d->Csor=1.999;
+   sphere3d->V1=0*GeFiCa::volt;
+   sphere3d->V0=2000*GeFiCa::volt;
+   sphere3d->InnerRadius=0.5*GeFiCa::cm;
+   sphere3d->OuterRadius=2.5*GeFiCa::cm;
+   sphere3d->SetImpurity(1e10/GeFiCa::cm3);
+   sphere3d->CalculateField(GeFiCa::kSOR2);
+   sphere3d->SaveField("sphere3dSOR2.root");
 
    // generate graphics
    TChain *tn = new TChain("t");
