@@ -12,7 +12,7 @@ void Sphere1D::Initialize()
    }
    double steplength=(OuterRadius-InnerRadius)/(n-1);
    SetStepLength(steplength); // fC1[i] set to [0, (n-1)*steplength]
-   for(int i=n;i-->0;)fC1[i]=fC1[i]+InnerRadius;
+   for (int i=n;i-->0;) fC1[i]=fC1[i]+InnerRadius;
    fIsFixed[0]=true;
    fIsFixed[n-1]=true;
    double slope = (V1-V0)/(n-1);
@@ -30,7 +30,7 @@ bool Sphere1D::Analytic()
       Warning("Analytic","can't handle changing impurity! Return false.");
       return false;
    }
-   double density=+fImpurity[0]*Qe;
+   double density=fImpurity[0]*Qe;
    double c1=(V1-V0 + density/epsilon/6*(fC1[n-1]*fC1[n-1]-fC1[0]*fC1[0]))
       /(1/fC1[n-1]-1/fC1[0]);
    double c2=V0+density/epsilon/6*fC1[0]*fC1[0]-c1/fC1[0];
@@ -45,6 +45,6 @@ bool Sphere1D::Analytic()
 //
 bool Sphere1D::CalculateField(EMethod method)
 {
-   if(!fIsLoaded)Initialize();
+   if(!fIsLoaded) Initialize();
    return X::CalculateField(method);
 }

@@ -24,7 +24,7 @@
 
    // make final plot
    gn->SetMarkerColor(kBlue);
-   gn->SetMarkerStyle(6);
+   gn->SetMarkerStyle(8);
    gn->SetMarkerSize(0.8);
    ga->SetLineColor(kRed);
    gn->SetTitle(";Thickness [cm];Potential [V]");

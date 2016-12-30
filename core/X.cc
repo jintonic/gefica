@@ -164,7 +164,7 @@ void X::SaveField(const char * fout)
    tree->Branch("c1",&C1s,"c1/D"); // persition in x
    tree->Branch("p",&Ps,"p/D"); // electric potential
    tree->Branch("sn",&StepNexts,"StepNext/D"); // Step length to next point in x
-   tree->Branch("sb",&StepBefores,"Step)Before/D"); // Step length to before point in x
+   tree->Branch("sb",&StepBefores,"StepBefore/D"); // Step length to before point in x
    tree->Branch("ib",&fIsFixeds,"fIsFixed/O"); // check is initial point
    tree->Branch("im",&impuritys,"impurity/D"); // Impurity
    for(int i=0;i<n;i++) {

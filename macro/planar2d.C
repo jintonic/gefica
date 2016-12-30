@@ -6,21 +6,19 @@
    detector2->V1=0*GeFiCa::volt;
    detector2->SetImpurity(1e10/GeFiCa::cm3);
    detector2->CalculateField(GeFiCa::kSOR2);
-   detector2->SaveField("planar2d.root");
+   detector2->SaveField("planar2dSOR2.root");
 
    // calculate fields
    GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(101);
-   detector->MaxIterations=1e5;
-   detector->Csor=1.95;
-   detector->V1=2000*GeFiCa::volt;
-   detector->V0=0*GeFiCa::volt;
+   detector->V0=2000*GeFiCa::volt;
+   detector->V1=0*GeFiCa::volt;
    detector->SetImpurity(1e10/GeFiCa::cm3);
    detector->CalculateField(GeFiCa::kAnalytic);
    detector->SaveField("planar1dTrue.root");
 
    // generate graphics
    TChain *tn = new TChain("t");
-   tn->Add("planar2d.root");
+   tn->Add("planar2dSOR2.root");
    tn->Draw("p:c1");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
 
@@ -31,7 +29,7 @@
 
    // make final plot
    gn->SetMarkerColor(kBlue);
-   gn->SetMarkerStyle(6);
+   gn->SetMarkerStyle(8);
    gn->SetMarkerSize(0.8);
    ga->SetLineColor(kRed);
    gn->SetTitle(";Thickness [cm];Potential [V]");

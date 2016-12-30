@@ -1,7 +1,5 @@
 {
    GeFiCa::Sphere1D *sphere1d=new GeFiCa::Sphere1D(101);
-   sphere1d->MaxIterations=1e5;
-   sphere1d->Csor=1.9;
    sphere1d->V1=0*GeFiCa::volt;
    sphere1d->V0=2000*GeFiCa::volt;
    sphere1d->InnerRadius=0.5*GeFiCa::cm;
@@ -12,7 +10,7 @@
 
    GeFiCa::Sphere *sphere3d=new GeFiCa::Sphere(101,10,10);
    sphere3d->MaxIterations=1e5;
-   sphere3d->Csor=1.99999;
+   sphere3d->Csor=1.96;
    sphere3d->V1=0*GeFiCa::volt;
    sphere3d->V0=2000*GeFiCa::volt;
    sphere3d->InnerRadius=0.5*GeFiCa::cm;
