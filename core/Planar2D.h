@@ -11,7 +11,7 @@ class GeFiCa::Planar2D : public GeFiCa::XY
       double XUpperBound,XLowerBound,YUpperBound,YLowerBound; 
 
    public :
-      Planar2D(int ix,int iy) : XY(ix,iy),XUpperBound(10),XLowerBound(0),YUpperBound(10),YLowerBound(0){};
+      Planar2D(int ix,int iy) : XY(ix,iy),XUpperBound(1),XLowerBound(0),YUpperBound(1),YLowerBound(0){};
       void Initialize();
       bool CalculateField(EMethod method=kSOR2);
 

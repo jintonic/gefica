@@ -11,10 +11,10 @@ namespace GeFiCa { class Sphere;}
 class GeFiCa::Sphere: public GeFiCa::RThetaPhi
 {
    public :
-      double UpperBound,LowerBound;
+      double OuterRadius,InnerRadius;
    public:
       Sphere(int r,int O,int a) : RThetaPhi(r, O, a),
-      UpperBound(10),LowerBound(0) {};
+      OuterRadius(3),InnerRadius(0.3) {};
 
       void Initialize();
       bool CalculateField(EMethod method=kSOR2);

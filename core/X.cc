@@ -16,8 +16,6 @@ X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),
    fDistanceToNext(0), fDistanceToPrevious(0), fImpurity(0)
 { 
    //claim a 1D field with nx grids
-   t=1;
-   d=1;
    n=nx;
    n1=nx; 
    fIsLoaded=false;
@@ -92,7 +90,7 @@ void X::SOR2(int idx,bool elec)
 {
    // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return ;
-   double density=-fImpurity[idx]*1.6e-19;
+   double density=-fImpurity[idx]*Qe;
    double h2=fDistanceToPrevious[idx];
    double h3=fDistanceToNext[idx];
    double tmp=-density/epsilon*h2*h3/2+(h3*fPotential[idx-1]+h2*fPotential[idx+1])/(h2+h3);
@@ -166,7 +164,7 @@ void X::SaveField(const char * fout)
    tree->Branch("c1",&C1s,"c1/D"); // persition in x
    tree->Branch("p",&Ps,"p/D"); // electric potential
    tree->Branch("sn",&StepNexts,"StepNext/D"); // Step length to next point in x
-   tree->Branch("sb",&StepBefores,"Step)Before/D"); // Step length to before point in x
+   tree->Branch("sb",&StepBefores,"StepBefore/D"); // Step length to before point in x
    tree->Branch("ib",&fIsFixeds,"fIsFixed/O"); // check is initial point
    tree->Branch("im",&impuritys,"impurity/D"); // Impurity
    for(int i=0;i<n;i++) {
@@ -231,14 +229,6 @@ void X::LoadField(const char * fin)
    file->Close();
    delete file;
    for(int idx=0;idx-->n;)SOR2(idx,1);
-}
-//_____________________________________________________________________________
-//
-void X::SetImpurity(double density)
-{
-   for(int i=0;i<n;i++) {
-	   fImpurity[i]=density;
-   }
 }
 //_____________________________________________________________________________
 //

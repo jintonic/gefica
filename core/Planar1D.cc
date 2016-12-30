@@ -19,9 +19,7 @@ void Planar1D::Initialize()
    fIsFixed[0]=true;
    fIsFixed[n-1]=true;
    double slope = (V1-V0)/(n-1);
-   for (int i=0; i<n; i++) {
-      fPotential[i]=V0+slope*i;
-   }
+   for (int i=0; i<n; i++) fPotential[i]=V0+slope*i;
 }
 //_____________________________________________________________________________
 //

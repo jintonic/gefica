@@ -62,7 +62,8 @@ class GeFiCa::X : public TObject
        * This function takes an argument for the variable density. It can be used if you consider impurity to be constant.
        * It is usualy in the form of 1e10/cm3 or some variation where cm3 is defined in the namespace GeFiCa.
        */
-      virtual void SetImpurity(double density); // If you can consider impurity to e constant
+      virtual void SetImpurity(double density) // If you can consider impurity to e constant
+      { for (int i=0; i<n; i++) fImpurity[i]=density; }
       /**
        * Another Important method involved in setting the impurity. This is used for a variable impurity level that changes with x.
        */

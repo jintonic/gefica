@@ -10,7 +10,7 @@ using namespace GeFiCa;
 void RhoPhiZ::SOR2(int idx,bool elec)
 {//need update
    if (fIsFixed[idx])return;
-   double density=-fImpurity[idx]*1.6e12;
+   double density=-fImpurity[idx]*Qe;
    double h2=fDistanceToPrevious[idx];
    double h3=fDistanceToNext[idx];
    double h4=fDistanceToLeft[idx];

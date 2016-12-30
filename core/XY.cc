@@ -17,8 +17,6 @@ XY::XY(unsigned short nx, unsigned short ny): X(nx*ny), n2(ny),
    fC2=new double[n];
    fDistanceToLeft=new double[n];
    fDistanceToRight=new double[n];
-   t=1;
-   d=2;
 }
 //_____________________________________________________________________________
 //
@@ -53,7 +51,7 @@ void XY::SOR2(int idx,bool elec)
 
    // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return;
-   double density=-fImpurity[idx]*1.6e12;
+   double density=-fImpurity[idx]*Qe;
    double h2=fDistanceToPrevious[idx];
    double h3=fDistanceToNext[idx];
    double h4=fDistanceToLeft[idx];
@@ -124,12 +122,13 @@ void XY::SaveField(const char * fout)
    v.Write();
    TTree * tree=(TTree*)file->Get("t");
    double E2s,C2s;
-   tree->Branch("e2",&E2s,"e2/D"); // Electric field in y
-   tree->Branch("c2",&C2s,"c2/D"); // persition in y
+   TBranch *be2 = tree->Branch("e2",&E2s,"e2/D"); // Electric field in y
+   TBranch *bc2 = tree->Branch("c2",&C2s,"c2/D"); // persition in y
    for(int i=0;i<n;i++) {
       E2s=fE2[i];
       C2s=fC2[i];
-      tree->Fill();
+      be2->Fill();
+      bc2->Fill();
    }
    file->Write();
    file->Close();
@@ -171,10 +170,4 @@ void XY::SetImpurity(TF2 * Im)
    for(int i=n;i-->0;) {
       fImpurity[i]=Im->Eval((double)fC1[i],(double)fC2[i]);
    }
-}
-//_____________________________________________________________________________
-//
-void XY::SetImpurity(double density)
-{
-   for(int i=n;i-->0;) fImpurity[i]=density;
 }

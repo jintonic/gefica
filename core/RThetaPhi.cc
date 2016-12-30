@@ -8,56 +8,55 @@
 using namespace GeFiCa;
 
 #include <cmath>
+#include <iostream>
 using namespace std;
 
 void RThetaPhi::SOR2(int idx,bool elec)
-{//need update
+{
    if (fIsFixed[idx])return;
-   double density=-fImpurity[idx]*1.6e12;
+
+   double density=fImpurity[idx]*Qe;
    double h2=fDistanceToPrevious[idx];
    double h3=fDistanceToNext[idx];
    double h4=fDistanceToLeft[idx];
    double h1=fDistanceToRight[idx];
    double h0=fDistanceToDown[idx];
    double h5=fDistanceToUp[idx];
+
+   // get potentials of points around point idx
    double Pym1,Pyp1,Pxm1,Pxp1,Pzp1,Pzm1;
-   if(idx<n1*n2)Pzm1=fPotential[idx+n-n1*n2];
+   if (idx<n1*n2) Pzm1=fPotential[idx+n-n1*n2];
    else Pzm1=fPotential[idx-n1*n2];
-   if(idx>=n-n1*n2)Pzp1=fPotential[idx-(n-n1*n2)];
+   if (idx>=n-n1*n2) Pzp1=fPotential[idx-(n-n1*n2)];
    else Pzp1=fPotential[idx+n1*n2];
-   if(idx%(n1*n2)>(n1*n2)-n1-1)
-   {
-      if(idx<n/2)Pyp1=fPotential[idx+n/2];
+   if (idx%(n1*n2)>(n1*n2)-n1-1) {
+      if(idx<n/2) Pyp1=fPotential[idx+n/2];
       else Pyp1=fPotential[idx-n/2];
-   }
-   else Pyp1=fPotential[idx+n1];
-   if(idx%(n1*n2)<n1)
-   {
+   } else
+      Pyp1=fPotential[idx+n1];
+   if (idx%(n1*n2)<n1) {
       if(idx<n/2)Pym1=fPotential[idx+n/2];
       else Pym1=fPotential[idx-n/2];
-   }
-   else Pym1=fPotential[idx-n1];
-   if((idx%(n1*n2))%n1==n1-1)Pxp1=fPotential[idx];
+   } else
+      Pym1=fPotential[idx-n1];
+   if ((idx%(n1*n2))%n1==n1-1) Pxp1=fPotential[idx];
    else Pxp1=fPotential[idx+1];
-   if((idx%(n1*n2))%n1==0)Pxm1=fPotential[idx];
+   if ((idx%(n1*n2))%n1==0) Pxm1=fPotential[idx];
    else Pxm1=fPotential[idx-1];
+
    double r=fC1[idx];
    double O=fC2[idx];
-   double tmp= (-density/epsilon/2
-         +(Pxp1-Pxm1)/1/r/(h2+h3)
+   double Ptmp = (density/epsilon/2
+         +(Pxp1-Pxm1)/r/(h2+h3)
          +(Pyp1-Pym1)/r/r/(h1+h4)/sin(O)*cos(O)/2
-         +Pxp1/(h3+h2)/h3+Pxm1/(h3+h2)/h2
-         +Pyp1/r/r/(h4+h1)/h4+Pym1/r/r/(h1+h4)/h1
-         +Pzp1/r/r/sin(O)/sin(O)/(h0+h5)/h5+Pzm1/r/r/sin(O)/sin(O)/(h0+h5)/h0)
-      /(1/(h2+h3)/h3
-            +1/(h2+h3)/h2
-            +1/r/r/h1/(h1+h4)
-            +1/r/r/h4/(h1+h4)
-            +1/r/r/sin(O)/sin(O)/h0/(h0+h5)
-            +1/r/r/sin(O)/sin(O)/h5/(h0+h5));
-   fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
-   if(elec)
-   {
+         +(Pxp1/h3+Pxm1/h2)/(h3+h2)
+         +(Pyp1/h1+Pym1/h4)/r/r/(h4+h1)
+         +(Pzp1/h5+Pzm1/h0)/r/r/sin(O)/sin(O)/(h0+h5))
+      /(     1/h2/h3
+            +1/r/r/h1/h4
+            +1/r/r/sin(O)/sin(O)/h5/h0);
+   fPotential[idx]=Csor*(Ptmp-fPotential[idx])+fPotential[idx];
+   if(elec) {
       fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
       fE2[idx]=(Pyp1-Pym1)/(h1+h4);
       fE3[idx]=(Pzp1-Pzm1)/(h0+h5);

@@ -11,14 +11,12 @@ XYZ::XYZ(unsigned short nx, unsigned short ny,unsigned short nz):
    XY(nx,ny*nz), n3(nz), fE3(0), fC3(0), fDistanceToUp(0), fDistanceToDown(0)
 { 
    //claim a field with n1*n2*n3 grids 
-   n=n1*n2*n3;
    n2=ny;
+   n=n1*n2*n3;
    fE3=new double[n];
    fC3=new double[n];
    fDistanceToUp=new double[n];
    fDistanceToDown=new double[n];
-   d=3;
-   t=1;
 }
 //_____________________________________________________________________________
 //
@@ -34,18 +32,18 @@ XYZ::~XYZ()
 //
 void XYZ::SetStepLength(double steplength1,double steplength2,double steplength3)
 {
-  XY::SetStepLength(steplength1,steplength2); 
+   XY::SetStepLength(steplength1,steplength2); 
    for (int i=0;i<n;i++) {
-      if(i/n1*n2==0)fC3[i]=0;
-      else fC3[i]=fC3[i-9]+steplength3;
+      if(i/(n1*n2)==0) fC3[i]=0;
+      else fC3[i]=fC3[i-n1*n2]+steplength3;
       if((i%(n1*n2))/n1!=0)fC2[i]=fC2[i-n1]+steplength2;
       else fC2[i]=0;
       if(i%n1==0)fC1[i]=0;
       else fC1[i]=fC1[i-1]+steplength1;
 
       fE3[i]=0;
-      fDistanceToLeft[i]=steplength3;
-      fDistanceToRight[i]=steplength3;
+      fDistanceToUp[i]=steplength3;
+      fDistanceToDown[i]=steplength3;
    }
 }
 //_____________________________________________________________________________
@@ -53,7 +51,7 @@ void XYZ::SetStepLength(double steplength1,double steplength2,double steplength3
 void XYZ::SOR2(int idx,bool elec)
 {
    if (fIsFixed[idx])return;
-   double density=-fImpurity[idx]*1.6e12;
+   double density=-fImpurity[idx]*Qe;
    double h2=fDistanceToPrevious[idx];
    double h3=fDistanceToNext[idx];
    double h4=fDistanceToLeft[idx];
@@ -94,7 +92,7 @@ void XYZ::SOR2(int idx,bool elec)
 //
 int XYZ::FindIdx(double tarx, double tary ,double tarz,int begin,int end)
 {
- //search using binary search
+   //search using binary search
    if(begin>=end)return XY::FindIdx(tarx,tary,begin,begin+n1*n2-1);
    int mid=((begin/(n1*n2)+end/(n1*n2))/2)*n1*n2;
    if(fC3[mid]>=tarz)return FindIdx(tarx,tary,tarz,begin,mid);

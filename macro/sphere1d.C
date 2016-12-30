@@ -1,14 +1,15 @@
 {
-  GeFiCa::Sphere1D *detector=new GeFiCa::Sphere1D(101);
-  detector->MaxIterations=1e5;
-  detector->Csor=1.95;
-  detector->V1=0*GeFiCa::volt;
-  detector->V0=4000*GeFiCa::volt;
-  detector->SetImpurity(1e10/GeFiCa::cm3);
-  detector->CalculateField(GeFiCa::kSOR2);
-  detector->SaveField("sphere1dSOR2.root");
-  detector->CalculateField(GeFiCa::kAnalytic);
-  detector->SaveField("sphere1dTrue.root");
+   GeFiCa::Sphere1D *detector=new GeFiCa::Sphere1D(101);
+   detector->MaxIterations=1e5;
+   detector->Csor=1.9;
+   detector->V1=0*GeFiCa::volt;
+   detector->V0=2000*GeFiCa::volt;
+   detector->SetImpurity(1e10/GeFiCa::cm3);
+   detector->CalculateField(GeFiCa::kAnalytic);
+   detector->SaveField("sphere1dTrue.root");
+
+   detector->CalculateField(GeFiCa::kSOR2);
+   detector->SaveField("sphere1dSOR2.root");
 
    // generate graphics
    TChain *tn = new TChain("t");
@@ -23,7 +24,7 @@
 
    // make final plot
    gn->SetMarkerColor(kBlue);
-   gn->SetMarkerStyle(6);
+   gn->SetMarkerStyle(8);
    gn->SetMarkerSize(0.8);
    ga->SetLineColor(kRed);
    gn->SetTitle(";Thickness [cm];Potential [V]");
