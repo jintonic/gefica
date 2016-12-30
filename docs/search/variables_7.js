@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['vneg',['Vneg',['../classGeFiCa_1_1X.html#afa9e3ab1b21aa5cdae5f70d78edd5698',1,'GeFiCa::X']]],
-  ['vpos',['Vpos',['../classGeFiCa_1_1X.html#a2b5496f5210411349c32cfa684ddf5c7',1,'GeFiCa::X']]]
+  ['v0',['V0',['../classGeFiCa_1_1X.html#af44c08a469f2d3257c73bec776b0fda7',1,'GeFiCa::X']]],
+  ['v1',['V1',['../classGeFiCa_1_1X.html#a81e42b519755c9541db6b403eed4e9b6',1,'GeFiCa::X']]]
 ];
