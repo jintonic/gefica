@@ -14,14 +14,14 @@ using namespace GeFiCa;
 void Rho::SOR2(int idx,bool elec)
 {
    if (fIsFixed[idx])return ;
-   double density=-fImpurity[idx]*1.6e-19;
+   double density=fImpurity[idx]*Qe;
    double h2=fDistanceToPrevious[idx];
    double h3=fDistanceToNext[idx];
    //double tmp=-density/epsilon*h2*h3/2+(fPotential[idx-1]-fPotential[idx+1])/fC1[idx]*h2*h3/(h2+h3)+(h3*fPotential[idx-1]+h2*fPotential[idx+1])/(h2+h3);
-   double tmp=(-density/epsilon+2/fC1[idx]*(fPotential[idx+1]-fPotential[idx-1])/(h2+h3)+fPotential[idx+1]/h2+fPotential[idx-1]/h3)/(1/h2+1/h3);
-   // over-relaxation if Csor>1
+   double tmp=(+density/epsilon*(h2+h3)*0.5+0.5/fC1[idx]*(fPotential[idx+1]-fPotential[idx-1])
+         +fPotential[idx+1]/h2+fPotential[idx-1]/h3)/(1/h2+1/h3);
+    // over-relaxation if Csor>1
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
-
    if(elec)fE1[idx]=(fPotential[idx+1]-fPotential[idx-1])/(h2+h3);
 }
 //_____________________________________________________________________________

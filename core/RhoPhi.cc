@@ -1,7 +1,8 @@
 #include "RhoPhi.h"
 #include "Units.h"
 using namespace GeFiCa;
-
+#include <iostream>
+using namespace std;
 void RhoPhi::SOR2(int idx,bool elec)
 {
 
@@ -27,6 +28,7 @@ void RhoPhi::SOR2(int idx,bool elec)
       /(1/h3/(h2+h3)+1/h2/(h2+h3)
             +1/r/r/h1/(h1+h4)+1/r/r/h4/(h1+h4));
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
+   cout<<tmp<<endl;
    if(elec)
    {
       fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
