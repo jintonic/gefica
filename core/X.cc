@@ -12,7 +12,7 @@ using namespace std;
 using namespace GeFiCa;
 
 X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),
-   Vpos(0), Vneg(2000), fIsFixed(0), fE1(0), fPotential(0), fC1(0),
+   V1(0), V0(2000), fIsFixed(0), fE1(0), fPotential(0), fC1(0),
    fDistanceToNext(0), fDistanceToPrevious(0), fImpurity(0)
 { 
    //claim a 1D field with nx grids

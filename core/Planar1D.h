@@ -31,14 +31,21 @@ class GeFiCa::Planar1D : public GeFiCa::X
        */
       void Initialize(); 
 
+      bool CalculateField(EMethod method=kSOR2);
+      /**
+       *This defines the class Planar1D for the cint dictionary.
+       */
+      ClassDef(Planar1D, 1);
+
+   protected:
       /**
        * Analytic calculation of 1D field with fixed impurity concentration.
        *
        * In case of fixed impurity, potential(x) = a x^2 + b x + c with
        * boundary conditions:
        *
-       * - potential(0) = Vneg,
-       * - potential(d) = Vpos,
+       * - potential(0) = V0,
+       * - potential(d) = V1,
        *
        * where d = UpperBound - LowerBound. It also obeys Gauss's Law:
        *
@@ -47,15 +54,10 @@ class GeFiCa::Planar1D : public GeFiCa::X
        * So, 
        *
        * - a = - rho/2/epsilon
-       * - b = (Vpos-Vneg - ad^2)/d
-       * - c = Vneg
+       * - b = (V1-V0 - ad^2)/d
+       * - c = V0
        */
       bool Analytic();
-      bool CalculateField(EMethod method=kSOR2);
-      /**
-       *This defines the class Planar1D for the cint dictionary.
-       */
-      ClassDef(Planar1D, 1);
 };
 #endif
 
