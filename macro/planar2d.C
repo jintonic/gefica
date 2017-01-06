@@ -1,7 +1,7 @@
 {
    GeFiCa::Planar2D *detector2 = new GeFiCa::Planar2D(101,101);
    detector2->MaxIterations=1e5;
-   detector2->Csor=1.95;
+   detector2->Csor=1.995;
    detector2->V0=2000*GeFiCa::volt;
    detector2->V1=0*GeFiCa::volt;
    detector2->SetImpurity(1e10/GeFiCa::cm3);

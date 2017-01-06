@@ -46,12 +46,14 @@ void XY::SetStepLength(double steplength1,double steplength2)
 }
 //_____________________________________________________________________________
 //
+#include <iostream>
+using namespace std;
 void XY::SOR2(int idx,bool elec)
 {
 
    // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return;
-   double density=-fImpurity[idx]*Qe;
+   double density=fImpurity[idx]*Qe;
    double h2=fDistanceToPrevious[idx];
    double h3=fDistanceToNext[idx];
    double h4=fDistanceToLeft[idx];
@@ -65,7 +67,11 @@ void XY::SOR2(int idx,bool elec)
    else Pxm1=fPotential[idx-1];
    if(idx%n1==n1-1)Pxp1=fPotential[idx];
    else Pxp1=fPotential[idx+1];
-   double tmp=((h1+h4)*(h1*h2*h4*Pxp1+h1*h3*h4*Pxm1)+(h2+h3)*(h1*h2*h3*Pyp1+h2*h3*h4*Pym1)-0.5*density/epsilon*(h1+h4)*(h2+h3)*h1*h2*h3*h4)/((h1+h4)*(h1*h2*h4+h1*h3*h4)+(h2+h3)*(h1*h2*h3+h2*h3*h4));
+
+   double tmp=(density/epsilon+1/(fC1[idx])*(Pxp1-Pxm1)/(h2+h3)+(Pxp1/h2+Pxm1/h3)*2/(h2+h3)+(Pyp1/h1+Pym1/h4)*2/(h1+h4))/
+     ((1/h1+1/h2)*2/(h2+h3)+(1/h3+1/h4)*2/(h1+h4));
+   /*double tmp=(density/epsilon+(Pxp1/h2+Pxm1/h3)*2/(h2+h3)+(Pyp1/h1+Pym1/h4)*2/(h1+h4))/
+     ((1/h1+1/h2)*2/(h2+h3)+(1/h3+1/h4)*2/(h1+h4));*///xy
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    if(elec)
    {

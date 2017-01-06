@@ -21,6 +21,7 @@ void PointContactXY::Initialize()
    double steplength1=(XUpperBound-XLowerBound)/n1;
    double steplength2=(YUpperBound-YLowerBound)/n2;
    SetStepLength(steplength1,steplength2);
+   for(int i=n;i-->0;) fC1[i]=fC1[i]+XLowerBound;
    // set potential for electrodes
    for(int i=n-1;i>=n-n1;i--) {
       fIsFixed[i]=true;
