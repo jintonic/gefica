@@ -1,4 +1,4 @@
-{/*
+{
    GeFiCa::PointContactXY *detector2 = new GeFiCa::PointContactXY(691,505);
    detector2->XLowerBound=-3.45;
    detector2->XUpperBound=3.45;
@@ -17,8 +17,8 @@
    //TF1 *im=new TF1("","pol1",-0.318e10,0.025e10)
    detector2->SetImpurity(-0.01e10/GeFiCa::cm3);
    detector2->CalculateField(GeFiCa::kSOR2);
-   detector2->SaveField("point2dSOR2.root");*/
-/*
+   detector2->SaveField("point2dSOR2.root");
+
    // calculate fields
    GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(505);
    detector->UpperBound=5.05;
@@ -34,7 +34,7 @@
    ta->Draw("p:c1");
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
 
-*/
+
    // generate graphics
    TChain *tn = new TChain("t");
    tn->Add("point2dSOR2.root");

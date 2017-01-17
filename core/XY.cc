@@ -67,8 +67,8 @@ void XY::SOR2(int idx,bool elec)
    else Pxm1=fPotential[idx-1];
    if(idx%n1==n1-1)Pxp1=fPotential[idx];
    else Pxp1=fPotential[idx+1];
-   double tmp=(density/epsilon+1/fC1[idx]*(Pxp1-Pxm1)/(h2+h3)+(Pxp1/h2+Pxm1/h3)*2/(h2+h3)+(Pyp1/h1+Pym1/h4)*2/(h1+h4))/
-//  double tmp=(density/epsilon+(Pxp1/h2+Pxm1/h3)*2/(h2+h3)+(Pyp1/h1+Pym1/h4)*2/(h1+h4))/
+   //double tmp=(density/epsilon+1/fC1[idx]*(Pxp1-Pxm1)/(h2+h3)+(Pxp1/h2+Pxm1/h3)*2/(h2+h3)+(Pyp1/h1+Pym1/h4)*2/(h1+h4))/
+  double tmp=(density/epsilon+(Pxp1/h2+Pxm1/h3)*2/(h2+h3)+(Pyp1/h1+Pym1/h4)*2/(h1+h4))/
      ((1/h1+1/h2)*2/(h2+h3)+(1/h3+1/h4)*2/(h1+h4));
   // cout<<tmp<<endl;
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
