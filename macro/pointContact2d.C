@@ -6,7 +6,8 @@
    detector2->PointBegin=-0.14;
    detector2->PointEnd=0.14;
 
-   //TF2 *im=new TF2("f","-0.318e10+0.025e10*y",0,6.9,0,5.05);
+   //TF2 *im=new TF2("f","-0.19175e10-0.025e10*y");
+   //TF2 *im=new TF2("f","-0.318e10+0.025e10*y");
    //TF1 *im1=new TF1("f","-0.318e10+0.025e10*x",0,6.9);
 
    detector2->MaxIterations=1e5;
@@ -15,6 +16,7 @@
    detector2->V1=0*GeFiCa::volt;
 
    //TF1 *im=new TF1("","pol1",-0.318e10,0.025e10)
+   //detector2->SetImpurity(im);//-0.01e10/GeFiCa::cm3);
    detector2->SetImpurity(-0.01e10/GeFiCa::cm3);
    detector2->CalculateField(GeFiCa::kSOR2);
    detector2->SaveField("point2dSOR2.root");
