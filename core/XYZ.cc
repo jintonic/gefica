@@ -10,6 +10,7 @@ using namespace GeFiCa;
 XYZ::XYZ(unsigned short nx, unsigned short ny,unsigned short nz): 
    XY(nx,ny*nz), n3(nz), fE3(0), fC3(0), fDistanceToUp(0), fDistanceToDown(0)
 { 
+  Impurity="0*y+0*z";
    //claim a field with n1*n2*n3 grids 
    n2=ny;
    n=n1*n2*n3;
@@ -193,4 +194,9 @@ void XYZ::SetImpurity(TF3 * Im)
    for(int i=n;i-->0;) {
       fImpurity[i]=Im->Eval((double)fC1[i],(double)fC2[i],(double)fC3[i]);
    }
+}
+void XYZ::Impuritystr2tf()
+{
+  TF3 * IM=new TF3("f",Impurity);
+  SetImpurity(IM);
 }

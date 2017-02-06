@@ -10,6 +10,7 @@ using namespace GeFiCa;
 XY::XY(unsigned short nx, unsigned short ny): X(nx*ny), n2(ny),
    fE2(0), fC2(0), fDistanceToLeft(0), fDistanceToRight(0)
 {
+  Impurity="0*y";
    //claim a 2D field with n1*n2 Grid
    n=nx*ny; 
    n1=nx;
@@ -173,6 +174,12 @@ void XY::LoadField(const char * fin)
 void XY::SetImpurity(TF2 * Im)
 {
    for(int i=n;i-->0;) {
-      fImpurity[i]=Im->Eval((double)fC1[i],(double)fC2[i]);
+      fImpurity[i]=Im->Eval(fC1[i],fC2[i]);
    }
+}
+
+void XY::Impuritystr2tf()
+{
+  TF2 * IM=new TF2("f",Impurity);
+  SetImpurity(IM);
 }

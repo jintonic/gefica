@@ -11,7 +11,7 @@ using namespace std;
 #include "Units.h"
 using namespace GeFiCa;
 
-X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),
+X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),Impurity("0"),
    V1(0), V0(2000), fIsFixed(0), fE1(0), fPotential(0), fC1(0),
    fDistanceToNext(0), fDistanceToPrevious(0), fImpurity(0)
 { 
@@ -64,6 +64,8 @@ void X::SetStepLength(double steplength)
 //
 bool X::CalculateField(EMethod method)
 {
+  Initialize();
+  Impuritystr2tf();
    fIsLoaded=true;
    if (method==kAnalytic) return Analytic();
    int cnt=0;
@@ -237,4 +239,10 @@ void X::SetImpurity(TF1 * Im)
    for(int i=n;i-->0;) {
       fImpurity[i]=Im->Eval((double)fC1[i]);
    }
+}
+
+void X::Impuritystr2tf()
+{
+  TF1 * IM=new TF1("f",Impurity);
+  SetImpurity(IM);
 }

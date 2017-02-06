@@ -38,6 +38,7 @@ class GeFiCa::XYZ : public GeFiCa::XY
       virtual int FindIdx(double tarx,double tary,
             double tarz,int begin,int end);
       virtual void SOR2(int idx,bool elec); 
+      virtual void Impuritystr2tf();
 };
 #endif
 

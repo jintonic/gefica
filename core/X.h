@@ -2,6 +2,7 @@
 #define GeFiCa_X_H
 
 #include <TObject.h>
+#include <string>
 class TF1;
 
 namespace GeFiCa { 
@@ -32,6 +33,7 @@ class GeFiCa::X : public TObject
       double Csor; ///< boost Iteration speed
       double Precision; ///< X limit
       int t,d;
+      char * Impurity; 
 
       double V1;///< Volage of the cathode
       double V0;///< Voltage of the anode
@@ -49,6 +51,10 @@ class GeFiCa::X : public TObject
        * Current methods are kAnalytic and kSOR2.
        */
       virtual bool CalculateField(EMethod method=kSOR2);
+      
+      
+      
+      virtual void Initialize(){};
       /**
        * This function creates a new TFile and TTree and fills it from data created by X::CalculateField.    
        */
@@ -125,6 +131,7 @@ class GeFiCa::X : public TObject
        */
       virtual void SOR2(int idx,bool calculateElectricField); 
 
+      virtual void Impuritystr2tf();
 };
 #endif
 
