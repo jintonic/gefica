@@ -1,4 +1,4 @@
-{/*
+{
    GeFiCa::PointContactXY *detector2 = new GeFiCa::PointContactXY(691,505);
    detector2->XLowerBound=-3.45;
    detector2->XUpperBound=3.45;
@@ -16,11 +16,11 @@
    detector2->V1=0*GeFiCa::volt;
 
    //TF1 *im=new TF1("","pol1",-0.318e10,0.025e10)
-   //detector2->SetImpurity(im);//-0.01e10/GeFiCa::cm3);
-   detector2->SetImpurity(0e10/GeFiCa::cm3);
+   detector2->Impurity="-0.318e10+0.025e10*y";//-0.01e10/GeFiCa::cm3);
+   //detector2->SetImpurity(0e10/GeFiCa::cm3);
    detector2->CalculateField(GeFiCa::kSOR2);
    detector2->SaveField("point2dSOR2.root");
-   */
+   
 /*
    // calculate fields
    GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(505);
@@ -46,7 +46,7 @@
   
    
   TTree *t = new TTree("t","t");
-  t->ReadFile("/home/rdlab/mjd_siggen/fields/p1/v.dat", "r:z:v");
+  t->ReadFile("/home/rdlab/mjd_siggen/fields/p1/ev.dat", "r:z:v");
   t->Draw("z:v","r<0.01&&r>-0.01","");
 
    TGraph *ga = new TGraph(t->GetSelectedRows(), t->GetV2(), t->GetV1());

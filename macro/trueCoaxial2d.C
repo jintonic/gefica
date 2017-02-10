@@ -13,6 +13,7 @@
   detector2->InnerRadius=0.14;//-3.45;
    detector2->OuterRadius=3.45;
    detector2->height=5.05;
+   detector2->Impurity="-0.318e10+0.025e10*y";
    
 
    TF2 *im=new TF2("f","-0.318e10+0.025e10*y");
@@ -32,7 +33,7 @@
 
    // generate graphics
    TChain *tn = new TChain("t");
-   tn->Add("trueCoaxial2d2.root");
+   tn->Add("trueCoaxial2d.root");
    tn->Draw("p:c1*10","c2<1");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
 
