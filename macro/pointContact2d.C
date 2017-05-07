@@ -18,6 +18,8 @@
    //TF1 *im=new TF1("","pol1",-0.318e10,0.025e10)
    detector2->Impurity="-0.318e10+0.025e10*y";//-0.01e10/GeFiCa::cm3);
    //detector2->SetImpurity(0e10/GeFiCa::cm3);
+   
+   
    detector2->CalculateField(GeFiCa::kSOR2);
    detector2->SaveField("point2dSOR2.root");
    
@@ -41,7 +43,7 @@
    // generate graphics
    TChain *tn = new TChain("t");
    tn->Add("point2dSOR2.root");
-   tn->Draw("c2*10:p","c1>-0.1&&c1<0.1","");
+   tn->Draw("c2*10:p","c1>-0.01&&c1<0.01","");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
   
    
@@ -50,13 +52,18 @@
   t->Draw("z:v","r<0.01&&r>-0.01","");
 
    TGraph *ga = new TGraph(t->GetSelectedRows(), t->GetV2(), t->GetV1());
-
+ gStyle->SetOptTitle(kTRUE);
    // make final plot
    gn->SetMarkerColor(kBlue);
    gn->SetMarkerStyle(8);
    gn->SetMarkerSize(0.8);
    ga->SetLineColor(kRed);
-   gn->SetTitle(";Thickness [cm];Potential [V]");
+   gn->SetTitle("GeFiCa");
+   gn->GetXaxis()->SetTitle("Thickness [cm]");
+   gn->GetYaxis()->SetTitle("Potential [V]");
+
+   ga->SetTitle("mjd");
    gn->Draw("ap");
    ga->Draw("l");
+   gPad->BuildLegend();
 }

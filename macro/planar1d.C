@@ -27,7 +27,12 @@
    gn->SetMarkerStyle(8);
    gn->SetMarkerSize(0.8);
    ga->SetLineColor(kRed);
-   gn->SetTitle(";Thickness [cm];Potential [V]");
+   gn->SetTitle("SOR2");
+   gn->GetXaxis()->SetTitle("Thickness [cm]");
+   gn->GetYaxis()->SetTitle("Potential [V]");
+
+   ga->SetTitle("Analytic");
    gn->Draw("ap");
    ga->Draw("l");
+   gPad->BuildLegend();
 }
