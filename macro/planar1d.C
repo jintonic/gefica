@@ -9,30 +9,6 @@
    detector->CalculateField(GeFiCa::kSOR2);
    detector->SaveField("planar1dSOR2.root");
    detector->CalculateField(GeFiCa::kAnalytic);
+   //save to local .root file
    detector->SaveField("planar1dTrue.root");
-
-   // generate graphics
-   TChain *tn = new TChain("t");
-   tn->Add("planar1dSOR2.root");
-   tn->Draw("p:c1");
-   TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
-
-   TChain *ta = new TChain("t");
-   ta->Add("planar1dTrue.root");
-   ta->Draw("p:c1");
-   TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
-
-   // make final plot
-   gn->SetMarkerColor(kBlue);
-   gn->SetMarkerStyle(8);
-   gn->SetMarkerSize(0.8);
-   ga->SetLineColor(kRed);
-   gn->SetTitle("SOR2");
-   gn->GetXaxis()->SetTitle("Thickness [cm]");
-   gn->GetYaxis()->SetTitle("Potential [V]");
-
-   ga->SetTitle("Analytic");
-   gn->Draw("ap");
-   ga->Draw("l");
-   gPad->BuildLegend();
 }
