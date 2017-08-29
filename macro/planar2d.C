@@ -4,7 +4,7 @@
    detector2->Csor=1.995;
    detector2->V0=2000*GeFiCa::volt;
    detector2->V1=0*GeFiCa::volt;
-   detector2->SetImpurity(1e10/GeFiCa::cm3);
+   detector2->tImpurity="1e10";
    detector2->CalculateField(GeFiCa::kSOR2);
    detector2->SaveField("planar2dSOR2.root");
 

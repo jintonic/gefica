@@ -4,7 +4,7 @@
    detector->Csor=1.9;
    detector->V1=0*GeFiCa::volt;
    detector->V0=2000*GeFiCa::volt;
-   detector->SetImpurity(1e10/GeFiCa::cm3);
+   detector->Impurity="1e10";
    detector->CalculateField(GeFiCa::kAnalytic);
    detector->SaveField("sphere1dTrue.root");
 

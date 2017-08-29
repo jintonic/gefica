@@ -4,7 +4,7 @@
    sphere1d->V0=2000*GeFiCa::volt;
    sphere1d->InnerRadius=0.5*GeFiCa::cm;
    sphere1d->OuterRadius=2.5*GeFiCa::cm;
-   sphere1d->SetImpurity(1e10/GeFiCa::cm3);
+   sphere1d->Impurity="1e10";
    sphere1d->CalculateField(GeFiCa::kAnalytic);
    sphere1d->SaveField("sphere1dTrue.root");
 

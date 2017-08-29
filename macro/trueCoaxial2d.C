@@ -3,7 +3,6 @@
    detector->V0=0*GeFiCa::volt;
    detector->V1=2500*GeFiCa::volt;
    detector->MaxIterations=1e5;
-   detector->SetImpurity(-0.1e10/GeFiCa::cm3);
    detector->Csor=1.95;
    detector->InnerRadius=0.14;
    detector->OuterRadius=3.45;
