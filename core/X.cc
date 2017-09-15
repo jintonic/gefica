@@ -82,7 +82,11 @@ bool X::CalculateField(EMethod method)
       }
       if(cnt%1000==0)
          cout<<cnt<<"  "<<XUpSum/XDownSum<<" down: "<<XDownSum<<", up: "<<XUpSum<<endl;
-      if (XUpSum/XDownSum<Precision) return true;
+      if (XUpSum/XDownSum<Precision)
+      {
+	for(int i=0;i<n;i++)SOR2(i,1);
+	return true;
+      }
    }
    return false;
 }
@@ -206,7 +210,6 @@ void X::LoadField(const char * fin)
    t->SetBranchAddress("p",&fP);
    t->SetBranchAddress("sn",&fStepNext);
    t->SetBranchAddress("sb",&fStepBefore);
-   t->SetBranchAddress("e1",&fE1);
    t->SetBranchAddress("if",&IsFixed);
    t->SetBranchAddress("im",&fimpurity);
 
