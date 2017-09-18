@@ -42,7 +42,7 @@ bool Planar1D::Analytic()
       // Fixme: i+1 and i-1 may be out of range
       fE1[i]=(fPotential[i+1]-fPotential[i-1])/(fDistanceToNext[i]+fDistanceToPrevious[i]);
    }
-   cout<<"aaa"<<endl;
+   cout<<"voltage for just    voltage"<<endl;
    cout<<a*fC1[n-1]*fC1[n-1]-2*a*fC1[n-1]+c<<endl;
    return true;
 }
