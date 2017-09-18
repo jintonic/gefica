@@ -3,7 +3,7 @@
    GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(101);
    detector->MaxIterations=1e5;
    detector->Csor=1.95;
-   detector->V1=2000*GeFiCa::volt;
+   detector->V1=565*GeFiCa::volt;
    detector->V0=0*GeFiCa::volt;
    //detector->SetImpurity(1e10/GeFiCa::cm3);
    detector->Impurity="1e10";
@@ -11,7 +11,7 @@
    detector->CalculateField(GeFiCa::kSOR2);
    detector->SaveField("planar1dSOR2.root");
    
-   detector->Impurity="0";
+ //  detector->Impurity="0";
    detector->CalculateField(GeFiCa::kAnalytic);
    detector->SaveField("planar1dTrue.root");
 
@@ -57,5 +57,5 @@
    leg->SetTextSize(0.05);
    leg->Draw();
    
-   cvs->SaveAs("planar1d.png");
+   //cvs->SaveAs("planar1d.png");
 }
