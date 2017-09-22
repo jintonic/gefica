@@ -44,6 +44,7 @@ bool Planar1D::Analytic()
    }
    cout<<"voltage for just    voltage"<<endl;
    cout<<a*fC1[n-1]*fC1[n-1]-2*a*fC1[n-1]+c<<endl;
+   cout<<"distance"<<-fPotential[n-1]/a<<"cm"<<endl;
    return true;
 }
 //_____________________________________________________________________________
