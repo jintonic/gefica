@@ -1,8 +1,8 @@
-#include "PointContactXY.h"
+#include "PointContactRZ.h"
 #include "Units.h"
 using namespace GeFiCa;
 
-void PointContactXY::Initialize()
+void PointContactRZ::Initialize()
 {
    // The step length is calculated with the following equation:
    // BEGIN_HTML
@@ -41,7 +41,7 @@ void PointContactXY::Initialize()
 }
 //_____________________________________________________________________________
 //
-bool PointContactXY::CalculateField(EMethod method)
+bool PointContactRZ::CalculateField(EMethod method)
 {
    if(!fIsLoaded)Initialize();
    return RZ::CalculateField(method);

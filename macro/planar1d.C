@@ -3,8 +3,13 @@
    GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(101);
    detector->MaxIterations=1e5;
    detector->Csor=1.95;
+<<<<<<< HEAD
    detector->UpperBound=0.175;
    detector->V1=100*GeFiCa::volt;
+=======
+   detector->UpperBound=1;
+   detector->V1=200*GeFiCa::volt;
+>>>>>>> cb55407589ef73295f6781f26d5ade34f6529987
    detector->V0=0*GeFiCa::volt;
    //detector->SetImpurity(1e10/GeFiCa::cm3);
    detector->Impurity="1e10";
@@ -30,7 +35,7 @@
    // generate graphics
    TChain *tn = new TChain("t");
    tn->Add("planar1dSOR2.root");
-   tn->Draw("p:c1");
+   tn->Draw("e1:c1");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
 
    TChain *ta = new TChain("t");

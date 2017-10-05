@@ -1,5 +1,5 @@
 {
-   GeFiCa::PointContactXY *detector2 = new GeFiCa::PointContactXY(691,505);
+   GeFiCa::PointContactXY *detector2 = new GeFiCa::PointContactRZ(691,505);
    detector2->XLowerBound=-3.45;
    detector2->XUpperBound=3.45;
    detector2->YUpperBound=5.05;
@@ -12,16 +12,16 @@
 
    detector2->MaxIterations=1e5;
    detector2->Csor=1.994;
-   detector2->V0=13500*GeFiCa::volt;
+   detector2->V0=2500*GeFiCa::volt;
    detector2->V1=0*GeFiCa::volt;
 
    //TF1 *im=new TF1("","pol1",-0.318e10,0.025e10)
    detector2->Impurity="-0.318e10+0.025e10*y";//-0.01e10/GeFiCa::cm3);
    //detector2->SetImpurity(0e10/GeFiCa::cm3);
    
-   //detector2->CalculateField(GeFiCa::kSOR2);
+   detector2->CalculateField(GeFiCa::kSOR2);
    detector2->SaveField("point2dSOR2.root");
-   detector2->LoadField("point2dSOR23.root");
+   //detector2->LoadField("point2dSOR23.root");
    
 /*
    // calculate fields
