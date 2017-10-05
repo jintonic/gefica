@@ -3,7 +3,8 @@
    GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(101);
    detector->MaxIterations=1e5;
    detector->Csor=1.95;
-   detector->V1=565*GeFiCa::volt;
+   detector->UpperBound=0.175;
+   detector->V1=100*GeFiCa::volt;
    detector->V0=0*GeFiCa::volt;
    //detector->SetImpurity(1e10/GeFiCa::cm3);
    detector->Impurity="1e10";
