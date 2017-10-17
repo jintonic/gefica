@@ -1,5 +1,5 @@
 {
-   GeFiCa::PointContactXY *detector2 = new GeFiCa::PointContactRZ(691,505);
+   GeFiCa::PointContactRZ *detector2 = new GeFiCa::PointContactRZ(691,505);
    detector2->XLowerBound=-3.45;
    detector2->XUpperBound=3.45;
    detector2->YUpperBound=5.05;
