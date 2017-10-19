@@ -1,8 +1,8 @@
 {
-   GeFiCa::PointContactRZ *detector2 = new GeFiCa::PointContactRZ(691,505);
-   detector2->XLowerBound=-3.45;
-   detector2->XUpperBound=3.45;
-   detector2->YUpperBound=5.05;
+   GeFiCa::PointContactRZ *detector2 = new GeFiCa::PointContactRZ(71,51);
+   detector2->RUpperBound=3.5;
+   detector2->RLowerBound=-3.5;
+   detector2->ZUpperBound=5.0;
    detector2->PointBegin=-0.14;
    detector2->PointEnd=0.14;
 
@@ -10,8 +10,8 @@
    TF2 *im=new TF2("f","-0.318e10+0.025e10*y");
    //TF1 *im1=new TF1("f","-0.318e10+0.025e10*x",0,6.9);
 
-   detector2->MaxIterations=1e5;
-   detector2->Csor=1.994;
+   detector2->MaxIterations=1e6;
+   detector2->Csor=1;
    detector2->V0=2500*GeFiCa::volt;
    detector2->V1=0*GeFiCa::volt;
 
@@ -54,39 +54,42 @@
 
    // generate graphics
    TChain *tn = new TChain("t");
-   tn->Add("point2dSOR23.root");
-   tn->Draw("c2*10:e2","c1<0.01&&c1>-0.01","colz");
-   TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
-  
+   tn->Add("point2dSOR2.root");
+   //tn->Draw("c2*10:p","c1<0.00&&c1>-0.005");
+  // TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
+ /* 
    TChain *ta = new TChain("t");
    ta->Add("point2dSOR2.root");
    ta->Draw("c2*10:e2","c1<0.01&&c1>-0.01","colz");
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
   
-
-  /* 
+*/
+   
   TTree *t = new TTree("t","t");
-  t->ReadFile("/home/byron/mjd_siggen/fields/p1/ev.dat", "r:z:v");
-  t->Draw("z:v","r<0.01&&r>-0.01","");
+  t->ReadFile("/home/byron/mjd_siggen/fields/p1/ev.nob", "r:z:v");
+  t->AddFriend("t2=t","point2dSOR2.root");
+  t->Draw("z:(t2.p-v)","r>-0.005&r<0.005","");
+  //t->Draw("z:r:(t2.p-v)","","colz");
+  
 
-   TGraph *ga = new TGraph(t->GetSelectedRows(), t->GetV2(), t->GetV1());
- */
+   TGraph *gn = new TGraph(t->GetSelectedRows(), t->GetV2(), t->GetV1());
+
    // make final plot
    gn->SetMarkerColor(kBlue);
    gn->SetMarkerStyle(8);
    gn->SetMarkerSize(0.3);
-   ga->SetLineColor(kRed);
-   gn->GetXaxis()->SetTitle("Thickness [cm]");
-   gn->GetYaxis()->SetTitle("Potential [V]");
-   gn->SetTitle("");
+   //ga->SetLineColor(kRed);
+   //gn->GetXaxis()->SetTitle("Thickness [cm]");
+   //gn->GetYaxis()->SetTitle("Potential [V]");
+   //gn->SetTitle("");
    
    gn->Draw("ap");
-   ga->Draw("p");
+   //ga->Draw("l");
    
    TLegend *leg = new TLegend(0.2,0.6,0.5,0.8);
    leg->SetBorderSize(0);
-   leg->AddEntry(gn,"GeFiCa","p");
-   leg->AddEntry(ga,"mjd","l");
+   //leg->AddEntry(gn,"GeFiCa","p");
+   //leg->AddEntry(ga,"mjd","l");
    leg->SetTextSize(0.05);
    leg->Draw();
    

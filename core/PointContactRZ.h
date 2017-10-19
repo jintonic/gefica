@@ -8,9 +8,9 @@ namespace GeFiCa { class PointContactRZ; }
 class GeFiCa::PointContactRZ : public GeFiCa::RZ
 {
   public:
-    double XUpperBound,XLowerBound,YUpperBound,YLowerBound,PointBegin,PointEnd;//bounds for X and Y and point start and end
+    double RUpperBound,RLowerBound,ZUpperBound,ZLowerBound,PointBegin,PointEnd;//bounds for X and Y and point start and end
    public :
-     PointContactRZ(int ix,int iy) : RZ(ix,iy), XUpperBound(1),XLowerBound(0),YUpperBound(1),YLowerBound(0), PointBegin(0.4),PointEnd(0.6){};
+     PointContactRZ(int ix,int iy) : RZ(ix,iy), RUpperBound(1),RLowerBound(0),ZUpperBound(1),ZLowerBound(0), PointBegin(0.4),PointEnd(0.6){};
 
      void Initialize();
      bool CalculateField(EMethod method=kSOR2);

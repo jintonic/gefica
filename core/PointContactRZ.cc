@@ -12,16 +12,16 @@ void PointContactRZ::Initialize()
    // END_HTML
    // If the inner radius is not larger than the outer radius,
    // no grid will be created
-   if (XLowerBound>=XUpperBound||YLowerBound>=YUpperBound) {
+   if (RLowerBound>=RUpperBound||ZLowerBound>=ZUpperBound) {
       Warning("Initialize",
             "Lower bound (%f) >= upper bound (%f)! No grid is created!",
-            XLowerBound, XUpperBound);
+            RLowerBound, RUpperBound);
       return;
    }
-   double steplength1=(XUpperBound-XLowerBound)/n1;
-   double steplength2=(YUpperBound-YLowerBound)/n2;
+   double steplength1=(RUpperBound-RLowerBound)/n1;
+   double steplength2=(ZUpperBound-ZLowerBound)/n2;
    SetStepLength(steplength1,steplength2);
-   for(int i=n;i-->0;) fC1[i]=fC1[i]+XLowerBound;
+   for(int i=n;i-->0;) fC1[i]=fC1[i]+RLowerBound;
    
    // set potential for electrodes
    for(int i=n-1;i>=n-n1;i--) {

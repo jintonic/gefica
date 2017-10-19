@@ -14,7 +14,7 @@ using namespace std;
 void RZ::SOR2(int idx,bool elec)
 {
 
-   // 2nd-order Runge-Kutta Successive Over-Relaxation
+   // 2nd-order Successive Over-Relaxation
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*Qe;
    double h2=fDistanceToPrevious[idx];
