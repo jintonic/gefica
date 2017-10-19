@@ -1,17 +1,17 @@
 {
-   GeFiCa::PointContactRZ *detector2 = new GeFiCa::PointContactRZ(71,51);
-   detector2->RUpperBound=3.5;
-   detector2->RLowerBound=-3.5;
-   detector2->ZUpperBound=5.0;
+   GeFiCa::PointContactRZ *detector2 = new GeFiCa::PointContactRZ(691,506);
+   detector2->RUpperBound=3.45;
+   detector2->RLowerBound=-3.45;
+   detector2->ZUpperBound=5.05;
    detector2->PointBegin=-0.14;
-   detector2->PointEnd=0.14;
+   detector2->PointEnd=0.1400;
 
    //TF2 *im=new TF2("f","-0.19175e10-0.025e10*y");
    TF2 *im=new TF2("f","-0.318e10+0.025e10*y");
    //TF1 *im1=new TF1("f","-0.318e10+0.025e10*x",0,6.9);
 
    detector2->MaxIterations=1e6;
-   detector2->Csor=1;
+   detector2->Csor=1.994;
    detector2->V0=2500*GeFiCa::volt;
    detector2->V1=0*GeFiCa::volt;
 
@@ -73,7 +73,7 @@
   
 
    TGraph *gn = new TGraph(t->GetSelectedRows(), t->GetV2(), t->GetV1());
-
+/*
    // make final plot
    gn->SetMarkerColor(kBlue);
    gn->SetMarkerStyle(8);
@@ -92,7 +92,7 @@
    //leg->AddEntry(ga,"mjd","l");
    leg->SetTextSize(0.05);
    leg->Draw();
-   
+   */
  //  cvs->SaveAs("pointContact2d.png");
 
 }

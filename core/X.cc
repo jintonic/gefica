@@ -65,6 +65,7 @@ void X::SetStepLength(double steplength)
 bool X::CalculateField(EMethod method)
 {
   Initialize();
+  //for(int i=0;i<n;i++)cout<<fPotential[i]<<"  "<<fIsFixed[i]<<endl;
   Impuritystr2tf();
    fIsLoaded=true;
    if (method==kAnalytic) return Analytic();
@@ -72,7 +73,7 @@ bool X::CalculateField(EMethod method)
    while (cnt++<MaxIterations) {
       double XUpSum=0;
       double XDownSum=0;
-      for (int i=1;i<n-1;i++) {
+      for (int i=n-1;i>=0;i--) {
          double old=fPotential[i];
          SOR2(i,0);
          if(old>0)XDownSum+=old;
@@ -80,7 +81,7 @@ bool X::CalculateField(EMethod method)
          if(fPotential[i]-old>0)XUpSum+=(fPotential[i]-old);
          else XUpSum+=-(fPotential[i]-old);
       }
-      if(cnt%1000==0)
+      if(cnt%10==0)
          cout<<cnt<<"  "<<XUpSum/XDownSum<<" down: "<<XDownSum<<", up: "<<XUpSum<<endl;
       if (XUpSum/XDownSum<Precision)
       {

@@ -1,4 +1,5 @@
 #include "PointContactRZ.h"
+#include "iostream"
 #include "Units.h"
 using namespace GeFiCa;
 
@@ -18,8 +19,9 @@ void PointContactRZ::Initialize()
             RLowerBound, RUpperBound);
       return;
    }
-   double steplength1=(RUpperBound-RLowerBound)/n1;
-   double steplength2=(ZUpperBound-ZLowerBound)/n2;
+   double steplength1=(RUpperBound-RLowerBound)/(n1-1);
+   double steplength2=(ZUpperBound-ZLowerBound)/(n2-1);
+   std::cout<<steplength1<<std::endl; 
    SetStepLength(steplength1,steplength2);
    for(int i=n;i-->0;) fC1[i]=fC1[i]+RLowerBound;
    
