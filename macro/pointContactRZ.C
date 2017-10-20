@@ -1,5 +1,5 @@
 {
-   GeFiCa::PointContactRZ *detector2 = new GeFiCa::PointContactRZ(691,506);
+   GeFiCa::PointContactRZ *detector2 = new GeFiCa::PointContactRZ(346,506);
    detector2->RUpperBound=3.45;
    detector2->RLowerBound=-3.45;
    detector2->ZUpperBound=5.05;
@@ -19,8 +19,8 @@
    detector2->Impurity="-0.318e10+0.025e10*y";//-0.01e10/GeFiCa::cm3);
    //detector2->SetImpurity(0e10/GeFiCa::cm3);
    
-   detector2->CalculateField(GeFiCa::kSOR2);
-   detector2->SaveField("point2dSOR2.root");
+   //detector2->CalculateField(GeFiCa::kSOR2);
+   //detector2->SaveField("point2dSOR2.root");
    //detector2->LoadField("point2dSOR23.root");
    
 /*
@@ -54,8 +54,8 @@
 
    // generate graphics
    TChain *tn = new TChain("t");
-   tn->Add("point2dSOR2.root");
-   //tn->Draw("c2*10:p","c1<0.00&&c1>-0.005");
+   //tn->Add("point2dSOR2.root");
+   //tn->Draw("c2*10:p","c1<0.00&&c1>-0.05");
   // TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
  /* 
    TChain *ta = new TChain("t");
@@ -66,9 +66,9 @@
 */
    
   TTree *t = new TTree("t","t");
-  t->ReadFile("/home/byron/mjd_siggen/fields/p1/ev.nob", "r:z:v");
+  t->ReadFile("/home/byron/mjd_siggen/fields/p1/evq.nob", "r:z:v");
   t->AddFriend("t2=t","point2dSOR2.root");
-  t->Draw("z:(t2.p-v)","r>-0.005&r<0.005","");
+  t->Draw("z:(t2.p-v)","r>0.1&r<0.3","");
   //t->Draw("z:r:(t2.p-v)","","colz");
   
 
