@@ -23,13 +23,16 @@ void PointContactRZ::Initialize()
    double steplength2=(ZUpperBound-ZLowerBound)/(n2-1);
    std::cout<<steplength1<<std::endl; 
    SetStepLength(steplength1,steplength2);
-   for(int i=n;i-->0;) fC1[i]=fC1[i]+RLowerBound;
-   
+   for(int i=n;i-->0;) 
+   {
+      fC1[i]=fC1[i]+RLowerBound;
+      fPotential[i]=(V0+V1)/2;
+   }
    // set potential for electrodes
    for(int i=n-1;i>=n-n1;i--) {
       fIsFixed[i]=true;
       fPotential[i]=V0;
-      if(fC1[n-1-i]>=PointBegin&&fC1[n-1-i]<=PointEnd) {
+      if(fC1[n-1-i]>=PointBegin-0.001&&fC1[n-1-i]<=PointEnd+0.001) {
          fPotential[n-1-i]=V1;
          fIsFixed[n-1-i]=true;
       }
