@@ -17,21 +17,21 @@ ROOTLIBS  := $(shell $(ROOTCONFIG) --libs)
 ARCHOK     = no
 
 ifeq ($(ARCH),linux)
-  CXX      = g++
+  CXX      = g++ -std=c++11
   CXXFLAGS = $(OPT2) -Wall -fPIC
   SOFLAGS  = -shared
   ARCHOK   = yes
 endif
 
 ifeq ($(ARCH),linuxx8664gcc)
-  CXX      = g++
+  CXX      = g++ -std=c++11
   CXXFLAGS = $(OPT2) -Wall -fPIC
   SOFLAGS  = -shared
   ARCHOK   = yes
 endif
 
 ifeq ($(ARCH),win32gcc)
-  CXX      = g++
+  CXX      = g++ -std=c++11
   CXXFLAGS = $(OPT2) -Wall
   SOFLAGS  = -shared
   ARCHOK   = yes
@@ -44,13 +44,15 @@ endif
 
 # In case that ALTCXX = 0, g++ will be used as CXX
 ifneq ($(ALTCXX),)
-  CXX = $(ALTCXX)
+  CXX = $(ALTCXX) -std=c++11
 endif
 
 # Finally, define CXXFLAGS & LIBS
 CXXFLAGS+=$(subst -std=c++11,,$(ROOTCFLAGS))
+#CXXFLAGS+=$(ROOTCFLAGS)
 CXXFLAGS+=-g
 LIBS    +=$(ROOTLIBS)
+LIBS    +=  -pthread
 
 
 # Define things related to rootcint
@@ -146,7 +148,7 @@ $(ROOTMAP): $(LIBRARY)
 $(LIBRARY): $(ROOTIFIED_OBJECT) $(OBJECTS)
 	@echo
 	@echo "* Creating shared library:"
-	$(CXX) $^ $(CXXFLAGS) $(LIBS) $(SOFLAGS) -o $@
+	$(CXX) $^ $(CXXFLAGS)  $(LIBS)   $(SOFLAGS) -o $@
 
 # An xxx.o file depends on xxx.cc. It is created with the command:
 # 	g++ -c xxx.cc -o xxx.o
