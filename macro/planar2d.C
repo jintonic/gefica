@@ -12,7 +12,7 @@
    GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(101);
    detector->V0=2000*GeFiCa::volt;
    detector->V1=0*GeFiCa::volt;
-   detector->SetImpurity(1e10/GeFiCa::cm3);
+   detector->Impurity="1e10";
    detector->CalculateField(GeFiCa::kAnalytic);
    detector->SaveField("planar1dTrue.root");
 

@@ -29,7 +29,7 @@
    // generate graphics
    TChain *tn = new TChain("t");
    tn->Add("planar1dSOR2.root");
-   tn->Draw("e1:c1");
+   tn->Draw("p:c1");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
 
    TChain *ta = new TChain("t");
