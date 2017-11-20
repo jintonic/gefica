@@ -1,12 +1,12 @@
 {
-   GeFiCa::TrueCoaxial1D *detector = new GeFiCa::TrueCoaxial1D(101);
+   GeFiCa::TrueCoaxial1D *detector = new GeFiCa::TrueCoaxial1D(332);
    detector->V0=0*GeFiCa::volt;
    detector->V1=2500*GeFiCa::volt;
    detector->InnerRadius=0.14;
    detector->OuterRadius=3.45;
 
    detector->MaxIterations=1e5;
-   detector->Impurity="-0.3e10";
+   detector->Impurity="-0.318e10";
    detector->Csor=1.95;
    d=detector->CalculateField(GeFiCa::kSOR2);
    detector->SaveField("trueCoaxial1d.root");
@@ -16,18 +16,18 @@
    // generate graphics
    TChain *tn = new TChain("t");
    tn->Add("trueCoaxial1d.root");
-   tn->Draw("p:c1");
+   tn->Draw("p:c1*10");
 
-    TTree *t = new TTree("t","t");
-    t->ReadFile("/home/rdlab/mjd_siggen/fields/p1/v.dat", "r:z:v");
-    t->Draw("v:r","z<10","");
+    TTree *ta = new TTree("t","t");
+    ta->ReadFile("/home/byron/mjd_siggen/fields/p1/v.dat", "r:z:v");
+    ta->Draw("v:r","z<0.1","");
 
-   TGraph *gn = new TGraph(t->GetSelectedRows(), t->GetV2(), t->GetV1());
+   TGraph *gn = new TGraph(t->GetSelectedRows(), tn->GetV2(), tn->GetV1());
 
 
-   TChain *ta = new TChain("t");
-   ta->Add("trueCoaxial1dTrue.root");
-   ta->Draw("p:c1*10");
+   //TChain *ta = new TChain("t");
+   //ta->Add("trueCoaxial1dTrue.root");
+   //ta->Draw("p:c1*10");
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
 
    // make final plot

@@ -1,10 +1,10 @@
 {
-   GeFiCa::PointContactRZ *detector2 = new GeFiCa::PointContactRZ(1036,506);
+   GeFiCa::PointContactRZ *detector2 = new GeFiCa::PointContactRZ(346,506);
    detector2->RUpperBound=3.45;
    detector2->RLowerBound=-3.45;
    detector2->ZUpperBound=5.05;
-   detector2->PointBegin=-0.13;
-   detector2->PointEnd=0.1300;
+   detector2->PointBegin=-3.45;
+   detector2->PointEnd=3.4500;
 
    //TF2 *im=new TF2("f","-0.19175e10-0.025e10*y");
    TF2 *im=new TF2("f","-0.318e10+0.025e10*y");
@@ -12,7 +12,7 @@
 
    detector2->MaxIterations=1e6;
    detector2->Precision=1e-8;
-   detector2->Csor=1.996;
+   detector2->Csor=1.992;
    detector2->V0=2500*GeFiCa::volt;
    detector2->V1=0*GeFiCa::volt;
 
@@ -20,9 +20,9 @@
    detector2->Impurity="-0.318e10+0.025e10*y";//-0.01e10/GeFiCa::cm3);
    //detector2->SetImpurity(0e10/GeFiCa::cm3);
    
-   detector2->CalculateField(GeFiCa::kSOR2);
-   detector2->SaveField("point2dSOR2k2.root");
-   //detector2->LoadField("point2dSOR23.root");
+   //detector2->CalculateField(GeFiCa::kSOR2);
+   //detector2->SaveField("point2dSOR2.root");
+   //detector2->LoadField("point21dSOR23.root");
    
 /*
    // calculate fields
@@ -46,6 +46,8 @@
    gStyle->SetTitleSize(0.05,"XY");
    gStyle->SetTitleFont(22,"XY");
    gStyle->SetLegendFont(22);
+   gStyle->SetCanvasColor(kBlack);
+   //cvs->SetFillColor(kBlack);
   /* 
    TChain *ta = new TChain("t");
    ta->Add("planar1dTrue.root");
@@ -60,40 +62,43 @@
   // TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
   
    TChain *ta = new TChain("t");
-   ta->Add("point2dSOR2k.root");
-   //ta->Draw("c2*10:c1:p","","colz");
-//   TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
+   ta->Add("point2dSOR2.root");
+   //ta->Draw("c1:p","c2>=0&c2<0.02","");
+   //TGraph *gn = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
   
 
    
   TTree *t = new TTree("t","t");
-  t->ReadFile("/home/byron/mjd_siggen/fields/p1/evqp.nob", "r:z:v");
-  t->AddFriend("t2=t","point2dSOR2k.root");
-  //t->Draw("z:(t2.p-v)","z!=1&r!=1&z<34.5&r>0.1&r<0.3","");
-  t->Draw("z:r:(t2.p-v)","z!=1&r!=1&z<34.5","colz");
+  t->ReadFile("/home/byron/mjdfieldgen2/mjd_siggen/fields/p1/evq.nob", "r:z:v");
+  t->AddFriend("t2=t","point2dSOR2.root");
+  //t->Draw("z:(t2.p-v)","z!=1&r!=1&z<1&r>34.&r<34.5","");
+  //TCanvas *can = new TCanvas;
+  //t->Draw("r:(t2.p-v)","z>=0&z<0.2","");
+  t->Draw("z:r:(t2.p-v)","r<39&r>-39","colz");
   
 
- //  TGraph *gn = new TGraph(t->GetSelectedRows(), t->GetV2(), t->GetV1());
-/*
+  // TGraph *gn = new TGraph(t->GetSelectedRows(), t->GetV2(), t->GetV1());
+
    // make final plot
-   gn->SetMarkerColor(kBlue);
-   gn->SetMarkerStyle(8);
-   gn->SetMarkerSize(0.3);
+   //gn->SetMarkerColor(kBlue);
+   //gn->SetMarkerStyle(8);
+   //gn->SetMarkerSize(0.3);
    //ga->SetLineColor(kRed);
    //gn->GetXaxis()->SetTitle("Thickness [cm]");
    //gn->GetYaxis()->SetTitle("Potential [V]");
    //gn->SetTitle("");
    
-   gn->Draw("ap");
+   //gn->Draw("ap");
    //ga->Draw("l");
-   
+  
+   /*
    TLegend *leg = new TLegend(0.2,0.6,0.5,0.8);
    leg->SetBorderSize(0);
    //leg->AddEntry(gn,"GeFiCa","p");
    //leg->AddEntry(ga,"mjd","l");
    leg->SetTextSize(0.05);
    leg->Draw();
-   */
+  */ 
  //  cvs->SaveAs("pointContact2d.png");
 
 }
