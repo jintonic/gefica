@@ -5,8 +5,11 @@
    detector2->ZUpperBound=5.05;
    detector2->PointBegin=-1.45;
    detector2->PointEnd=1.4500;
-   detector2->RHole=2.4500;
-   detector2->DHole=2.50;
+   detector2->DHole=1.0;
+   detector2->OutterRadiusHole=1;
+   detector2->InnerRadiusHole=0.5;
+   detector2->removedConnorradius=1;
+   detector2->removedConnorheight=1;
 
    //TF2 *im=new TF2("f","-0.19175e10-0.025e10*y");
    //TF2 *im=new TF2("f","-0.318e10+0.025e10*y");

@@ -1,6 +1,7 @@
 #include "RPointContactRZ.h"
 #include "iostream"
 #include "Units.h"
+#include <cmath>
 using namespace GeFiCa;
 
 void RPointContactRZ::Initialize()
@@ -23,6 +24,19 @@ void RPointContactRZ::Initialize()
    double steplength2=(ZUpperBound-ZLowerBound)/(n2-1);
    std::cout<<steplength1<<std::endl; 
    SetStepLength(steplength1,steplength2);
+   double x1=OutterRadiusHole,
+	  y1=ZUpperBound,
+	  x2=InnerRadiusHole,
+	  y2=ZUpperBound-DHole,
+	  x3=RUpperBound-removedConnorradius,
+	  y3=ZUpperBound,
+	  x4=RUpperBound,
+	  y4=ZUpperBound-removedConnorheight;
+   double k1=(y1-y2)/(x1-x2);
+   double b1=y1-k1*x1;
+   double k2=(y3-y4)/(x3-x4);
+   double b2=(y3-k2*x3);
+
    for(int i=n;i-->0;) 
    {
       fC1[i]=fC1[i]+RLowerBound;
@@ -45,12 +59,23 @@ void RPointContactRZ::Initialize()
    }
    for (int i=0;i<n;i++)
    {
-     if(fC1[i]>-RHole-steplength1/2 && fC1[i]<RHole+steplength1/2 && fC2[i]>DHole-steplength2/2)
+     if(((fC2[i]>-k1*(fC1[i])+b1-steplength2/2  && fC2[i]>y2-steplength2/2)||(fC2[i]>-k2*(fC1[i])+b2-steplength2/2))&&fC1[i]<0)
      {
        fIsFixed[i]=true;
        fPotential[i]=V0;
      }
-     if(fC1[i]<RHole-steplength1/2&&fC1[i]>-RHole+steplength1/2&&fC2[i]>DHole)
+
+     if(((fC2[i]>-k1*(fC1[i])+b1+steplength2 && fC2[i]>y2+steplength2)||fC2[i]>-k2*(fC1[i])+b2+steplength2)&&fC1[i]<0)
+     {
+       fPotential[i]=0;
+     }
+     if(((fC2[i]>k1*(fC1[i])+b1-steplength2/2  && fC2[i]>y2-steplength2/2)||(fC2[i]>k2*(fC1[i])+b2-steplength2/2))&&fC1[i]>0)
+     {
+       fIsFixed[i]=true;
+       fPotential[i]=V0;
+     }
+
+     if(((fC2[i]>k1*(fC1[i])+b1+steplength2 && fC2[i]>y2+steplength2)||fC2[i]>k2*(fC1[i])+b2+steplength2)&&fC1[i]>0)
      {
        fPotential[i]=0;
      }
