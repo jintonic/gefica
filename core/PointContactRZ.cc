@@ -27,6 +27,11 @@ void PointContactRZ::Initialize()
    {
       fC1[i]=fC1[i]+RLowerBound;
       fPotential[i]=(V0+V1)/2;
+      if(fC1[i]>PointBegin&&fC1[i]<PointEnd&&fC2[i]<PointDepth)
+      {
+	fPotential[i]=0;
+	fIsFixed[i]=true;
+      }
    }
    // set potential for electrodes
    for(int i=n-1;i>=n-n1;i--) {
