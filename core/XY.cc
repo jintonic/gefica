@@ -84,10 +84,10 @@ void XY::SOR2(int idx,bool elec)
 int XY::FindIdx(double tarx,double tary ,int ybegin,int yend)
 {
    //search using binary search
-   if(ybegin>=yend)return X::FindIdx(tarx,ybegin,ybegin+n1-1);
+   if(ybegin>=yend)return X::FindIdx(tarx,ybegin/n1*n1,ybegin+n1-1);
    int mid=((ybegin/n1+yend/n1)/2)*n1;
    if(fC2[mid]>=tary)return FindIdx(tarx,tary,ybegin,mid);
-   else return FindIdx(tarx,tary,mid+1,yend);
+   else return FindIdx(tarx,tary,mid+n1,yend);
 }
 //_____________________________________________________________________________
 //
@@ -95,10 +95,12 @@ double XY::GetData(double tarx, double tary, int thing)
 {
    //ask thing with coordinate and item number: 1:Impurity 2:Potential 3:E1 4:E2
 
-   int idx=FindIdx(tarx,tary,0,n);
+   int idx=FindIdx(tarx,tary,0,n-1);
    double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
+   cout<<"next"<<fDistanceToNext[idx]<<endl;
    double aa=1-ab;
    double ba=(tary-fC2[idx])/fDistanceToRight[idx];
+   cout<<"right"<<fDistanceToRight[idx]<<endl;
    double bb=1-ba;
    double tar0,tar1,tar2,tar3,*tar=NULL;
    switch(thing)
@@ -115,6 +117,8 @@ double XY::GetData(double tarx, double tary, int thing)
    if(idx>n-n1){tar2=0;tar3=0;}
    else {tar2=tar[idx+n1];}
    if (tar3==-1)tar3=tar[idx+n1+1];
+   cout<<tar0<<" "<<tar1<<" "<<tar2<<" "<<tar3<<endl;
+   cout<<aa<<" "<<ab<<" "<<ba<<" "<<bb<<endl;
    return (tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb;
 }
 //_____________________________________________________________________________
@@ -127,14 +131,21 @@ void XY::SaveField(const char * fout)
    v[8]=(double)n2;
    v.Write();
    TTree * tree=(TTree*)file->Get("t");
-   double E2s,C2s;
+   double E2s,C2s,StepLeft,StepRight;
    TBranch *be2 = tree->Branch("e2",&E2s,"e2/D"); // Electric field in y
    TBranch *bc2 = tree->Branch("c2",&C2s,"c2/D"); // persition in y
+   TBranch *bsl=tree->Branch("sl",&StepLeft,"StepLeft/D"); // Step length to next point in x
+   TBranch *bsr=tree->Branch("sr",&StepRight,"StepRight/D"); // Step length to before point in x
+
    for(int i=0;i<n;i++) {
       E2s=fE2[i];
       C2s=fC2[i];
+      StepLeft=fDistanceToLeft[i];
+      StepRight=fDistanceToRight[i];
       be2->Fill();
       bc2->Fill();
+      bsl->Fill();
+      bsr->Fill();
    }
    file->Write();
    file->Close();
@@ -154,17 +165,26 @@ void XY::LoadField(const char * fin)
 
    TChain *t =new TChain("t");
    t->Add(fin);
-   double fEy,fPy;
+   double fEy,fPy,fstepleft,fstepright;
    t->SetBranchAddress("c2",&fPy);
    t->SetBranchAddress("e2",&fEy);
+   t->SetBranchAddress("sl",&fstepleft);
+   t->SetBranchAddress("sr",&fstepright);
+
 
    fE2=new double[n];
    fC2=new double[n];
+   fDistanceToRight=new double[n];
+   fDistanceToLeft=new double[n];
 
    for (int i=0;i<n;i++) {
       t->GetEntry(i);
       fE2[i]=fEy;
       fC2[i]=fPy;
+      fDistanceToRight[i]=fstepright;
+      fDistanceToLeft[i]=fstepright;
+
+
    }
    file->Close();
    delete file;

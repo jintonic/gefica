@@ -211,7 +211,7 @@ void X::LoadField(const char * fin)
    t->SetBranchAddress("p",&fP);
    t->SetBranchAddress("sn",&fStepNext);
    t->SetBranchAddress("sb",&fStepBefore);
-   t->SetBranchAddress("if",&IsFixed);
+   t->SetBranchAddress("ib",&IsFixed);
    t->SetBranchAddress("im",&fimpurity);
 
    fE1=new double[n];
