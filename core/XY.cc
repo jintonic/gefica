@@ -84,23 +84,30 @@ void XY::SOR2(int idx,bool elec)
 int XY::FindIdx(double tarx,double tary ,int ybegin,int yend)
 {
    //search using binary search
-   if(ybegin>=yend)return X::FindIdx(tarx,ybegin/n1*n1,ybegin+n1-1);
-   int mid=((ybegin/n1+yend/n1)/2)*n1;
-   if(fC2[mid]>=tary)return FindIdx(tarx,tary,ybegin,mid);
-   else return FindIdx(tarx,tary,mid+n1,yend);
+  // if(ybegin>=yend)cout<<"to x"<<ybegin<<" "<<yend<<endl;;
+   if(ybegin>=yend)return X::FindIdx(tarx,ybegin*n1,(ybegin+1)*n1-1);
+   int mid=((ybegin+yend)/2);
+   if(fC2[mid*n1]>=tary){//cout<<"firsthalf"<<ybegin<<" "<<yend<<endl; 
+     return FindIdx(tarx,tary,ybegin,mid);
+}
+   else{//cout<<"senondhalf"<<ybegin<<" "<<yend<<endl; 
+     return FindIdx(tarx,tary,mid+1,yend);}
 }
 //_____________________________________________________________________________
 //
 double XY::GetData(double tarx, double tary, int thing)
 {
    //ask thing with coordinate and item number: 1:Impurity 2:Potential 3:E1 4:E2
+ // for (int i=0;i<n;i++)
+ //  cout<<fDistanceToNext[i]<<" "<<i<<endl;
 
-   int idx=FindIdx(tarx,tary,0,n-1);
+   int idx=FindIdx(tarx,tary,0,n2-1);
+   //cout<<idx<<" "<<n<<endl;
    double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
-   cout<<"next"<<fDistanceToNext[idx]<<endl;
    double aa=1-ab;
    double ba=(tary-fC2[idx])/fDistanceToRight[idx];
-   cout<<"right"<<fDistanceToRight[idx]<<endl;
+   //cout<<"right"<<fDistanceToRight[idx]<<endl;
+   //cout<<"next"<<fDistanceToNext[idx]<<endl;
    double bb=1-ba;
    double tar0,tar1,tar2,tar3,*tar=NULL;
    switch(thing)
@@ -117,8 +124,8 @@ double XY::GetData(double tarx, double tary, int thing)
    if(idx>n-n1){tar2=0;tar3=0;}
    else {tar2=tar[idx+n1];}
    if (tar3==-1)tar3=tar[idx+n1+1];
-   cout<<tar0<<" "<<tar1<<" "<<tar2<<" "<<tar3<<endl;
-   cout<<aa<<" "<<ab<<" "<<ba<<" "<<bb<<endl;
+   //cout<<tar0<<" "<<tar1<<" "<<tar2<<" "<<tar3<<endl;
+   //cout<<aa<<" "<<ab<<" "<<ba<<" "<<bb<<endl;
    return (tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb;
 }
 //_____________________________________________________________________________
@@ -129,7 +136,7 @@ void XY::SaveField(const char * fout)
    TFile *file=new TFile(fout,"update");
    TVectorD  v=*(TVectorD*)file->Get("v");
    v[8]=(double)n2;
-   v.Write();
+   v.Write("v");
    TTree * tree=(TTree*)file->Get("t");
    double E2s,C2s,StepLeft,StepRight;
    TBranch *be2 = tree->Branch("e2",&E2s,"e2/D"); // Electric field in y
