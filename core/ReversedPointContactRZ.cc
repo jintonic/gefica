@@ -1,10 +1,10 @@
-#include "RPointContactRZ.h"
+#include "ReversedPointContactRZ.h"
 #include "iostream"
 #include "Units.h"
 #include <cmath>
 using namespace GeFiCa;
 
-void RPointContactRZ::Initialize()
+void ReversedPointContactRZ::Initialize()
 {
    // The step length is calculated with the following equation:
    // BEGIN_HTML
@@ -84,7 +84,7 @@ void RPointContactRZ::Initialize()
 }
 //_____________________________________________________________________________
 //
-bool RPointContactRZ::CalculateField(EMethod method)
+bool ReversedPointContactRZ::CalculateField(EMethod method)
 {
    if(!fIsLoaded)Initialize();
    return RZ::CalculateField(method);

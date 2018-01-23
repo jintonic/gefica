@@ -1,5 +1,5 @@
 {
-   GeFiCa::RPointContactRZ *detector2 = new GeFiCa::RPointContactRZ(346,506);
+   GeFiCa::ReversedPointContactRZ *detector2 = new GeFiCa::ReversedPointContactRZ(346,506);
    detector2->RUpperBound=3.45;
    detector2->RLowerBound=-3.45;
    detector2->ZUpperBound=5.05;
