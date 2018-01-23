@@ -33,7 +33,7 @@ class GeFiCa::X : public TObject
       double Csor; ///< boost Iteration speed
       double Precision; ///< X limit
       int t,d;
-      char * Impurity; 
+      const char* Impurity; 
 
       double V1;///< Volage of the cathode
       double V0;///< Voltage of the anode
