@@ -64,9 +64,9 @@ void X::SetStepLength(double steplength)
 //
 bool X::CalculateField(EMethod method)
 {
-  Initialize();
-  //for(int i=0;i<n;i++)cout<<fPotential[i]<<"  "<<fIsFixed[i]<<endl;
-  Impuritystr2tf();
+   Initialize();
+   //for(int i=0;i<n;i++)cout<<fPotential[i]<<"  "<<fIsFixed[i]<<endl;
+   Impuritystr2tf();
    fIsLoaded=true;
    if (method==kAnalytic) return Analytic();
    int cnt=0;
@@ -85,8 +85,8 @@ bool X::CalculateField(EMethod method)
          cout<<cnt<<"  "<<XUpSum/XDownSum<<" down: "<<XDownSum<<", up: "<<XUpSum<<endl;
       if (XUpSum/XDownSum<Precision)
       {
-	for(int i=0;i<n;i++)SOR2(i,1);
-	return true;
+         for(int i=0;i<n;i++)SOR2(i,1);
+         return true;
       }
    }
    return false;
@@ -247,6 +247,7 @@ void X::SetImpurity(TF1 * Im)
 
 void X::Impuritystr2tf()
 {
-  TF1 * IM=new TF1("f",Impurity);
-  SetImpurity(IM);
+   const char *expression = Impurity;
+   TF1 * IM=new TF1("f",expression);
+   SetImpurity(IM);
 }

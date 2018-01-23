@@ -10,7 +10,7 @@ using namespace GeFiCa;
 XY::XY(unsigned short nx, unsigned short ny): X(nx*ny), n2(ny),
    fE2(0), fC2(0), fDistanceToLeft(0), fDistanceToRight(0)
 {
-  Impurity="0*y";
+   Impurity="0*y";
    //claim a 2D field with n1*n2 Grid
    n=nx*ny; 
    n1=nx;
@@ -69,9 +69,9 @@ void XY::SOR2(int idx,bool elec)
    if(idx%n1==n1-1)Pxp1=fPotential[idx];
    else Pxp1=fPotential[idx+1];
    //double tmp=(density/epsilon+1/fC1[idx]*(Pxp1-Pxm1)/(h2+h3)+(Pxp1/h2+Pxm1/h3)*2/(h2+h3)+(Pyp1/h1+Pym1/h4)*2/(h1+h4))/
-  double tmp=(density/epsilon+(Pxp1/h2+Pxm1/h3)*2/(h2+h3)+(Pyp1/h1+Pym1/h4)*2/(h1+h4))/
-     ((1/h2+1/h3)*2/(h2+h3)+(1/h1+1/h4)*2/(h1+h4));
-  // cout<<tmp<<endl;
+   double tmp=(density/epsilon+(Pxp1/h2+Pxm1/h3)*2/(h2+h3)+(Pyp1/h1+Pym1/h4)*2/(h1+h4))/
+      ((1/h2+1/h3)*2/(h2+h3)+(1/h1+1/h4)*2/(h1+h4));
+   // cout<<tmp<<endl;
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    if(elec)
    {
@@ -84,22 +84,22 @@ void XY::SOR2(int idx,bool elec)
 int XY::FindIdx(double tarx,double tary ,int ybegin,int yend)
 {
    //search using binary search
-  // if(ybegin>=yend)cout<<"to x"<<ybegin<<" "<<yend<<endl;;
+   // if(ybegin>=yend)cout<<"to x"<<ybegin<<" "<<yend<<endl;;
    if(ybegin>=yend)return X::FindIdx(tarx,ybegin*n1,(ybegin+1)*n1-1);
    int mid=((ybegin+yend)/2);
    if(fC2[mid*n1]>=tary){//cout<<"firsthalf"<<ybegin<<" "<<yend<<endl; 
-     return FindIdx(tarx,tary,ybegin,mid);
-}
+      return FindIdx(tarx,tary,ybegin,mid);
+   }
    else{//cout<<"senondhalf"<<ybegin<<" "<<yend<<endl; 
-     return FindIdx(tarx,tary,mid+1,yend);}
+      return FindIdx(tarx,tary,mid+1,yend);}
 }
 //_____________________________________________________________________________
 //
 double XY::GetData(double tarx, double tary, int thing)
 {
    //ask thing with coordinate and item number: 1:Impurity 2:Potential 3:E1 4:E2
- // for (int i=0;i<n;i++)
- //  cout<<fDistanceToNext[i]<<" "<<i<<endl;
+   // for (int i=0;i<n;i++)
+   //  cout<<fDistanceToNext[i]<<" "<<i<<endl;
 
    int idx=FindIdx(tarx,tary,0,n2-1);
    //cout<<idx<<" "<<n<<endl;
@@ -207,6 +207,7 @@ void XY::SetImpurity(TF2 * Im)
 
 void XY::Impuritystr2tf()
 {
-  TF2 * IM=new TF2("f",Impurity);
-  SetImpurity(IM);
+   const char* expression = Impurity;
+   TF2 * IM=new TF2("f",expression);
+   SetImpurity(IM);
 }
