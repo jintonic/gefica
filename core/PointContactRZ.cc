@@ -13,12 +13,17 @@ void PointContactRZ::Initialize()
    // END_HTML
    // If the inner radius is not larger than the outer radius,
    // no grid will be created
-   if (RLowerBound>=RUpperBound||ZLowerBound>=ZUpperBound) {
+   if (ZLowerBound>=ZUpperBound) {
       Warning("Initialize",
             "Lower bound (%f) >= upper bound (%f)! No grid is created!",
-            RLowerBound, RUpperBound);
+            ZLowerBound, ZUpperBound);
       return;
    }
+   double RUpperBound,RLowerBound,PointBegin,PointEnd;
+   RUpperBound=Radius;
+   RLowerBound=-Radius;
+   PointBegin=-PointR;
+   PointEnd=PointR;
    double steplength1=(RUpperBound-RLowerBound)/(n1-1);
    double steplength2=(ZUpperBound-ZLowerBound)/(n2-1);
    SetStepLength(steplength1,steplength2);
