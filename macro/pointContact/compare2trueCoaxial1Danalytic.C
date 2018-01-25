@@ -4,11 +4,9 @@
 {
    // calculate potential for point contact 2D
    GeFiCa::PointContactRZ *ppc = new GeFiCa::PointContactRZ(1036,506);
-   ppc->RUpperBound=3.45;
-   ppc->RLowerBound=-3.45;
+   ppc->Radius=3.45;
    ppc->ZUpperBound=5.05;
-   ppc->PointBegin=-0.135;
-   ppc->PointEnd=0.135;
+   ppc->PointR=0.135;
    ppc->PointDepth=5.05;
 
    ppc->MaxIterations=1e6;
