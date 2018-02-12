@@ -17,21 +17,21 @@ ROOTLIBS  := $(shell $(ROOTCONFIG) --libs)
 ARCHOK     = no
 
 ifeq ($(ARCH),linux)
-  CXX      = g++ -std=c++11
+  CXX      = g++ 
   CXXFLAGS = $(OPT2) -Wall -fPIC
   SOFLAGS  = -shared
   ARCHOK   = yes
 endif
 
 ifeq ($(ARCH),linuxx8664gcc)
-  CXX      = g++ -std=c++11
+  CXX      = g++ 
   CXXFLAGS = $(OPT2) -Wall -fPIC
   SOFLAGS  = -shared
   ARCHOK   = yes
 endif
 
 ifeq ($(ARCH),win32gcc)
-  CXX      = g++ -std=c++11
+  CXX      = g++ 
   CXXFLAGS = $(OPT2) -Wall
   SOFLAGS  = -shared
   ARCHOK   = yes
@@ -44,7 +44,7 @@ endif
 
 # In case that ALTCXX = 0, g++ will be used as CXX
 ifneq ($(ALTCXX),)
-  CXX = $(ALTCXX) -std=c++11
+  CXX = $(ALTCXX) 
 endif
 
 # Finally, define CXXFLAGS & LIBS
