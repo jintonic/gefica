@@ -17,21 +17,21 @@ ROOTLIBS  := $(shell $(ROOTCONFIG) --libs)
 ARCHOK     = no
 
 ifeq ($(ARCH),linux)
-  CXX      = g++ 
+  CXX      = g++ -std=c++11 
   CXXFLAGS = $(OPT2) -Wall -fPIC
   SOFLAGS  = -shared
   ARCHOK   = yes
 endif
 
 ifeq ($(ARCH),linuxx8664gcc)
-  CXX      = g++ 
+  CXX      = g++ -std=c++11 
   CXXFLAGS = $(OPT2) -Wall -fPIC
   SOFLAGS  = -shared
   ARCHOK   = yes
 endif
 
 ifeq ($(ARCH),win32gcc)
-  CXX      = g++ 
+  CXX      = g++ -std=c++11 
   CXXFLAGS = $(OPT2) -Wall
   SOFLAGS  = -shared
   ARCHOK   = yes
@@ -160,7 +160,7 @@ $(ROOTIFIED_SOURCE): $(HEADERS) $(LINKDEF)
 	@echo 
 	@echo "* Rootifying files:" 
 	@rm -f $(ROOTIFIED_SOURCE) $(ROOTIFIED_HEADER) 
-	$(ROOTCINT) -f $(ROOTIFIED_SOURCE) -c -p $(CXXFLAGS) $(HEADERS) $(LINKDEF)
+	$(ROOTCINT) -f $(ROOTIFIED_SOURCE) -c  $(CXXFLAGS) $(HEADERS) $(LINKDEF)
 	@echo 
 	@echo "* Creating object files:" 
 
