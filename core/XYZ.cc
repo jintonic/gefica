@@ -101,7 +101,7 @@ int XYZ::FindIdx(double tarx, double tary ,double tarz,int begin,int end)
 }
 //_____________________________________________________________________________
 //
-double XYZ::GetData(double tarx, double tary, double tarz,int thing)
+double XYZ::GetData(double tarx, double tary, double tarz, EOutput output )
 {
    //get item with number: 0:Impurity 1:Potential 2: Ex 3:Ey 4:Ez
 
@@ -113,7 +113,7 @@ double XYZ::GetData(double tarx, double tary, double tarz,int thing)
    double ac=(tarz-fC3[idx])/fDistanceToUp[idx];
    double ca=1-ac;
    double tar0,tar1,tar2,tar3,tar4,tar5,tar6,tar7,*tar=NULL;
-   switch(thing)
+   switch(output)
    {
       case 0:tar= fImpurity;break;
       case 1:tar= fPotential;break;

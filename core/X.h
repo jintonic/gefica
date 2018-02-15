@@ -12,6 +12,14 @@ namespace GeFiCa {
       kSOR2, ///< Successove over-relaxation method to the 2nd order
       kSOR4, ///< Successove over-relaxation method to the 4th order
    };
+   enum EOutput ///< Different output of the calculate field
+   {
+      kImpurity,
+      kPotential,
+      kE1,
+      kE2,
+      kE3,
+   };
 
    class X;
 }
@@ -77,17 +85,17 @@ class GeFiCa::X : public TObject
       /**
        * Returns the value for E under the first direction.
        */
-      virtual double GetE1(double x,double y,double z){return GetData(x,2);};
+      virtual double GetE1(double x,double y,double z){return GetData(x,kE1);};
       virtual double GetE2(double x,double y,double z){return 0;};
       virtual double GetE3(double x,double y,double z){return 0;};
       /**
        * Returns the impurity level.
        */ 
-      virtual double GetImpurity(double x){return GetData(x,0);};
+      virtual double GetImpurity(double x){return GetData(x,kImpurity);};
       /**
        * Returns the potential.
        */ 
-      virtual double GetPotential(double x){return GetData(x,1);};
+      virtual double GetPotential(double x){return GetData(x,kPotential);};
       /**
        * Returns the location under the first directions.
        */ 
@@ -120,12 +128,9 @@ class GeFiCa::X : public TObject
        */
       virtual bool Analytic();
       /**
-       * Returns data for various variables. 
-       * Case 0: Returns impurity
-       * Case 1: Returns the potential
-       * Case 2: Returns E1
+       * Returns data of certain EOutput.
        */
-      virtual double GetData(double tarx,int thing); 
+      virtual double GetData(double tarx, EOutput output); 
       /**
        * Uses Second order Successive Over-Relaxation method to calculate the field.
        */

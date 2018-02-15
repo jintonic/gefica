@@ -125,26 +125,24 @@ double X::GetXEdge(bool beginorend)
 }
 //_____________________________________________________________________________
 //
-double X::GetData(double tarx,int thing)
+double X::GetData(double tarx, EOutput output)
 {
-   // ask thingwith number: 1:Potential 2:E1 0:Impurty
    int idx=FindIdx(tarx,0,n-1);
-   if (idx==n)
-   {
-      switch (thing)
-      {
+   if (idx==n) {
+      switch (output) {
          case 0:return fImpurity[idx];
          case 2:return fE1[idx];
          case 1:return fPotential[idx];
+         default: return -1;
       }
    }
    double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
    double aa=1-ab;
-   switch(thing)
-   {
+   switch(output) {
       case 2:return fE1[idx]*ab+fE1[idx+1]*aa;
       case 1:return fPotential[idx]*ab+fC1[idx+1]*aa;
       case 0:return fImpurity[idx]*ab+fImpurity[idx+1]*aa;
+      default: return -1;
    }
    return -1;
 }

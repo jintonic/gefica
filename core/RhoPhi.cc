@@ -36,7 +36,7 @@ void RhoPhi::SOR2(int idx,bool elec)
 }
 //_____________________________________________________________________________
 //
-double RhoPhi::GetData(double tarx, double tary, int thing)
+double RhoPhi::GetData(double tarx, double tary, EOutput output)
 {
    //0:Impurity 1:Potential 2:E1 3:E2
    int idx=FindIdx(tarx,tary,0,n);
@@ -45,11 +45,12 @@ double RhoPhi::GetData(double tarx, double tary, int thing)
    double ba=(tary-fC2[idx])/fDistanceToRight[idx];
    double bb=1-ba;
    double tar0,tar1,tar2,tar3,*tar=NULL;
-   switch(thing) {
+   switch(output) {
       case 0:tar= fImpurity;break;
       case 1:tar= fPotential;break;
       case 2:tar= fE1;break;
       case 3:tar= fE2;break;
+      default:break;
    }
    tar3=-1;
    tar0=tar[idx];

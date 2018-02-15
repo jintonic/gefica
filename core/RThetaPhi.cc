@@ -64,7 +64,7 @@ void RThetaPhi::SOR2(int idx,bool elec)
 }
 //_____________________________________________________________________________
 //
-double RThetaPhi::GetData(double tarx, double tary, double tarz,int thing)
+double RThetaPhi::GetData(double tarx, double tary, double tarz, EOutput output)
 {
    int idx=FindIdx(tarx,tary,tarz,0,n);
    double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
@@ -74,7 +74,7 @@ double RThetaPhi::GetData(double tarx, double tary, double tarz,int thing)
    double ac=(tarz-fC3[idx])/fDistanceToUp[idx];
    double ca=1-ac;
    double tar0,tar1,tar2,tar3,tar4,tar5,tar6,tar7,*tar=NULL;
-   switch(thing)
+   switch(output)
    {
       case 0:tar= fImpurity;break;
       case 1:tar= fPotential;break;

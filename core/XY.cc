@@ -95,9 +95,8 @@ int XY::FindIdx(double tarx,double tary ,int ybegin,int yend)
 }
 //_____________________________________________________________________________
 //
-double XY::GetData(double tarx, double tary, int thing)
+double XY::GetData(double tarx, double tary, EOutput output)
 {
-   //ask thing with coordinate and item number: 1:Impurity 2:Potential 3:E1 4:E2
    // for (int i=0;i<n;i++)
    //  cout<<fDistanceToNext[i]<<" "<<i<<endl;
 
@@ -110,12 +109,12 @@ double XY::GetData(double tarx, double tary, int thing)
    //cout<<"next"<<fDistanceToNext[idx]<<endl;
    double bb=1-ba;
    double tar0,tar1,tar2,tar3,*tar=NULL;
-   switch(thing)
-   {
+   switch(output) {
       case 0:tar= fImpurity;break;
       case 1:tar= fPotential;break;
       case 2:tar= fE1;break;
       case 3:tar= fE2;break;
+      default:break;
    }
    tar3=-1;
    tar0=tar[idx];

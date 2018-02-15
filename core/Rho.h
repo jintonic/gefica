@@ -18,9 +18,9 @@ class GeFiCa::Rho : public X
 	  * This defines the class R for the cint dictionary.
 	  */
       ClassDef(Rho,1);
-      virtual double GetPotential(double rho){return GetData(rho,1);};
-      virtual double GetE1(double rho,double phi,double z){return GetData(rho,2);};
-      virtual double GetImpurity(double rho){return GetData(rho,0);};
+      virtual double GetPotential(double rho){return GetData(rho,kPotential);};
+      virtual double GetE1(double rho,double phi,double z){return GetData(rho,kE1);};
+      virtual double GetImpurity(double rho){return GetData(rho,kImpurity);};
    protected:
 
       virtual void SOR2(int idx,bool elec); // 2nd-order Runge-Kutta Successive Over-Relaxation
