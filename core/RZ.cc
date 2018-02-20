@@ -14,7 +14,6 @@ using namespace GeFiCa;
 using namespace std;
 void RZ::SOR2(int idx,bool elec)
 {
-
    // 2nd-order Successive Over-Relaxation
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*Qe;
@@ -32,10 +31,9 @@ void RZ::SOR2(int idx,bool elec)
    if(idx%n1==n1-1)Pxp1=fPotential[idx];
    else Pxp1=fPotential[idx+1];
    double tmp=(density/epsilon+1/fC1[idx]*(Pxp1-Pxm1)/(h2+h3)+(Pxp1/h2+Pxm1/h3)*2/(h2+h3)+(Pyp1/h1+Pym1/h4)*2/(h1+h4))/
-     ((1/h2+1/h3)*2/(h2+h3)+(1/h1+1/h4)*2/(h1+h4));
+      ((1/h2+1/h3)*2/(h2+h3)+(1/h1+1/h4)*2/(h1+h4));
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
-   if(elec)
-   {
+   if(elec) {
       fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
       fE2[idx]=(Pyp1-Pym1)/(h1+h4);
    }

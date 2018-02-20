@@ -2,14 +2,14 @@ void compare2fieldgen()
 {
    double r,z,p;
 
-   TH2F *hmjd = new TH2F("hmjd","",346,0,346,506,0,506);
-   ifstream ff("ev.dat");
-   for (int i = 0; i < 346; i++) {
-     for (int j = 0; j < 506; j++) {
-        ff>>r>>z>>p;
-        hmjd->SetBinContent(i,j,p);
-     } 
-   }
+   //TH2F *hmjd = new TH2F("hmjd","",346,0,346,506,0,506);
+   //ifstream ff("ev.dat");
+   //for (int i = 0; i < 346; i++) {
+   //  for (int j = 0; j < 506; j++) {
+   //     ff>>r>>z>>p;
+   //     hmjd->SetBinContent(i,j,p);
+   //  } 
+   //}
 
    TH2F *hgfc = new TH2F("hgfc","",346,0,346,506,0,506);
    ifstream fg("halfP.txt");
@@ -20,8 +20,8 @@ void compare2fieldgen()
      } 
    }
 
-   hmjd->Draw("colz");
-   TCanvas *can = new TCanvas;
+   //hmjd->Draw("colz");
+   //TCanvas *can = new TCanvas;
    hgfc->Draw("colz");
 }
 

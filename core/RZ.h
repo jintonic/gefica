@@ -15,19 +15,15 @@ namespace GeFiCa { class RZ; }
 
 class GeFiCa::RZ : public GeFiCa::XY
 {
-
    public:
       /**
-      * RZ is a constructor with default values n1,n2 = 101
-      */
+       * RZ is a constructor with default values n1,n2 = 101
+       */
       RZ(unsigned short n1=101, unsigned short n2=101):XY(n1,n2){};
-      
-
 
       ClassDef(RZ,1);
 
    protected:
-
       virtual void SOR2(int idx,bool elec);
-    };
+};
 #endif 

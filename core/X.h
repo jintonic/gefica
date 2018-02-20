@@ -60,11 +60,10 @@ class GeFiCa::X : public TObject
        */
       virtual bool CalculateField(EMethod method=kSOR2);
       
-      
-      
-      virtual void Initialize(){};
+      virtual void Initialize() {};
       /**
-       * This function creates a new TFile and TTree and fills it from data created by X::CalculateField.    
+       * This function creates a new TFile and TTree and fills it from data
+       * created by X::CalculateField.    
        */
       virtual void SaveField(const char *fout);
       /**
