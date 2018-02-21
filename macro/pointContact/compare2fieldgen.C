@@ -33,7 +33,7 @@ void generateField()
    ppc->PointR=0.135;
    ppc->PointDepth=1.05;
 
-   ppc->MaxIterations=1e6;
+   ppc->MaxIterations=100;
    ppc->Precision=1e-8;
    ppc->Csor=1.996;
    ppc->V0=0*GeFiCa::volt;
@@ -54,7 +54,4 @@ void r2t()
      for (int j = 0; j < 506; j++) {
         fo<<i*ppc->Radius/346<<"\t"<<j*ppc->ZUpperBound/506<<"\t"
            <<ppc->GetPotential(i*ppc->Radius/346,j*ppc->ZUpperBound/506)<<endl;
-     } 
-   }
-   fo.close();
-}
+     } } fo.close(); }

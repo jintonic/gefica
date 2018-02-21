@@ -33,7 +33,7 @@ void halfPointContactRZ::Initialize()
       fPotential[i]=(V0+V1)/2;
       if(fC1[i]>PointBegin&&fC1[i]<PointEnd&&fC2[i]<PointDepth)
       {
-	    fPotential[i]=0;
+	    fPotential[i]=V1;
 	    fIsFixed[i]=true;
       }
    }
