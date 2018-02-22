@@ -102,6 +102,7 @@ double XY::GetData(double tarx, double tary, EOutput output)
 
    int idx=FindIdx(tarx,tary,0,n2-1);
 
+   cout<<"index:"<<idx<<endl;
    //test
    /*cout<<"(0,0)c1: "<<fC1[idx]<<" c2: "<<fC2[idx]<<" p: "<<fPotential[idx]<<endl;
    cout<<"(1,0)c1: "<<fC1[idx-1]<<" c2: "<<fC2[idx-1]<<" p: "<<fPotential[idx-1]<<endl;
@@ -133,7 +134,7 @@ double XY::GetData(double tarx, double tary, EOutput output)
    if (tar3==-1)tar3=tar[idx-n1-1];
    //cout<<tar0<<" "<<tar1<<" "<<tar2<<" "<<tar3<<endl;
    //cout<<aa<<" "<<ab<<" "<<ba<<" "<<bb<<endl;
-   return (tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb;
+   return (tar0*ab+tar1*aa)*bb+(tar2*ab+tar3*aa)*ba;
 }
 //_____________________________________________________________________________
 //

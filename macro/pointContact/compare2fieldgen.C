@@ -27,11 +27,11 @@ void compare2fieldgen()
 
 void generateField()
 {
-   GeFiCa::halfPointContactRZ *ppc = new GeFiCa::halfPointContactRZ(1036,506);
-   ppc->Radius=3.45;
-   ppc->ZUpperBound=5.05;
-   ppc->PointR=0.135;
-   ppc->PointDepth=1.05;
+   GeFiCa::PointContactRZ *ppc = new GeFiCa::PointContactRZ(200,100);
+   ppc->Radius=0.5;
+   ppc->ZUpperBound=1;
+   ppc->PointR=0.1;
+   ppc->PointDepth=0.01;
 
    ppc->MaxIterations=1e6;
    ppc->Precision=1e-8;
@@ -41,15 +41,19 @@ void generateField()
    ppc->Impurity="-0.318e10+0*y";
 
    ppc->CalculateField(GeFiCa::kSOR2);
-   ppc->SaveField("half.root");
+   ppc->SaveField("full.root");
 }
+
 void printapoint()
 {
-   GeFiCa::halfPointContactRZ *ppc = new GeFiCa::halfPointContactRZ(1036,506);
+   GeFiCa::halfPointContactRZ *ppc = new GeFiCa::halfPointContactRZ;
    ppc->LoadField("half.root");
-   cout<<ppc->GetPotential(1,0.9999);
-	
+   cout<<ppc->GetPotential(0.5,0.5)<<endl;
+   cout<<ppc->GetPotential(0.,0.)<<endl;
+   cout<<ppc->GetPotential(0.,1)<<endl;
+   cout<<ppc->GetPotential(0.,0.5)<<endl;
 }
+
 void r2t()
 {
    GeFiCa::halfPointContactRZ *ppc = new GeFiCa::halfPointContactRZ(1036,506);
