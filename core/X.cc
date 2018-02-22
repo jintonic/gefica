@@ -108,7 +108,7 @@ void X::SOR2(int idx,bool elec)
 int X::FindIdx(double tarx,int begin,int end)
 {
    //search using binary search
-   if (begin>=end)return begin;
+   if (begin>=end)return end;
    int mid=(begin+end)/2;
    if(fC1[mid]>=tarx)return FindIdx(tarx,begin,mid);
    else return FindIdx(tarx,mid+1,end);
@@ -133,12 +133,12 @@ double X::GetData(double tarx, EOutput output)
          default: return -1;
       }
    }
-   double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
+   double ab=(-tarx+fC1[idx])/fDistanceToNext[idx];
    double aa=1-ab;
    switch(output) {
-      case 2:return fE1[idx]*ab+fE1[idx+1]*aa;
-      case 1:return fPotential[idx]*ab+fC1[idx+1]*aa;
-      case 0:return fImpurity[idx]*ab+fImpurity[idx+1]*aa;
+      case 2:return fE1[idx]*ab+fE1[idx-1]*aa;
+      case 1:return fPotential[idx]*ab+fC1[idx-1]*aa;
+      case 0:return fImpurity[idx]*ab+fImpurity[idx-1]*aa;
       default: return -1;
    }
    return -1;

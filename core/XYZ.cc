@@ -106,11 +106,11 @@ double XYZ::GetData(double tarx, double tary, double tarz, EOutput output )
    //get item with number: 0:Impurity 1:Potential 2: Ex 3:Ey 4:Ez
 
    int idx=FindIdx(tarx,tary,tarz,0,n);
-   double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
+   double ab=(-tarx+fC1[idx])/fDistanceToNext[idx];
    double aa=1-ab;
-   double ba=(tary-fC2[idx])/fDistanceToRight[idx];
+   double ba=(-tary+fC2[idx])/fDistanceToRight[idx];
    double bb=1-ba;
-   double ac=(tarz-fC3[idx])/fDistanceToUp[idx];
+   double ac=(-tarz+fC3[idx])/fDistanceToUp[idx];
    double ca=1-ac;
    double tar0,tar1,tar2,tar3,tar4,tar5,tar6,tar7,*tar=NULL;
    switch(output)
@@ -127,14 +127,14 @@ double XYZ::GetData(double tarx, double tary, double tarz, EOutput output )
    tar7=-1;
    tar0=tar[idx];
    if(idx>=(n-n1*n2)){tar4=0;tar5=0;tar6=0;tar7=0;}
-   else{tar4=tar[idx+n1*n2];}
+   else{tar4=tar[idx-n1*n2];}
    if(idx%(n1*n2)%n1==n1-1){tar2=0;tar3=0;tar6=0;tar7=0;}
-   else{tar2=tar[idx+n1];}
+   else{tar2=tar[idx-n1];}
    if(idx%(n1*n2)/n1==n2-1){tar1=0;tar3=0;tar5=0;tar7=0;}
-   if(tar3==-1)tar3=tar[idx+n1+1];
-   if(tar5==-1)tar5=tar[idx+n1*n2+1];
-   if(tar6==-1)tar6=tar[idx+n1*n2+n1];
-   if(tar7==-1)tar7=tar[idx+n1*n2+n1+1];
+   if(tar3==-1)tar3=tar[idx-n1-1];
+   if(tar5==-1)tar5=tar[idx-n1*n2-1];
+   if(tar6==-1)tar6=tar[idx-n1*n2-n1];
+   if(tar7==-1)tar7=tar[idx-n1*n2-n1-1];
    return ((tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb)*ac+((tar4*aa+tar5*ab)*ba+(tar6*aa+tar7*ab)*bb)*ca;
 }
 //_____________________________________________________________________________

@@ -33,7 +33,7 @@ void generateField()
    ppc->PointR=0.135;
    ppc->PointDepth=1.05;
 
-   ppc->MaxIterations=100;
+   ppc->MaxIterations=1e6;
    ppc->Precision=1e-8;
    ppc->Csor=1.996;
    ppc->V0=0*GeFiCa::volt;
@@ -43,7 +43,13 @@ void generateField()
    ppc->CalculateField(GeFiCa::kSOR2);
    ppc->SaveField("half.root");
 }
-
+void printapoint()
+{
+   GeFiCa::halfPointContactRZ *ppc = new GeFiCa::halfPointContactRZ(1036,506);
+   ppc->LoadField("half.root");
+   cout<<ppc->GetPotential(1,0.9999);
+	
+}
 void r2t()
 {
    GeFiCa::halfPointContactRZ *ppc = new GeFiCa::halfPointContactRZ(1036,506);
@@ -52,6 +58,7 @@ void r2t()
    ofstream fo("halfP.txt");
    for (int i = 0; i < 346; i++) {
      for (int j = 0; j < 506; j++) {
-        fo<<i*ppc->Radius/346<<"\t"<<j*ppc->ZUpperBound/506<<"\t"
-           <<ppc->GetPotential(i*ppc->Radius/346,j*ppc->ZUpperBound/506)<<endl;
-     } } fo.close(); }
+        fo<<1.0*i*3.46/346<<"\t"<<1.0*j*5.06/506<<"\t"
+           <<ppc->GetPotential(1.0*i*ppc->Radius/346,1.0*j*ppc->ZUpperBound/506)<<endl;
+      } fo.close(); }
+}

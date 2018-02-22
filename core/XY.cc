@@ -85,7 +85,7 @@ int XY::FindIdx(double tarx,double tary ,int ybegin,int yend)
 {
    //search using binary search
    // if(ybegin>=yend)cout<<"to x"<<ybegin<<" "<<yend<<endl;;
-   if(ybegin>=yend)return X::FindIdx(tarx,ybegin*n1,(ybegin+1)*n1-1);
+   if(ybegin>=yend)return X::FindIdx(tarx,yend*n1,(yend+1)*n1-1);
    int mid=((ybegin+yend)/2);
    if(fC2[mid*n1]>=tary){//cout<<"firsthalf"<<ybegin<<" "<<yend<<endl; 
       return FindIdx(tarx,tary,ybegin,mid);
@@ -101,10 +101,18 @@ double XY::GetData(double tarx, double tary, EOutput output)
    //  cout<<fDistanceToNext[i]<<" "<<i<<endl;
 
    int idx=FindIdx(tarx,tary,0,n2-1);
+
+   //test
+   /*cout<<"(0,0)c1: "<<fC1[idx]<<" c2: "<<fC2[idx]<<" p: "<<fPotential[idx]<<endl;
+   cout<<"(1,0)c1: "<<fC1[idx-1]<<" c2: "<<fC2[idx-1]<<" p: "<<fPotential[idx-1]<<endl;
+   cout<<"(0,1)c1: "<<fC1[idx-n1]<<" c2: "<<fC2[idx-n1]<<" p: "<<fPotential[idx-n1]<<endl;
+   cout<<"(1,1)c1: "<<fC1[idx-n1-1]<<" c2: "<<fC2[idx-n1-1]<<" p: "<<fPotential[idx-n1-1]<<endl;
+   */
+   
    //cout<<idx<<" "<<n<<endl;
-   double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
+   double ab=(-tarx+fC1[idx])/fDistanceToNext[idx];
    double aa=1-ab;
-   double ba=(tary-fC2[idx])/fDistanceToRight[idx];
+   double ba=(-tary+fC2[idx])/fDistanceToRight[idx];
    //cout<<"right"<<fDistanceToRight[idx]<<endl;
    //cout<<"next"<<fDistanceToNext[idx]<<endl;
    double bb=1-ba;
@@ -119,10 +127,10 @@ double XY::GetData(double tarx, double tary, EOutput output)
    tar3=-1;
    tar0=tar[idx];
    if(idx/n1+1==n1){tar1=0;tar3=0;}
-   else {tar1=tar[idx+1];}
+   else {tar1=tar[idx-1];}
    if(idx>n-n1){tar2=0;tar3=0;}
-   else {tar2=tar[idx+n1];}
-   if (tar3==-1)tar3=tar[idx+n1+1];
+   else {tar2=tar[idx-n1];}
+   if (tar3==-1)tar3=tar[idx-n1-1];
    //cout<<tar0<<" "<<tar1<<" "<<tar2<<" "<<tar3<<endl;
    //cout<<aa<<" "<<ab<<" "<<ba<<" "<<bb<<endl;
    return (tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb;
