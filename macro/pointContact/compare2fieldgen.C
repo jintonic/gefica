@@ -12,7 +12,7 @@ void compare2fieldgen()
    //}
 
    TH2F *hgfc = new TH2F("hgfc","",346,0,346,506,0,506);
-   ifstream fg("halfP.txt");
+   ifstream fg("full.txt");
    for (int i = 0; i < 346; i++) {
      for (int j = 0; j < 506; j++) {
         fg>>r>>z>>p;
@@ -35,7 +35,7 @@ void generateField()
 
    ppc->MaxIterations=1e6;
    ppc->Precision=1e-8;
-   ppc->Csor=1.996;
+   ppc->Csor=1.990;
    ppc->V0=0*GeFiCa::volt;
    ppc->V1=-2500*GeFiCa::volt;
    ppc->Impurity="-0.318e10+0*y";
@@ -57,12 +57,25 @@ void printapoint()
 void r2t()
 {
    GeFiCa::halfPointContactRZ *ppc = new GeFiCa::halfPointContactRZ(1036,506);
-   ppc->LoadField("half.root");
+   ppc->LoadField("full.root");
 
-   ofstream fo("halfP.txt");
+   ofstream fo("full.txt" );
    for (int i = 0; i < 346; i++) {
      for (int j = 0; j < 506; j++) {
-        fo<<1.0*i*3.46/346<<"\t"<<1.0*j*5.06/506<<"\t"
-           <<ppc->GetPotential(1.0*i*ppc->Radius/346,1.0*j*ppc->ZUpperBound/506)<<endl;
-      } fo.close(); }
+        fo<<1.0*i*0.5/346<<"\t"<<1.0*j*1/506<<"\t"
+           <<ppc->GetPotential(1.0*i*0.5/346,1.0*j*1/506)<<endl;
+      } 
+   }
+   fo.close(); 
+}
+void treedraw()
+{
+   TTree *t = new TTree("t","t");
+   t->ReadFile("full.txt", "r:z:v");
+   //t->AddFriend("t2=t","point2dSOR2.root");
+   //t->Draw("z:(t2.p-v)","z!=1&r!=1&z<1&r>34.&r<34.5","");
+   //TCanvas *can = new TCanvas;
+   //t->Draw("r:(t2.p-v)","z>=0&z<0.2","");
+   t->Draw("z:r:v","","colz");
+
 }

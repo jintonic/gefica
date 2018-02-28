@@ -102,7 +102,7 @@ double XY::GetData(double tarx, double tary, EOutput output)
 
    int idx=FindIdx(tarx,tary,0,n2-1);
 
-   cout<<"index:"<<idx<<endl;
+   //cout<<"index:"<<idx<<endl;
    //test
    /*cout<<"(0,0)c1: "<<fC1[idx]<<" c2: "<<fC2[idx]<<" p: "<<fPotential[idx]<<endl;
    cout<<"(1,0)c1: "<<fC1[idx-1]<<" c2: "<<fC2[idx-1]<<" p: "<<fPotential[idx-1]<<endl;
