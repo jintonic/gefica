@@ -8,7 +8,7 @@ using namespace GeFiCa;
 void PointContactRZ::Initialize()
 {
    if (n1%2==1) {
-      Error("Initialize", "Number of grids in R cannot be even, abort!");
+      Error("Initialize", "Number of grids in R cannot be odd, abort!");
       abort();
    }
             
