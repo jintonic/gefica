@@ -5,6 +5,12 @@ using namespace GeFiCa;
 
 void PointContactRZ::Initialize()
 {
+   if (n1%2==1) {
+      Warning("Initialize",
+            "Number of grids in R cannot be even, set to %d-1", n1);
+      n1--;
+   }
+            
    // The step length is calculated with the following equation:
    // BEGIN_HTML
    // <pre>
