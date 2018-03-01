@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "PointContactRZ.h"
 #include "iostream"
 #include "Units.h"
@@ -6,9 +8,8 @@ using namespace GeFiCa;
 void PointContactRZ::Initialize()
 {
    if (n1%2==1) {
-      Warning("Initialize",
-            "Number of grids in R cannot be even, set to %d-1", n1);
-      n1--;
+      Error("Initialize", "Number of grids in R cannot be even, abort!");
+      abort();
    }
             
    // The step length is calculated with the following equation:
@@ -39,7 +40,7 @@ void PointContactRZ::Initialize()
       fC1[i]=fC1[i]+RLowerBound;
       fPotential[i]=(V0+V1)/2;
       // set potential for inner electrodes
-      if(fC1[i]>PointBegin&&fC1[i]<PointEnd&&fC2[i]<PointDepth) {
+      if(fC1[i]>PointBegin&&fC1[i]<PointEnd&&fC2[i]<=PointDepth) {
          fPotential[i]=V1;
          fIsFixed[i]=true;
       }
