@@ -134,7 +134,7 @@ double XY::GetData(double tarx, double tary, EOutput output)
    if (tar3==-1)tar3=tar[idx-n1-1];
    //cout<<tar0<<" "<<tar1<<" "<<tar2<<" "<<tar3<<endl;
    //cout<<aa<<" "<<ab<<" "<<ba<<" "<<bb<<endl;
-   return (tar0*ab+tar1*aa)*bb+(tar2*ab+tar3*aa)*ba;
+   return (tar1*ab+tar0*aa)*bb+(tar3*ab+tar2*aa)*ba;
 }
 //_____________________________________________________________________________
 //

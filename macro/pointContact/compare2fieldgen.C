@@ -27,7 +27,7 @@ void compare2fieldgen()
 
 void generateField()
 {
-   GeFiCa::PointContactRZ *ppc = new GeFiCa::PointContactRZ(200,100);
+   GeFiCa::PointContactRZ *ppc = new GeFiCa::PointContactRZ(200,101);
    ppc->Radius=0.5;
    ppc->ZUpperBound=1;
    ppc->PointR=0.1;
