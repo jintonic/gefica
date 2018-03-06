@@ -12,6 +12,9 @@ class GeFiCa::PointContactRZ : public GeFiCa::RZ
    public :
      PointContactRZ(int ix,int iy) : RZ(ix,iy), RUpperBound(1),RLowerBound(0),ZUpperBound(1),ZLowerBound(0), PointBegin(0.4),PointEnd(0.6){};
 
+     /**
+      * Assign initial voltage values to grid points.
+      */
      void Initialize();
      bool CalculateField(EMethod method=kSOR2);
 
