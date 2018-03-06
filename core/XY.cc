@@ -102,13 +102,12 @@ double XY::GetData(double tarx, double tary, EOutput output)
 
    int idx=FindIdx(tarx,tary,0,n2-1);
 
-   //cout<<"index:"<<idx<<endl;
    //test
-   /*cout<<"(0,0)c1: "<<fC1[idx]<<" c2: "<<fC2[idx]<<" p: "<<fPotential[idx]<<endl;
-   cout<<"(1,0)c1: "<<fC1[idx-1]<<" c2: "<<fC2[idx-1]<<" p: "<<fPotential[idx-1]<<endl;
-   cout<<"(0,1)c1: "<<fC1[idx-n1]<<" c2: "<<fC2[idx-n1]<<" p: "<<fPotential[idx-n1]<<endl;
-   cout<<"(1,1)c1: "<<fC1[idx-n1-1]<<" c2: "<<fC2[idx-n1-1]<<" p: "<<fPotential[idx-n1-1]<<endl;
-   */
+   //cout<<"index:"<<idx<<endl;
+   //cout<<"(0,0)c1: "<<fC1[idx]<<" c2: "<<fC2[idx]<<" p: "<<fPotential[idx]<<endl;
+   //cout<<"(1,0)c1: "<<fC1[idx-1]<<" c2: "<<fC2[idx-1]<<" p: "<<fPotential[idx-1]<<endl;
+   //cout<<"(0,1)c1: "<<fC1[idx-n1]<<" c2: "<<fC2[idx-n1]<<" p: "<<fPotential[idx-n1]<<endl;
+   //cout<<"(1,1)c1: "<<fC1[idx-n1-1]<<" c2: "<<fC2[idx-n1-1]<<" p: "<<fPotential[idx-n1-1]<<endl;
    
    //cout<<idx<<" "<<n<<endl;
    double ab=(-tarx+fC1[idx])/fDistanceToNext[idx];
@@ -129,7 +128,7 @@ double XY::GetData(double tarx, double tary, EOutput output)
    tar0=tar[idx];
    if(idx/n1+1==n1){tar1=0;tar3=0;}
    else {tar1=tar[idx-1];}
-   if(idx>n-n1){tar2=0;tar3=0;}
+   if(idx<n1){tar2=0;tar3=0;}
    else {tar2=tar[idx-n1];}
    if (tar3==-1)tar3=tar[idx-n1-1];
    //cout<<tar0<<" "<<tar1<<" "<<tar2<<" "<<tar3<<endl;
