@@ -23,9 +23,9 @@ class GeFiCa::R : public X
 	  */
       ClassDef(R,1);
 
-      virtual double GetPotential(double r){return GetData(r,1);};
-      virtual double GetE1(double r,double theta,double phi){return GetData(r,2);};
-      virtual double GetImpurity(double r){return GetData(r,0);};
+      virtual double GetPotential(double r){return GetData(r,kPotential);};
+      virtual double GetE1(double r,double theta,double phi){return GetData(r,kE1);};
+      virtual double GetImpurity(double r){return GetData(r,kImpurity);};
    protected:
 
       virtual void SOR2(int idx,bool elec); // 2nd-order Runge-Kutta Successive Over-Relaxation

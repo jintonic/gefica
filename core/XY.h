@@ -30,19 +30,19 @@ class GeFiCa::XY : public GeFiCa::X
 		/**
 		* Returns the potential in two dimensions
 		*/
-      virtual double GetPotential(double x,double y){return GetData(x,y,1);};
+      virtual double GetPotential(double x,double y){return GetData(x,y,kPotential);};
       /**
       * Returns the value for the electric field under the first direction
       */
-      virtual double GetE1(double x,double y,double z){return GetData(x,y,2);};
+      virtual double GetE1(double x,double y){return GetData(x,y,kE1);};
       /**
       * Returns the value for the electic field under the second direction
       */
-      virtual double GetE2(double x,double y,double z){return GetData(x,y,3);};
+      virtual double GetE2(double x,double y){return GetData(x,y,kE2);};
       /**
       * Returns the two dimensional impurity
       */
-      virtual double GetImpurity(double x,double y){return GetData(x,y,0);};
+      virtual double GetImpurity(double x,double y){return GetData(x,y,kImpurity);};
 
    	/**
    	* Method involved in setting the impurity. 
@@ -74,11 +74,8 @@ class GeFiCa::XY : public GeFiCa::X
 
 		/**
       * Returns data for various variables. 
-      * Case 0: Returns impurity 
-      * Case 1: Returns the potential 
-      *Case 2: Returns E1
       */
-      double GetData(double tarx,double tary,int thing); 
+      double GetData(double tarx,double tary,EOutput output); 
       virtual void SetStepLength(double steplength1,double steplength2); 
       virtual void Impuritystr2tf();
 };

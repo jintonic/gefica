@@ -10,7 +10,7 @@ using namespace GeFiCa;
 XY::XY(unsigned short nx, unsigned short ny): X(nx*ny), n2(ny),
    fE2(0), fC2(0), fDistanceToLeft(0), fDistanceToRight(0)
 {
-  Impurity="0*y";
+   Impurity="0*y";
    //claim a 2D field with n1*n2 Grid
    n=nx*ny; 
    n1=nx;
@@ -69,9 +69,9 @@ void XY::SOR2(int idx,bool elec)
    if(idx%n1==n1-1)Pxp1=fPotential[idx];
    else Pxp1=fPotential[idx+1];
    //double tmp=(density/epsilon+1/fC1[idx]*(Pxp1-Pxm1)/(h2+h3)+(Pxp1/h2+Pxm1/h3)*2/(h2+h3)+(Pyp1/h1+Pym1/h4)*2/(h1+h4))/
-  double tmp=(density/epsilon+(Pxp1/h2+Pxm1/h3)*2/(h2+h3)+(Pyp1/h1+Pym1/h4)*2/(h1+h4))/
-     ((1/h2+1/h3)*2/(h2+h3)+(1/h1+1/h4)*2/(h1+h4));
-  // cout<<tmp<<endl;
+   double tmp=(density/epsilon+(Pxp1/h2+Pxm1/h3)*2/(h2+h3)+(Pyp1/h1+Pym1/h4)*2/(h1+h4))/
+      ((1/h2+1/h3)*2/(h2+h3)+(1/h1+1/h4)*2/(h1+h4));
+   // cout<<tmp<<endl;
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    if(elec)
    {
@@ -84,38 +84,57 @@ void XY::SOR2(int idx,bool elec)
 int XY::FindIdx(double tarx,double tary ,int ybegin,int yend)
 {
    //search using binary search
-   if(ybegin>=yend)return X::FindIdx(tarx,ybegin,ybegin+n1-1);
-   int mid=((ybegin/n1+yend/n1)/2)*n1;
-   if(fC2[mid]>=tary)return FindIdx(tarx,tary,ybegin,mid);
-   else return FindIdx(tarx,tary,mid+1,yend);
+   // if(ybegin>=yend)cout<<"to x"<<ybegin<<" "<<yend<<endl;;
+   if(ybegin>=yend)return X::FindIdx(tarx,yend*n1,(yend+1)*n1-1);
+   int mid=((ybegin+yend)/2);
+   if(fC2[mid*n1]>=tary){//cout<<"firsthalf"<<ybegin<<" "<<yend<<endl; 
+      return FindIdx(tarx,tary,ybegin,mid);
+   }
+   else{//cout<<"senondhalf"<<ybegin<<" "<<yend<<endl; 
+      return FindIdx(tarx,tary,mid+1,yend);}
 }
 //_____________________________________________________________________________
 //
-double XY::GetData(double tarx, double tary, int thing)
+double XY::GetData(double tarx, double tary, EOutput output)
 {
-   //ask thing with coordinate and item number: 1:Impurity 2:Potential 3:E1 4:E2
+   // for (int i=0;i<n;i++)
+   //  cout<<fDistanceToNext[i]<<" "<<i<<endl;
 
-   int idx=FindIdx(tarx,tary,0,n);
-   double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
+   int idx=FindIdx(tarx,tary,0,n2-1);
+
+   //cout<<"index:"<<idx<<endl;
+   //test
+   /*cout<<"(0,0)c1: "<<fC1[idx]<<" c2: "<<fC2[idx]<<" p: "<<fPotential[idx]<<endl;
+   cout<<"(1,0)c1: "<<fC1[idx-1]<<" c2: "<<fC2[idx-1]<<" p: "<<fPotential[idx-1]<<endl;
+   cout<<"(0,1)c1: "<<fC1[idx-n1]<<" c2: "<<fC2[idx-n1]<<" p: "<<fPotential[idx-n1]<<endl;
+   cout<<"(1,1)c1: "<<fC1[idx-n1-1]<<" c2: "<<fC2[idx-n1-1]<<" p: "<<fPotential[idx-n1-1]<<endl;
+   */
+   
+   //cout<<idx<<" "<<n<<endl;
+   double ab=(-tarx+fC1[idx])/fDistanceToNext[idx];
    double aa=1-ab;
-   double ba=(tary-fC2[idx])/fDistanceToRight[idx];
+   double ba=(-tary+fC2[idx])/fDistanceToRight[idx];
+   //cout<<"right"<<fDistanceToRight[idx]<<endl;
+   //cout<<"next"<<fDistanceToNext[idx]<<endl;
    double bb=1-ba;
    double tar0,tar1,tar2,tar3,*tar=NULL;
-   switch(thing)
-   {
+   switch(output) {
       case 0:tar= fImpurity;break;
       case 1:tar= fPotential;break;
       case 2:tar= fE1;break;
       case 3:tar= fE2;break;
+      default:break;
    }
    tar3=-1;
    tar0=tar[idx];
    if(idx/n1+1==n1){tar1=0;tar3=0;}
-   else {tar1=tar[idx+1];}
+   else {tar1=tar[idx-1];}
    if(idx>n-n1){tar2=0;tar3=0;}
-   else {tar2=tar[idx+n1];}
-   if (tar3==-1)tar3=tar[idx+n1+1];
-   return (tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb;
+   else {tar2=tar[idx-n1];}
+   if (tar3==-1)tar3=tar[idx-n1-1];
+   //cout<<tar0<<" "<<tar1<<" "<<tar2<<" "<<tar3<<endl;
+   //cout<<aa<<" "<<ab<<" "<<ba<<" "<<bb<<endl;
+   return (tar1*ab+tar0*aa)*bb+(tar3*ab+tar2*aa)*ba;
 }
 //_____________________________________________________________________________
 //
@@ -125,16 +144,23 @@ void XY::SaveField(const char * fout)
    TFile *file=new TFile(fout,"update");
    TVectorD  v=*(TVectorD*)file->Get("v");
    v[8]=(double)n2;
-   v.Write();
+   v.Write("v");
    TTree * tree=(TTree*)file->Get("t");
-   double E2s,C2s;
+   double E2s,C2s,StepLeft,StepRight;
    TBranch *be2 = tree->Branch("e2",&E2s,"e2/D"); // Electric field in y
    TBranch *bc2 = tree->Branch("c2",&C2s,"c2/D"); // persition in y
+   TBranch *bsl=tree->Branch("sl",&StepLeft,"StepLeft/D"); // Step length to next point in x
+   TBranch *bsr=tree->Branch("sr",&StepRight,"StepRight/D"); // Step length to before point in x
+
    for(int i=0;i<n;i++) {
       E2s=fE2[i];
       C2s=fC2[i];
+      StepLeft=fDistanceToLeft[i];
+      StepRight=fDistanceToRight[i];
       be2->Fill();
       bc2->Fill();
+      bsl->Fill();
+      bsr->Fill();
    }
    file->Write();
    file->Close();
@@ -154,17 +180,26 @@ void XY::LoadField(const char * fin)
 
    TChain *t =new TChain("t");
    t->Add(fin);
-   double fEy,fPy;
+   double fEy,fPy,fstepleft,fstepright;
    t->SetBranchAddress("c2",&fPy);
    t->SetBranchAddress("e2",&fEy);
+   t->SetBranchAddress("sl",&fstepleft);
+   t->SetBranchAddress("sr",&fstepright);
+
 
    fE2=new double[n];
    fC2=new double[n];
+   fDistanceToRight=new double[n];
+   fDistanceToLeft=new double[n];
 
    for (int i=0;i<n;i++) {
       t->GetEntry(i);
       fE2[i]=fEy;
       fC2[i]=fPy;
+      fDistanceToRight[i]=fstepright;
+      fDistanceToLeft[i]=fstepright;
+
+
    }
    file->Close();
    delete file;
@@ -180,6 +215,7 @@ void XY::SetImpurity(TF2 * Im)
 
 void XY::Impuritystr2tf()
 {
-  TF2 * IM=new TF2("f",Impurity);
-  SetImpurity(IM);
+   const char* expression = Impurity;
+   TF2 * IM=new TF2("f",expression);
+   SetImpurity(IM);
 }

@@ -8,9 +8,10 @@ namespace GeFiCa { class PointContactRZ; }
 class GeFiCa::PointContactRZ : public GeFiCa::RZ
 {
   public:
-    double RUpperBound,RLowerBound,ZUpperBound,ZLowerBound,PointBegin,PointEnd;//bounds for X and Y and point start and end
+    double Radius,ZUpperBound,ZLowerBound,PointR,PointDepth;//bounds for X and Y and point start and end
    public :
-     PointContactRZ(int ix,int iy) : RZ(ix,iy), RUpperBound(1),RLowerBound(0),ZUpperBound(1),ZLowerBound(0), PointBegin(0.4),PointEnd(0.6){};
+     PointContactRZ(int ix, int iy) : RZ(ix, iy),
+     Radius(1),ZUpperBound(1),ZLowerBound(0), PointR(0.4),PointDepth(0.2){};
 
      /**
       * Assign initial voltage values to grid points.

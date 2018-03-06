@@ -64,12 +64,10 @@ void X::SetStepLength(double steplength)
 //
 bool X::CalculateField(EMethod method)
 {
-  Initialize();
-  //for(int i=0;i<n;i++)cout<<fPotential[i]<<"  "<<fIsFixed[i]<<endl;
-  Impuritystr2tf();
-   fIsLoaded=true;
+   Impuritystr2tf();
    if (method==kAnalytic) return Analytic();
    int cnt=0;
+   cout<<"MaxIterations: "<<MaxIterations<<endl;
    while (cnt++<MaxIterations) {
       double XUpSum=0;
       double XDownSum=0;
@@ -83,10 +81,9 @@ bool X::CalculateField(EMethod method)
       }
       if(cnt%10==0)
          cout<<cnt<<"  "<<XUpSum/XDownSum<<" down: "<<XDownSum<<", up: "<<XUpSum<<endl;
-      if (XUpSum/XDownSum<Precision)
-      {
-	for(int i=0;i<n;i++)SOR2(i,1);
-	return true;
+      if (XUpSum/XDownSum<Precision) {
+         for(int i=0;i<n;i++)SOR2(i,1);
+         return true;
       }
    }
    return false;
@@ -111,7 +108,7 @@ void X::SOR2(int idx,bool elec)
 int X::FindIdx(double tarx,int begin,int end)
 {
    //search using binary search
-   if (begin>=end)return begin;
+   if (begin>=end)return end;
    int mid=(begin+end)/2;
    if(fC1[mid]>=tarx)return FindIdx(tarx,begin,mid);
    else return FindIdx(tarx,mid+1,end);
@@ -125,26 +122,24 @@ double X::GetXEdge(bool beginorend)
 }
 //_____________________________________________________________________________
 //
-double X::GetData(double tarx,int thing)
+double X::GetData(double tarx, EOutput output)
 {
-   // ask thingwith number: 1:Potential 2:E1 0:Impurty
    int idx=FindIdx(tarx,0,n-1);
-   if (idx==n)
-   {
-      switch (thing)
-      {
+   if (idx==n) {
+      switch (output) {
          case 0:return fImpurity[idx];
          case 2:return fE1[idx];
          case 1:return fPotential[idx];
+         default: return -1;
       }
    }
-   double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
+   double ab=(-tarx+fC1[idx])/fDistanceToNext[idx];
    double aa=1-ab;
-   switch(thing)
-   {
-      case 2:return fE1[idx]*ab+fE1[idx+1]*aa;
-      case 1:return fPotential[idx]*ab+fC1[idx+1]*aa;
-      case 0:return fImpurity[idx]*ab+fImpurity[idx+1]*aa;
+   switch(output) {
+      case 2:return fE1[idx]*ab+fE1[idx-1]*aa;
+      case 1:return fPotential[idx]*ab+fC1[idx-1]*aa;
+      case 0:return fImpurity[idx]*ab+fImpurity[idx-1]*aa;
+      default: return -1;
    }
    return -1;
 }
@@ -211,7 +206,7 @@ void X::LoadField(const char * fin)
    t->SetBranchAddress("p",&fP);
    t->SetBranchAddress("sn",&fStepNext);
    t->SetBranchAddress("sb",&fStepBefore);
-   t->SetBranchAddress("if",&IsFixed);
+   t->SetBranchAddress("ib",&IsFixed);
    t->SetBranchAddress("im",&fimpurity);
 
    fE1=new double[n];
@@ -247,6 +242,7 @@ void X::SetImpurity(TF1 * Im)
 
 void X::Impuritystr2tf()
 {
-  TF1 * IM=new TF1("f",Impurity);
-  SetImpurity(IM);
+   const char *expression = Impurity;
+   TF1 * IM=new TF1("f",expression);
+   SetImpurity(IM);
 }
