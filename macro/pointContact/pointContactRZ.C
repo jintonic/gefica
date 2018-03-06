@@ -1,19 +1,17 @@
 {
    GeFiCa::PointContactRZ *detector2 = new GeFiCa::PointContactRZ(1036,506);
-   detector2->RUpperBound=3.45;
-   detector2->RLowerBound=-3.45;
+   detector2->Radius=3.45;
    detector2->ZUpperBound=5.05;
-   detector2->PointBegin=-0.135;
-   detector2->PointEnd=0.13500;
-   detector2->PointDepth=0.2100;
+   detector2->PointR=0.14;
+   detector2->PointDepth=0.21;
 
    //TF2 *im=new TF2("f","-0.19175e10-0.025e10*y");
-   TF2 *im=new TF2("f","-0.318e10+0.025e10*y");
+   //TF2 *im=new TF2("f","-0.318e10+0.025e10*y");
    //TF1 *im1=new TF1("f","-0.318e10+0.025e10*x",0,6.9);
 
    detector2->MaxIterations=1e6;
    detector2->Precision=1e-8;
-   detector2->Csor=1.996;
+   detector2->Csor=1.9965;
    detector2->V0=2500*GeFiCa::volt;
    detector2->V1=0*GeFiCa::volt;
 
@@ -34,7 +32,6 @@
    detector->SetImpurity(-0.01e10/GeFiCa::cm3);
    detector->CalculateField(GeFiCa::kAnalytic);
    detector->SaveField("planar1dTrue.root");
-*/
 
   
    TCanvas * cvs=new TCanvas();
@@ -49,12 +46,11 @@
    gStyle->SetLegendFont(22);
    gStyle->SetCanvasColor(kBlack);
    //cvs->SetFillColor(kBlack);
-  /* 
+
    TChain *ta = new TChain("t");
    ta->Add("planar1dTrue.root");
    ta->Draw("e1:c1");
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
-*/
 
    // generate graphics
    TChain *tn = new TChain("t");
@@ -92,14 +88,13 @@
    //gn->Draw("ap");
    //ga->Draw("l");
   
-   /*
    TLegend *leg = new TLegend(0.2,0.6,0.5,0.8);
    leg->SetBorderSize(0);
    //leg->AddEntry(gn,"GeFiCa","p");
    //leg->AddEntry(ga,"mjd","l");
    leg->SetTextSize(0.05);
    leg->Draw();
-  */ 
  //  cvs->SaveAs("pointContact2d.png");
 
+  */ 
 }

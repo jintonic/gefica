@@ -47,11 +47,11 @@ void generateField()
 void printapoint()
 {
    GeFiCa::halfPointContactRZ *ppc = new GeFiCa::halfPointContactRZ;
-   ppc->LoadField("half.root");
-   cout<<ppc->GetPotential(0.5,0.5)<<endl;
-   cout<<ppc->GetPotential(0.,0.)<<endl;
-   cout<<ppc->GetPotential(0.,1)<<endl;
-   cout<<ppc->GetPotential(0.,0.5)<<endl;
+   ppc->LoadField("point2dSOR2.root");
+   cout<<ppc->GetPotential(0,5.04)<<endl;
+   //cout<<ppc->GetPotential(0.,0.)<<endl;
+   //cout<<ppc->GetPotential(0.,1)<<endl;
+   //cout<<ppc->GetPotential(0.,0.5)<<endl;
 }
 
 void r2t()
