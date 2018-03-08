@@ -40,7 +40,7 @@ void PointContactRZ::Initialize()
       fC1[i]=fC1[i]+RLowerBound;
       fPotential[i]=(V0+V1)/2;
       // set potential for inner electrodes
-      if(fC1[i]>=PointBegin&&fC1[i]<=PointEnd&&fC2[i]<=PointDepth) {
+      if(fC1[i]>=PointBegin-steplength1/2&&fC1[i]<=PointEnd+steplength1/2&&fC2[i]<=PointDepth+steplength2/2) {
          fPotential[i]=V1;
          fIsFixed[i]=true;
       }
