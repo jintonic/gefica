@@ -11,38 +11,47 @@ void PointContactRZ::BounardaryOnPointcontact()
 {
     int index=FindIdx(PointR,PointDepth,0,n2-1);
     cout<<index<<" "<<fC1[index]<<" "<<fC2[index]<<endl;
-    int StartinR=index/n1*n1;
-    int StartinZ=index%n1;
-    cout<<StartinZ<<" "<<fC1[StartinZ]<<" "<<fC2[StartinZ]<<endl;
-    cout<<StartinR<<" "<<fC1[StartinR]<<" "<<fC2[StartinR]<<endl;
+    int idxZ=index/n1*n1;
+    int idxPos=index%n1;
+    cout<<idxPos<<" "<<fC1[idxPos]<<" "<<fC2[idxPos]<<endl;
+    cout<<idxZ<<" "<<fC1[idxZ]<<" "<<fC2[idxZ]<<endl;
 
-    for (int i=0;i<n1;i++)
-    {
-        fC2[StartinR+i]=PointDepth;//set z for the line where z is closest to pc's depth
-        //cout<<StartinR+i<<" "<< fC2[StartinR+i]<<"| ";
+    for (int i=0;i<n1;i++) {
+        fC2[idxZ+i]=PointDepth;//set z for the line where z is closest to pc's depth
+        //cout<<idxZ+i<<" "<< fC2[idxZ+i]<<"| ";
 
         //set steps from depthline
-        fDistanceToPrevious[StartinR+i]=fC2[StartinR+i]-fC2[StartinR+i-n1];
-        fDistanceToNext[StartinR+i]=fC2[StartinR+i+n1]-fC2[StartinR+i];
+        fDistanceToLeft[idxZ+i]=fC2[idxZ+i]-fC2[idxZ+i-n1];
+        fDistanceToRight[idxZ+i]=fC2[idxZ+i+n1]-fC2[idxZ+i];
 
         //set steps for two line aside depth of pc
-        fDistanceToPrevious[StartinR+i+n1]=fDistanceToNext[StartinR+i];
-        fDistanceToNext[StartinR+i-n1]=fDistanceToPrevious[StartinR+i];
-
-
+        fDistanceToLeft[idxZ+i+n1]=fDistanceToRight[idxZ+i];
+        fDistanceToRight[idxZ+i-n1]=fDistanceToLeft[idxZ+i];
     }
 
-    for(int i =0;i<n2;i++)
-    {
-        fC1[StartinZ+i*n1]=PointR;//set r for the line where r is closest to pc's R 
+    for(int i=0;i<n2;i++) {
+        fC1[idxPos+i*n1]=PointR;//set r for the line where r is closest to pc's R 
 
         //set steps for Radius line
-        fDistanceToLeft[StartinZ+i*n1]=fC1[StartinZ+i*n1]-fC1[StartinZ+i*n1-1];
-        fDistanceToRight[StartinZ+i*n1]=fC1[StartinZ+i*n1+1]-fC1[StartinZ+i*n1];
+        fDistanceToPrevious[idxPos+i*n1]=fC1[idxPos+i*n1]-fC1[idxPos+i*n1-1];
+        fDistanceToNext[idxPos+i*n1]=fC1[idxPos+i*n1+1]-fC1[idxPos+i*n1];
 
         //set steps for two line aside the previous line
-        fDistanceToLeft[StartinZ+i*n1+1]=fDistanceToRight[StartinZ+i*n1];
-        fDistanceToRight[StartinZ+i*n1-1]=fDistanceToLeft[StartinZ+i*n1];
+        fDistanceToPrevious[idxPos+i*n1+1]=fDistanceToNext[idxPos+i*n1];
+        fDistanceToNext[idxPos+i*n1-1]=fDistanceToPrevious[idxPos+i*n1];
+    }
+    int idxNeg=n1-idxPos-1;
+    cout<<idxNeg<<" "<<fC1[idxNeg]<<" "<<fC2[idxNeg]<<endl;
+    for(int i=0;i<n2;i++) {
+        fC1[idxNeg+i*n1]=-PointR;//set r for the line where r is closest to pc's R 
+
+        //set steps for Radius line
+        fDistanceToPrevious[idxNeg+i*n1]=fC1[idxNeg+i*n1]-fC1[idxNeg+i*n1-1];
+        fDistanceToNext[idxNeg+i*n1]=fC1[idxNeg+i*n1+1]-fC1[idxNeg+i*n1];
+
+        //set steps for two line aside the previous line
+        fDistanceToPrevious[idxNeg+i*n1+1]=fDistanceToNext[idxNeg+i*n1];
+        fDistanceToNext[idxNeg+i*n1-1]=fDistanceToPrevious[idxNeg+i*n1];
     }
 
 }
