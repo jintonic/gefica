@@ -17,6 +17,7 @@ class GeFiCa::PointContactRZ : public GeFiCa::RZ
       * Assign initial voltage values to grid points.
       */
      void Initialize();
+     void BounardaryOnPointcontact();
      bool CalculateField(EMethod method=kSOR2);
 
      ClassDef(PointContactRZ,1);
