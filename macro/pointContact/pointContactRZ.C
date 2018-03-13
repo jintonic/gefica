@@ -9,7 +9,7 @@
    //TF2 *im=new TF2("f","-0.318e10+0.025e10*y");
    //TF1 *im1=new TF1("f","-0.318e10+0.025e10*x",0,6.9);
 
-   detector2->MaxIterations=0;//1e5;
+   detector2->MaxIterations=1e5;
    detector2->Precision=1e-8;
    detector2->Csor=1.9965;
    detector2->V0=2500*GeFiCa::volt;
