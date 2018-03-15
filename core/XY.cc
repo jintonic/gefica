@@ -105,15 +105,16 @@ double XY::GetData(double tarx, double tary, EOutput output)
    //test
    //cout<<"index:"<<idx<<endl;
    //cout<<"(0,0)c1: "<<fC1[idx]<<" c2: "<<fC2[idx]<<" p: "<<fPotential[idx]<<endl;
-   //cout<<"(1,0)c1: "<<fC1[idx-1]<<" c2: "<<fC2[idx-1]<<" p: "<<fPotential[idx-1]<<endl;
-   //cout<<"(0,1)c1: "<<fC1[idx-n1]<<" c2: "<<fC2[idx-n1]<<" p: "<<fPotential[idx-n1]<<endl;
+   //cout<<"(0,1)c1: "<<fC1[idx-1]<<" c2: "<<fC2[idx-1]<<" p: "<<fPotential[idx-1]<<endl;
+   //cout<<"(1,0)c1: "<<fC1[idx-n1]<<" c2: "<<fC2[idx-n1]<<" p: "<<fPotential[idx-n1]<<endl;
    //cout<<"(1,1)c1: "<<fC1[idx-n1-1]<<" c2: "<<fC2[idx-n1-1]<<" p: "<<fPotential[idx-n1-1]<<endl;
    
    //cout<<idx<<" "<<n<<endl;
-   double ab=(-tarx+fC1[idx])/fDistanceToNext[idx];
+   double ab=(-tarx+fC1[idx])/fDistanceToPrevious[idx];
    double aa=1-ab;
-   double ba=(-tary+fC2[idx])/fDistanceToRight[idx];
-   //cout<<"right"<<fDistanceToRight[idx]<<endl;
+   double ba=(-tary+fC2[idx])/fDistanceToLeft[idx];
+   //cout<<"left"<<fDistanceToLeft[idx]<<endl;
+   //cout<<"right "<<fDistanceToRight[idx]<<endl;
    //cout<<"next"<<fDistanceToNext[idx]<<endl;
    double bb=1-ba;
    double tar0,tar1,tar2,tar3,*tar=NULL;
@@ -132,7 +133,13 @@ double XY::GetData(double tarx, double tary, EOutput output)
    else {tar2=tar[idx-n1];}
    if (tar3==-1)tar3=tar[idx-n1-1];
    //cout<<tar0<<" "<<tar1<<" "<<tar2<<" "<<tar3<<endl;
+   //cout<<tarx<<", "<<tary<<endl;
    //cout<<aa<<" "<<ab<<" "<<ba<<" "<<bb<<endl;
+   //
+   //if (fC1[idx]>0. && fC2[idx]>0.211){
+   //   cout<<tary-0.21<<endl;
+   //   abort();
+   //}
    return (tar1*ab+tar0*aa)*bb+(tar3*ab+tar2*aa)*ba;
 }
 //_____________________________________________________________________________
@@ -175,16 +182,15 @@ void XY::LoadField(const char * fin)
    TFile *file=new TFile(fin);
    TVectorD *v1=(TVectorD*)file->Get("v");
    double * v=v1->GetMatrixArray();
-   n2		=(int)	v[8];
+   n2	= (int)v[8];
 
    TChain *t =new TChain("t");
    t->Add(fin);
-   double fEy,fPy,fstepleft,fstepright;
-   t->SetBranchAddress("c2",&fPy);
-   t->SetBranchAddress("e2",&fEy);
-   t->SetBranchAddress("sl",&fstepleft);
-   t->SetBranchAddress("sr",&fstepright);
-
+   double Ey,Py,stepleft,stepright;
+   t->SetBranchAddress("c2",&Py);
+   t->SetBranchAddress("e2",&Ey);
+   t->SetBranchAddress("sl",&stepleft);
+   t->SetBranchAddress("sr",&stepright);
 
    fE2=new double[n];
    fC2=new double[n];
@@ -193,12 +199,10 @@ void XY::LoadField(const char * fin)
 
    for (int i=0;i<n;i++) {
       t->GetEntry(i);
-      fE2[i]=fEy;
-      fC2[i]=fPy;
-      fDistanceToRight[i]=fstepright;
-      fDistanceToLeft[i]=fstepright;
-
-
+      fE2[i]=Ey;
+      fC2[i]=Py;
+      fDistanceToRight[i]=stepright;
+      fDistanceToLeft[i]=stepleft;
    }
    file->Close();
    delete file;
