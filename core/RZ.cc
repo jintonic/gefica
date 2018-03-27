@@ -17,24 +17,26 @@ void RZ::SOR2(int idx,bool elec)
    // 2nd-order Successive Over-Relaxation
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*Qe;
-   double h2=fDistanceToPrevious[idx];
-   double h3=fDistanceToNext[idx];
-   double h4=fDistanceToLeft[idx];
-   double h1=fDistanceToRight[idx];
-   double Pym1,Pyp1,Pxm1,Pxp1;
-   if(idx>=n1)Pym1=fPotential[idx-n1];
-   else Pym1=fPotential[idx];
-   if(idx>=n-n1)Pyp1=fPotential[idx];
-   else Pyp1=fPotential[idx+n1];
-   if(idx%n1==0)Pxm1=fPotential[idx];
-   else Pxm1=fPotential[idx-1];
-   if(idx%n1==n1-1)Pxp1=fPotential[idx];
-   else Pxp1=fPotential[idx+1];
-   double tmp=(density/epsilon+1/fC1[idx]*(Pxp1-Pxm1)/(h2+h3)+(Pxp1/h3+Pxm1/h2)*2/(h2+h3)+(Pyp1/h1+Pym1/h4)*2/(h1+h4))/
-      ((1/h2+1/h3)*2/(h2+h3)+(1/h1+1/h4)*2/(h1+h4));
+   double drm=fDistanceToPrevious[idx]; // dr_minus
+   double drp=fDistanceToNext[idx];
+   double dzm=fDistanceToLeft[idx];
+   double dzp=fDistanceToRight[idx];
+   double pzm,pzp,prm,prp; // pzm: potential_z_plus
+   if(idx>=n1)pzm=fPotential[idx-n1];
+   else pzm=fPotential[idx];
+   if(idx>=n-n1)pzp=fPotential[idx];
+   else pzp=fPotential[idx+n1];
+   if(idx%n1==0)prm=fPotential[idx];
+   else prm=fPotential[idx-1];
+   if(idx%n1==n1-1)prp=fPotential[idx];
+   else prp=fPotential[idx+1];
+   double tmp=(density/epsilon
+         + 1/fC1[idx]*(prp-prm)/(drm+drp) +(prp/drp+prm/drm)*2/(drm+drp)
+         + (pzp/dzp+pzm/dzm)*2/(dzp+dzm))/
+      ((1/drm+1/drp)*2/(drm+drp)+(1/dzp+1/dzm)*2/(dzp+dzm));
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    if(elec) {
-      fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
-      fE2[idx]=(Pyp1-Pym1)/(h1+h4);
+      fE1[idx]=(prp-prm)/(drm+drp);
+      fE2[idx]=(pzp-pzm)/(dzp+dzm);
    }
 }

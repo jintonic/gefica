@@ -11,7 +11,7 @@ void PointContactRZ::BounardaryOnPointcontact()
 {
    int index=FindIdx(PointR,PointDepth,0,n2-1);
    cout<<index<<" "<<fC1[index]<<" "<<fC2[index]<<endl;
-   int idxZ=index/n1*n1-1;
+   int idxZ=(index/n1-1)*n1;
    int idxPos=index%n1-1;
    cout<<idxPos<<" "<<fC1[idxPos]<<" "<<fC2[idxPos]<<endl;
    cout<<idxZ<<" "<<fC1[idxZ]<<" "<<fC2[idxZ]<<endl;
