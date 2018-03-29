@@ -23,7 +23,7 @@ void RZ::SOR2(int idx,bool elec)
    double dzp=fDistanceToRight[idx];
    double pzm,pzp,prm,prp; // pzm: potential_z_plus
    if(idx>=n1)pzm=fPotential[idx-n1];
-   else pzm=fPotential[idx];
+   else pzm=fPotential[idx+n1];
    if(idx>=n-n1)pzp=fPotential[idx];
    else pzp=fPotential[idx+n1];
    if(idx%n1==0)prm=fPotential[idx];

@@ -2,7 +2,7 @@
    // draw MJD result
    TCanvas *c1 = new TCanvas;
    TTree *tm = new TTree("tm","tm");
-   tm->ReadFile("ev.new", "r:z:v");
+   tm->ReadFile("ev.dat", "r:z:v:er:ez:e");
    tm->Draw("z:r:v","","colz");
    //t->AddFriend("t2=t","point2dSOR2.root");
    //t->Draw("z:(t2.p-v)","z!=1&r!=1&z<1&r>34.&r<34.5","");
@@ -12,10 +12,25 @@
    // draw GeFiCa result
    TCanvas *c2 = new TCanvas;
    TTree *tg = new TTree("tg","tg");
-   tg->ReadFile("result.txt", "r:z:v:d");
+   tg->ReadFile("result.txt", "r:z:v:d:e1:e2:e:de1:de2:de");
    tg->Draw("z:r:v","","colz");
+   TCanvas *c4 = new TCanvas;
+   tg->Draw("z:r:e","","colz");
+   TCanvas *c5 = new TCanvas;
+   tg->Draw("z:r:e1","","colz");
+   TCanvas *c6 = new TCanvas;
+   tg->Draw("z:r:e2","","colz");
 
    // draw difference
    TCanvas *c3 = new TCanvas;
+   //c3->SetFillColor(kBlack);
    tg->Draw("z:r:d","","colz");
+   TCanvas *c7 = new TCanvas;
+   tg->Draw("z:r:de1","","colz");
+   TCanvas *c8 = new TCanvas;
+   tg->Draw("z:r:de2","","colz");
+   TCanvas *c9 = new TCanvas;
+   tg->Draw("z:r:de","","colz");
+   
+   //electricfield
 }
