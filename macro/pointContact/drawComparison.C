@@ -2,7 +2,7 @@
    // draw MJD result
    TCanvas *c1 = new TCanvas;
    TTree *tm = new TTree("tm","tm");
-   tm->ReadFile("ev.dat", "r:z:v:er:ez:e");
+   tm->ReadFile("ev.new", "r:z:v:e:er:ez");
    tm->Draw("z:r:v","","colz");
    //t->AddFriend("t2=t","point2dSOR2.root");
    //t->Draw("z:(t2.p-v)","z!=1&r!=1&z<1&r>34.&r<34.5","");
