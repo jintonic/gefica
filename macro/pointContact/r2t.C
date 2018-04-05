@@ -1,6 +1,6 @@
 {
    GeFiCa::PointContactRZ *detector2 = new GeFiCa::PointContactRZ(1036,506);
-   detector2->LoadField("point2dSOR2pure.root");
+   detector2->LoadField("point2dSOR2.root");
 
    ifstream infile("ev.new");
    ofstream outfile("result.txt");
