@@ -55,14 +55,11 @@ class GeFiCa::XY : public GeFiCa::X
       ClassDef(XY,1);
 
    protected:
-
       virtual void SOR2(int idx,bool elec);
       double *fE2; /**< Electric field under the second coordinate (x, r, or rho) direction */
       double *fC2; /**< The location under the second coordinate (x, r, or rho) direction*/
-      double *fDistanceToLeft; /**< Distance to the next point to the left under the current coordinate 
-      direction */
-      double *fDistanceToRight;/**< Distance to the next point to the right under the current coordinate 
-      direction*/ 
+      double *fdC2p; ///< distance between this and next grid points alone C2
+      double *fdC2m; ///< distance between this and previous grid points alone C2
       //left and right are for y axis
       /**
       * Uses a binary search to return the index in two dimensions
@@ -78,6 +75,7 @@ class GeFiCa::XY : public GeFiCa::X
       double GetData(double tarx,double tary,EOutput output); 
       virtual void SetStepLength(double steplength1,double steplength2); 
       virtual void Impuritystr2tf();
+      virtual bool CalculateField(int idx);
 };
 #endif 
 

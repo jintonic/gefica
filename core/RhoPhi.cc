@@ -8,10 +8,10 @@ void RhoPhi::SOR2(int idx,bool elec)
 
    if (fIsFixed[idx])return;
    double density=-fImpurity[idx]*Qe;
-   double h2=fDistanceToPrevious[idx];
-   double h3=fDistanceToNext[idx];
-   double h4=fDistanceToLeft[idx];
-   double h1=fDistanceToRight[idx];
+   double h2=fdC1m[idx];
+   double h3=fdC1p[idx];
+   double h4=fdC2m[idx];
+   double h1=fdC2p[idx];
    double Pym1,Pyp1,Pxm1,Pxp1;
    if(idx>=n1)Pym1=fPotential[idx-n1];
    else Pym1=fPotential[idx+n-n1];
@@ -40,9 +40,9 @@ double RhoPhi::GetData(double tarx, double tary, EOutput output)
 {
    //0:Impurity 1:Potential 2:E1 3:E2
    int idx=FindIdx(tarx,tary,0,n);
-   double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
+   double ab=(tarx-fC1[idx])/fdC1p[idx];
    double aa=1-ab;
-   double ba=(tary-fC2[idx])/fDistanceToRight[idx];
+   double ba=(tary-fC2[idx])/fdC2p[idx];
    double bb=1-ba;
    double tar0,tar1,tar2,tar3,*tar=NULL;
    switch(output) {

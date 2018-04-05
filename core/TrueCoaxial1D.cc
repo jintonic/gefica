@@ -42,15 +42,15 @@ bool TrueCoaxial1D::Analytic()
       fPotential[i] = a+b*log(fC1[i])-density/4/epsilon*fC1[i]*fC1[i];
 
       fE1[i]=(fPotential[i+1]-fPotential[i-1])
-         /(fDistanceToNext[i]+fDistanceToPrevious[i]);
+         /(fdC1p[i]+fdC1m[i]);
    }
    cout<<"Voltage: "<<density/epsilon*(fC1[n-1]*log(fC1[0]/fC1[n-1])/2+(fC1[n-1]*fC1[n-1]-fC1[0]*fC1[0])/4);
    return true;
 }
 //_____________________________________________________________________________
 //
-bool TrueCoaxial1D::CalculateField(EMethod method)
+bool TrueCoaxial1D::CalculatePotential(EMethod method)
 {
    if(!fIsLoaded)Initialize();
-   return X::CalculateField(method);
+   return X::CalculatePotential(method);
 }

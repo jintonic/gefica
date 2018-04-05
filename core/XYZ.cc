@@ -8,7 +8,7 @@
 using namespace GeFiCa;
 
 XYZ::XYZ(unsigned short nx, unsigned short ny,unsigned short nz): 
-   XY(nx,ny*nz), n3(nz), fE3(0), fC3(0), fDistanceToUp(0), fDistanceToDown(0)
+   XY(nx,ny*nz), n3(nz), fE3(0), fC3(0), fdC3p(0), fdC3m(0)
 { 
    Impurity="0*y+0*z";
    //claim a field with n1*n2*n3 grids 
@@ -16,8 +16,8 @@ XYZ::XYZ(unsigned short nx, unsigned short ny,unsigned short nz):
    n=n1*n2*n3;
    fE3=new double[n];
    fC3=new double[n];
-   fDistanceToUp=new double[n];
-   fDistanceToDown=new double[n];
+   fdC3p=new double[n];
+   fdC3m=new double[n];
 }
 //_____________________________________________________________________________
 //
@@ -26,8 +26,8 @@ XYZ::~XYZ()
 
    if (fE3) delete[] fE3;
    if (fC3) delete[] fC3;
-   if (fDistanceToUp) delete[] fDistanceToUp;
-   if (fDistanceToDown) delete[] fDistanceToDown; 
+   if (fdC3p) delete[] fdC3p;
+   if (fdC3m) delete[] fdC3m; 
 }
 //_____________________________________________________________________________
 //
@@ -43,8 +43,8 @@ void XYZ::SetStepLength(double steplength1,double steplength2,double steplength3
       else fC1[i]=fC1[i-1]+steplength1;
 
       fE3[i]=0;
-      fDistanceToUp[i]=steplength3;
-      fDistanceToDown[i]=steplength3;
+      fdC3p[i]=steplength3;
+      fdC3m[i]=steplength3;
    }
 }
 //_____________________________________________________________________________
@@ -53,12 +53,12 @@ void XYZ::SOR2(int idx,bool elec)
 {
    if (fIsFixed[idx])return;
    double density=-fImpurity[idx]*Qe;
-   double h2=fDistanceToPrevious[idx];
-   double h3=fDistanceToNext[idx];
-   double h4=fDistanceToLeft[idx];
-   double h1=fDistanceToRight[idx];
-   double h0=fDistanceToDown[idx];
-   double h5=fDistanceToUp[idx];
+   double h2=fdC1m[idx];
+   double h3=fdC1p[idx];
+   double h4=fdC2m[idx];
+   double h1=fdC2p[idx];
+   double h0=fdC3m[idx];
+   double h5=fdC3p[idx];
    double Pym1,Pyp1,Pxm1,Pxp1,Pzp1,Pzm1;
    if(idx<n1*n2)Pzm1=fPotential[idx];
    else Pzm1=fPotential[idx-n1*n2];
@@ -106,11 +106,11 @@ double XYZ::GetData(double tarx, double tary, double tarz, EOutput output )
    //get item with number: 0:Impurity 1:Potential 2: Ex 3:Ey 4:Ez
 
    int idx=FindIdx(tarx,tary,tarz,0,n);
-   double ab=(-tarx+fC1[idx])/fDistanceToNext[idx];
+   double ab=(-tarx+fC1[idx])/fdC1p[idx];
    double aa=1-ab;
-   double ba=(-tary+fC2[idx])/fDistanceToRight[idx];
+   double ba=(-tary+fC2[idx])/fdC2p[idx];
    double bb=1-ba;
-   double ac=(-tarz+fC3[idx])/fDistanceToUp[idx];
+   double ac=(-tarz+fC3[idx])/fdC3p[idx];
    double ca=1-ac;
    double tar0,tar1,tar2,tar3,tar4,tar5,tar6,tar7,*tar=NULL;
    switch(output)
@@ -195,9 +195,27 @@ void XYZ::SetImpurity(TF3 * Im)
       fImpurity[i]=Im->Eval((double)fC1[i],(double)fC2[i],(double)fC3[i]);
    }
 }
+//_____________________________________________________________________________
+//
 void XYZ::Impuritystr2tf()
 {
    const char* expression = Impurity;
    TF3 * IM=new TF3("f",expression);
    SetImpurity(IM);
+}
+//_____________________________________________________________________________
+//
+void XYZ::CalculateField()
+{
+   if (!XY::CalculateField()) return false;
+   if (fdC3p[idx]==0 || fdC3m[idx]==0) return false;
+
+   if (idx<n1*n2) // C3 lower border
+      fE3[idx]=(fPotential[idx]-fPotential[idx+n1])/fdC3p[idx];
+   else if (idx>=n-n1*n2) // C3 upper border
+      fE3[idx]=(fPotential[idx]-fPotential[idx-n1])/fdC3m[idx];
+   else { // bulk
+      fE3[idx]=(fPotential[idx-n1]-fPotential[idx+n1])/(fdC3m[idx]+fdC3p[idx]);
+   }
+   return true;
 }

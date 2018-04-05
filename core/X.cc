@@ -13,7 +13,7 @@ using namespace GeFiCa;
 
 X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),Impurity("0"),
    V1(0), V0(2000), fIsFixed(0), fE1(0), fPotential(0), fC1(0),
-   fDistanceToNext(0), fDistanceToPrevious(0), fImpurity(0)
+   fdC1p(0), fdC1m(0), fImpurity(0)
 { 
    //claim a 1D field with nx grids
    n=nx;
@@ -24,8 +24,8 @@ X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),Impuri
    fC1=new double[n];
    fPotential=new double[n];
    fIsFixed=new bool[n];
-   fDistanceToNext=new double[n];
-   fDistanceToPrevious=new double[n];
+   fdC1p=new double[n];
+   fdC1m=new double[n];
    fImpurity=new double[n];
 }
 //_____________________________________________________________________________
@@ -35,8 +35,8 @@ X::~X()
    if (fE1) delete[] fE1;
    if (fPotential) delete[] fPotential;
    if (fC1) delete[] fC1;
-   if (fDistanceToNext) delete[] fDistanceToNext;
-   if (fDistanceToPrevious) delete[] fDistanceToPrevious;
+   if (fdC1p) delete[] fdC1p;
+   if (fdC1m) delete[] fdC1m;
    if (fIsFixed) delete[] fIsFixed;
    if (fImpurity) delete[] fImpurity;
 }
@@ -56,13 +56,13 @@ void X::SetStepLength(double steplength)
    for (int i=n;i-->0;) {
       fIsFixed[i]=false;
       fC1[i]=i*steplength;
-      fDistanceToNext[i]=steplength;
-      fDistanceToPrevious[i]=steplength;
+      fdC1p[i]=steplength;
+      fdC1m[i]=steplength;
    }
 }
 //_____________________________________________________________________________
 //
-bool X::CalculateField(EMethod method)
+bool X::CalculatePotential(EMethod method)
 {
    Impuritystr2tf();
    if (method==kAnalytic) return Analytic();
@@ -82,7 +82,7 @@ bool X::CalculateField(EMethod method)
       if(cnt%10==0)
          cout<<cnt<<"  "<<XUpSum/XDownSum<<" down: "<<XDownSum<<", up: "<<XUpSum<<endl;
       if (XUpSum/XDownSum<Precision) {
-         for(int i=0;i<n;i++)SOR2(i,1);
+         for (int i=0; i<n; i++) if (!CalculateField(i)) return false;
          return true;
       }
    }
@@ -95,8 +95,8 @@ void X::SOR2(int idx,bool elec)
    // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return ;
    double density=-fImpurity[idx]*Qe;
-   double h2=fDistanceToPrevious[idx];
-   double h3=fDistanceToNext[idx];
+   double h2=fdC1m[idx];
+   double h3=fdC1p[idx];
    double tmp=-density/epsilon*h2*h3/2+(h3*fPotential[idx-1]+h2*fPotential[idx+1])/(h2+h3);
    // over-relaxation if Csor>1
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
@@ -133,7 +133,7 @@ double X::GetData(double tarx, EOutput output)
          default: return -1;
       }
    }
-   double ab=(-tarx+fC1[idx])/fDistanceToNext[idx];
+   double ab=(-tarx+fC1[idx])/fdC1p[idx];
    double aa=1-ab;
    switch(output) {
       case 2:return fE1[idx]*ab+fE1[idx-1]*aa;
@@ -174,8 +174,8 @@ void X::SaveField(const char * fout)
       E1s=fE1[i];
       C1s=fC1[i];
       Ps=fPotential[i];
-      StepNexts=fDistanceToNext[i];
-      StepBefores=fDistanceToPrevious[i];
+      StepNexts=fdC1p[i];
+      StepBefores=fdC1m[i];
       fIsFixeds=fIsFixed[i];
       tree->Fill();
    }
@@ -214,8 +214,8 @@ void X::LoadField(const char * fin)
    fC1=new double[n];
    fPotential=new double[n];
    fIsFixed=new bool[n];
-   fDistanceToNext=new double[n];
-   fDistanceToPrevious=new double[n];
+   fdC1p=new double[n];
+   fdC1m=new double[n];
    fImpurity=new double[n];
 
    for (int i=0;i<n;i++) {
@@ -224,8 +224,8 @@ void X::LoadField(const char * fin)
       fC1[i]=C1;
       fPotential[i]=fP;
       fIsFixed[i]=fIsFixed;  
-      fDistanceToNext[i]=fStepNext;
-      fDistanceToPrevious[i]=fStepBefore;
+      fdC1p[i]=fStepNext;
+      fdC1m[i]=fStepBefore;
       fImpurity[i]=fimpurity;
    }
    file->Close();
@@ -240,10 +240,26 @@ void X::SetImpurity(TF1 * Im)
       fImpurity[i]=Im->Eval((double)fC1[i]);
    }
 }
-
+//_____________________________________________________________________________
+//
 void X::Impuritystr2tf()
 {
    const char *expression = Impurity;
    TF1 * IM=new TF1("f",expression);
    SetImpurity(IM);
+}
+//_____________________________________________________________________________
+//
+bool X::CalculateField(int idx)
+{
+   if (fdC1p[idx]==0 || fdC1m[idx]==0) return false;
+
+   if (idx%n1==0) // C1 lower boundary
+      fE1[idx]=(fPotential[idx]-fPotential[idx+1])/fdC1p[idx];
+   else if ((idx+1)%n1==0) // C1 upper boundary
+      fE1[idx]=(fPotential[idx]-fPotential[idx-1])/fdC1m[idx];
+   else { // bulk
+      fE1[idx]=(fPotential[idx-1]-fPotential[idx+1])/(fdC1m[idx]+fdC1p[idx]);
+   }
+   return true;
 }

@@ -37,14 +37,14 @@ bool Sphere1D::Analytic()
    for (int i=0; i<n; i++) {
       fPotential[i] = -density/6/epsilon*fC1[i]*fC1[i]+c1/fC1[i]+c2;
       // Fixme:
-      if (i!=0||i!=n-1)fE1[i]=(fPotential[i+1]-fPotential[i-1])/(fDistanceToNext[i]+fDistanceToPrevious[i]);
+      if (i!=0||i!=n-1)fE1[i]=(fPotential[i+1]-fPotential[i-1])/(fdC1p[i]+fdC1m[i]);
    }
    return true;
 }
 //_____________________________________________________________________________
 //
-bool Sphere1D::CalculateField(EMethod method)
+bool Sphere1D::CalculatePotential(EMethod method)
 {
    if(!fIsLoaded) Initialize();
-   return X::CalculateField(method);
+   return X::CalculatePotential(method);
 }

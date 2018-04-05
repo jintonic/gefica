@@ -83,8 +83,8 @@ void ReversedPointContactRZ::Initialize()
 }
 //_____________________________________________________________________________
 //
-bool ReversedPointContactRZ::CalculateField(EMethod method)
+bool ReversedPointContactRZ::CalculatePotential(EMethod method)
 {
    if(!fIsLoaded)Initialize();
-   return RZ::CalculateField(method);
+   return RZ::CalculatePotential(method);
 }

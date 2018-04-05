@@ -35,8 +35,8 @@ void Planar2D2::Initialize()
 }
 //_____________________________________________________________________________
 //
-bool Planar2D2::CalculateField(EMethod method)
+bool Planar2D2::CalculatePotential(EMethod method)
 {
    if(!fIsLoaded)Initialize();
-   return XY::CalculateField(method);
+   return XY::CalculatePotential(method);
 }

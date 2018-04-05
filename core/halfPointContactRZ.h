@@ -14,7 +14,7 @@ class GeFiCa::halfPointContactRZ : public GeFiCa::RZ
      Radius(1),ZUpperBound(1),ZLowerBound(0), PointR(0.4),PointDepth(0.2){};
 
      void Initialize();
-     bool CalculateField(EMethod method=kSOR2);
+     bool CalculatePotential(EMethod method=kSOR2);
 
      ClassDef(halfPointContactRZ,1);
 };

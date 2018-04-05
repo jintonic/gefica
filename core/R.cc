@@ -15,8 +15,8 @@ void R::SOR2(int idx,bool elec)
 {
    if (fIsFixed[idx])return ;
    double density=fImpurity[idx]*Qe;
-   double h2=fDistanceToPrevious[idx];
-   double h3=fDistanceToNext[idx];
+   double h2=fdC1m[idx];
+   double h3=fdC1p[idx];
    double tmp=(+density/epsilon*(h2+h3)*0.5+1/fC1[idx]*(fPotential[idx+1]-fPotential[idx-1])
          +fPotential[idx+1]/h2+fPotential[idx-1]/h3)/(1/h2+1/h3);
    // over-relaxation if Csor>1
@@ -31,8 +31,8 @@ void R::SOR4(int idx)
   if (fIsFixed[idx])return;
 
    double density=fImpurity[idx]*1.6e-19;
-   double h2=fDistanceToPrevious[idx];
-   double h3=fDistanceToNext[idx];
+   double h2=fdC1m[idx];
+   double h3=fdC1p[idx];
    double h1=h2;
    double xp2,xm2,xm1,xp1;
    xm1=fPotential[idx-1];

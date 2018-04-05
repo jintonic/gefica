@@ -25,8 +25,8 @@ void Sphere::Initialize()
 }
 //_____________________________________________________________________________
 //
-bool Sphere::CalculateField(EMethod method)
+bool Sphere::CalculatePotential(EMethod method)
 {
    if(!fIsLoaded) Initialize();
-   return X::CalculateField(method);
+   return X::CalculatePotential(method);
 }

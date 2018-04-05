@@ -31,7 +31,7 @@ class GeFiCa::Planar1D : public GeFiCa::X
        */
       void Initialize(); 
 
-      bool CalculateField(EMethod method=kSOR2);
+      bool CalculatePotential(EMethod method=kSOR2);
       /**
        *This defines the class Planar1D for the cint dictionary.
        */

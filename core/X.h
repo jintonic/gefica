@@ -55,15 +55,15 @@ class GeFiCa::X : public TObject
 
       virtual ~X();
       /**
-       * Function for deciding which method to use for the field calculation. 
-       * Current methods are kAnalytic and kSOR2.
+       * Calculate potential using various methods.
+       * Current available methods are kAnalytic and kSOR2.
        */
-      virtual bool CalculateField(EMethod method=kSOR2);
+      virtual bool CalculatePotential(EMethod method=kSOR2);
       
       virtual void Initialize() {};
       /**
        * This function creates a new TFile and TTree and fills it from data
-       * created by X::CalculateField.    
+       * created by X::CalculatePotential.    
        */
       virtual void SaveField(const char *fout);
       /**
@@ -110,8 +110,8 @@ class GeFiCa::X : public TObject
       double *fE1; ///< Electric field under the first coordinate (x, r, or rho) direction 
       double  *fPotential; ///< Potential in the referenced grid
       double *fC1; ///< the location under the first coordinate (x, r, or rho) direction
-      double *fDistanceToNext;///< Distance to the next point under the current coordinate direction
-      double *fDistanceToPrevious;///< Distance to the previous point under the current coordinate direction
+      double *fdC1p; ///< distance between this and next grid points alone C1
+      double *fdC1m; ///< distance between this and previous grid points alone C1
       double *fImpurity; ///< Value of the impurity level at a point on the grid
 
       /**
@@ -136,6 +136,11 @@ class GeFiCa::X : public TObject
       virtual void SOR2(int idx,bool calculateElectricField); 
 
       virtual void Impuritystr2tf();
+
+      /**
+       * Calculate electric field after CalculatePotential.
+       */
+      virtual bool CalculateField(int idx);
 };
 #endif
 

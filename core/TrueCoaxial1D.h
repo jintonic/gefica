@@ -21,7 +21,7 @@ class GeFiCa::TrueCoaxial1D : public GeFiCa::Rho
        * be created.
        */
       void Initialize();
-      bool CalculateField(EMethod method=kSOR2);
+      bool CalculatePotential(EMethod method=kSOR2);
       ClassDef(TrueCoaxial1D, 1);
 
    protected:

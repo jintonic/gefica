@@ -55,8 +55,8 @@ void halfPointContactRZ::Initialize()
 }
 //_____________________________________________________________________________
 //
-bool halfPointContactRZ::CalculateField(EMethod method)
+bool halfPointContactRZ::CalculatePotential(EMethod method)
 {
    if(!fIsLoaded)Initialize();
-   return RZ::CalculateField(method);
+   return RZ::CalculatePotential(method);
 }

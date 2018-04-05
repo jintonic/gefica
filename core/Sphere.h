@@ -17,7 +17,7 @@ class GeFiCa::Sphere: public GeFiCa::RThetaPhi
       OuterRadius(3),InnerRadius(0.3) {};
 
       void Initialize();
-      bool CalculateField(EMethod method=kSOR2);
+      bool CalculatePotential(EMethod method=kSOR2);
 
       ClassDef(Sphere,1);
 };

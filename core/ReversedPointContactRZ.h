@@ -19,7 +19,7 @@ class GeFiCa::ReversedPointContactRZ : public GeFiCa::RZ
      removedConnorradius(0.2), removedConnorheight(0.3), DHole(0.2) {};
 
      void Initialize();
-     bool CalculateField(EMethod method=kSOR2);
+     bool CalculatePotential(EMethod method=kSOR2);
 
      ClassDef(ReversedPointContactRZ,1);
 };

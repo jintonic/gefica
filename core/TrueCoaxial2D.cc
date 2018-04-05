@@ -31,8 +31,8 @@ void TrueCoaxial2D::Initialize()
 }
 //_____________________________________________________________________________
 //
-bool TrueCoaxial2D::CalculateField(EMethod method)
+bool TrueCoaxial2D::CalculatePotential(EMethod method)
 {
    if(!fIsLoaded)Initialize();
-   return RhoPhi::CalculateField(method);
+   return RhoPhi::CalculatePotential(method);
 }

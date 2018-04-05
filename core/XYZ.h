@@ -30,14 +30,16 @@ class GeFiCa::XYZ : public GeFiCa::XY
       ClassDef(XYZ,1);
 
    protected:
-
       virtual double GetData(double tarx,double tary,double tarz, EOutput output);
       virtual void SetStepLength(double steplength1,double steplength2,double steplength3);
-      double *fE3,*fC3,*fDistanceToUp,*fDistanceToDown;//left and right are for y axis
+      double *fE3,*fC3;
+      double *fdC3p; ///< distance between this and next grid points alone C3
+      double *fdC3m; ///< distance between this and previous grid points alone C3
       virtual int FindIdx(double tarx,double tary,
             double tarz,int begin,int end);
       virtual void SOR2(int idx,bool elec); 
       virtual void Impuritystr2tf();
+      virtual bool CalculateField(int idx);
 };
 #endif
 

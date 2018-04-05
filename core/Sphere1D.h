@@ -14,7 +14,7 @@ class GeFiCa::Sphere1D : public GeFiCa::R
       Sphere1D(int nx=101) : R(nx),InnerRadius(0.3),OuterRadius(3) {};
       ClassDef(Sphere1D, 1);
       void Initialize();      
-      bool CalculateField(EMethod method=kSOR2);
+      bool CalculatePotential(EMethod method=kSOR2);
    protected:
       /**
        * Analytic calculation of 1D field in spheric coordinates.

@@ -16,12 +16,12 @@ void RThetaPhi::SOR2(int idx,bool elec)
    if (fIsFixed[idx])return;
 
    double density=fImpurity[idx]*Qe;
-   double h2=fDistanceToPrevious[idx];
-   double h3=fDistanceToNext[idx];
-   double h4=fDistanceToLeft[idx];
-   double h1=fDistanceToRight[idx];
-   double h0=fDistanceToDown[idx];
-   double h5=fDistanceToUp[idx];
+   double h2=fdC1m[idx];
+   double h3=fdC1p[idx];
+   double h4=fdC2m[idx];
+   double h1=fdC2p[idx];
+   double h0=fdC3m[idx];
+   double h5=fdC3p[idx];
 
    // get potentials of points around point idx
    double Pym1,Pyp1,Pxm1,Pxp1,Pzp1,Pzm1;
@@ -67,11 +67,11 @@ void RThetaPhi::SOR2(int idx,bool elec)
 double RThetaPhi::GetData(double tarx, double tary, double tarz, EOutput output)
 {
    int idx=FindIdx(tarx,tary,tarz,0,n);
-   double ab=(tarx-fC1[idx])/fDistanceToNext[idx];
+   double ab=(tarx-fC1[idx])/fdC1p[idx];
    double aa=1-ab;
-   double ba=(tary-fC2[idx])/fDistanceToRight[idx];
+   double ba=(tary-fC2[idx])/fdC2p[idx];
    double bb=1-ba;
-   double ac=(tarz-fC3[idx])/fDistanceToUp[idx];
+   double ac=(tarz-fC3[idx])/fdC3p[idx];
    double ca=1-ac;
    double tar0,tar1,tar2,tar3,tar4,tar5,tar6,tar7,*tar=NULL;
    switch(output)

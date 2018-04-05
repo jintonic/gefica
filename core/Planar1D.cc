@@ -40,7 +40,7 @@ bool Planar1D::Analytic()
    for (int i=0; i<n; i++) {
       fPotential[i] = a*fC1[i]*fC1[i]+b*fC1[i]+c;
       // Fixme: i+1 and i-1 may be out of range
-      fE1[i]=(fPotential[i+1]-fPotential[i-1])/(fDistanceToNext[i]+fDistanceToPrevious[i]);
+      fE1[i]=(fPotential[i+1]-fPotential[i-1])/(fdC1p[i]+fdC1m[i]);
    }
    cout<<"voltage for just    voltage"<<endl;
    cout<<a*fC1[n-1]*fC1[n-1]-2*a*fC1[n-1]+c<<endl;
@@ -49,8 +49,8 @@ bool Planar1D::Analytic()
 }
 //_____________________________________________________________________________
 //
-bool Planar1D::CalculateField(EMethod method)
+bool Planar1D::CalculatePotential(EMethod method)
 {
    if(!fIsLoaded)Initialize();
-   return X::CalculateField(method);
+   return X::CalculatePotential(method);
 }

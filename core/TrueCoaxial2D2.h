@@ -14,7 +14,7 @@ class GeFiCa::TrueCoaxial2D2 : public GeFiCa::RZ
 
       TrueCoaxial2D2(int r,int O) : RZ(r, O) ,InnerRadius(0.5),OuterRadius(3),height(5){};
       void Initialize(); 
-      bool CalculateField(EMethod method=kSOR2);
+      bool CalculatePotential(EMethod method=kSOR2);
 
 
       ClassDef(TrueCoaxial2D2,1);

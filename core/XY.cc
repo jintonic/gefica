@@ -8,7 +8,7 @@
 using namespace GeFiCa;
 
 XY::XY(unsigned short nx, unsigned short ny): X(nx*ny), n2(ny),
-   fE2(0), fC2(0), fDistanceToLeft(0), fDistanceToRight(0)
+   fE2(0), fC2(0), fdC2p(0), fdC2m(0)
 {
    Impurity="0*y";
    //claim a 2D field with n1*n2 Grid
@@ -16,8 +16,8 @@ XY::XY(unsigned short nx, unsigned short ny): X(nx*ny), n2(ny),
    n1=nx;
    fE2=new double[n];
    fC2=new double[n];
-   fDistanceToLeft=new double[n];
-   fDistanceToRight=new double[n];
+   fdC2m=new double[n];
+   fdC2p=new double[n];
 }
 //_____________________________________________________________________________
 //
@@ -25,8 +25,8 @@ XY::~XY()
 {
    if (fE2) delete[] fE2;
    if (fC2) delete[] fC2;
-   if (fDistanceToLeft) delete[] fDistanceToLeft;
-   if (fDistanceToRight) delete[] fDistanceToRight;
+   if (fdC2m) delete[] fdC2m;
+   if (fdC2p) delete[] fdC2p;
 }
 //_____________________________________________________________________________
 //
@@ -41,8 +41,8 @@ void XY::SetStepLength(double steplength1,double steplength2)
       else fC1[i]=fC1[i-1]+steplength1;
 
       fE2[i]=0;
-      fDistanceToLeft[i]=steplength2;
-      fDistanceToRight[i]=steplength2;
+      fdC2m[i]=steplength2;
+      fdC2p[i]=steplength2;
    }
 }
 //_____________________________________________________________________________
@@ -55,10 +55,10 @@ void XY::SOR2(int idx,bool elec)
    // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*Qe;
-   double h2=fDistanceToPrevious[idx];
-   double h3=fDistanceToNext[idx];
-   double h4=fDistanceToLeft[idx];
-   double h1=fDistanceToRight[idx];
+   double h2=fdC1m[idx];
+   double h3=fdC1p[idx];
+   double h4=fdC2m[idx];
+   double h1=fdC2p[idx];
    double Pym1,Pyp1,Pxm1,Pxp1;
    if(idx>=n1)Pym1=fPotential[idx-n1];
    else Pym1=fPotential[idx];
@@ -98,7 +98,7 @@ int XY::FindIdx(double tarx,double tary ,int ybegin,int yend)
 double XY::GetData(double tarx, double tary, EOutput output)
 {
    // for (int i=0;i<n;i++)
-   //  cout<<fDistanceToNext[i]<<" "<<i<<endl;
+   //  cout<<fdC1p[i]<<" "<<i<<endl;
 
    int idx=FindIdx(tarx,tary,0,n2-1);
 
@@ -110,12 +110,12 @@ double XY::GetData(double tarx, double tary, EOutput output)
    //cout<<"(1,1)c1: "<<fC1[idx-n1-1]<<" c2: "<<fC2[idx-n1-1]<<" p: "<<fPotential[idx-n1-1]<<endl;
    //
    //cout<<idx<<" "<<n<<endl;
-   double ab=(-tarx+fC1[idx])/fDistanceToPrevious[idx];
+   double ab=(-tarx+fC1[idx])/fdC1m[idx];
    double aa=1-ab;
-   double ba=(-tary+fC2[idx])/fDistanceToLeft[idx];
-   //cout<<"left"<<fDistanceToLeft[idx]<<endl;
-   //cout<<"right "<<fDistanceToRight[idx]<<endl;
-   //cout<<"next"<<fDistanceToNext[idx]<<endl;
+   double ba=(-tary+fC2[idx])/fdC2m[idx];
+   //cout<<"left"<<fdC2m[idx]<<endl;
+   //cout<<"right "<<fdC2p[idx]<<endl;
+   //cout<<"next"<<fdC1p[idx]<<endl;
    double bb=1-ba;
    double tar0,tar1,tar2,tar3,*tar=NULL;
    switch(output) {
@@ -161,8 +161,8 @@ void XY::SaveField(const char * fout)
    for(int i=0;i<n;i++) {
       E2s=fE2[i];
       C2s=fC2[i];
-      StepLeft=fDistanceToLeft[i];
-      StepRight=fDistanceToRight[i];
+      StepLeft=fdC2m[i];
+      StepRight=fdC2p[i];
       be2->Fill();
       bc2->Fill();
       bsl->Fill();
@@ -194,15 +194,15 @@ void XY::LoadField(const char * fin)
 
    fE2=new double[n];
    fC2=new double[n];
-   fDistanceToRight=new double[n];
-   fDistanceToLeft=new double[n];
+   fdC2p=new double[n];
+   fdC2m=new double[n];
 
    for (int i=0;i<n;i++) {
       t->GetEntry(i);
       fE2[i]=Ey;
       fC2[i]=Py;
-      fDistanceToRight[i]=stepright;
-      fDistanceToLeft[i]=stepleft;
+      fdC2p[i]=stepright;
+      fdC2m[i]=stepleft;
    }
    file->Close();
    delete file;
@@ -215,10 +215,28 @@ void XY::SetImpurity(TF2 * Im)
       fImpurity[i]=Im->Eval(fC1[i],fC2[i]);
    }
 }
-
+//_____________________________________________________________________________
+//
 void XY::Impuritystr2tf()
 {
    const char* expression = Impurity;
    TF2 * IM=new TF2("f",expression);
    SetImpurity(IM);
+}
+//_____________________________________________________________________________
+//
+bool XY::CalculateField()
+{
+   if (!X::CalculateField()) return false;
+   if (fdC2p[idx]==0 || fdC2m[idx]==0) return false;
+
+   if (idx%(n1*n2)<n1) // C2 lower border
+      fE2[idx]=(fPotential[idx]-fPotential[idx+n1])/fdC2p[idx];
+   else if (idx%(n1*n2)>=n-n1) // C2 upper border
+      fE2[idx]=(fPotential[idx]-fPotential[idx-n1])/fdC2m[idx];
+   else { // bulk
+      fE1[idx]=(fPotential[idx-1]-fPotential[idx+1])/(fdC1m[idx]+fdC1p[idx]);
+      fE2[idx]=(fPotential[idx-n1]-fPotential[idx+n1])/(fdC2m[idx]+fdC2p[idx]);
+   }
+   return true;
 }
