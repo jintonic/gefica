@@ -10,7 +10,7 @@
       E1=detector2->GetE1(x/10,y/10);
       E2=detector2->GetE2(x/10,y/10);
       E=(E1*E1+E2*E2)**0.5;
-      outfile<<x<<"  "<<y<<"  "<<anotherV<<"  "<<v-anotherV<<"  "<<E1<<"  "<<E2<<"  "<<E<<"  "<<er+E1<<"  "<<ez+E2<<"  "<<e-E<<endl;
+      outfile<<x<<"  "<<y<<"  "<<anotherV<<"  "<<v-anotherV<<"  "<<E1<<"  "<<E2<<"  "<<E<<"  "<<er-E1<<"  "<<ez-E2<<"  "<<e-E<<endl;
    }
    infile.close();
    outfile.close();

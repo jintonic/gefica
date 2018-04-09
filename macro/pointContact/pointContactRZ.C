@@ -19,7 +19,7 @@
    detector2->Impurity="-0.318e10+0.025e10*y";//-0.01e10/GeFiCa::cm3);
    //detector2->SetImpurity(0e10/GeFiCa::cm3);
    
-   detector2->CalculateField(GeFiCa::kSOR2);
+   detector2->CalculatePotential(GeFiCa::kSOR2);
    detector2->SaveField("point2dSOR2.root");
    //detector2->LoadField("point21dSOR23.root");
    

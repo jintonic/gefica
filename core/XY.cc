@@ -225,9 +225,9 @@ void XY::Impuritystr2tf()
 }
 //_____________________________________________________________________________
 //
-bool XY::CalculateField()
+bool XY::CalculateField(int idx)
 {
-   if (!X::CalculateField()) return false;
+   if (!X::CalculateField(idx)) return false;
    if (fdC2p[idx]==0 || fdC2m[idx]==0) return false;
 
    if (idx%(n1*n2)<n1) // C2 lower border

@@ -101,7 +101,6 @@ void X::SOR2(int idx,bool elec)
    // over-relaxation if Csor>1
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
 
-   if(elec)fE1[idx]=(fPotential[idx+1]-fPotential[idx-1])/(h2+h3);
 }
 //_____________________________________________________________________________
 //
