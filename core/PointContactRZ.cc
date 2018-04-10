@@ -122,19 +122,4 @@ bool PointContactRZ::CalculatePotential(EMethod method)
 }
 //_____________________________________________________________________________
 //
-void PointContactRZ::SOR2(int idx,bool elec)
-{
-   RZ::SOR2(idx,elec);
-   // update electric fields on point contact boundary
-   if (elec) {
-      if (fC2[idx]>PointDepth-fdC2m[idx]
-            && fC2[idx]<PointDepth+fdC2p[idx]) // PC top border
-         fE2[idx]=(fPotential[idx]-fPotential[idx+n1])/fdC2p[idx];
-      if (fC1[idx]>-PointR-fdC1m[idx]
-            && fC1[idx]<-PointR+fdC1p[idx]) // PC left border
-         fE1[idx]=(fPotential[idx]-fPotential[idx-1])/fdC1m[idx];
-      if (fC1[idx]>PointR-fdC1m[idx]
-            && fC1[idx]<PointR+fdC1p[idx]) // PC right border
-         fE1[idx]=(fPotential[idx]-fPotential[idx+1])/fdC1p[idx];
-   }
-}
+

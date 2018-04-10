@@ -160,12 +160,12 @@ void X::SaveField(const char * fout)
    v.Write("v");
    bool fIsFixeds;
 
-   double E1s,C1s,Ps,StepNexts,StepBefores,impuritys;
+   double E1s,C1s,Ps,dC1p,dC1m,impuritys;
    tree->Branch("e1",&E1s,"e1/D"); // Electric X in x
    tree->Branch("c1",&C1s,"c1/D"); // persition in x
    tree->Branch("p",&Ps,"p/D"); // electric potential
-   tree->Branch("sn",&StepNexts,"sn/D"); // Step length to next point in x
-   tree->Branch("sb",&StepBefores,"sb/D"); // Step length to before point in x
+   tree->Branch("dC1p",&dC1p,"dC1p/D"); // Step length to next point in x
+   tree->Branch("dC1m",&dC1m,"dC1m/D"); // Step length to before point in x
    tree->Branch("ib",&fIsFixeds,"ib/O"); // check is initial point
    tree->Branch("im",&impuritys,"im/D"); // Impurity
    for(int i=0;i<n;i++) {
@@ -173,8 +173,8 @@ void X::SaveField(const char * fout)
       E1s=fE1[i];
       C1s=fC1[i];
       Ps=fPotential[i];
-      StepNexts=fdC1p[i];
-      StepBefores=fdC1m[i];
+      dC1p=fdC1p[i];
+      dC1m=fdC1m[i];
       fIsFixeds=fIsFixed[i];
       tree->Fill();
    }
@@ -200,12 +200,12 @@ void X::LoadField(const char * fin)
    TChain *t =new TChain("t");
    t->Add(fin);
    bool IsFixed;
-   double E1,C1,fP,fStepNext,fStepBefore,fimpurity;
+   double E1,C1,fP,dC1p,dC1m,fimpurity;
    t->SetBranchAddress("e1",&E1);
    t->SetBranchAddress("c1",&C1);
    t->SetBranchAddress("p",&fP);
-   t->SetBranchAddress("sn",&fStepNext);
-   t->SetBranchAddress("sb",&fStepBefore);
+   t->SetBranchAddress("dC1p",&dC1p);
+   t->SetBranchAddress("dC1m",&dC1m);
    t->SetBranchAddress("ib",&IsFixed);
    t->SetBranchAddress("im",&fimpurity);
 
@@ -223,8 +223,8 @@ void X::LoadField(const char * fin)
       fC1[i]=C1;
       fPotential[i]=fP;
       fIsFixed[i]=fIsFixed;  
-      fdC1p[i]=fStepNext;
-      fdC1m[i]=fStepBefore;
+      fdC1p[i]=dC1p;
+      fdC1m[i]=dC1m;
       fImpurity[i]=fimpurity;
    }
    file->Close();

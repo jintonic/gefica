@@ -1,8 +1,8 @@
 {
-   GeFiCa::PointContactRZ *detector2 = new GeFiCa::PointContactRZ(1690,1006);
+   GeFiCa::PointContactRZ *detector2 = new GeFiCa::PointContactRZ(690,505);
    detector2->Radius=3.45;
    detector2->ZUpperBound=5.05;
-   detector2->PointR=3.04;
+   detector2->PointR=0.14;
    detector2->PointDepth=0.21;
 
    //TF2 *im=new TF2("f","-0.19175e10-0.025e10*y");
@@ -11,12 +11,12 @@
 
    detector2->MaxIterations=1e5;
    detector2->Precision=1e-7;
-   detector2->Csor=1.997;
+   detector2->Csor=1.994;
    detector2->V0=2500*GeFiCa::volt;
    detector2->V1=0*GeFiCa::volt;
 
    //TF1 *im=new TF1("","pol1",-0.318e10,0.025e10)
-   detector2->Impurity="-0.318e10+0.025e10*y";//-0.01e10/GeFiCa::cm3);
+   //detector2->Impurity="-0.318e10+0.025e10*y";//-0.01e10/GeFiCa::cm3);
    //detector2->SetImpurity(0e10/GeFiCa::cm3);
    
    detector2->CalculatePotential(GeFiCa::kSOR2);

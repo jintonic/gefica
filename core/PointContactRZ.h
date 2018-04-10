@@ -25,8 +25,8 @@ class GeFiCa::PointContactRZ : public GeFiCa::RZ
 
       ClassDef(PointContactRZ,1);
 
-   protected:
-      void SOR2(int idx, bool elec);
+  // protected:
+  //    void SOR2(int idx, bool elec);
 };
 
 #endif

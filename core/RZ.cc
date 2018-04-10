@@ -14,7 +14,6 @@ using namespace GeFiCa;
 using namespace std;
 void RZ::SOR2(int idx,bool elec)
 {
-    
    if (fIsFixed[idx])return; 
    // 2nd-order Successive Over-Relaxation
    double density=fImpurity[idx]*Qe;
@@ -36,5 +35,23 @@ void RZ::SOR2(int idx,bool elec)
          + (pzp/dzp+pzm/dzm)*2/(dzp+dzm))/
       ((1/drm+1/drp)*2/(drm+drp)+(1/dzp+1/dzm)*2/(dzp+dzm));
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
-   
 }
+
+/*
+void PointContactRZ::SOR2(int idx,bool elec)
+{
+   RZ::SOR2(idx,elec);
+   // update electric fields on point contact boundary
+   if (elec) {
+      if (fC2[idx]>PointDepth-fdC2m[idx]
+            && fC2[idx]<PointDepth+fdC2p[idx]) // PC top border
+         fE2[idx]=(fPotential[idx]-fPotential[idx+n1])/fdC2p[idx];
+      if (fC1[idx]>-PointR-fdC1m[idx]
+            && fC1[idx]<-PointR+fdC1p[idx]) // PC left border
+         fE1[idx]=(fPotential[idx]-fPotential[idx-1])/fdC1m[idx];
+      if (fC1[idx]>PointR-fdC1m[idx]
+            && fC1[idx]<PointR+fdC1p[idx]) // PC right border
+         fE1[idx]=(fPotential[idx]-fPotential[idx+1])/fdC1p[idx];
+   }
+}
+*/
