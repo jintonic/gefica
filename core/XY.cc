@@ -230,12 +230,11 @@ bool XY::CalculateField(int idx)
    if (!X::CalculateField(idx)) return false;
    if (fdC2p[idx]==0 || fdC2m[idx]==0) return false;
 
-   if (idx%(n1*n2)<n1) // C2 lower border
+   if (idx%(n1*n2)<n1) // C2 lower boundary
       fE2[idx]=(fPotential[idx]-fPotential[idx+n1])/fdC2p[idx];
-   else if (idx%(n1*n2)>=n-n1) // C2 upper border
+   else if (idx%(n1*n2)>=n-n1) // C2 upper boundary
       fE2[idx]=(fPotential[idx]-fPotential[idx-n1])/fdC2m[idx];
    else { // bulk
-      fE1[idx]=(fPotential[idx-1]-fPotential[idx+1])/(fdC1m[idx]+fdC1p[idx]);
       fE2[idx]=(fPotential[idx-n1]-fPotential[idx+n1])/(fdC2m[idx]+fdC2p[idx]);
    }
    return true;

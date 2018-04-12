@@ -16,7 +16,7 @@
    detector2->V1=0*GeFiCa::volt;
 
    //TF1 *im=new TF1("","pol1",-0.318e10,0.025e10)
-   //detector2->Impurity="-0.318e10+0.025e10*y";//-0.01e10/GeFiCa::cm3);
+   detector2->Impurity="-0.318e10+0.025e10*y";//-0.01e10/GeFiCa::cm3);
    //detector2->SetImpurity(0e10/GeFiCa::cm3);
    
    detector2->CalculatePotential(GeFiCa::kSOR2);

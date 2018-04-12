@@ -255,7 +255,7 @@ bool X::CalculateField(int idx)
 
    if (idx%n1==0) // C1 lower boundary
       fE1[idx]=(fPotential[idx]-fPotential[idx+1])/fdC1p[idx];
-   else if ((idx+1)%n1==0) // C1 upper boundary
+   else if (idx%n1==n1-1) // C1 upper boundary
       fE1[idx]=(fPotential[idx]-fPotential[idx-1])/fdC1m[idx];
    else { // bulk
       fE1[idx]=(fPotential[idx-1]-fPotential[idx+1])/(fdC1m[idx]+fdC1p[idx]);

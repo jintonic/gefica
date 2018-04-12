@@ -122,4 +122,19 @@ bool PointContactRZ::CalculatePotential(EMethod method)
 }
 //_____________________________________________________________________________
 //
+bool PointContactRZ::CalculateField(int idx)
+{
+   if (!XY::CalculateField(idx)) return false;
 
+   if (fC2[idx]>PointDepth-fdC2m[idx]
+         && fC2[idx]<PointDepth+fdC2p[idx]) // PC top boundary
+      fE2[idx]=(fPotential[idx]-fPotential[idx+n1])/fdC2p[idx];
+   if (fC1[idx]>-PointR-fdC1m[idx]
+         && fC1[idx]<-PointR+fdC1p[idx]) // PC left boundary
+      fE1[idx]=(fPotential[idx]-fPotential[idx-1])/fdC1m[idx];
+   if (fC1[idx]>PointR-fdC1m[idx]
+         && fC1[idx]<PointR+fdC1p[idx]) // PC right boundary
+      fE1[idx]=(fPotential[idx]-fPotential[idx+1])/fdC1p[idx];
+
+   return true;
+}
