@@ -15,6 +15,9 @@
    tg->ReadFile("result.txt", "r:z:v:d:e1:e2:e:de1:de2:de");
    tg->Draw("z:r:v","","colz");
    TCanvas *c4 = new TCanvas;
+   
+   c4->SetFillColor(kBlue);
+   
    tg->Draw("z:r:e","","colz");
    TCanvas *c5 = new TCanvas;
    tg->Draw("z:r:e1","","colz");
@@ -23,13 +26,14 @@
 
    // draw difference
    TCanvas *c3 = new TCanvas;
-   //c3->SetFillColor(kBlack);
    tg->Draw("z:r:d","","colz");
    TCanvas *c7 = new TCanvas;
    tg->Draw("z:r:de1","","colz");
    TCanvas *c8 = new TCanvas;
    tg->Draw("z:r:de2","","colz");
    TCanvas *c9 = new TCanvas;
+   
+   c9->SetFillColor(kBlue);
    tg->Draw("z:r:de","","colz");
    
    //electricfield
