@@ -15,6 +15,13 @@ ROOTCFLAGS:= $(shell $(ROOTCONFIG) --cflags)
 ROOTLIBS  := $(shell $(ROOTCONFIG) --libs)
 
 ARCHOK     = no
+ifeq ($(ARCH),macosx64)
+  CXX      = g++ -std=c++11 
+  CXXFLAGS = $(OPT2) -Wall -fPIC
+  SOFLAGS  = -shared
+  ARCHOK   = yes
+endif
+
 
 ifeq ($(ARCH),linux)
   CXX      = g++ -std=c++11 
