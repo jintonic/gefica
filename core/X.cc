@@ -50,6 +50,46 @@ bool X::Analytic()
 }
 //_____________________________________________________________________________
 //
+int X::Findmax()
+{
+   double max=fPotential[0];
+   int maxn=0;
+   for(int i=1;i<n;i++)
+   {
+      if(fPotential[i]>max)
+      {
+         maxn=i;
+         max=fPotential[i];
+      }
+   }
+   return maxn;
+}
+//_____________________________________________________________________________
+//
+int X::Findmin()
+{
+   double min=fPotential[0];
+   int minn=0;
+   for(int i=1;i<n;i++)
+   {
+      if(fPotential[i]<min)
+      {
+         minn=i;
+         min=fPotential[i];
+      }
+   }
+   return minn;
+}
+//_____________________________________________________________________________
+//
+bool X::Depleattest()
+{
+   int maxn=Findmax();
+   int minn=Findmin(); 
+   return fIsFixed[maxn]&&fIsFixed[minn];
+}
+//_____________________________________________________________________________
+//
 void X::SetStepLength(double steplength)
 {
    //set field step length

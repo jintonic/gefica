@@ -60,6 +60,10 @@ class GeFiCa::X : public TObject
        */
       virtual bool CalculatePotential(EMethod method=kSOR2);
       
+      virtual bool Depleattest();
+      virtual int Findmax();
+      virtual int Findmin();
+      
       virtual void Initialize() {};
       /**
        * This function creates a new TFile and TTree and fills it from data

@@ -94,7 +94,7 @@ void PointContactRZ::Initialize()
 
    // set initial potential values
    for(int i=n;i-->0;) {
-      fPotential[i]=(V0+V1)/2;
+      //fPotential[i]=(V0+V1)/2;//common this line for finding depleat voltage
       // set potential for inner electrodes
       if(fC1[i]>=PointBegin&&fC1[i]<=PointEnd&&fC2[i]<=PointDepth) {
          fPotential[i]=V1;
@@ -118,6 +118,29 @@ void PointContactRZ::Initialize()
 bool PointContactRZ::CalculatePotential(EMethod method)
 {
    if (!fIsLoaded) Initialize();
+   while(1)
+   {
+      RZ::CalculatePotential(method);
+      if(!X::Depleattest())
+      {
+          int maxn=Findmax();
+          int minn=Findmin();
+          if(V0>V1)
+          {
+             V0=(fPotential[maxn]-V0)*1.01+V0;
+             V1=(V1-fPotential[minn])*1.01+fPotential[minn];
+          }
+          else
+          {
+             V1=(fPotential[maxn]-V1)*1.01+V1;
+             V0=(V0-fPotential[minn])*1.01+fPotential[minn];
+          }
+          Initialize();
+          cout<<V0<<" "<<V1<<endl;
+          RZ::CalculatePotential(method);
+      }
+      else break;
+   }
    return RZ::CalculatePotential(method);
 }
 //_____________________________________________________________________________
