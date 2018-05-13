@@ -58,12 +58,15 @@ class GeFiCa::X : public TObject
        * Calculate potential using various methods.
        * Current available methods are kAnalytic and kSOR2.
        */
-      virtual bool CalculatePotential(EMethod method=kSOR2);
+      bool CalculatePotential(EMethod method=kSOR2);
       
-      virtual bool Depleattest();
-      virtual int Findmax();
-      virtual int Findmin();
+      bool Depleattest();
+      int Findmax();
+      int Findmin();
+      void Multiply(double p);
+      void Add(X *anotherfield);
       
+      void CopyField(X *target);
       virtual void Initialize() {};
       /**
        * This function creates a new TFile and TTree and fills it from data
@@ -79,30 +82,26 @@ class GeFiCa::X : public TObject
        * This function takes an argument for the variable density. It can be used if you consider impurity to be constant.
        * It is usualy in the form of 1e10/cm3 or some variation where cm3 is defined in the namespace GeFiCa.
        */
-      virtual void SetImpurity(double density) // If you can consider impurity to e constant
+      void SetImpurity(double density) // If you can consider impurity to e constant
       { for (int i=0; i<n; i++) fImpurity[i]=density; }
       /**
        * Another Important method involved in setting the impurity. This is used for a variable impurity level that changes with x.
        */
-      virtual void SetImpurity(TF1 * Im); // Used for the real change in impurity over x 
+      void SetImpurity(TF1 * Im); // Used for the real change in impurity over x 
       /**
        * Returns the value for E under the first direction.
        */
-      virtual double GetE1(double x,double y,double z){return GetData(x,kE1);};
-      virtual double GetE2(double x,double y,double z){return 0;};
-      virtual double GetE3(double x,double y,double z){return 0;};
+      double GetE1(double x){return GetData(x,kE1);};
+      double GetE2(double x){return 0;};
+      double GetE3(double x){return 0;};
       /**
        * Returns the impurity level.
        */ 
-      virtual double GetImpurity(double x){return GetData(x,kImpurity);};
+      double GetImpurity(double x){return GetData(x,kImpurity);};
       /**
        * Returns the potential.
        */ 
-      virtual double GetPotential(double x){return GetData(x,kPotential);};
-      /**
-       * Returns the location under the first directions.
-       */ 
-      virtual double GetXEdge(bool beginorend); 
+      double GetPotential(double x){return GetData(x,kPotential);};
       /**
        *This defines the class for the cint dictionary.
        */
@@ -121,11 +120,11 @@ class GeFiCa::X : public TObject
       /**
        * Sets the field step length.
        */
-      virtual void SetStepLength(double steplength);
+      void SetStepLength(double steplength);
       /**
        * Uses a binary search to return the index .
        */
-      virtual int FindIdx(double tarx,int begin,int end);
+      int FindIdx(double tarx,int begin,int end);
       /**
        * Calculates the field using an analytical method.
        */
@@ -133,7 +132,7 @@ class GeFiCa::X : public TObject
       /**
        * Returns data of certain EOutput.
        */
-      virtual double GetData(double tarx, EOutput output); 
+      double GetData(double tarx, EOutput output); 
       /**
        * Uses Second order Successive Over-Relaxation method to calculate the field.
        */

@@ -20,9 +20,9 @@ class GeFiCa::XYZ : public GeFiCa::XY
       virtual void SaveField(const char *fout=NULL);
       virtual void LoadField(const char *fin=NULL);
 
-      virtual void SetImpurity(TF3 * Im);
+      void SetImpurity(TF3 * Im);
       
-      virtual double GetPotential(double x,double y,double z){return GetData(x,y,z,kPotential);};
+      double GetPotential(double x,double y,double z){return GetData(x,y,z,kPotential);};
       virtual double GetE1(double x,double y,double z){return GetData(x,y,z,kE1);};
       virtual double GetE2(double x,double y,double z){return GetData(x,y,z,kE2);};
       virtual double GetE3(double x,double y,double z){return GetData(x,y,z,kE3);};

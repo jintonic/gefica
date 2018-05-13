@@ -72,6 +72,7 @@ double RhoPhiZ::GetData(double tarx, double tary, double tarz, EOutput output)
    if(idx%(n1*n2)%n1==n1-1){tar2=0;tar3=0;tar6=0;tar7=0;}
    else{tar2=tar[idx+n1];}
    if(idx%(n1*n2)/n1==n2-1){tar1=0;tar3=0;tar5=0;tar7=0;}
+   else{tar1=tar[idx+1];}
    if(tar3==-1)tar3=tar[idx+n1+1];
    if(tar5==-1)tar5=tar[idx+n1*n2+1];
    if(tar6==-1)tar6=tar[idx+n1*n2+n1];

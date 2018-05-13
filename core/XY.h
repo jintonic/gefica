@@ -30,25 +30,25 @@ class GeFiCa::XY : public GeFiCa::X
 		/**
 		* Returns the potential in two dimensions
 		*/
-      virtual double GetPotential(double x,double y){return GetData(x,y,kPotential);};
+      double GetPotential(double x,double y){return GetData(x,y,kPotential);};
       /**
       * Returns the value for the electric field under the first direction
       */
-      virtual double GetE1(double x,double y){return GetData(x,y,kE1);};
+      double GetE1(double x,double y){return GetData(x,y,kE1);};
       /**
       * Returns the value for the electic field under the second direction
       */
-      virtual double GetE2(double x,double y){return GetData(x,y,kE2);};
+      double GetE2(double x,double y){return GetData(x,y,kE2);};
       /**
       * Returns the two dimensional impurity
       */
-      virtual double GetImpurity(double x,double y){return GetData(x,y,kImpurity);};
+      double GetImpurity(double x,double y){return GetData(x,y,kImpurity);};
 
    	/**
    	* Method involved in setting the impurity. 
    	* This is used for a variable impurity level that changes with x
    	*/
-      virtual void SetImpurity(TF2 * Im);
+      void SetImpurity(TF2 * Im);
 		/**
 		* This defines the class for the CINT library
 		*/
@@ -64,7 +64,7 @@ class GeFiCa::XY : public GeFiCa::X
       /**
       * Uses a binary search to return the index in two dimensions
       */
-      virtual int FindIdx(double tarx,double tary
+      int FindIdx(double tarx,double tary
             ,int ybegin,int yend);
 
 
@@ -73,7 +73,7 @@ class GeFiCa::XY : public GeFiCa::X
       * Returns data for various variables. 
       */
       double GetData(double tarx,double tary,EOutput output); 
-      virtual void SetStepLength(double steplength1,double steplength2); 
+      void SetStepLength(double steplength1,double steplength2); 
       virtual void Impuritystr2tf();
       virtual bool CalculateField(int idx);
 };

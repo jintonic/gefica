@@ -50,6 +50,34 @@ bool X::Analytic()
 }
 //_____________________________________________________________________________
 //
+void X::Add (GeFiCa::X *anotherfield)
+{
+   if (n!=anotherfield->n)
+   {
+      Warning("Add", 
+            "Only same type of detector can be added together! Do nothing.");
+      return;
+   }
+   for(int i=0;i<n;i++)
+   {
+      fPotential[i]=fPotential[i]+anotherfield->fPotential[i];
+   }
+   
+}
+
+
+//_____________________________________________________________________________
+//
+void X::Multiply (double p)
+{
+   for(int i=0;i<n;i++)
+   {
+      fPotential[i]=fPotential[i]*p;
+   }
+   
+}
+//_____________________________________________________________________________
+//
 int X::Findmax()
 {
    double max=fPotential[0];
@@ -86,6 +114,7 @@ bool X::Depleattest()
 {
    int maxn=Findmax();
    int minn=Findmin(); 
+   cout<<"max: "<<fIsFixed[maxn]<<"min: "<<fIsFixed[minn]<<"minidx: "<<minn<<endl;
    return fIsFixed[maxn]&&fIsFixed[minn];
 }
 //_____________________________________________________________________________
@@ -152,13 +181,7 @@ int X::FindIdx(double tarx,int begin,int end)
    if(fC1[mid]>=tarx)return FindIdx(tarx,begin,mid);
    else return FindIdx(tarx,mid+1,end);
 }
-//_____________________________________________________________________________
-//
-double X::GetXEdge(bool beginorend)
-{
-   if(beginorend) return fC1[n1-1];
-   else return fC1[0];
-}
+
 //_____________________________________________________________________________
 //
 double X::GetData(double tarx, EOutput output)
@@ -181,6 +204,14 @@ double X::GetData(double tarx, EOutput output)
       default: return -1;
    }
    return -1;
+}
+//_____________________________________________________________________________
+//
+void X::CopyField(GeFiCa::X *target)
+{
+   target->SaveField("tmp");
+   this->LoadField("tmp");
+
 }
 //_____________________________________________________________________________
 //
@@ -240,10 +271,10 @@ void X::LoadField(const char * fin)
    TChain *t =new TChain("t");
    t->Add(fin);
    bool IsFixed;
-   double E1,C1,fP,dC1p,dC1m,fimpurity;
+   double E1,C1,P,dC1p,dC1m,fimpurity;
    t->SetBranchAddress("e1",&E1);
    t->SetBranchAddress("c1",&C1);
-   t->SetBranchAddress("p",&fP);
+   t->SetBranchAddress("p",&P);
    t->SetBranchAddress("dC1p",&dC1p);
    t->SetBranchAddress("dC1m",&dC1m);
    t->SetBranchAddress("ib",&IsFixed);
@@ -261,8 +292,8 @@ void X::LoadField(const char * fin)
       t->GetEntry(i);
       fE1[i]=E1;
       fC1[i]=C1;
-      fPotential[i]=fP;
-      fIsFixed[i]=fIsFixed;  
+      fPotential[i]=P;
+      fIsFixed[i]=IsFixed;  
       fdC1p[i]=dC1p;
       fdC1m[i]=dC1m;
       fImpurity[i]=fimpurity;
