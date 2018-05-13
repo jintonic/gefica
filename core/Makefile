@@ -16,7 +16,7 @@ ROOTLIBS  := $(shell $(ROOTCONFIG) --libs)
 
 ARCHOK     = no
 ifeq ($(ARCH),macosx64)
-  CXX      = g++ -std=c++11 
+  CXX      = g++  
   CXXFLAGS = $(OPT2) -Wall -fPIC
   SOFLAGS  = -shared
   ARCHOK   = yes
@@ -55,7 +55,7 @@ ifneq ($(ALTCXX),)
 endif
 
 # Finally, define CXXFLAGS & LIBS
-CXXFLAGS+=$(subst -std=c++11,,$(ROOTCFLAGS))
+CXXFLAGS+=$(subst --std=c++11,,$(subst -stdlib=libc++,,$(ROOTCFLAGS)))
 #CXXFLAGS+=$(ROOTCFLAGS)
 CXXFLAGS+=-g
 LIBS    +=$(ROOTLIBS)
@@ -94,12 +94,12 @@ ROOTMAP = $(LIBRARY:.so=.rootmap)
 
 SYMBOLS = `nm -CPu $(LIBRARY) |\
 	  awk -F: '/^T/{printf("(%s)\n",$$1)}' |\
-	  sort -u | tr '\n' '|'`
+	  sort -u | tr '\n' '|'|sed 's/|$$//'`
 ALLLIBS = $(wildcard $(shell $(ROOTCONFIG) --libdir)/*.so)
 DEPENDS = $(shell symbols=$(SYMBOLS); \
 	  for so in $(ALLLIBS); \
-	  do nm -CD --defined-only $$so |\
-	  grep -E 'T ('$$symbols')::' > /dev/null &&\
+	  do nm  --defined-only $$so |\
+	  grep -E 'T ('$$symbols')::' >/dev/null  &&\
 	  echo $$so;\
 	  done | sort -u | tr '\n' ' ')
 
@@ -135,7 +135,7 @@ endif
 %.d:%.cc
 	@echo creating $@
 	@set -e; rm -f $@; \
-	  $(CXX) -MM $(CPPFLAGS) $< > $@.$$$$; \
+	  $(CXX) -MM $(CXXFLAGS) $< > $@.$$$$; \
 	  sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	  rm -f $@.$$$$ 
 
@@ -174,6 +174,7 @@ $(ROOTIFIED_SOURCE): $(HEADERS) $(LINKDEF)
 info: 
 	@echo
 	@echo "target:   $(LIBRARY) $(ROOTMAP)"
+	@echo "synbols:   $(SYMBOLS)"
 	@echo "sources:  $(SOURCES)"
 	@echo "headers:  $(HEADERS)"
 	@echo "objects:  $(OBJECTS)"
@@ -181,6 +182,7 @@ info:
 	@echo "compiler: $(CXX)"
 	@echo "flags:    $(CXXFLAGS)"
 	@echo "libs:     $(LIBS)"
+	@echo "dependents:     $(DEPENDS)"
 	@echo
 
 clean:
