@@ -112,6 +112,14 @@ void PointContactRZ::Initialize()
       fPotential[i]=V0;
       fPotential[i+n1-1]=V0;
    }
+   for (int i=0;i<n1;i++)
+   {
+      if(fC1[i]>ContactInnerR||fC1[i]<-ContactInnerR)
+      {
+         fIsFixed[i]=true;
+         fPotential[i]=V0;
+      }
+   }
 }
 //_____________________________________________________________________________
 //

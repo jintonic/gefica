@@ -34,6 +34,28 @@ void RZ::SOR2(int idx,bool elec)
          + 1/fC1[idx]*(prp-prm)/(drm+drp) +(prp/drp+prm/drm)*2/(drm+drp)
          + (pzp/dzp+pzm/dzm)*2/(dzp+dzm))/
       ((1/drm+1/drp)*2/(drm+drp)+(1/dzp+1/dzm)*2/(dzp+dzm));
-   fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
+   //find minmium and maxnium of all five grid, the new one should not go overthem.
+   //find min
+   double min=prm;
+   double max=prm;
+   if(min>prp)min=prp;
+   if (min>pzp)min=pzp;
+   if (min>pzm)min=pzm;
+   //find max
+   if(max<prp)max=prp;
+   if (max<pzp)max=pzp;
+   if (max<pzm)max=pzm;
+//if tmp is greater or smaller than max and min, set tmp to it.
+   
+      //over relax
+   //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
+   tmp=Csor*(tmp-fPotential[idx])+fPotential[idx];
+   
+   if(tmp<min)fPotential[idx]=min;
+   else if(tmp>max)fPotential[idx]=max;
+   else fPotential[idx]=tmp;
+
+
+
 }
 

@@ -1,19 +1,34 @@
 {
    // calculate fields
    GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(101);
-   detector->MaxIterations=1e5;
+   detector->MaxIterations=10;
    detector->Csor=1.95;
    detector->UpperBound=0.175;
-   detector->V1=100*GeFiCa::volt;
+   detector->V1=1000*GeFiCa::volt;
    //detector->SetImpurity(1e10/GeFiCa::cm3);
    detector->Impurity="1e10";
 
-   detector->CalculateField(GeFiCa::kSOR2);
+   detector->CalculatePotential(GeFiCa::kSOR2);
    detector->SaveField("planar1dSOR2.root");
    
+     
  //  detector->Impurity="0";
-   detector->CalculateField(GeFiCa::kAnalytic);
-   detector->SaveField("planar1dTrue.root");
+   for (int i=0;i<10;i++)
+   {
+      detector->MaxIterations=30*i;
+      detector->CalculatePotential(GeFiCa::kSOR2);
+      detector->SaveField("planar1dSOR2.root");
+      TCanvas * cvs=new TCanvas();
+      TChain *tn = new TChain("t");
+ 
+      tn->Add("planar1dSOR2.root");
+      tn->Draw("p:c1");
+
+  
+   }
+  
+
+
 
    TCanvas * cvs=new TCanvas();
    gStyle->SetPadTopMargin(0.02);

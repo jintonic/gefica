@@ -145,8 +145,9 @@ bool X::CalculatePotential(EMethod method)
          SOR2(i,0);
          if(old>0)XDownSum+=old;
          else XDownSum-=old;
-         if(fPotential[i]-old>0)XUpSum+=(fPotential[i]-old);
-         else XUpSum+=-(fPotential[i]-old);
+         double diff=fPotential[i]-old;
+         if(diff>0)XUpSum+=(diff);
+         else XUpSum-=(diff);
       }
       if(cnt%10==0)
          cout<<cnt<<"  "<<XUpSum/XDownSum<<" down: "<<XDownSum<<", up: "<<XUpSum<<endl;
