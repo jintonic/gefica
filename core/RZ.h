@@ -22,6 +22,7 @@ class GeFiCa::RZ : public GeFiCa::XY
       RZ(unsigned short n1=101, unsigned short n2=101):XY(n1,n2){};
 
       ClassDef(RZ,1);
+      void CalculateCapacitance();
 
    protected:
       virtual void SOR2(int idx,bool elec);

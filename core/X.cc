@@ -114,7 +114,7 @@ bool X::Depleattest()
 {
    int maxn=Findmax();
    int minn=Findmin(); 
-   cout<<"max: "<<fIsFixed[maxn]<<"min: "<<fIsFixed[minn]<<"minidx: "<<minn<<endl;
+   //debug:cout<<"max: "<<fIsFixed[maxn]<<"min: "<<fIsFixed[minn]<<"minidx: "<<minn<<endl;
    return fIsFixed[maxn]&&fIsFixed[minn];
 }
 //_____________________________________________________________________________

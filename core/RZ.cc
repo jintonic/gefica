@@ -58,4 +58,38 @@ void RZ::SOR2(int idx,bool elec)
 
 
 }
+void RZ::CalculateCapacitance()
+{
+   /*
+   http://bgaowww.physics.utoledo.edu/teaching/LectureNotes/Phys2080/Chapter16.htm
+   https://en.wikipedia.org/wiki/Electric_field#Energy_in_the_electric_field
+   use Energy in a charged capacitor= total energy U stored in the electric field in a given volume V 
+   to find capacitance
+   */
+   //only work when impurity are zero
+   for(int i=0;i<n;i++)
+   {
+      if(fImpurity[i]!=0)
+      {
+         //impurity not clear,return
+         return;
+      }
+   }
+   double V=1*volt;
+   //debug:cout<<V<<endl;
+   double SumofElectricField=0;
+   for(int i=0;i<n;i++)
+   {
+      if(fC1[i]<0)continue;
+      //integral over electric field
+      double e1=fE1[i];
+      double e2=fE2[i];
+      double dr=fdC1p[i];
+      double dz=fdC2p[i];
+      SumofElectricField+=(e1*e1+e2*e2)*fC1[i]*dr*dz;
+
+   }
+   double Capacitance=SumofElectricField*2*3.14159*epsilon/V/V;
+   cout<<"Calculated capacitance is "<<Capacitance/pF<<endl;
+}
 
