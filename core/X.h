@@ -2,6 +2,7 @@
 #define GeFiCa_X_H
 
 #include <TObject.h>
+#include <TMatrixDSparse.h>
 #include <string>
 class TF1;
 
@@ -69,6 +70,10 @@ class GeFiCa::X : public TObject
       void CopyField(X *target);
       virtual void Initialize() {};
       /**
+       * find surunding index and return in int array
+       */
+      virtual int* FindSurrundingMatrix(int idx);
+      /**
        * This function creates a new TFile and TTree and fills it from data
        * created by X::CalculatePotential.    
        */
@@ -116,7 +121,14 @@ class GeFiCa::X : public TObject
       double *fdC1p; ///< distance between this and next grid points alone C1
       double *fdC1m; ///< distance between this and previous grid points alone C1
       double *fImpurity; ///< Value of the impurity level at a point on the grid
+      TMatrixDSparse *fA; ///<the matrix used for Conjugate Gradient
 
+      /**
+       * build matrix for Conjugate Gradient
+       * return if success
+       */
+      virtual bool BuildMatrix();
+      
       /**
        * Sets the field step length.
        */

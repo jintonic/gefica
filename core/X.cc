@@ -6,6 +6,9 @@ using namespace std;
 #include <TChain.h>
 #include <TVectorD.h>
 #include <TF1.h>
+#include <TMatrixDSparse.h>
+#include "Math/GSLMinimizer.h"
+#include "Math/Functor.h"
 
 #include "X.h"
 #include "Units.h"
@@ -131,8 +134,82 @@ void X::SetStepLength(double steplength)
 }
 //_____________________________________________________________________________
 //
+virtual int* FindSurrundingMatrix(int idx)
+{
+   int tmp=new int[2];
+   if(idx-1<0)tmp[0]=1;
+   else tmp[0]=idx-1;
+   if(idx+1>n)tmp[1]=n-1;
+   else tmp[1]=idx+1;
+   return tmp;
+}
+double X::ConjugateGradient(double * x)
+{
+   return -1;
+}
+bool X::BuildMatrix()
+{
+   fA=new TMatrixDSparse(n,n);
+   for (int i=0;i<n;i++)
+   {
+      int dxm=fdC1m[i];
+      int dxp=fdC1p[i];
+      if (dxm==0||dxp==0)return false;
+
+      fA->SetMatrixArray(2,i,FindSurrundingMatrix(i),
+            {
+               1/(dxp*(1/dxm+1/dxp)),  
+               1/(dxm*(1/dxm+1/dxp))
+            }
+           );
+
+   }
+   return true;
+}
+//_____________________________________________________________________________
+//
 bool X::CalculatePotential(EMethod method)
 {
+   if(mehtod==kConjugateGradient)
+   {
+      /*sudo code
+       *
+       * buildmatrix()
+       *
+       * double copyfPotential.copy(fpotential)
+       *loop(0->n)
+       *{
+       * step[i]=...//if fixed, make it 0
+       * setvar(copypotential[i],i)
+       * 
+       * }
+       * root::minimize(f(),x)
+      */
+      BuildMatrix();
+      double* fPotentialCopy=new double[n];
+      double* Steps=new double[n];
+      ROOT::Math::GSLMinimizer min( ROOT::Math::kVectorBFGS );
+
+      min.SetMaxFunctionCalls(1000000);
+      min.SetMaxIterations(100000);
+      min.SetTolerance(0.001);
+
+      ROOT::Math::Functor f(&ConjugateGradient,n);
+      
+      for(int i=0;i<n;i++)
+      {
+         fPotentialCopy[i]=fPotential[i];
+         if(fIsFixed[i])Steps[i]=0;
+         else Steps[i]=0.01;
+         min.SetVariable(i,i,fPotentialCopy[i],Steps[i]);
+      }
+      min.Minimize();
+      for(int i=n;i-->0;)
+      {
+      }
+
+      return true;
+   }
    Impuritystr2tf();
    if (method==kAnalytic) return Analytic();
    int cnt=0;
