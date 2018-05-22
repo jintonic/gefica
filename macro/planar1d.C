@@ -8,7 +8,8 @@
    //detector->SetImpurity(1e10/GeFiCa::cm3);
    detector->Impurity="1e10";
 
-   detector->CalculatePotential(GeFiCa::kSOR2);
+   //detector->CalculatePotential(GeFiCa::kSOR2);
+   detector->CalculatePotential(GeFiCa::kConjugateGradient);
    detector->SaveField("planar1dSOR2.root");
    
      

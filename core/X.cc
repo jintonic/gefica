@@ -134,43 +134,52 @@ void X::SetStepLength(double steplength)
 }
 //_____________________________________________________________________________
 //
-virtual int* FindSurrundingMatrix(int idx)
+int* X::FindSurrundingMatrix(int idx)
 {
-   int tmp=new int[2];
-   if(idx-1<0)tmp[0]=1;
-   else tmp[0]=idx-1;
-   if(idx+1>n)tmp[1]=n-1;
+   int *tmp=new int[3];
+   tmp[0]=idx;
+   if(idx-1<0)tmp[1]=1;
+   else tmp[1]=idx-1;
+   if(idx+1>n)tmp[2]=n-1;
    else tmp[1]=idx+1;
    return tmp;
 }
-double X::ConjugateGradient(double * x)
+double X::ConjugateGradient(const double * xx)
 {
-   return -1;
+   TMatrixD *xT=new TMatrixD(1,n,xx);
+   TMatrixD *x=new TMatrixD(n,1,xx);
+   TMatrixD *b=new TMatrixD(1,n,fb);
+   return ((*xT)*(*fA)*(*x)+(*b)*(*x))(0,0);
 }
 bool X::BuildMatrix()
 {
    fA=new TMatrixDSparse(n,n);
+   fb=new double[n];
    for (int i=0;i<n;i++)
    {
       int dxm=fdC1m[i];
       int dxp=fdC1p[i];
+      fb[i]=fImpurity[i]*(dxm+dxp);
       if (dxm==0||dxp==0)return false;
+      double* tmp=new double[2];
+      tmp[1]=1/(dxp);
+      tmp[2]=1/(dxm);
+      tmp[0]=(1/dxm+1/dxp);
 
-      fA->SetMatrixArray(2,i,FindSurrundingMatrix(i),
-            {
-               1/(dxp*(1/dxm+1/dxp)),  
-               1/(dxm*(1/dxm+1/dxp))
-            }
-           );
+      fA->SetMatrixArray(2,&i,FindSurrundingMatrix(i),tmp);
 
    }
    return true;
+}
+double atest(const double *x)
+{
+return -1;
 }
 //_____________________________________________________________________________
 //
 bool X::CalculatePotential(EMethod method)
 {
-   if(mehtod==kConjugateGradient)
+   if(method==kConjugateGradient)
    {
       /*sudo code
        *
@@ -195,17 +204,20 @@ bool X::CalculatePotential(EMethod method)
       min.SetTolerance(0.001);
 
       ROOT::Math::Functor f(&ConjugateGradient,n);
+      //ROOT::Math::Functor f(&atest,n);//GeFiCa::X::ConjugateGradient,n);
       
       for(int i=0;i<n;i++)
       {
          fPotentialCopy[i]=fPotential[i];
          if(fIsFixed[i])Steps[i]=0;
          else Steps[i]=0.01;
-         min.SetVariable(i,i,fPotentialCopy[i],Steps[i]);
+         const char *a=new char(i);
+         min.SetVariable(i,a,fPotentialCopy[i],Steps[i]);
       }
       min.Minimize();
       for(int i=n;i-->0;)
       {
+         fPotential[i]=fPotentialCopy[i];
       }
 
       return true;

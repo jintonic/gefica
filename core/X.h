@@ -10,6 +10,7 @@ namespace GeFiCa {
    enum EMethod ///< Different methods to calculate fields
    {
       kAnalytic,
+      kConjugateGradient,
       kSOR2, ///< Successove over-relaxation method to the 2nd order
       kSOR4, ///< Successove over-relaxation method to the 4th order
    };
@@ -38,7 +39,7 @@ class GeFiCa::X : public TObject
    public:
       int n1; ///< number of grid along the 1st axis
       int MaxIterations; ///< max one turn Iteration number
-      int n; ///< n = n1 total number of grid
+      static int n; ///< n = n1 total number of grid
       double Csor; ///< boost Iteration speed
       double Precision; ///< X limit
       int t,d;
@@ -121,7 +122,8 @@ class GeFiCa::X : public TObject
       double *fdC1p; ///< distance between this and next grid points alone C1
       double *fdC1m; ///< distance between this and previous grid points alone C1
       double *fImpurity; ///< Value of the impurity level at a point on the grid
-      TMatrixDSparse *fA; ///<the matrix used for Conjugate Gradient
+      static TMatrixDSparse *fA; ///<the matrix used for Conjugate Gradient
+      static double * fb;///<static impurity matrix 
 
       /**
        * build matrix for Conjugate Gradient
@@ -156,6 +158,8 @@ class GeFiCa::X : public TObject
        * Calculate electric field after CalculatePotential.
        */
       virtual bool CalculateField(int idx);
+
+      static double ConjugateGradient(const double * x);
 };
 #endif
 
