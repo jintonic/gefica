@@ -94,6 +94,7 @@ ROOTMAP = $(LIBRARY:.so=.rootmap)
 
 SYMBOLS = `nm -CPu $(LIBRARY) |\
 	  awk -F: '/^T/{printf("(%s)\n",$$1)}' |\
+          grep -v operator|\
 	  sort -u | tr '\n' '|'|sed 's/|$$//'`
 ALLLIBS = $(wildcard $(shell $(ROOTCONFIG) --libdir)/*.so)
 DEPENDS = $(shell symbols=$(SYMBOLS); \
@@ -174,7 +175,7 @@ $(ROOTIFIED_SOURCE): $(HEADERS) $(LINKDEF)
 info: 
 	@echo
 	@echo "target:   $(LIBRARY) $(ROOTMAP)"
-	@echo "synbols:   $(SYMBOLS)"
+	@echo "symbols:   $(SYMBOLS)"
 	@echo "sources:  $(SOURCES)"
 	@echo "headers:  $(HEADERS)"
 	@echo "objects:  $(OBJECTS)"
