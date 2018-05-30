@@ -2,15 +2,14 @@
 #define GeFiCa_X_H
 
 #include <TObject.h>
-#include <TMatrixDSparse.h>
 #include <string>
+
 class TF1;
 
 namespace GeFiCa { 
    enum EMethod ///< Different methods to calculate fields
    {
       kAnalytic,
-      kConjugateGradient,
       kSOR2, ///< Successove over-relaxation method to the 2nd order
       kSOR4, ///< Successove over-relaxation method to the 4th order
    };
@@ -39,7 +38,7 @@ class GeFiCa::X : public TObject
    public:
       int n1; ///< number of grid along the 1st axis
       int MaxIterations; ///< max one turn Iteration number
-      static int n; ///< n = n1 total number of grid
+      int n; ///< n = n1 total number of grid
       double Csor; ///< boost Iteration speed
       double Precision; ///< X limit
       int t,d;
@@ -122,14 +121,6 @@ class GeFiCa::X : public TObject
       double *fdC1p; ///< distance between this and next grid points alone C1
       double *fdC1m; ///< distance between this and previous grid points alone C1
       double *fImpurity; ///< Value of the impurity level at a point on the grid
-      static TMatrixDSparse *fA; ///<the matrix used for Conjugate Gradient
-      static double * fb;///<static impurity matrix 
-
-      /**
-       * build matrix for Conjugate Gradient
-       * return if success
-       */
-      virtual bool BuildMatrix();
       
       /**
        * Sets the field step length.
@@ -159,7 +150,6 @@ class GeFiCa::X : public TObject
        */
       virtual bool CalculateField(int idx);
 
-      static double ConjugateGradient(const double * x);
 };
 #endif
 

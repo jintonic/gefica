@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 #include <TFile.h>
@@ -6,9 +7,8 @@ using namespace std;
 #include <TChain.h>
 #include <TVectorD.h>
 #include <TF1.h>
-#include <TMatrixDSparse.h>
-#include "Math/GSLMinimizer.h"
-#include "Math/Functor.h"
+#include <Math/GSLMinimizer.h>
+#include <Math/Functor.h>
 
 #include "X.h"
 #include "Units.h"
@@ -42,6 +42,8 @@ X::~X()
    if (fdC1m) delete[] fdC1m;
    if (fIsFixed) delete[] fIsFixed;
    if (fImpurity) delete[] fImpurity;
+   //if (fA) delete fA;
+   //if (fb) delete []fb;
 }
 //_____________________________________________________________________________
 //
@@ -124,6 +126,7 @@ bool X::Depleattest()
 //
 void X::SetStepLength(double steplength)
 {
+   cout<<"set step length"<<endl;
    //set field step length
    for (int i=n;i-->0;) {
       fIsFixed[i]=false;
@@ -140,89 +143,18 @@ int* X::FindSurrundingMatrix(int idx)
    tmp[0]=idx;
    if(idx-1<0)tmp[1]=1;
    else tmp[1]=idx-1;
-   if(idx+1>n)tmp[2]=n-1;
-   else tmp[1]=idx+1;
+   if(idx+1>=n)tmp[2]=n-2;
+   else tmp[2]=idx+1;
+   cout<<tmp[0]<<" "<<tmp[1]<<" "<<tmp[2]<<endl;
    return tmp;
 }
-double X::ConjugateGradient(const double * xx)
-{
-   TMatrixD *xT=new TMatrixD(1,n,xx);
-   TMatrixD *x=new TMatrixD(n,1,xx);
-   TMatrixD *b=new TMatrixD(1,n,fb);
-   return ((*xT)*(*fA)*(*x)+(*b)*(*x))(0,0);
-}
-bool X::BuildMatrix()
-{
-   fA=new TMatrixDSparse(n,n);
-   fb=new double[n];
-   for (int i=0;i<n;i++)
-   {
-      int dxm=fdC1m[i];
-      int dxp=fdC1p[i];
-      fb[i]=fImpurity[i]*(dxm+dxp);
-      if (dxm==0||dxp==0)return false;
-      double* tmp=new double[2];
-      tmp[1]=1/(dxp);
-      tmp[2]=1/(dxm);
-      tmp[0]=(1/dxm+1/dxp);
 
-      fA->SetMatrixArray(2,&i,FindSurrundingMatrix(i),tmp);
-
-   }
-   return true;
-}
-double atest(const double *x)
-{
-return -1;
-}
 //_____________________________________________________________________________
 //
 bool X::CalculatePotential(EMethod method)
 {
-   if(method==kConjugateGradient)
-   {
-      /*sudo code
-       *
-       * buildmatrix()
-       *
-       * double copyfPotential.copy(fpotential)
-       *loop(0->n)
-       *{
-       * step[i]=...//if fixed, make it 0
-       * setvar(copypotential[i],i)
-       * 
-       * }
-       * root::minimize(f(),x)
-      */
-      BuildMatrix();
-      double* fPotentialCopy=new double[n];
-      double* Steps=new double[n];
-      ROOT::Math::GSLMinimizer min( ROOT::Math::kVectorBFGS );
-
-      min.SetMaxFunctionCalls(1000000);
-      min.SetMaxIterations(100000);
-      min.SetTolerance(0.001);
-
-      ROOT::Math::Functor f(&ConjugateGradient,n);
-      //ROOT::Math::Functor f(&atest,n);//GeFiCa::X::ConjugateGradient,n);
-      
-      for(int i=0;i<n;i++)
-      {
-         fPotentialCopy[i]=fPotential[i];
-         if(fIsFixed[i])Steps[i]=0;
-         else Steps[i]=0.01;
-         const char *a=new char(i);
-         min.SetVariable(i,a,fPotentialCopy[i],Steps[i]);
-      }
-      min.Minimize();
-      for(int i=n;i-->0;)
-      {
-         fPotential[i]=fPotentialCopy[i];
-      }
-
-      return true;
-   }
    Impuritystr2tf();
+
    if (method==kAnalytic) return Analytic();
    int cnt=0;
    cout<<"MaxIterations: "<<MaxIterations<<endl;

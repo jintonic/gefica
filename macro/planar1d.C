@@ -1,17 +1,18 @@
 {
    // calculate fields
-   GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(101);
+   GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(11);
    detector->MaxIterations=10;
    detector->Csor=1.95;
-   detector->UpperBound=0.175;
+   detector->UpperBound=0.175*GeFiCa::cm;
    detector->V1=1000*GeFiCa::volt;
+   detector->V0=0*GeFiCa::volt;
    //detector->SetImpurity(1e10/GeFiCa::cm3);
-   detector->Impurity="1e10";
+//   detector->Impurity="1e10";
 
    //detector->CalculatePotential(GeFiCa::kSOR2);
-   detector->CalculatePotential(GeFiCa::kConjugateGradient);
+   detector->CalculatePotential(GeFiCa::kCG);
    detector->SaveField("planar1dSOR2.root");
-   
+  /* 
      
  //  detector->Impurity="0";
    for (int i=0;i<10;i++)
@@ -74,4 +75,5 @@
    leg->Draw();
    
    //cvs->SaveAs("planar1d.png");
+*/
 }

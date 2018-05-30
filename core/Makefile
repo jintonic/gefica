@@ -12,7 +12,8 @@ ROOTCONFIG = root-config
 ARCH      := $(shell $(ROOTCONFIG) --arch)
 ALTCXX    := $(shell $(ROOTCONFIG) --cxx)
 ROOTCFLAGS:= $(shell $(ROOTCONFIG) --cflags)
-ROOTLIBS  := $(shell $(ROOTCONFIG) --libs)
+ROOTLIBS  := $(shell $(ROOTCONFIG) --libs) -lMathMore
+
 
 ARCHOK     = no
 ifeq ($(ARCH),macosx64)
@@ -99,7 +100,7 @@ SYMBOLS = `nm -CPu $(LIBRARY) |\
 ALLLIBS = $(wildcard $(shell $(ROOTCONFIG) --libdir)/*.so)
 DEPENDS = $(shell symbols=$(SYMBOLS); \
 	  for so in $(ALLLIBS); \
-	  do nm  --defined-only $$so |\
+	  do nm -DC  --defined-only $$so |\
 	  grep -E 'T ('$$symbols')::' >/dev/null  &&\
 	  echo $$so;\
 	  done | sort -u | tr '\n' ' ')

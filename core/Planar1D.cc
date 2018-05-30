@@ -7,6 +7,7 @@ using namespace GeFiCa;
 
 void Planar1D::Initialize()
 {
+   cout<<"Initialize"<<endl;
    if (LowerBound>=UpperBound) {
       Warning("Initialize",
             "Lower bound (%f) >= upper bound (%f)! No grid is created!",
