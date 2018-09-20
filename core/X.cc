@@ -1,7 +1,3 @@
-#include <iostream>
-#include <vector>
-using namespace std;
-
 #include <TFile.h>
 #include <TTree.h>
 #include <TChain.h>
@@ -14,10 +10,9 @@ using namespace std;
 #include "Units.h"
 using namespace GeFiCa;
 
-X::X(int nx) : TObject(), MaxIterations(100000), Csor(1), Precision(1e-7),Impurity("0"),
-   V1(0), V0(2000), fIsFixed(0), fE1(0), fPotential(0), fC1(0),
-   fdC1p(0), fdC1m(0), fImpurity(0)
-{ 
+X::X(int nx) : TObject(), MaxIterations(100000), Csor(1),
+   Precision(1e-7),Impurity("0"), V1(0), V0(2000), fIsFixed(0), fE1(0),
+   fPotential(0), fC1(0), fdC1p(0), fdC1m(0), fImpurity(0) { 
    //claim a 1D field with nx grids
    n=nx;
    n1=nx; 
@@ -49,8 +44,7 @@ X::~X()
 //
 bool X::Analytic()
 {
-   // Analytic calculation
-   cout<<"no method can use"<<endl;
+   Printf("There is no analytic solution for this setup");
    return false; 
 }
 //_____________________________________________________________________________
@@ -67,10 +61,7 @@ void X::Add (GeFiCa::X *anotherfield)
    {
       fPotential[i]=fPotential[i]+anotherfield->fPotential[i];
    }
-   
 }
-
-
 //_____________________________________________________________________________
 //
 void X::Multiply (double p)
@@ -119,14 +110,12 @@ bool X::Depleattest()
 {
    int maxn=Findmax();
    int minn=Findmin(); 
-   //debug:cout<<"max: "<<fIsFixed[maxn]<<"min: "<<fIsFixed[minn]<<"minidx: "<<minn<<endl;
    return fIsFixed[maxn]&&fIsFixed[minn];
 }
 //_____________________________________________________________________________
 //
 void X::SetStepLength(double steplength)
 {
-   cout<<"set step length"<<endl;
    //set field step length
    for (int i=n;i-->0;) {
       fIsFixed[i]=false;
@@ -145,7 +134,6 @@ int* X::FindSurrundingMatrix(int idx)
    else tmp[1]=idx-1;
    if(idx+1>=n)tmp[2]=n-2;
    else tmp[2]=idx+1;
-   cout<<tmp[0]<<" "<<tmp[1]<<" "<<tmp[2]<<endl;
    return tmp;
 }
 
@@ -157,7 +145,6 @@ bool X::CalculatePotential(EMethod method)
 
    if (method==kAnalytic) return Analytic();
    int cnt=0;
-   cout<<"MaxIterations: "<<MaxIterations<<endl;
    while (cnt++<MaxIterations) {
       double XUpSum=0;
       double XDownSum=0;
@@ -170,8 +157,6 @@ bool X::CalculatePotential(EMethod method)
          if(diff>0)XUpSum+=(diff);
          else XUpSum-=(diff);
       }
-      if(cnt%10==0)
-         cout<<cnt<<"  "<<XUpSum/XDownSum<<" down: "<<XDownSum<<", up: "<<XUpSum<<endl;
       if (XUpSum/XDownSum<Precision) {
          for (int i=0; i<n; i++) if (!CalculateField(i)) return false;
          return true;
