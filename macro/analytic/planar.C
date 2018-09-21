@@ -1,8 +1,9 @@
+// definition of necessary units
 static const double cm=1;
 static const double cm3=cm*cm*cm;
 static const double volt=1;
 static const double C=1; // Coulomb
-static const double e=1.6e-19*C; // electron charge
+static const double e=1.6e-19*C; // elementary charge
 static const double epsilon0=8.854187817e-14*C/volt/cm; // vacuum permittivity
 // https://link.springer.com/chapter/10.1007/10832182_519
 static const double epsilon=15.8; // Ge dielectric constant
@@ -72,6 +73,7 @@ void drawV()
 //
 void drawE()
 {
+   TCanvas *c = new TCanvas;
    TLegend *l = new TLegend(0.45,0.65,0.68,0.98);
    l->SetHeader("Impurity [cm^{-3}]");
 
@@ -94,7 +96,7 @@ void drawE()
    fE[0]->GetYaxis()->SetTitle("Electric field [V/cm]");
 
    l->Draw();
-   gPad->Print("Ex.png");
+   c->Print("Ex.png");
 }
 //______________________________________________________________________________
 //

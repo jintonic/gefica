@@ -1,3 +1,4 @@
+// definition of necessary units
 static const double cm=1;
 static const double cm3=cm*cm*cm;
 static const double volt=1;
@@ -40,12 +41,13 @@ double E(double *coordinates, double *parameters)
 }
 //______________________________________________________________________________
 //
-const int n=5; // number of curves
-double rho[n]={-3.5e10*e/cm3, -1.5e10*e/cm3, 0, 1.5e10*e/cm3, 3.5e10*e/cm3};
+const int n=6; // number of curves
+double rho[n]={-3.5e10*e/cm3, -1.5e10*e/cm3, 0, 
+   1.5e10*e/cm3, 3.5e10*e/cm3, 6e10*e/cm3};
 
 void drawV()
 {
-   TLegend *l = new TLegend(0.65,0.60,0.90,0.95);
+   TLegend *l = new TLegend(0.75,0.55,0.98,0.98);
    l->SetHeader("Impurity [cm^{-3}]");
 
    TF1 *fV[n]={0};
@@ -58,7 +60,7 @@ void drawV()
       fV[i]->SetParameters(ri[i],ro[i],vi[i],vo[i],rho[i]);
       fV[i]->SetLineStyle(i+1);
       fV[i]->SetLineColor(i+1);
-      if (i+1==5) fV[i]->SetLineColor(kMagenta); // yellow -> magenta
+      if (i+1==5) fV[i]->SetLineColor(28); // yellow -> brown
       if (i==0) fV[i]->Draw();
       else fV[i]->Draw("same");
       l->AddEntry(fV[i],Form("%8.1e",rho[i]/e*cm3),"l");
@@ -74,7 +76,8 @@ void drawV()
 //
 void drawE()
 {
-   TLegend *l = new TLegend(0.45,0.65,0.68,0.98);
+   TCanvas *c = new TCanvas;
+   TLegend *l = new TLegend(0.75,0.55,0.98,0.98);
    l->SetHeader("Impurity [cm^{-3}]");
 
    TF1 *fE[n]={0};
@@ -87,7 +90,7 @@ void drawE()
       fE[i]->SetParameters(ri[i],ro[i],vi[i],vo[i],rho[i]);
       fE[i]->SetLineStyle(i+1);
       fE[i]->SetLineColor(i+1);
-      if (i+1==5) fE[i]->SetLineColor(kMagenta); // yellow -> magenta
+      if (i+1==5) fE[i]->SetLineColor(28); // yellow -> brown
       if (i==0) fE[i]->Draw();
       else fE[i]->Draw("same");
       l->AddEntry(fE[i],Form("%8.1e",rho[i]/e*cm3),"l");
@@ -97,7 +100,7 @@ void drawE()
    fE[0]->GetYaxis()->SetTitle("Electric field [V/cm]");
 
    l->Draw();
-   gPad->Print("Er.png");
+   c->Print("Er.png");
 }
 //______________________________________________________________________________
 //
@@ -116,7 +119,7 @@ void coaxial()
    gStyle->SetPadLeftMargin(0.12);
    gStyle->SetPadTopMargin(0.01);
    gStyle->SetPadBottomMargin(0.11);
-   
+
    drawV();
    drawE();
 }
