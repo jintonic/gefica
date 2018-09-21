@@ -63,13 +63,13 @@ void drawV()
    fV[0]->GetYaxis()->SetTitle("Voltage [V]");
 
    l->Draw();
-   gPad->Print("Vx.pdf");
+   gPad->Print("Vx.png");
 }
 //_____________________________________________________________________________
 //
 void drawE()
 {
-   TLegend *l = new TLegend(0.44,0.65,0.67,0.98);
+   TLegend *l = new TLegend(0.45,0.65,0.68,0.98);
    l->SetHeader("Impurity [cm^{-3}]");
 
    TF1 *fE[n]={0};
@@ -92,7 +92,7 @@ void drawE()
    fE[0]->GetYaxis()->SetTitle("Electric field [V/cm]");
 
    l->Draw();
-   gPad->Print("Ex.pdf");
+   gPad->Print("Ex.png");
 }
 //_____________________________________________________________________________
 //
@@ -101,14 +101,14 @@ void planar()
    gROOT->SetStyle("Plain"); // pick up a good default drawing style
    // modify the default style
    gStyle->SetLegendBorderSize(0);
-   gStyle->SetLegendFont(22);
-   gStyle->SetLabelFont(22,"XY");
-   gStyle->SetTitleFont(22,"XY");
+   gStyle->SetLegendFont(132);
+   gStyle->SetLabelFont(132,"XY");
+   gStyle->SetTitleFont(132,"XY");
    gStyle->SetLabelSize(0.05,"XY");
    gStyle->SetTitleSize(0.05,"XY");
-   gStyle->SetTitleOffset(1.1,"Y");
+   gStyle->SetTitleOffset(1.2,"Y");
    gStyle->SetPadRightMargin(0.01);
-   gStyle->SetPadLeftMargin(0.11);
+   gStyle->SetPadLeftMargin(0.12);
    gStyle->SetPadTopMargin(0.01);
    gStyle->SetPadBottomMargin(0.11);
    
