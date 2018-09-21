@@ -63,7 +63,7 @@ void drawV()
    fV[0]->GetYaxis()->SetTitle("Voltage [V]");
 
    l->Draw();
-   gPad->Print("planarV.pdf");
+   gPad->Print("Vx.pdf");
 }
 //_____________________________________________________________________________
 //
@@ -92,7 +92,7 @@ void drawE()
    fE[0]->GetYaxis()->SetTitle("Electric field [V/cm]");
 
    l->Draw();
-   gPad->Print("planarE.pdf");
+   gPad->Print("Ex.pdf");
 }
 //_____________________________________________________________________________
 //
