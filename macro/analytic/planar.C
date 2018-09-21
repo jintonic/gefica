@@ -33,7 +33,7 @@ double E(double *coordinates, double *parameters)
 
    double a =-rho/epsilon0/epsilon;
    double c2= (v1-v0)/(x1-x0) - a/2*(x1+x0);
-   return a*x + c2;
+   return -a*x - c2;
 }
 //_____________________________________________________________________________//
 const int n=5; // number of curves
