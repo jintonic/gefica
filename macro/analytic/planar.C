@@ -6,22 +6,24 @@ static const double e=1.6e-19*C; // electron charge
 static const double epsilon0=8.854187817e-14*C/volt/cm; // vacuum permittivity
 // https://link.springer.com/chapter/10.1007/10832182_519
 static const double epsilon=15.8; // Ge dielectric constant
-//_____________________________________________________________________________// V"(x)=a, https://www.wolframalpha.com/input/?i=f%27%27(x)%3Da
+//______________________________________________________________________________
+// V"(x)=a, https://www.wolframalpha.com/input/?i=V%27%27(x)%3Da
 double V(double *coordinates, double *parameters)
 {
-   double x = coordinates[0];
-   double x0= parameters[0];
-   double x1= parameters[1];
-   double v0= parameters[2];
-   double v1= parameters[3];
-   double rho=parameters[4];
+   double x = coordinates[0];// there is no phi and z dependence
+   double x0= parameters[0]; // lower electrode
+   double x1= parameters[1]; // upper electrode
+   double v0= parameters[2]; // lower voltage
+   double v1= parameters[3]; // upper voltage
+   double rho=parameters[4]; // space charge density [C/cm3]
 
    double a =-rho/epsilon0/epsilon;
    double c2= (v1-v0)/(x1-x0) - a/2*(x1+x0);
    double c1= (v0*x1-v1*x0)/(x1-x0) + a/2*x0*x1;
    return a*x*x/2 + c2*x + c1;
 }
-//_____________________________________________________________________________// E=-V'
+//______________________________________________________________________________
+// E=-V'
 double E(double *coordinates, double *parameters)
 {
    double x = coordinates[0];
@@ -35,8 +37,10 @@ double E(double *coordinates, double *parameters)
    double c2= (v1-v0)/(x1-x0) - a/2*(x1+x0);
    return -a*x - c2;
 }
-//_____________________________________________________________________________//
+//______________________________________________________________________________
+//
 const int n=5; // number of curves
+double rho[n]={-3.5e10*e/cm3, -1.5e10*e/cm3, 0, 1.5e10*e/cm3, 3.5e10*e/cm3};
 
 void drawV()
 {
@@ -45,7 +49,6 @@ void drawV()
 
    TF1 *fV[n]={0};
    double x0[n]={0}, x1[n], v0[n]={0}, v1[n];
-   double rho[n]={-3.5e10*e/cm3, -1.5e10*e/cm3, 0, 1.5e10*e/cm3, 3.5e10*e/cm3};
    for (int i=0; i<n; i++) {
       x1[i] = 1*cm;
       v1[i] = 2000*volt;
@@ -65,7 +68,7 @@ void drawV()
    l->Draw();
    gPad->Print("Vx.png");
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 void drawE()
 {
@@ -74,7 +77,6 @@ void drawE()
 
    TF1 *fE[n]={0};
    double x0[n]={0}, x1[n], v0[n]={0}, v1[n];
-   double rho[n]={-3.5e10*e/cm3, -1.5e10*e/cm3, 0, 1.5e10*e/cm3, 3.5e10*e/cm3};
    for (int i=0; i<n; i++) {
       x1[i] = 1*cm;
       v1[i] = 2000*volt;
@@ -94,7 +96,7 @@ void drawE()
    l->Draw();
    gPad->Print("Ex.png");
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 void planar()
 {
