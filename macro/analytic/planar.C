@@ -10,7 +10,7 @@ static const double epsilon=15.8; // Ge dielectric constant
 // V"(x)=a, https://www.wolframalpha.com/input/?i=V%27%27(x)%3Da
 double V(double *coordinates, double *parameters)
 {
-   double x = coordinates[0];// there is no phi and z dependence
+   double x = coordinates[0];// there is no y and z dependence
    double x0= parameters[0]; // lower electrode
    double x1= parameters[1]; // upper electrode
    double v0= parameters[2]; // lower voltage
