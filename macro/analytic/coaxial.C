@@ -63,7 +63,8 @@ void drawV()
       if (i+1==5) fV[i]->SetLineColor(28); // yellow -> brown
       if (i==0) fV[i]->Draw();
       else fV[i]->Draw("same");
-      l->AddEntry(fV[i],Form("%8.1e",rho[i]/e*cm3),"l");
+      // net impurity concentration = - rho/e
+      l->AddEntry(fV[i],Form("%8.1e",-rho[i]/e*cm3),"l");
    }
    fV[0]->SetTitle("");
    fV[0]->GetXaxis()->SetTitle("Radius [cm]");
@@ -93,7 +94,8 @@ void drawE()
       if (i+1==5) fE[i]->SetLineColor(28); // yellow -> brown
       if (i==0) fE[i]->Draw();
       else fE[i]->Draw("same");
-      l->AddEntry(fE[i],Form("%8.1e",rho[i]/e*cm3),"l");
+      // net impurity concentration = - rho/e
+      l->AddEntry(fE[i],Form("%8.1e",-rho[i]/e*cm3),"l");
    }
    fE[0]->SetTitle("");
    fE[0]->GetXaxis()->SetTitle("Radius [cm]");
