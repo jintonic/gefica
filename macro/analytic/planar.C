@@ -75,7 +75,7 @@ void drawV()
 void drawE()
 {
    TCanvas *c = new TCanvas;
-   TLegend *l = new TLegend(0.45,0.65,0.68,0.98);
+   TLegend *l = new TLegend(0.45,0.65,0.67,0.98);
    l->SetHeader("Impurity [cm^{-3}]");
 
    TF1 *fE[n]={0};
