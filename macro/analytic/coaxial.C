@@ -71,7 +71,7 @@ void drawV()
    fV[0]->GetYaxis()->SetTitle("Voltage [V]");
 
    l->Draw();
-   gPad->Print("Vr.png");
+   gPad->Print("Vrho.png");
 }
 //______________________________________________________________________________
 //
@@ -102,7 +102,7 @@ void drawE()
    fE[0]->GetYaxis()->SetTitle("Electric field [V/cm]");
 
    l->Draw();
-   c->Print("Er.png");
+   c->Print("Erho.png");
 }
 //______________________________________________________________________________
 //
