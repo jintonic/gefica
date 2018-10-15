@@ -1,29 +1,57 @@
 {
    GeFiCa::PointContactRZ *detector2 = new GeFiCa::PointContactRZ(690,505);
-   detector2->Radius=4;
-   detector2->ZUpperBound=3;
-   detector2->PointR=0.3;
-   detector2->PointDepth=0.;
-   detector2->ContactInnerR=1;
+   detector2->Radius=3.45;
+   detector2->ZUpperBound=5.05;
+   detector2->PointR=0.14;
+   detector2->PointDepth=0.21;
+   detector2->ContactInnerR=3.450;
 
    //TF2 *im=new TF2("f","-0.19175e10-0.025e10*y");
    //TF2 *im=new TF2("f","-0.318e10+0.025e10*y");
    //TF1 *im1=new TF1("f","-0.318e10+0.025e10*x",0,6.9);
 
    detector2->MaxIterations=1e5;
-   detector2->Precision=1e-7;
+   detector2->Precision=1e-6;
    detector2->Csor=1.994;
-   detector2->V0=1000*GeFiCa::volt;
+   detector2->V0=2500*GeFiCa::volt;
    detector2->V1=0*GeFiCa::volt;
 
    //TF1 *im=new TF1("","pol1",-0.318e10,0.025e10)
-   detector2->Impurity="-0.7e10+0.0e10*y";//-0.01e10/GeFiCa::cm3);
+   detector2->Impurity="-0.318e10+0.025e10*y";//-0.01e10/GeFiCa::cm3);
    //detector2->SetImpurity(0e10/GeFiCa::cm3);
    
-   detector2->CalculatePotential(GeFiCa::kSOR2);
-   detector2->SaveField("point2dSOR2.root");
+   //detector2->CalculatePotential(GeFiCa::kSOR2);
+   cout<<detector2->Depleattest()<<endl;
+   //detector2->SaveField("point2dSOR2.root");
    //detector2->LoadField("point21dSOR23.root");
-   
+
+   TCanvas * cvs=new TCanvas();
+   gStyle->SetOptTitle(kFALSE);
+   gStyle->SetPadTopMargin(0.02);
+   gStyle->SetPadRightMargin(0.01);
+   gStyle->SetPadLeftMargin(0.0999999999);
+   gStyle->SetLabelFont(22,"XY");
+   gStyle->SetLabelSize(0.06,"XY");
+   gStyle->SetTitleSize(0.05,"XY");
+   gStyle->SetTitleFont(22,"XY");
+   gStyle->SetLegendFont(22);
+   gStyle->SetCanvasColor(kBlack);
+   gStyle->SetOptStat(0);
+   //gStyle->SetPalette(1);
+
+   //hframe->Draw(); //you can set the axis att via hframe->GetXaxis()..
+   TH2F* h= new TH2F("hist","",10,-3.45,3.45,10,0,5.05);
+   TChain *ta = new TChain("t");
+   ta->Add("point2dSOR2.root");
+   ta->Draw("c2:c1:p>>hist","","colz");
+   h->GetYaxis()->SetTitle("Thickness [cm]");
+   h->GetXaxis()->SetTitle("Radius [cm]");
+   //th->FillN(ta->Get("c1"),ta->Get("c2"),ta->Get("p"));
+   //TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
+   //ga->GetXaxis()->SetRangeUser(-3.45,3.45);
+   //ga->GetYaxis()->SetRangeUser(0,5.0);
+   //ga->Draw("ap");
+
 /*
    // calculate fields
    GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(505);
@@ -49,13 +77,13 @@
    //cvs->SetFillColor(kBlack);
 
    TChain *ta = new TChain("t");
-   ta->Add("planar1dTrue.root");
+   ta->Adinputd("planar1dTrue.root");
    ta->Draw("e1:c1");
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
 
    // generate graphics
    TChain *tn = new TChain("t");
-   //tn->Add("point2dSOR2.root");
+   /input/tn->Add("point2dSOR2.root");
    //tn->Draw("c2*10:p","c1<0.00&&c1>-0.05");
   // TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
   
@@ -76,7 +104,7 @@
   
 
   // TGraph *gn = new TGraph(t->GetSelectedRows(), t->GetV2(), t->GetV1());
-
+nput
    // make final plot
    //gn->SetMarkerColor(kBlue);
    //gn->SetMarkerStyle(8);
@@ -87,7 +115,6 @@
    //gn->SetTitle("");
    
    //gn->Draw("ap");
-   //ga->Draw("l");
   
    TLegend *leg = new TLegend(0.2,0.6,0.5,0.8);
    leg->SetBorderSize(0);

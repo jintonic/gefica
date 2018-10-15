@@ -65,7 +65,9 @@ class GeFiCa::X : public TObject
       int Findmax();
       int Findmin();
       void Multiply(double p);
+      X& operator*=(double p);
       void Add(X *anotherfield);
+      X& operator+=(X *anotherfield);
       
       void CopyField(X *target);
       virtual void Initialize() {};

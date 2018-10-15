@@ -12,11 +12,11 @@ using namespace std;
 void PointContactRZ::BoundaryOnPointcontact()
 {
    int index=FindIdx(PointR,PointDepth,0,n2-1);
-   cout<<index<<" "<<fC1[index]<<" "<<fC2[index]<<endl;
+   //cout<<index<<" "<<fC1[index]<<" "<<fC2[index]<<endl;
    int idxZ=(index/n1-1)*n1;
    int idxPos=index%n1-1;
-   cout<<idxPos<<" "<<fC1[idxPos]<<" "<<fC2[idxPos]<<endl;
-   cout<<idxZ<<" "<<fC1[idxZ]<<" "<<fC2[idxZ]<<endl;
+   //cout<<idxPos<<" "<<fC1[idxPos]<<" "<<fC2[idxPos]<<endl;
+   //cout<<idxZ<<" "<<fC1[idxZ]<<" "<<fC2[idxZ]<<endl;
 
    for (int i=0;i<n1;i++) {
       if (PointDepth==0) break;
@@ -44,7 +44,7 @@ void PointContactRZ::BoundaryOnPointcontact()
       fdC1p[idxPos+i*n1-1]=fdC1m[idxPos+i*n1];
    }
    int idxNeg=n1-idxPos-1;
-   cout<<idxNeg<<" "<<fC1[idxNeg]<<" "<<fC2[idxNeg]<<endl;
+   //cout<<idxNeg<<" "<<fC1[idxNeg]<<" "<<fC2[idxNeg]<<endl;
    for(int i=0;i<n2;i++) {
       fC1[idxNeg+i*n1]=-PointR;//set r for the line where r is closest to pc's R 
 
@@ -127,29 +127,29 @@ bool PointContactRZ::CalculatePotential(EMethod method)
 {
    if (!fIsLoaded) Initialize();
 // this commentd block are slow depletion voltage finder
-// while(1)
-// {
-//    RZ::CalculatePotential(method);
-//    if(!X::Depleattest())
-//    {
-//        int maxn=Findmax();
-//        int minn=Findmin();
-//        if(V0>V1)
-//        {
-//           V0=(fPotential[maxn]-V0)*1.01+V0;
-//           V1=(V1-fPotential[minn])*1.01+fPotential[minn];
-//        }
-//        else
-//        {
-//           V1=(fPotential[maxn]-V1)*1.01+V1;
-//           V0=(V0-fPotential[minn])*1.01+fPotential[minn];
-//        }
-//        Initialize();
-//        RZ::CalculatePotential(method);
-//        cout<<V0<<" "<<V1<<endl;
-//    }
-//    else break;
-// }
+ while(0)
+ {
+    RZ::CalculatePotential(method);
+    if(!X::Depleattest())
+    {
+        int maxn=Findmax();
+        int minn=Findmin();
+        if(V0>V1)
+        {
+           V0=(fPotential[maxn]-V0)*1.01+V0;
+           V1=-(V1-fPotential[minn])*1.01+V1;
+        }
+        else
+        {
+           V1=(fPotential[maxn]-V1)*1.01+V1;
+           V0=-(V0-fPotential[minn])*1.01+V0;
+        }
+        Initialize();
+        RZ::CalculatePotential(method);
+        cout<<V0<<" "<<V1<<endl;
+    }
+    else break;
+ }
    return RZ::CalculatePotential(method);
 }
 //_____________________________________________________________________________

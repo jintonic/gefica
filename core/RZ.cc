@@ -50,9 +50,11 @@ void RZ::SOR2(int idx,bool elec)
       //over relax
    //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    tmp=Csor*(tmp-fPotential[idx])+fPotential[idx];
-   
+   //if need calculate depleted voltage
+   if (false){
    if(tmp<min)fPotential[idx]=min;
    else if(tmp>max)fPotential[idx]=max;
+   }
    else fPotential[idx]=tmp;
 
 
