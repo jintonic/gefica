@@ -1,13 +1,9 @@
-#include <iostream>
-using namespace std;
-
 #include "Planar1D.h"
 #include "Units.h"
 using namespace GeFiCa;
 
 void Planar1D::Initialize()
 {
-   cout<<"Initialize"<<endl;
    if (LowerBound>=UpperBound) {
       Warning("Initialize",
             "Lower bound (%f) >= upper bound (%f)! No grid is created!",
@@ -21,7 +17,6 @@ void Planar1D::Initialize()
    fIsFixed[n-1]=true;
    double slope = (V1-V0)/(n-1);
    for (int i=0; i<n; i++) fPotential[i]=V0+slope*i;
-   //for (int i=0; i<n; i++) fPotential[i]=V0;
    fPotential[n-1]=V1;
 }
 //_____________________________________________________________________________
@@ -40,14 +35,13 @@ bool Planar1D::Analytic()
    double a=-fImpurity[n-1]*Qe/2/epsilon;
    double b=(fPotential[n-1]-fPotential[0]-a*d*d)/d;
    double c=fPotential[0];
-   for (int i=0; i<n; i++) {
-      fPotential[i] = a*fC1[i]*fC1[i]+b*fC1[i]+c;
-      // Fixme: i+1 and i-1 may be out of range
+   for (int i=0; i<n; i++) fPotential[i] = a*fC1[i]*fC1[i]+b*fC1[i]+c;
+
+   for (int i=1; i<n-1; i++)
       fE1[i]=(fPotential[i+1]-fPotential[i-1])/(fdC1p[i]+fdC1m[i]);
-   }
-   cout<<"voltage for just    voltage"<<endl;
-   cout<<a*fC1[n-1]*fC1[n-1]-2*a*fC1[n-1]+c<<endl;
-   cout<<"distance"<<-fPotential[n-1]/a<<"cm"<<endl;
+   fE1[0]=(fPotential[1]-fPotential[0])/fdC1p[0];
+   fE1[n-1]=(fPotential[n-1]-fPotential[n-2])/fdC1m[n-1];
+
    return true;
 }
 //_____________________________________________________________________________
