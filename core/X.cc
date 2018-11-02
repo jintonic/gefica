@@ -66,21 +66,6 @@ X& X::operator+= (GeFiCa::X *anotherfield)
 }
 //_____________________________________________________________________________
 //
-void X::Add (GeFiCa::X *anotherfield)
-{
-   if (n!=anotherfield->n)
-   {
-      Warning("Add", 
-            "Only same type of detector can be added together! Do nothing.");
-      return;
-   }
-   for(int i=0;i<n;i++)
-   {
-      fPotential[i]=fPotential[i]+anotherfield->fPotential[i];
-   }
-}
-//_____________________________________________________________________________
-//
 X& X::operator*= (double p)
 {
    for(int i=0;i<n;i++)
@@ -88,15 +73,6 @@ X& X::operator*= (double p)
       fPotential[i]=fPotential[i]*p;
    }
    return *this;
-}
-//_____________________________________________________________________________
-//
-void X::Multiply (double p)
-{
-   for(int i=0;i<n;i++)
-   {
-      fPotential[i]=fPotential[i]*p;
-   }
 }
 //_____________________________________________________________________________
 //
@@ -139,16 +115,10 @@ bool X::Depleattest()
    bool MaxCheck=fIsFixed[maxn];
    if(fPotential[maxn]<0.999*(V0>V1?V0:V1))MaxCheck=true;
    int minn=Findmin(); 
-<<<<<<< HEAD
    bool MinCheck=fIsFixed[minn];
    if(fPotential[minn]>0.999*(V1>V0?V0:V1))MaxCheck=true;
    //debug:cout<<"max: "<<fIsFixed[maxn]<<"min: "<<fIsFixed[minn]<<"minidx: "<<minn<<endl;
    return MaxCheck&&MinCheck;
-   
-
-=======
-   return fIsFixed[maxn]&&fIsFixed[minn];
->>>>>>> 7d3f3ef1d02ca8970103c5d0492ab65ad0ef2bbd
 }
 //_____________________________________________________________________________
 //

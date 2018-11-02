@@ -58,16 +58,16 @@ quickerdepletionvoltagefinder()
    weightingPotential->CalculateCapacitance();
    int stepsize=1;
    wholedetector->CopyField(weightingPotential);
-   wholedetector->Multiply(2);
+   wholedetector=wholedetector*2;
    GeFiCa::PointContactRZ * multiweightPotential=new GeFiCa::PointContactRZ(100,100);
     multiweightPotential  ->CopyField(weightingPotential);
-   wholedetector->Add(justimpurity);
+   wholedetector=wholedetector+justimpurity;
    wholedetector->SaveField("beforejump");
    int stepsize=2;
    while(!wholedetector->Depleattest())
    {
-      multiweightPotential->Multiply(2);
-      wholedetector->Add(multiweightPotential);
+      multiweightPotential=multiweightPotential*2;
+      wholedetector=wholedetector+multiweightPotential;
       stepsize=stepsize*2;
    }
    double upper=stepsize;
@@ -77,8 +77,8 @@ quickerdepletionvoltagefinder()
    {
       mid=(upper+lower)/2;
       wholedetector->CopyField(weightingPotential);
-      wholedetector->Multiply(mid);
-      wholedetector->Add(justimpurity);
+      wholedetector=wholedetector*mid;
+      wholedetector=wholedetector+justimpurity;
       if(wholedetector->Depleattest())
       {
          upper=mid-1e-5;
