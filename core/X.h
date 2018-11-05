@@ -26,7 +26,7 @@ namespace GeFiCa {
 }
 
 /**
- * 1 D grid for field calculation.
+ * 1D grid for field calculation.
  *
  * Successive Over-Relaxation (SOR) method is used to calculate the field in a
  * grid. Please refer to https://mediatum.ub.tum.de/node?id=969435 for detailed
@@ -36,22 +36,18 @@ namespace GeFiCa {
 class GeFiCa::X : public TObject 
 {
    public:
-      int n1; ///< number of grid along the 1st axis
-      int MaxIterations; ///< max one turn Iteration number
-      int n; ///< n = n1 total number of grid
-      double Csor; ///< boost Iteration speed
-      double Precision; ///< X limit
+      int n1; ///< number of grid points along the 1st coordinate
+      int MaxIterations; ///< maximal iteration to be performed
+      int n; ///< total number of grid points (n = n1 in 1D case)
+      double Csor; ///< 1<=Csor<2, used to boost iteration speed
+      double Precision; ///< difference between two consecutive iterations
       int t,d;
       const char* Impurity; 
 
-      double V1;///< Volage of the cathode
-      double V0;///< Voltage of the anode
+      double V0;///< voltage of one electrode
+      double V1;///< voltage of the other electrode
 
    public:
-
-      /**
-       * X is a constructor, if given a number, no input is needed
-       */
       X(int nx=101 /**< Number of grid lines. */);
 
       virtual ~X();
@@ -61,7 +57,7 @@ class GeFiCa::X : public TObject
        */
       bool CalculatePotential(EMethod method=kSOR2);
       
-      bool IsDepleted();
+      bool IsDepleted(); ///< check if the detector is depleted
       int Findmax();
       int Findmin();
       X& operator*=(double p);
@@ -70,9 +66,9 @@ class GeFiCa::X : public TObject
       void CopyField(X *target);
       virtual void Initialize() {};
       /**
-       * find surunding index and return in int array
+       * find surrounding index and return in int array
        */
-      virtual int* FindSurrundingMatrix(int idx);
+      virtual int* FindSurroundingMatrix(int idx);
       /**
        * This function creates a new TFile and TTree and fills it from data
        * created by X::CalculatePotential.    
@@ -82,17 +78,15 @@ class GeFiCa::X : public TObject
        * calculate electric field after load
        */
       virtual void LoadField(const char *fin);
-      /*! \brief Ionizing impurity level method
-       * 
-       * This function takes an argument for the variable density. It can be used if you consider impurity to be constant.
-       * It is usualy in the form of 1e10/cm3 or some variation where cm3 is defined in the namespace GeFiCa.
+      /**
+       * Set average impurity of the crystal as a single number.
        */
-      void SetImpurity(double density) // If you can consider impurity to e constant
+      void SetImpurity(double density)
       { for (int i=0; i<n; i++) fImpurity[i]=density; }
       /**
-       * Another Important method involved in setting the impurity. This is used for a variable impurity level that changes with x.
+       * Set impurity that changes with x.
        */
-      void SetImpurity(TF1 * Im); // Used for the real change in impurity over x 
+      void SetImpurity(TF1 *fi1);
       /**
        * Returns the value for E under the first direction.
        */
@@ -113,8 +107,8 @@ class GeFiCa::X : public TObject
       ClassDef(X,1);
 
    protected:
-      bool * fIsFixed; ///< Is used to check if a value is fixed or if it can be modified. It is usally used to check boundary conditions and find out if you are on the edge.
-      bool fIsLoaded; ///< fIsLoaded is used to check if points in the grid have a value or not. If fIsLoaded returns true, the the points if the grid have value and you do not need to initialize, if it returns false you do.
+      bool * fIsFixed; ///< Is used to check if a value is fixed or if it can be modified. It is usually used to check boundary conditions and find out if you are on the edge.
+      bool fIsLoaded; ///< fIsLoaded is used to check if points in the grid have a value or not. If fIsLoaded returns true, the points if the grid have value and you do not need to initialize, if it returns false you do.
       double *fE1; ///< Electric field under the first coordinate (x, r, or rho) direction 
       double  *fPotential; ///< Potential in the referenced grid
       double *fC1; ///< the location under the first coordinate (x, r, or rho) direction
@@ -149,7 +143,6 @@ class GeFiCa::X : public TObject
        * Calculate electric field after CalculatePotential.
        */
       virtual bool CalculateField(int idx);
-
 };
 #endif
 

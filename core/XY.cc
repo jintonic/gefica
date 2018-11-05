@@ -11,7 +11,6 @@ XY::XY(unsigned short nx, unsigned short ny): X(nx*ny), n2(ny),
    fE2(0), fC2(0), fdC2p(0), fdC2m(0)
 {
    Impurity="0*y";
-   //claim a 2D field with n1*n2 Grid
    n=nx*ny; 
    n1=nx;
    fE2=new double[n];

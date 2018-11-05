@@ -11,9 +11,8 @@
 using namespace GeFiCa;
 
 X::X(int nx) : TObject(), MaxIterations(100000), Csor(1),
-   Precision(1e-7),Impurity("0"), V1(0), V0(2000), fIsFixed(0), fE1(0),
+   Precision(1e-7),Impurity("0"), V0(0), V1(2000), fIsFixed(0), fE1(0),
    fPotential(0), fC1(0), fdC1p(0), fdC1m(0), fImpurity(0) { 
-   //claim a 1D field with nx grids
    n=nx;
    n1=nx; 
    fIsLoaded=false;
@@ -134,7 +133,7 @@ void X::SetStepLength(double steplength)
 }
 //_____________________________________________________________________________
 //
-int* X::FindSurrundingMatrix(int idx)
+int* X::FindSurroundingMatrix(int idx)
 {
    int *tmp=new int[3];
    tmp[0]=idx;
@@ -319,19 +318,16 @@ void X::LoadField(const char * fin)
 }
 //_____________________________________________________________________________
 //
-void X::SetImpurity(TF1 * Im)
+void X::SetImpurity(TF1 *fi1)
 {
-   for(int i=n;i-->0;) {
-      fImpurity[i]=Im->Eval((double)fC1[i]);
-   }
+   for (int i=n;i-->0;) fImpurity[i]=fi1->Eval(fC1[i]);
 }
 //_____________________________________________________________________________
 //
 void X::Impuritystr2tf()
 {
-   const char *expression = Impurity;
-   TF1 * IM=new TF1("f",expression);
-   SetImpurity(IM);
+   TF1 *fi1 = new TF1("f",Impurity);
+   SetImpurity(fi1);
 }
 //_____________________________________________________________________________
 //

@@ -1,10 +1,3 @@
-///////////////////////
-//                   //
-//XY                 //
-//                   //
-//2D Field based on X//
-//it will create a 2D Field using cartesian coordinate and calculate the result
-///////////////////////
 #ifndef GeFiCa_XY_H
 #define GeFiCa_XY_H
 
@@ -13,15 +6,15 @@ class TF2;
 
 namespace GeFiCa { class XY; }
 
+/**
+ * 2D grid for field calculation in Cartesian coordinates.
+ */
 class GeFiCa::XY : public GeFiCa::X
 {
    public:
-      unsigned short n2; /**< number of steps along the 2nd axis*/
-   public:
-      /**
-      * XY is a constructor with default values n1,n2 = 101
-      */
-      XY(unsigned short n1=101, unsigned short n2=101);
+      unsigned short n2; ///< number of grid points along the 2nd coordinate
+
+      XY(unsigned short nx=101, unsigned short ny=101);
       
       virtual ~XY();
 
@@ -64,10 +57,7 @@ class GeFiCa::XY : public GeFiCa::X
       /**
       * Uses a binary search to return the index in two dimensions
       */
-      int FindIdx(double tarx,double tary
-            ,int ybegin,int yend);
-
-
+      int FindIdx(double tarx,double tary,int ybegin,int yend);
 
 		/**
       * Returns data for various variables. 
