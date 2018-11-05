@@ -41,17 +41,20 @@ class GeFiCa::Planar1D : public GeFiCa::X
       /**
        * Analytic calculation of 1D field with fixed impurity concentration.
        *
-       * In case of fixed impurity, potential(x) = a x^2 + b x + c with
-       * boundary conditions:
+       * In case of fixed impurity, rho, the solution of Poisson's Equation
+       *
+       *     d^2 p / dx^2 = -rho/epsilon
+       *
+       * with boundary conditions:
        *
        * - potential(0) = V0,
        * - potential(d) = V1,
        *
-       * where d = UpperBound - LowerBound. It also obeys Gauss's Law:
+       * where, d = UpperBound - LowerBound, is
        *
-       * - d^2 p / dx^2 = -rho/epsilon
+       *     potential(x) = a x^2 + b x + c 
        *
-       * So, 
+       * where, 
        *
        * - a = - rho/2/epsilon
        * - b = (V1-V0 - ad^2)/d
