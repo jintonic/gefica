@@ -108,7 +108,7 @@ int X::Findmin()
 }
 //_____________________________________________________________________________
 //
-bool X::Depleattest()
+bool X::IsDepleted()
 {
    //this block only apply to old method which does not work now.
    int maxn=Findmax();

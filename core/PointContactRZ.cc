@@ -130,7 +130,7 @@ bool PointContactRZ::CalculatePotential(EMethod method)
  while(0)
  {
     RZ::CalculatePotential(method);
-    if(!X::Depleattest())
+    if(!X::IsDepleted())
     {
         int maxn=Findmax();
         int minn=Findmin();

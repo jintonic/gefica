@@ -61,7 +61,7 @@ class GeFiCa::X : public TObject
        */
       bool CalculatePotential(EMethod method=kSOR2);
       
-      bool Depleattest();
+      bool IsDepleted();
       int Findmax();
       int Findmin();
       X& operator*=(double p);
