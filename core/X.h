@@ -60,6 +60,7 @@ class GeFiCa::X : public TObject
       bool IsDepleted(); ///< check if the detector is depleted
       int Findmax();
       int Findmin();
+
       X& operator*=(double p);
       X& operator+=(X *anotherfield);
       

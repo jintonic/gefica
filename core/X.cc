@@ -12,7 +12,8 @@ using namespace GeFiCa;
 
 X::X(int nx) : TObject(), MaxIterations(100000), Csor(1),
    Precision(1e-7),Impurity("0"), V0(0), V1(2000), fIsFixed(0), fE1(0),
-   fPotential(0), fC1(0), fdC1p(0), fdC1m(0), fImpurity(0) { 
+   fPotential(0), fC1(0), fdC1p(0), fdC1m(0), fImpurity(0)
+{ 
    n=nx;
    n1=nx; 
    fIsLoaded=false;
@@ -36,8 +37,6 @@ X::~X()
    if (fdC1m) delete[] fdC1m;
    if (fIsFixed) delete[] fIsFixed;
    if (fImpurity) delete[] fImpurity;
-   //if (fA) delete fA;
-   //if (fb) delete []fb;
 }
 //_____________________________________________________________________________
 //
@@ -48,27 +47,23 @@ bool X::Analytic()
 }
 //_____________________________________________________________________________
 //
-X& X::operator+= (GeFiCa::X *anotherfield)
+X& X::operator+=(GeFiCa::X *anotherfield)
 {
-   if (n!=anotherfield->n)
-   {
+   if (n!=anotherfield->n) {
       Warning("Add", 
             "Only same type of detector can be added together! Do nothing.");
       return *this; 
    }
-   for(int i=0;i<n;i++)
-   {
+   for (int i=0; i<n; i++) {
       fPotential[i]=fPotential[i]+anotherfield->fPotential[i];
    }
    return *this;
-   
 }
 //_____________________________________________________________________________
 //
-X& X::operator*= (double p)
+X& X::operator*=(double p)
 {
-   for(int i=0;i<n;i++)
-   {
+   for (int i=0; i<n; i++) {
       fPotential[i]=fPotential[i]*p;
    }
    return *this;
