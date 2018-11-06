@@ -10,10 +10,10 @@ namespace GeFiCa { class XYZ; }
 class GeFiCa::XYZ : public GeFiCa::XY
 {
    public:
-      unsigned short n3; // number of steps along the 3nd axis
+      int n3; ///< number of grid points along the 3nd coordinate
 
    public:
-      XYZ(unsigned short n1=101, unsigned short n2=11,unsigned short n3=11);
+      XYZ(int n1=101, int n2=11, int n3=11);
       
       virtual ~XYZ();
 
@@ -38,7 +38,6 @@ class GeFiCa::XYZ : public GeFiCa::XY
       virtual int FindIdx(double tarx,double tary,
             double tarz,int begin,int end);
       virtual void SOR2(int idx,bool elec); 
-      virtual void Impuritystr2tf();
       virtual bool CalculateField(int idx);
 };
 #endif

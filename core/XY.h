@@ -12,9 +12,9 @@ namespace GeFiCa { class XY; }
 class GeFiCa::XY : public GeFiCa::X
 {
    public:
-      unsigned short n2; ///< number of grid points along the 2nd coordinate
+      int n2; ///< number of grid points along the 2nd coordinate
 
-      XY(unsigned short nx=101, unsigned short ny=101);
+      XY(int nx=101, int ny=101);
       
       virtual ~XY();
 
@@ -36,12 +36,11 @@ class GeFiCa::XY : public GeFiCa::X
       * Returns the two dimensional impurity
       */
       double GetImpurity(double x,double y){return GetData(x,y,kImpurity);};
-
    	/**
    	* Method involved in setting the impurity. 
    	* This is used for a variable impurity level that changes with x
    	*/
-      void SetImpurity(TF2 * Im);
+      void SetImpurity(TF2 *Im);
 		/**
 		* This defines the class for the CINT library
 		*/
@@ -53,18 +52,15 @@ class GeFiCa::XY : public GeFiCa::X
       double *fC2; /**< The location under the second coordinate (x, r, or rho) direction*/
       double *fdC2p; ///< distance between this and next grid points alone C2
       double *fdC2m; ///< distance between this and previous grid points alone C2
-      //left and right are for y axis
       /**
       * Uses a binary search to return the index in two dimensions
       */
       int FindIdx(double tarx,double tary,int ybegin,int yend);
-
-		/**
-      * Returns data for various variables. 
-      */
+      /**
+       * Returns data for various variables. 
+       */
       double GetData(double tarx,double tary,EOutput output); 
       void SetStepLength(double steplength1,double steplength2); 
-      virtual void Impuritystr2tf();
       virtual bool CalculateField(int idx);
 };
 #endif 

@@ -21,7 +21,7 @@
    //detector2->SetImpurity(0e10/GeFiCa::cm3);
    
    //detector2->CalculatePotential(GeFiCa::kSOR2);
-   cout<<detector2->Depleattest()<<endl;
+   cout<<detector2->IsDepleted()<<endl;
    //detector2->SaveField("point2dSOR2.root");
    //detector2->LoadField("point21dSOR23.root");
 

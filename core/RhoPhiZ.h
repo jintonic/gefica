@@ -9,7 +9,7 @@ namespace GeFiCa { class RhoPhiZ; }
 class GeFiCa::RhoPhiZ : public GeFiCa::XYZ
 {
    public:
-      RhoPhiZ(unsigned short n1, unsigned short n2,unsigned short n3): XYZ(n1,n2,n3) {t=2;d=3;};
+      RhoPhiZ(unsigned short n1, unsigned short n2,unsigned short n3): XYZ(n1,n2,n3) {};
       virtual ~RhoPhiZ(){};
       virtual double GetPotential(double rho,double phi,double z){return GetData(rho,phi,z,kPotential);};
       virtual double GetE1(double rho,double phi,double z){return GetData(rho,phi,z,kE1);};

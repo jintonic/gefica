@@ -37,19 +37,16 @@ class GeFiCa::X : public TObject
 {
    public:
       int n1; ///< number of grid points along the 1st coordinate
-      int MaxIterations; ///< maximal iteration to be performed
       int n; ///< total number of grid points (n = n1 in 1D case)
       double Csor; ///< 1<=Csor<2, used to boost iteration speed
       double Precision; ///< difference between two consecutive iterations
-      int t,d;
-      const char* Impurity; 
+      int MaxIterations; ///< maximal iteration to be performed
 
       double V0;///< voltage of one electrode
       double V1;///< voltage of the other electrode
 
    public:
-      X(int nx=101 /**< Number of grid lines. */);
-
+      X(int nx=101 /**< [in] Number of grid points */);
       virtual ~X();
       /**
        * Calculate potential using various methods.
@@ -64,7 +61,6 @@ class GeFiCa::X : public TObject
       X& operator*=(double p);
       X& operator+=(X *anotherfield);
       
-      void CopyField(X *target);
       virtual void Initialize() {};
       /**
        * find surrounding index and return in int array
@@ -102,6 +98,7 @@ class GeFiCa::X : public TObject
        * Returns the potential.
        */ 
       double GetPotential(double x){return GetData(x,kPotential);};
+      void Copy(const X&);
       /**
        *This defines the class for the cint dictionary.
        */
@@ -116,7 +113,6 @@ class GeFiCa::X : public TObject
       double *fdC1p; ///< distance between this and next grid points alone C1
       double *fdC1m; ///< distance between this and previous grid points alone C1
       double *fImpurity; ///< Value of the impurity level at a point on the grid
-      
       /**
        * Sets the field step length.
        */
@@ -137,9 +133,6 @@ class GeFiCa::X : public TObject
        * Uses Second order Successive Over-Relaxation method to calculate the field.
        */
       virtual void SOR2(int idx,bool calculateElectricField); 
-
-      virtual void Impuritystr2tf();
-
       /**
        * Calculate electric field after CalculatePotential.
        */

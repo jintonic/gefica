@@ -10,14 +10,11 @@
 #include "Units.h"
 using namespace GeFiCa;
 
-X::X(int nx) : TObject(), MaxIterations(100000), Csor(1),
-   Precision(1e-7),Impurity("0"), V0(0), V1(2000), fIsFixed(0), fE1(0),
-   fPotential(0), fC1(0), fdC1p(0), fdC1m(0), fImpurity(0)
+X::X(int nx) : TObject(), n1(nx), n(nx), Csor(1.95), Precision(1e-7),
+   MaxIterations(100000), V0(0), V1(2000*volt)
 { 
-   n=nx;
-   n1=nx; 
-   fIsLoaded=false;
    if (n<10) { n=11; n1=11; }
+   fIsLoaded=false;
    fE1=new double[n];
    fC1=new double[n];
    fPotential=new double[n];
@@ -25,6 +22,23 @@ X::X(int nx) : TObject(), MaxIterations(100000), Csor(1),
    fdC1p=new double[n];
    fdC1m=new double[n];
    fImpurity=new double[n];
+}
+//_____________________________________________________________________________
+//
+void X::Copy(const X &xp)
+{
+   n=xp.n; n1=xp.n1;
+   fIsLoaded=xp.fIsLoaded;
+   for (int i=0; i<n; i++) {
+      fE1[i]=xp.fE1[i];
+      fC1[i]=xp.fC1[i];
+      fPotential[i]=xp.fPotential[i];
+      fIsFixed[i]=xp.fIsFixed[i];
+      fdC1p[i]=xp.fdC1p[i];
+      fdC1m[i]=xp.fdC1m[i];
+      fImpurity[i]=xp.fImpurity[i];
+   }
+   V0=xp.V0; V1=xp.V1;
 }
 //_____________________________________________________________________________
 //
@@ -54,18 +68,17 @@ X& X::operator+=(GeFiCa::X *anotherfield)
             "Only same type of detector can be added together! Do nothing.");
       return *this; 
    }
-   for (int i=0; i<n; i++) {
+   for (int i=0; i<n; i++)
       fPotential[i]=fPotential[i]+anotherfield->fPotential[i];
-   }
+   V0+=anotherfield->V0; V1+=anotherfield->V1;
    return *this;
 }
 //_____________________________________________________________________________
 //
 X& X::operator*=(double p)
 {
-   for (int i=0; i<n; i++) {
-      fPotential[i]=fPotential[i]*p;
-   }
+   for (int i=0; i<n; i++) fPotential[i]=fPotential[i]*p;
+   V0*=p; V1*=p;
    return *this;
 }
 //_____________________________________________________________________________
@@ -104,15 +117,15 @@ int X::Findmin()
 //
 bool X::IsDepleted()
 {
-   //this block only apply to old method which does not work now.
    int maxn=Findmax();
-   bool MaxCheck=fIsFixed[maxn];
-   if(fPotential[maxn]<0.999*(V0>V1?V0:V1))MaxCheck=true;
+   bool upperBorderReached=fIsFixed[maxn];
+   if (fPotential[maxn]-(V0>V1?V0:V1)<0.00001) upperBorderReached=true;
+   
    int minn=Findmin(); 
-   bool MinCheck=fIsFixed[minn];
-   if(fPotential[minn]>0.999*(V1>V0?V0:V1))MaxCheck=true;
-   //debug:cout<<"max: "<<fIsFixed[maxn]<<"min: "<<fIsFixed[minn]<<"minidx: "<<minn<<endl;
-   return MaxCheck&&MinCheck;
+   bool lowerBorderReached=fIsFixed[minn];
+   if ((V1>V0?V0:V1)-fPotential[minn]<0.00001) lowerBorderReached=true;
+   
+   return upperBorderReached && lowerBorderReached;
 }
 //_____________________________________________________________________________
 //
@@ -138,13 +151,10 @@ int* X::FindSurroundingMatrix(int idx)
    else tmp[2]=idx+1;
    return tmp;
 }
-
 //_____________________________________________________________________________
 //
 bool X::CalculatePotential(EMethod method)
 {
-   Impuritystr2tf();
-
    if (method==kAnalytic) return Analytic();
    int cnt=0;
    while (cnt++<MaxIterations) {
@@ -178,7 +188,6 @@ void X::SOR2(int idx,bool elec)
    double tmp=-density/epsilon*h2*h3/2+(h3*fPotential[idx-1]+h2*fPotential[idx+1])/(h2+h3);
    // over-relaxation if Csor>1
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
-
 }
 //_____________________________________________________________________________
 //
@@ -213,14 +222,6 @@ double X::GetData(double tarx, EOutput output)
       default: return -1;
    }
    return -1;
-}
-//_____________________________________________________________________________
-//
-void X::CopyField(GeFiCa::X *target)
-{
-   target->SaveField("tmp");
-   this->LoadField("tmp");
-
 }
 //_____________________________________________________________________________
 //
@@ -316,13 +317,6 @@ void X::LoadField(const char * fin)
 void X::SetImpurity(TF1 *fi1)
 {
    for (int i=n;i-->0;) fImpurity[i]=fi1->Eval(fC1[i]);
-}
-//_____________________________________________________________________________
-//
-void X::Impuritystr2tf()
-{
-   TF1 *fi1 = new TF1("f",Impurity);
-   SetImpurity(fi1);
 }
 //_____________________________________________________________________________
 //

@@ -7,12 +7,9 @@
 #include "Units.h"
 using namespace GeFiCa;
 
-XY::XY(unsigned short nx, unsigned short ny): X(nx*ny), n2(ny),
-   fE2(0), fC2(0), fdC2p(0), fdC2m(0)
+XY::XY(int nx, int ny): X(nx*ny), n2(ny), fE2(0), fC2(0), fdC2p(0), fdC2m(0)
 {
-   Impurity="0*y";
    n=nx*ny; 
-   n1=nx;
    fE2=new double[n];
    fC2=new double[n];
    fdC2m=new double[n];
@@ -50,7 +47,6 @@ void XY::SetStepLength(double steplength1,double steplength2)
 using namespace std;
 void XY::SOR2(int idx,bool elec)
 {
-
    // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return;
    double density=fImpurity[idx]*Qe;
@@ -96,9 +92,6 @@ int XY::FindIdx(double tarx,double tary ,int ybegin,int yend)
 //
 double XY::GetData(double tarx, double tary, EOutput output)
 {
-   // for (int i=0;i<n;i++)
-   //  cout<<fdC1p[i]<<" "<<i<<endl;
-
    int idx=FindIdx(tarx,tary,0,n2-1);
 
    //test
@@ -170,7 +163,6 @@ void XY::SaveField(const char * fout)
    file->Write();
    file->Close();
    delete file;
-
 }
 //_____________________________________________________________________________
 //
@@ -208,19 +200,9 @@ void XY::LoadField(const char * fin)
 }
 //_____________________________________________________________________________
 //
-void XY::SetImpurity(TF2 * Im)
+void XY::SetImpurity(TF2 *Im)
 {
-   for(int i=n;i-->0;) {
-      fImpurity[i]=Im->Eval(fC1[i],fC2[i]);
-   }
-}
-//_____________________________________________________________________________
-//
-void XY::Impuritystr2tf()
-{
-   const char* expression = Impurity;
-   TF2 * IM=new TF2("f",expression);
-   SetImpurity(IM);
+   for (int i=n;i-->0;) fImpurity[i] = Im->Eval(fC1[i], fC2[i]);
 }
 //_____________________________________________________________________________
 //

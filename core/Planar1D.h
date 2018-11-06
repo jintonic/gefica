@@ -21,8 +21,7 @@ class GeFiCa::Planar1D : public GeFiCa::X
       double LowerBound;///< lower boundary of the planar detector
 
    public :
-      Planar1D(int nx=101) : X(nx), UpperBound(1), LowerBound(0) 
-      {}; 
+      Planar1D(int nx=101) : X(nx), UpperBound(1), LowerBound(0) {}; 
 
       /**
        * Calculate the step length of the grid.

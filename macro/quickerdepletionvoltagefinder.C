@@ -54,7 +54,7 @@ quickerdepletionvoltagefinder()
    weightingPotential->Impurity="0+0*y";
    //weightingPotential->CalculatePotential(GeFiCa::kSOR2);
    //weightingPotential->SaveField("wp");
-   weightingPotential->LoadField("wp.root");
+   weightingPotential->LoadField("wp");
    weightingPotential->CalculateCapacitance();
    int stepsize=1;
    wholedetector->CopyField(weightingPotential);
@@ -64,7 +64,7 @@ quickerdepletionvoltagefinder()
    wholedetector=wholedetector+justimpurity;
    wholedetector->SaveField("beforejump");
    int stepsize=2;
-   while(!wholedetector->Depleattest())
+   while(!wholedetector->IsDepleted())
    {
       multiweightPotential=multiweightPotential*2;
       wholedetector=wholedetector+multiweightPotential;
@@ -79,7 +79,7 @@ quickerdepletionvoltagefinder()
       wholedetector->CopyField(weightingPotential);
       wholedetector=wholedetector*mid;
       wholedetector=wholedetector+justimpurity;
-      if(wholedetector->Depleattest())
+      if(wholedetector->IsDepleted())
       {
          upper=mid-1e-5;
       }
