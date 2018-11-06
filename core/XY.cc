@@ -9,7 +9,7 @@ using namespace GeFiCa;
 
 XY::XY(int nx, int ny): X(nx*ny), n2(ny), fE2(0), fC2(0), fdC2p(0), fdC2m(0)
 {
-   n=nx*ny; 
+   n1=nx; // n1 is set to nx*ny through X constructor, it is fixed here
    fE2=new double[n];
    fC2=new double[n];
    fdC2m=new double[n];

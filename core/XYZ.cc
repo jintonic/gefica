@@ -10,8 +10,7 @@ using namespace GeFiCa;
 XYZ::XYZ(int nx, int ny, int nz): XY(nx,ny*nz), n3(nz), fE3(0), fC3(0),
    fdC3p(0), fdC3m(0)
 { 
-   n2=ny;
-   n=n1*n2*n3;
+   n2=ny; // n2 is set to ny*nz through XY constructor, it is fixed here
    fE3=new double[n];
    fC3=new double[n];
    fdC3p=new double[n];
