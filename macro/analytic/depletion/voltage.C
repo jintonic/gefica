@@ -3,121 +3,142 @@ static const double cm=1;
 static const double cm3=cm*cm*cm;
 static const double volt=1;
 static const double C=1; // Coulomb
-static const double e=1.6e-19*C; // elementary charge
+static const double Qe=1.6e-19*C; // elementary charge
 static const double epsilon0=8.854187817e-14*C/volt/cm; // vacuum permittivity
 // https://link.springer.com/chapter/10.1007/10832182_519
-static const double epsilon=15.8; // Ge dielectric constant
+static const double epsilonGe=15.8; // Ge dielectric constant
 //______________________________________________________________________________
 // V"(x)=a, https://www.wolframalpha.com/input/?i=V%27%27(x)%3Da
 double V(double *coordinates, double *parameters)
 {
-   double x = coordinates[0];// there is no y and z dependence
-   double x0= parameters[0]; // lower electrode
-   double x1= parameters[1]; // upper electrode
-   double v0= parameters[2]; // lower voltage
-   double v1= parameters[3]; // upper voltage
-   double rho=parameters[4]; // space charge density [C/cm3]
+   double x = coordinates[0];  // there is no y and z dependence
+   double x0= 0*cm;            // lower electrode
+   double x1= parameters[0];   // upper electrode
+   double v0= 0*volt;          // lower voltage
+   double v1= parameters[1];   // upper voltage
+   double rho=parameters[2]*Qe;// space charge density [C/cm3]
 
-   double a =-rho/epsilon0/epsilon;
+   double a =-rho/epsilon0/epsilonGe;
    double c2= (v1-v0)/(x1-x0) - a/2*(x1+x0);
    double c1= (v0*x1-v1*x0)/(x1-x0) + a/2*x0*x1;
    return a*x*x/2 + c2*x + c1;
 }
 //______________________________________________________________________________
-// E=-V'
-double E(double *coordinates, double *parameters)
+// search for depletion voltage of a planar detector given impurity & thickness
+double GetVdep(double impurity, double thickness)
 {
-   double x = coordinates[0];
-   double x0= parameters[0];
-   double x1= parameters[1];
-   double v0= parameters[2];
-   double v1= parameters[3];
-   double rho=parameters[4];
+   if (impurity==0) return 0; // nothing to deplete
 
-   double a =-rho/epsilon0/epsilon;
-   double c2= (v1-v0)/(x1-x0) - a/2*(x1+x0);
-   return -a*x - c2;
+   TF1 *det=new TF1("det", V, 0, thickness, 3); // potential distr.
+   double vlower=0*volt, vupper=2e4*volt; // range of search
+   while (vupper-vlower>1e-3*volt) { // binary search
+      double bias=(vupper+vlower)/2; // bias voltage
+      det->SetParameters(thickness, bias, impurity);
+      if (det->Derivative(0)*det->Derivative(thickness)<0) vlower=bias;
+      else vupper=bias;
+   }
+   return bias;
 }
 //______________________________________________________________________________
-//
-const int n=5; // number of curves
-double rho[n]={-3.5e10*e/cm3, -1.5e10*e/cm3, 0, 1.5e10*e/cm3, 3.5e10*e/cm3};
-
-// search for depletion voltage of a planar detector with given impurity
-
-void voltage(double impurity=5e10/*1/cm^3*/, double thickness=1/*cm*/)
+// draw results
+void voltage(double thickness=1*cm)
 {
-   // potential due to impurity alone
-   GeFiCa::Planar1D impurityPotential;
-   impurityPotential.SetImpurity(impurity/GeFiCa::cm3);
-   impurityPotential.V1=0;
-   impurityPotential.UpperBound=thickness*GeFiCa::cm;
-   impurityPotential.CalculatePotential(GeFiCa::kSOR2);
+   const int n=10; // number of points
+   double vdep[n], impurity[n]={1e9/cm3, 2e9/cm3, 4e9/cm3, 8e9/cm3, 1e10/cm3,
+      2e10/cm3, 4e10/cm3, 8e10/cm3, 1e11/cm3, 1.2e11/cm3};
+   for (int i=0; i<n; i++) vdep[i] = GetVdep(impurity[i], thickness);
 
-   // weighting potential
-   GeFiCa::Planar1D weightingPotential;
-   weightingPotential.SetImpurity(0);
-   weightingPotential.V1=1*GeFiCa::volt;
-   weightingPotential.UpperBound=thickness*GeFiCa::cm;
-   weightingPotential.CalculatePotential(GeFiCa::kSOR2);
+   gROOT->SetStyle("Plain"); // pick up a good default drawing style
+   // modify the default style
+   gStyle->SetLegendBorderSize(0);
+   gStyle->SetLegendFont(132);
+   gStyle->SetTextFont(132);
+   gStyle->SetLabelFont(132,"XY");
+   gStyle->SetTitleFont(132,"XY");
+   gStyle->SetLabelSize(0.05,"XY");
+   gStyle->SetTitleSize(0.05,"XY");
+   gStyle->SetTitleOffset(1.1,"XY");
+   gStyle->SetPadRightMargin(0.01);
+   gStyle->SetPadLeftMargin(0.11);
+   gStyle->SetPadTopMargin(0.01);
+   gStyle->SetPadBottomMargin(0.12);
+   
+   // Vdep VS impurity
+   TGraph *g = new TGraph(n,impurity,vdep);
+   g->SetTitle(";Impurity [cm^{-3}];Depletion Voltage [V]");
+   g->Draw("apc");
+   TText *t1 = new TText(2e9, 6000, Form(
+            "%.0f cm thick planar detector", thickness/cm));
+   t1->Draw();
+   gPad->SetLogx(); gPad->SetGridx(); gPad->SetGridy();
+   gPad->Print("depleted.png");
 
-   // total potential = impurity potential + V * weighting potential
-   GeFiCa::Planar1D totalPotential;
-   double lower=0, upper=20000*GeFiCa::volt; // limits of trials
-   double vdep;
-   while (lower<upper) {
-      vdep=(upper+lower)/2;
-      totalPotential.Copy(weightingPotential);
-      totalPotential*=vdep;
-      totalPotential+=&impurityPotential;
-      if (totalPotential.IsDepleted()) upper=vdep-1e-5;
-      else lower=vdep+1e-5;
-   }
-   cout<<"depletion voltage is: "<<vdep/GeFiCa::volt<<" V"<<endl;
-}
+   // voltage VS thickness
+   TCanvas *c = new TCanvas;
+   double bias = 1000*volt;
 
-//______________________________________________________________________________
-//
-bool isDepleted(double we0,double we1,double im0, double im1)
-{
-   return ((we0+im0<0)==(we1+im1<0))||(we0+im0==0)||(we1+im1==0);
-}
-//______________________________________________________________________________
-//
-double *findDepletedVoltage()
-{
-   TF1 *fwe=new TF1("fwe", E, 0, 1*cm,5);
-   fwe->SetParameters(0,1*cm,0,1*cm,0);
+   // over depleted
+   TF1 *fvo=new TF1("fvo", V, 0, thickness, 3);
+   fvo->SetParameters(thickness, vdep[6]+bias, impurity[6]);
+   fvo->SetTitle(";Thickness [cm]; Voltage [V]");
+   fvo->SetLineColor(kMagenta);
+   fvo->SetLineStyle(2);
+   fvo->GetXaxis()->SetTitleOffset(1.1);
+   fvo->Draw();
 
-   TF1 *fim[n]={0};
-   double x0[n]={0}, x1[n], v0[n]={0}, v1[n];
-   double *dv=new double[n];
-   for (int i=0; i<n; i++) 
-   {
-      x1[i] = 1*cm;
-      v1[i] = 0*volt;
-      fim[i] = new TF1(Form("fim%d",i), E, x0[i], x1[i], 5);
-      fim[i]->SetParameters(x0[i],x1[i],v0[i],v1[i],rho[i]);
-      double upperdepletedvoltage=1e10; 
-      double lowerdepletedvoltage=0; 
-      while(upperdepletedvoltage>=lowerdepletedvoltage)
-      {
-         double mid=(upperdepletedvoltage+lowerdepletedvoltage)/2;
-         if(isDepleted(mid* fwe->Eval(x0[i]),mid*fwe->Eval(x1[i]),fim[i]->Eval(x0[i]),fim[i]->Eval(x1[i])))
-         {
-            upperdepletedvoltage=mid-1e-5;
-         }
-         else lowerdepletedvoltage=mid+1e-5;
-      }
-      dv[i]=upperdepletedvoltage;
-   }
-   return dv; 
-}
-Vdep()
-{
-   double *result=findDepletedVoltage();
-   for(int i=0;i<5;i++)
-   {
-      cout<<rho[i]<<" "<<result[i]<<endl;
-   }
+   // depleted
+   TF1 *fvd=new TF1("fvd", V, 0, thickness, 3);
+   fvd->SetParameters(thickness, vdep[6], impurity[6]);
+   fvd->Draw("same");
+
+   // undepleted
+   TF1 *fvu=new TF1("fvu", V, 0, thickness, 3);
+   fvu->SetParameters(thickness, bias, impurity[6]);
+   fvu->SetLineColor(kRed);
+   fvu->SetLineStyle(3);
+   fvu->Draw("same");
+
+   // potential due to bias alone
+   TF1 *fvb=new TF1("fvb", V, 0, thickness, 3);
+   fvb->SetParameters(thickness, bias, 0/cm3);
+   fvb->SetLineColor(kBlue);
+   fvb->SetLineStyle(4);
+   fvb->Draw("same");
+
+   // potential due to space charges alone
+   TF1 *fvc=new TF1("fvc", V, 0, thickness, 3);
+   fvc->SetParameters(thickness, 0*volt, impurity[6]);
+   fvc->SetLineColor(kGreen);
+   fvc->SetLineStyle(5);
+   fvc->Draw("same");
+
+   // draw lines and texts
+   TLine *l1 = new TLine(0,bias/volt,thickness/cm,bias/volt);
+   l1->SetLineStyle(kDashed); l1->Draw();
+   TLine *l2 = new TLine(0,vdep[6]/volt,thickness/cm,vdep[6]/volt);
+   l2->SetLineStyle(kDashed); l2->Draw();
+   TLine *l3=new TLine(0,(vdep[6]+bias)/volt,thickness/cm,(vdep[6]+bias)/volt);
+   l3->SetLineStyle(kDashed); l3->Draw();
+   TText *t2 = new TText(0.04,bias/volt+20,Form("%.0f V", bias/volt));
+   t2->Draw();
+   TText *t3 = new TText(0.04,vdep[6]/volt+20, Form("%.0f V", vdep[6]/volt));
+   t3->Draw();
+   TText *t4 = new TText(0.04,(vdep[6]+bias)/volt+20,
+         Form("%.0f V", (vdep[6]+bias)/volt));
+   t4->Draw();
+   TText *t5 = new TText(0.5, 2800, "over depleted");
+   t5->SetTextColor(kMagenta); t5->Draw();
+   TText *t6 = new TText(0.8, 2310, "just depleted");
+   t6->Draw();
+   TText *t7 = new TText(0.65, 1250, "undepleted");
+   t7->SetTextColor(kRed); t7->Draw();
+   TText *t8 = new TText(0.65, 800, "bias alone");
+   t8->SetTextColor(kBlue); t8->Draw();
+   TText *t9 = new TText(0.55, 200, "space charges alone");
+   t9->SetTextColor(kGreen); t9->Draw();
+   TLatex *t10 = new TLatex(0.1, 2700,
+         Form("Impurity: %.0e/cm^{3}",impurity[6]/cm3));
+   t10->Draw();
+
+   c->Print("undepleted.png");
 }
