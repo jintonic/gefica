@@ -1,10 +1,8 @@
 # Contents
 
-Files in this directory plot analytic results (electric potential and field
-versus location) of Poisson's equation in one dimensional
-
-- Cartesian coordinate (planar.C),
-- Cylindrical coordinate (coaxial.C), and
-- Spherical coordinate (spherical.C).
+- `depletion/voltage.C`: search for depletion voltage given impurity
+- `planar.C`: analytic solution of Poisson's Eq. in Cartesian coordinates
+- `coaxial.C`: analytic solution of Poisson's Eq. in Cylindrical coordinates
+- `spherical.C`: analytic solution of Poisson's Eq. in Spherical coordinates
 
 The impurity concentration is assumed to be constant throughout the volume.
