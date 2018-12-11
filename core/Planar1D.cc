@@ -46,6 +46,12 @@ bool Planar1D::Analytic()
 }
 //_____________________________________________________________________________
 //
+double Planar1D::FindImpuritywithDepletedV(double DepletedV, double SizeofDetector)
+{
+   return -DepletedV*2/SizeofDetector/SizeofDetector;
+}
+//_____________________________________________________________________________
+//
 bool Planar1D::CalculatePotential(EMethod method)
 {
    if(!fIsLoaded)Initialize();

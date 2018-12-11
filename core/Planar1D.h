@@ -29,6 +29,7 @@ class GeFiCa::Planar1D : public GeFiCa::X
        * double stepLength=(UpperBound-LowerBound)/(n-1);
        */
       void Initialize(); 
+      double FindImpuritywithDepletedV(double DepletedV, double SizeofDetector);
 
       bool CalculatePotential(EMethod method=kSOR2);
       /**
