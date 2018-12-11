@@ -162,7 +162,7 @@ bool X::CalculatePotential(EMethod method)
       double XDownSum=0;
       for (int i=n-1;i>=0;i--) {
          double old=fPotential[i];
-         SOR2(i,0);
+         SOR2(i,1);
          if(old>0)XDownSum+=old;
          else XDownSum-=old;
          double diff=fPotential[i]-old;
@@ -185,9 +185,31 @@ void X::SOR2(int idx,bool elec)
    double density=-fImpurity[idx]*Qe;
    double h2=fdC1m[idx];
    double h3=fdC1p[idx];
+   double p2=fPotential[idx-1];
+   double p3=fPotential[idx+1];
+
    double tmp=-density/epsilon*h2*h3/2+(h3*fPotential[idx-1]+h2*fPotential[idx+1])/(h2+h3);
-   // over-relaxation if Csor>1
-   fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
+   
+   //find minmium and maxnium of all five grid, the new one should not go overthem.
+   //find min
+   double min=p2;
+   double max=p2;
+   if(min>p3)min=p3;
+   //find max
+   if(max<p3)max=p3;
+//if tmp is greater or smaller than max and min, set tmp to it.
+   
+      //over relax
+   //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
+   tmp=Csor*(tmp-fPotential[idx])+fPotential[idx];
+   //if need calculate depleted voltage
+   if(elec)
+   {
+      if(tmp<min)fPotential[idx]=min;
+      else if(tmp>max)fPotential[idx]=max;
+      else fPotential[idx]=tmp;
+   }
+   else fPotential[idx]=tmp;
 }
 //_____________________________________________________________________________
 //
@@ -319,7 +341,7 @@ void X::SetImpurity(TF1 *fi1)
    for (int i=n;i-->0;) fImpurity[i]=fi1->Eval(fC1[i]);
 }
 //_____________________________________________________________________________
-//
+
 bool X::CalculateField(int idx)
 {
    if (fdC1p[idx]==0 || fdC1m[idx]==0) return false;
@@ -332,4 +354,40 @@ bool X::CalculateField(int idx)
       fE1[idx]=(fPotential[idx-1]-fPotential[idx+1])/(fdC1m[idx]+fdC1p[idx]);
    }
    return true;
+}
+
+//_____________________________________________________________________________
+//
+double  X::CalculateCapacitance()
+{
+   /*
+   http://bgaowww.physics.utoledo.edu/teaching/LectureNotes/Phys2080/Chapter16.htm
+   https://en.wikipedia.org/wiki/Electric_field#Energy_in_the_electric_field
+   use Energy in a charged capacitor= total energy U stored in the electric field in a given volume V 
+   to find capacitance
+   */
+   //only work when impurity are zero
+   for(int i=0;i<n;i++)
+   {
+      if(fImpurity[i]!=0)
+      {
+         //impurity not clear,return
+         return -1;
+      }
+   }
+   double V=1*volt;
+   //debug:cout<<V<<endl;
+   double SumofElectricField=0;
+   for(int i=0;i<n;i++)
+   {
+      if(fC1[i]<0)continue;
+      //integral over electric field
+      double e1=fE1[i];
+      double dx=fdC1p[i];
+      SumofElectricField+=(e1*e1)*dx;
+
+   }
+   double Capacitance=SumofElectricField*2*epsilon/V/V;
+   std::cout<<"Calculated capacitance is "<<Capacitance/pF<<std::endl;
+   return Capacitance/pF;
 }
