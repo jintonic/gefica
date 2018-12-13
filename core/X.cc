@@ -14,6 +14,10 @@ X::X(int nx) : TObject(), n1(nx), n(nx), Csor(1.95), Precision(1e-7),
    MaxIterations(100000), V0(0), V1(2000*volt)
 { 
    if (n<10) { n=11; n1=11; }
+
+   DepletedData=new bool[n];
+   for(int i=0;i<n;i++)DepletedData[i]=true;
+
    fIsLoaded=false;
    fE1=new double[n];
    fC1=new double[n];
@@ -51,6 +55,7 @@ X::~X()
    if (fdC1m) delete[] fdC1m;
    if (fIsFixed) delete[] fIsFixed;
    if (fImpurity) delete[] fImpurity;
+   if (DepletedData) delete[] fImpurity;
 }
 //_____________________________________________________________________________
 //
@@ -169,6 +174,9 @@ bool X::CalculatePotential(EMethod method)
          if(diff>0)XUpSum+=(diff);
          else XUpSum-=(diff);
       }
+      if(cnt%10==0)
+         std::cout<<cnt<<"  "<<XUpSum/XDownSum<<" down: "<<XDownSum<<", up: "<<XUpSum<<std::endl;
+
       if (XUpSum/XDownSum<Precision) {
          for (int i=0; i<n; i++) if (!CalculateField(i)) return false;
          return true;
@@ -205,9 +213,21 @@ void X::SOR2(int idx,bool elec)
    //if need calculate depleted voltage
    if(elec)
    {
-      if(tmp<min)fPotential[idx]=min;
-      else if(tmp>max)fPotential[idx]=max;
-      else fPotential[idx]=tmp;
+      if(tmp<min)
+      {
+         fPotential[idx]=min;
+         DepletedData[idx]=false;
+      }
+      else if(tmp>max)
+      {
+         fPotential[idx]=max;
+         DepletedData[idx]=false;
+      }
+      else 
+      {
+         fPotential[idx]=tmp;
+         DepletedData[idx]=true;
+      }
    }
    else fPotential[idx]=tmp;
 }
@@ -367,14 +387,23 @@ double  X::CalculateCapacitance()
    to find capacitance
    */
    //only work when impurity are zero
+   double * tmpImpurity=fImpurity;
    for(int i=0;i<n;i++)
    {
       if(fImpurity[i]!=0)
       {
          //impurity not clear,return
-         return -1;
+         //return -1;
+         fImpurity=new double[n];
+         for(int j=0;j<n;j++)
+         {
+            fImpurity[j]=0;
+            if(!fIsFixed[j]&&!DepletedData[j])fIsFixed[j]=true;
+         }
+         break;
       }
    }
+   CalculatePotential(GeFiCa::kSOR2);
    double V=1*volt;
    //debug:cout<<V<<endl;
    double SumofElectricField=0;
@@ -386,8 +415,13 @@ double  X::CalculateCapacitance()
       double dx=fdC1p[i];
       SumofElectricField+=(e1*e1)*dx;
 
+      if(!DepletedData[i])fIsFixed[i]=false;
+//   std::cout<<" "<<fE1[i];
+
    }
+   if(fImpurity!=tmpImpurity)delete []fImpurity;
+   fImpurity=tmpImpurity;
    double Capacitance=SumofElectricField*2*epsilon/V/V;
-   std::cout<<"Calculated capacitance is "<<Capacitance/pF<<std::endl;
+   std::cout<<"Calculated capacitance is "<<Capacitance/pF<<" "<<SumofElectricField<<" "<<fE1[10]<<std::endl;
    return Capacitance/pF;
 }
