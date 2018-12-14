@@ -2,4 +2,5 @@
 *.d
 *.so
 *.rootmap
-GeFiCa.*
+*GeFiCa*
+tags
