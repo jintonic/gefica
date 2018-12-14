@@ -1,4 +1,4 @@
-#ifdef __MAKECINT__
+#ifdef __CLING__
 #pragma link C++ namespace GeFiCa;
 #pragma link C++ class GeFiCa::X+;
 #pragma link C++ class GeFiCa::R+;
