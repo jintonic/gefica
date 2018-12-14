@@ -25,7 +25,7 @@ X::X(int nx) : TObject(), n1(nx), n(nx), Csor(1.95), Precision(1e-7),
 }
 //_____________________________________________________________________________
 //
-void X::Copy(const X &xp)
+void X::CopyFrom(const X &xp)
 {
    n=xp.n; n1=xp.n1;
    fIsLoaded=xp.fIsLoaded;

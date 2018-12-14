@@ -26,9 +26,9 @@ XY::~XY()
 }
 //_____________________________________________________________________________
 //
-void XY::Copy(const XY &xp)
+void XY::CopyFrom(const XY &xp)
 {
-   X::Copy(xp);
+   X::CopyFrom(xp);
    n2=xp.n2;
    for (int i=0; i<n; i++) {
       fE2[i]=xp.fE2[i];
