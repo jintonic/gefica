@@ -55,7 +55,7 @@ X::~X()
    if (fdC1m) delete[] fdC1m;
    if (fIsFixed) delete[] fIsFixed;
    if (fImpurity) delete[] fImpurity;
-   if (DepletedData) delete[] fImpurity;
+   if (DepletedData) delete[] DepletedData;
 }
 //_____________________________________________________________________________
 //
