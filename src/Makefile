@@ -1,14 +1,11 @@
 LIBNAME = GeFiCa
 LIBRARY = lib$(LIBNAME).so
 ROOTMAP = $(LIBRARY:.so=.rootmap)
-
 DIC_SRC = $(LIBNAME).cc
-DIC_HDR = $(DIC_SRC:.cc=.h)
-DIC_OBJ = $(DIC_SRC:.cc=.o)
 
 LINKDEF = LinkDef.h
 SOURCES = $(filter-out $(DIC_SRC), $(wildcard *.cc))
-HEADERS = $(filter-out $(DIC_HDR) $(LINKDEF), $(wildcard *.h))
+HEADERS = $(filter-out $(LINKDEF), $(wildcard *.h))
 OBJECTS = $(SOURCES:.cc=.o)
 DEPENDS = $(SOURCES:.cc=.d)
 
@@ -28,7 +25,7 @@ all: $(LIBRARY)
 #  The flag "-shared" is used to create shared libs
 #  $@ represents the target, that is, $(LIBRARY)
 #  $^ represents all the prerequisites, i.e., all *.o files
-$(LIBRARY): $(DIC_OBJ) $(OBJECTS)
+$(LIBRARY): $(OBJECTS) $(DIC_SRC:.cc=.o)
 	@echo
 	@echo "creating shared library:"
 	$(CXX) $^ $(CXXFLAGS) -shared $(LIBS) -o $@
@@ -42,7 +39,7 @@ $(LIBRARY): $(DIC_OBJ) $(OBJECTS)
 $(DIC_SRC): $(HEADERS) $(LINKDEF)
 	@echo 
 	@echo "creating ROOT dictionary and rootmap files:" 
-	rootcling -f $@ $(CXXFLAGS) -s lib$(LIBNAME) -rmf $(ROOTMAP) $^
+	rootcling -f $@ $(CXXFLAGS) -s lib$(LIBNAME) -rml lib$(LIBNAME) -rmf $(ROOTMAP) $^
 	@echo 
 	@echo "creating object files:" 
 
