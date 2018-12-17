@@ -3,26 +3,26 @@
    detector2->Radius=3.45;
    detector2->ZUpperBound=5.05;
    detector2->PointR=0.14;
-   detector2->PointDepth=0.21;
-   detector2->ContactInnerR=3.450;
+   detector2->PointDepth=0.;//21;
+   detector2->ContactInnerR=1.450;
 
    //TF2 *im=new TF2("f","-0.19175e10-0.025e10*y");
-   //TF2 *im=new TF2("f","-0.318e10+0.025e10*y");
+   TF2 *im=new TF2("f","-0.318e10+0.025e10*y");
    //TF1 *im1=new TF1("f","-0.318e10+0.025e10*x",0,6.9);
 
    detector2->MaxIterations=1e5;
    detector2->Precision=1e-6;
    detector2->Csor=1.994;
-   detector2->V0=2500*GeFiCa::volt;
+   detector2->V0=800*GeFiCa::volt;
    detector2->V1=0*GeFiCa::volt;
 
    //TF1 *im=new TF1("","pol1",-0.318e10,0.025e10)
-   detector2->Impurity="-0.318e10+0.025e10*y";//-0.01e10/GeFiCa::cm3);
-   //detector2->SetImpurity(0e10/GeFiCa::cm3);
+   //detector2->Impurity="-0.318e10+0.025e10*y";//-0.01e10/GeFiCa::cm3);
+   detector2->SetImpurity(im);
    
-   //detector2->CalculatePotential(GeFiCa::kSOR2);
-   cout<<detector2->IsDepleted()<<endl;
-   //detector2->SaveField("point2dSOR2.root");
+   detector2->CalculatePotential(GeFiCa::kSOR2);
+   //cout<<detector2->IsDepleted()<<endl;
+   detector2->SaveField("point2dSOR2.root");
    //detector2->LoadField("point21dSOR23.root");
 
    TCanvas * cvs=new TCanvas();

@@ -12,7 +12,7 @@ using namespace GeFiCa;
 //
 #include <iostream>
 using namespace std;
-void RZ::SOR2(int idx,bool elec)
+void RZ::SOR2(int idx,bool NotImpurityPotential)
 {
    if (fIsFixed[idx])return; 
    // 2nd-order Successive Over-Relaxation
@@ -49,15 +49,26 @@ void RZ::SOR2(int idx,bool elec)
    
       //over relax
    //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
-   tmp=Csor*(tmp-fPotential[idx])+fPotential[idx];
    //if need calculate depleted voltage
-   if(elec)
+   double oldP=fPotential[idx];
+   
+   if(tmp<min)
    {
-      if(tmp<min)fPotential[idx]=min;
-      else if(tmp>max)fPotential[idx]=max;
-      else fPotential[idx]=tmp;
+      fPotential[idx]=min;
+      DepletedData[idx]=false;
    }
-   else fPotential[idx]=tmp;
+   else if(tmp>max)
+   {
+      fPotential[idx]=max;
+      DepletedData[idx]=false;
+   }
+   else
+      DepletedData[idx]=true;
+   if(DepletedData[idx]||!NotImpurityPotential)
+   {
+      tmp=Csor*(tmp-oldP)+oldP;
+      fPotential[idx]=tmp;
+   }
 
 
 
