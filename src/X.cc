@@ -11,7 +11,7 @@
 using namespace GeFiCa;
 
 X::X(int nx) : TObject(), n1(nx), n(nx), Csor(1.95), Precision(1e-7),
-   MaxIterations(100000), V0(0), V1(2000*volt)
+   MaxIterations(100000), V0(0), V1(2000*volt), NotImpurityPotential(true)
 { 
    if (n<10) { n=11; n1=11; }
 
@@ -74,8 +74,11 @@ X& X::operator+=(GeFiCa::X *anotherfield)
       return *this; 
    }
    for (int i=0; i<n; i++)
+   {
       fPotential[i]=fPotential[i]+anotherfield->fPotential[i];
-   V0+=anotherfield->V0; V1+=anotherfield->V1;
+      fImpurity[i]+=anotherfield->fImpurity[i];
+   }
+   V0+=anotherfield->V0; V1+=anotherfield->V1; 
    return *this;
 }
 //_____________________________________________________________________________
@@ -122,15 +125,12 @@ int X::Findmin()
 //
 bool X::IsDepleted()
 {
-   int maxn=Findmax();
-   bool upperBorderReached=fIsFixed[maxn];
-   if (fPotential[maxn]-(V0>V1?V0:V1)<0.00001) upperBorderReached=true;
-   
-   int minn=Findmin(); 
-   bool lowerBorderReached=fIsFixed[minn];
-   if ((V1>V0?V0:V1)-fPotential[minn]<0.00001) lowerBorderReached=true;
-   
-   return upperBorderReached && lowerBorderReached;
+  for(int i=0;i<n;i++)
+  {
+     SOR2(i,0);
+     if (!DepletedData[i])return false;
+  }
+  return true;
 }
 //_____________________________________________________________________________
 //
@@ -162,12 +162,14 @@ bool X::CalculatePotential(EMethod method)
 {
    if (method==kAnalytic) return Analytic();
    int cnt=0;
+   if (V0==0&&V1==0)NotImpurityPotential=false;
+   else NotImpurityPotential=true;
    while (cnt++<MaxIterations) {
       double XUpSum=0;
       double XDownSum=0;
       for (int i=n-1;i>=0;i--) {
          double old=fPotential[i];
-         SOR2(i,1);
+         SOR2(i,NotImpurityPotential);
          if(old>0)XDownSum+=old;
          else XDownSum-=old;
          double diff=fPotential[i]-old;
@@ -211,7 +213,7 @@ void X::SOR2(int idx,bool elec)
    //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    tmp=Csor*(tmp-fPotential[idx])+fPotential[idx];
    //if need calculate depleted voltage
-   if(elec)
+   if(!elec)
    {
       if(tmp<min)
       {

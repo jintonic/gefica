@@ -46,6 +46,7 @@ class GeFiCa::X : public TObject
       double V1;///< voltage of the other electrode
 
       bool *DepletedData;///<is a grid depleted
+      bool NotImpurityPotential;///<ignore depleted test
 
    public:
       X(int nx=101 /**< [in] Number of grid points */);
