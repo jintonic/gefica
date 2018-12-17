@@ -8,29 +8,30 @@ Classes named as a type of Ge detectors, such as Planar1D, TrueCoaxial2D, Sphere
 
 ## Links
 
-- Doxygen documentation: http://www.physino.xyz/gefica
+- Doxygen documentation: http://physino.xyz/gefica
 - Github page: https://github.com/jintonic/gefica
 
 ## Directories
 
 Directory | Contents
 ----------|-----------
-core      | source code
+src       | source code
 docs      | documentation generated using [Doxygen][]
 macro     | [ROOT][] macros showing usages of some classes
 
 ## Get started
 
-1. Make sure that [ROOT][] is installed.
+1. Make sure that [ROOT][] (version 6 and above) is installed.
 2. Execute the following commands in a terminal:
 
 ~~~sh
 git clone https://github.com/jintonic/gefica.git
-cd gefica/core
-make install
-export LD_LIBRARY_PATH=~/lib:$LD_LIBRARY_PATH
+cd gefica/src
+make
+export LD_LIBRARY_PATH=$(PWD):$LD_LIBRARY_PATH
+# change LD_LIBRARY_PATH to DYLD_LIBRARY_PATH for MAC
 cd ../macro
-root planar1d.C
+root -l planar1d.C
 ~~~
 
 ## References

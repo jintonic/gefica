@@ -101,7 +101,7 @@ class GeFiCa::X : public TObject
        * Returns the potential.
        */ 
       double GetPotential(double x){return GetData(x,kPotential);};
-      void Copy(const X&);
+      void CopyFrom(const X&);
       double  CalculateCapacitance();
       /**
        *This defines the class for the cint dictionary.

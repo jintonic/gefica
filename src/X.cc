@@ -29,7 +29,7 @@ X::X(int nx) : TObject(), n1(nx), n(nx), Csor(1.95), Precision(1e-7),
 }
 //_____________________________________________________________________________
 //
-void X::Copy(const X &xp)
+void X::CopyFrom(const X &xp)
 {
    n=xp.n; n1=xp.n1;
    fIsLoaded=xp.fIsLoaded;
@@ -55,7 +55,7 @@ X::~X()
    if (fdC1m) delete[] fdC1m;
    if (fIsFixed) delete[] fIsFixed;
    if (fImpurity) delete[] fImpurity;
-   if (DepletedData) delete[] fImpurity;
+   if (DepletedData) delete[] DepletedData;
 }
 //_____________________________________________________________________________
 //

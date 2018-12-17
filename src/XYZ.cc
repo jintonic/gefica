@@ -27,9 +27,9 @@ XYZ::~XYZ()
 }
 //_____________________________________________________________________________
 //
-void XYZ::Copy(const XYZ &xp)
+void XYZ::CopyFrom(const XYZ &xp)
 {
-   XY::Copy(xp);
+   XY::CopyFrom(xp);
    n3=xp.n3;
    for (int i=0; i<n; i++) {
       fE3[i]=xp.fE3[i];
