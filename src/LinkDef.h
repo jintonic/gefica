@@ -11,15 +11,14 @@
 #pragma link C++ class GeFiCa::TrueCoaxial1D+;
 #pragma link C++ class GeFiCa::RThetaPhi+;
 #pragma link C++ class GeFiCa::TrueCoaxial2D+;
-#pragma link C++ class GeFiCa::TrueCoaxial2D2+;
 #pragma link C++ class GeFiCa::RhoPhiZ+;
 #pragma link C++ class GeFiCa::Planar1D+;
 #pragma link C++ class GeFiCa::Planar2D+;
-#pragma link C++ class GeFiCa::Planar2D2+;
 #pragma link C++ class GeFiCa::PointContactRZ+;
 #pragma link C++ class GeFiCa::halfPointContactRZ+;
 #pragma link C++ class GeFiCa::ReversedPointContactRZ+;
 #pragma link C++ class GeFiCa::Sphere1D+;
+#pragma link C++ class GeFiCa::Siegfried+;
 #endif
 /**
  * \example planar1d.C
