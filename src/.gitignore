@@ -1,5 +1,6 @@
 *.o
 *.d
+*.d.*
 *.so
 *.rootmap
 *GeFiCa*

@@ -8,6 +8,7 @@ void RhoPhi::SOR2(int idx,bool elec)
 
    if (fIsFixed[idx])return;
    double density=-fImpurity[idx]*Qe;
+   double r=fC1[idx];
    double h2=fdC1m[idx];
    double h3=fdC1p[idx];
    double h4=fdC2m[idx];
@@ -21,7 +22,6 @@ void RhoPhi::SOR2(int idx,bool elec)
    else Pxm1=fPotential[idx-1];
    if(idx%n1==n1-1)Pxp1=fPotential[idx];
    else Pxp1=fPotential[idx+1];
-   double r=fC1[idx];
    double tmp = (Pxp1/(h3*(h2+h3))+Pxm1/(h2*(h2+h3))
          +Pyp1/r/r/h4/(h1+h4)+Pym1/r/r/h1/(h1+h4)
          -density/epsilon/2+(Pxp1-Pxm1)/2/r/(h2+h3))

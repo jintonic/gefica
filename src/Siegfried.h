@@ -1,1 +1,0 @@
-// segmented true coaxial HPGe
