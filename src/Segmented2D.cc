@@ -4,7 +4,7 @@
 #include "Units.h"
 using namespace GeFiCa;
 using namespace std;
-void Segmented2D::Initialize()
+void Segmented2D::Initialize(int SegmentID)
 {
    // The step length is calculated with the following equation:
    // BEGIN_HTML
@@ -20,8 +20,20 @@ void Segmented2D::Initialize()
             RLowerBound, RUpperBound);
       return;
    }
+   if(SegmentNum==0)
+   {
+      Warning("Initialize",
+            "total Segment number cannot be zero!");
+      return;
+   }
+   if (SegmentNum<0)SegmentNum=-SegmentNum;
+   if (SegmentID<0)SegmentID=-SegmentID;
+   if(SegmentID>SegmentNum)SegmentID=SegmentID%SegmentNum;
+
    double steplength1=(RUpperBound-RLowerBound)/(n1-1);
    double steplength2=2*TMath::Pi()/(n2);
+   double SegmentUpperBound=2*TMath::Pi()*SegmentID/SegmentNum;
+   double SegmentLowerBound=2*TMath::Pi()*(SegmentID-1)/SegmentNum;
    SetStepLength(steplength1,steplength2);
    for(int i=0;i<n;i++)
    {
@@ -29,32 +41,36 @@ void Segmented2D::Initialize()
       if(i%n1==0)
       {
          fIsFixed[i]=true;
-         fPotential[i]=V0;
+         if(SegmentID==0)fPotential[i]=V1;
+         else fPotential[i]=V0;
       }
-      else if(i%n1==n1-1&&fC2[i]<=SegmentSize)
+      else if(i%n1==n1-1)
          //need shift boundary as pointcontact
       {
          fIsFixed[i]=true;
-         fPotential[i]=V1;
-      }
-      else if(i%n1==n1-1&&fC2[i]>SegmentSize)
-      {
-         fIsFixed[i]=true;
-         fPotential[i]=V0;
+         if(SegmentID==0)fPotential[i]=V0;
+         else if(fC2[i]<=SegmentUpperBound&&fC2[i]>=SegmentLowerBound)
+         {
+            fPotential[i]=V1;
+         }
+         else if(fC2[i]>=SegmentUpperBound||fC2[i]<=SegmentLowerBound)
+         {
+            fPotential[i]=V0;
+         }
       }
       else 
       {
          fIsFixed[i]=false;
          fPotential[i]=0;
       }
-      
+
 
    }
 }
 //_____________________________________________________________________________
 //
-bool Segmented2D::CalculatePotential(EMethod method)
+bool Segmented2D::CalculatePotential(EMethod method,int SegmentID)
 {
-   if (!fIsLoaded) Initialize();
+   if (!fIsLoaded) Initialize(SegmentID);
    return RhoPhi::CalculatePotential(method);
 }
