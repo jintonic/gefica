@@ -4,7 +4,8 @@ void CalculateWeightingPotential()
    GeFiCa::Segmented2D *siegfried = new GeFiCa::Segmented2D;
    siegfried->V0=0*GeFiCa::volt;
    siegfried->V1=1*GeFiCa::volt;
-   siegfried->CalculatePotential();
+   siegfried->SegmentNum=6;
+   siegfried->CalculatePotential(GeFiCa::kSOR2,3);
    siegfried->SaveField("siegfried.root");
 }
 //______________________________________________________________________________
@@ -68,6 +69,6 @@ void DrawWeightingPotential()
 //
 void siegfried()
 {
-   if (gSystem->Which(".","siegfried.root")==0) CalculateWeightingPotential();
+   if (1||gSystem->Which(".","siegfried.root")==0) CalculateWeightingPotential();
    DrawWeightingPotential();
 }

@@ -188,7 +188,7 @@ bool X::CalculatePotential(EMethod method)
 }
 //_____________________________________________________________________________
 //
-void X::SOR2(int idx,bool elec)
+void X::SOR2(int idx,bool NotImpurityPotential)
 {
    // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return ;
@@ -209,29 +209,27 @@ void X::SOR2(int idx,bool elec)
    if(max<p3)max=p3;
 //if tmp is greater or smaller than max and min, set tmp to it.
    
-      //over relax
    //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
-   tmp=Csor*(tmp-fPotential[idx])+fPotential[idx];
-   //if need calculate depleted voltage
-   if(!elec)
+   double oldP=fPotential[idx];
+   
+   if(tmp<min)
    {
-      if(tmp<min)
-      {
-         fPotential[idx]=min;
-         DepletedData[idx]=false;
-      }
-      else if(tmp>max)
-      {
-         fPotential[idx]=max;
-         DepletedData[idx]=false;
-      }
-      else 
-      {
-         fPotential[idx]=tmp;
-         DepletedData[idx]=true;
-      }
+      fPotential[idx]=min;
+      DepletedData[idx]=false;
    }
-   else fPotential[idx]=tmp;
+   else if(tmp>max)
+   {
+      fPotential[idx]=max;
+      DepletedData[idx]=false;
+   }
+   else
+      DepletedData[idx]=true;
+   if(DepletedData[idx]||!NotImpurityPotential)
+   {
+      //over relax
+      tmp=Csor*(tmp-oldP)+oldP;
+      fPotential[idx]=tmp;
+   }
 }
 //_____________________________________________________________________________
 //
@@ -383,11 +381,11 @@ bool X::CalculateField(int idx)
 double  X::CalculateCapacitance()
 {
    /*
-   http://bgaowww.physics.utoledo.edu/teaching/LectureNotes/Phys2080/Chapter16.htm
-   https://en.wikipedia.org/wiki/Electric_field#Energy_in_the_electric_field
-   use Energy in a charged capacitor= total energy U stored in the electric field in a given volume V 
-   to find capacitance
-   */
+http://bgaowww.physics.utoledo.edu/teaching/LectureNotes/Phys2080/Chapter16.htm
+https://en.wikipedia.org/wiki/Electric_field#Energy_in_the_electric_field
+use Energy in a charged capacitor= total energy U stored in the electric field in a given volume V 
+to find capacitance
+*/
    //only work when impurity are zero
    double * tmpImpurity=fImpurity;
    for(int i=0;i<n;i++)
@@ -418,7 +416,7 @@ double  X::CalculateCapacitance()
       SumofElectricField+=(e1*e1)*dx;
 
       if(!DepletedData[i])fIsFixed[i]=false;
-//   std::cout<<" "<<fE1[i];
+      //   std::cout<<" "<<fE1[i];
 
    }
    if(fImpurity!=tmpImpurity)delete []fImpurity;

@@ -136,7 +136,7 @@ class GeFiCa::X : public TObject
       /**
        * Uses Second order Successive Over-Relaxation method to calculate the field.
        */
-      virtual void SOR2(int idx,bool calculateElectricField); 
+      virtual void SOR2(int idx,bool NotImpurityPotential); 
       /**
        * Calculate electric field after CalculatePotential.
        */
