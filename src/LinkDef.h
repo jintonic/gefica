@@ -18,7 +18,7 @@
 #pragma link C++ class GeFiCa::halfPointContactRZ+;
 #pragma link C++ class GeFiCa::ReversedPointContactRZ+;
 #pragma link C++ class GeFiCa::Sphere1D+;
-#pragma link C++ class GeFiCa::Siegfried2D+;
+#pragma link C++ class GeFiCa::Segmented2D+;
 #endif
 /**
  * \example planar1d.C

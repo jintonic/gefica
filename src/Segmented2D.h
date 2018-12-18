@@ -4,14 +4,14 @@
 #include "RhoPhi.h"
 #include <TMath.h> 
 
-namespace GeFiCa { class Siegfried2D; }
+namespace GeFiCa { class Segmented2D; }
 
-class GeFiCa::Siegfried2D : public GeFiCa::RhoPhi
+class GeFiCa::Segmented2D : public GeFiCa::RhoPhi
 {
    public:
       double RUpperBound,RLowerBound,SegmentSize;//bounds for X and Y and point start and end
  
-      Siegfried2D(int ix, int iy) : RhoPhi(ix, iy),
+      Segmented2D(int ix=360, int iy=301) : RhoPhi(ix, iy),
       RUpperBound(2.5),RLowerBound(0.5),SegmentSize(TMath::Pi()/3) {};
 
       /**
@@ -20,7 +20,7 @@ class GeFiCa::Siegfried2D : public GeFiCa::RhoPhi
       void Initialize();
       bool CalculatePotential(EMethod method=kSOR2);
 
-      ClassDef(Siegfried2D,1);
+      ClassDef(Segmented2D,1);
 };
 
 #endif

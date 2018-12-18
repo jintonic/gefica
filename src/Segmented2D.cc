@@ -1,10 +1,10 @@
 #include <stdlib.h>
 
-#include "Siegfried2D.h"
+#include "Segmented2D.h"
 #include "Units.h"
 using namespace GeFiCa;
 using namespace std;
-void Siegfried2D::Initialize()
+void Segmented2D::Initialize()
 {
    // The step length is calculated with the following equation:
    // BEGIN_HTML
@@ -53,7 +53,7 @@ void Siegfried2D::Initialize()
 }
 //_____________________________________________________________________________
 //
-bool Siegfried2D::CalculatePotential(EMethod method)
+bool Segmented2D::CalculatePotential(EMethod method)
 {
    if (!fIsLoaded) Initialize();
    return RhoPhi::CalculatePotential(method);
