@@ -29,6 +29,7 @@ void DrawWeightingPotential()
    gStyle->SetNumberContours(nCont);
    // make a square canvas
    TCanvas *c = new TCanvas("c", "c", 450, 450);
+   c->SetLogz();
    // load data and draw
    TChain *t = new TChain("t");
    t->Add("siegfried.root");
