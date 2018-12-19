@@ -5,7 +5,8 @@ void CalculateWeightingPotential()
    siegfried->V0=0*GeFiCa::volt;
    siegfried->V1=1*GeFiCa::volt;
    siegfried->SegmentNum=6;
-   siegfried->CalculatePotential(GeFiCa::kSOR2,3);
+   siegfried->SegmentID=1;
+   siegfried->CalculatePotential(GeFiCa::kSOR2);
    siegfried->SaveField("siegfried.root");
 }
 //______________________________________________________________________________

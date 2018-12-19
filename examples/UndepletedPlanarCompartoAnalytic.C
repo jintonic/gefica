@@ -10,7 +10,7 @@ static const double epsilon0=8.854187817e-14*C/volt/cm; // vacuum permittivity
 static const double epsilonGe=15.8; // Ge dielectric constant
 double NumericalFieldGenerate(double V, double totalD)
 {
-   int n=1001;
+   int n=2001;
    // calculate fields
    GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(n);
    detector->MaxIterations=1e5;

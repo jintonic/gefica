@@ -4,7 +4,7 @@
 #include "Units.h"
 using namespace GeFiCa;
 using namespace std;
-void Segmented2D::Initialize(int SegmentID)
+void Segmented2D::Initialize()
 {
    // The step length is calculated with the following equation:
    // BEGIN_HTML
@@ -69,8 +69,8 @@ void Segmented2D::Initialize(int SegmentID)
 }
 //_____________________________________________________________________________
 //
-bool Segmented2D::CalculatePotential(EMethod method,int SegmentID)
+bool Segmented2D::CalculatePotential(EMethod method)
 {
-   if (!fIsLoaded) Initialize(SegmentID);
+   if (!fIsLoaded) Initialize();
    return RhoPhi::CalculatePotential(method);
 }

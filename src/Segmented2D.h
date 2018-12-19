@@ -11,15 +11,16 @@ class GeFiCa::Segmented2D : public GeFiCa::RhoPhi
    public:
       double RUpperBound,RLowerBound;
       int SegmentNum;//total segment number
+      int SegmentID;
  
       Segmented2D(int ix=360, int iy=301) : RhoPhi(ix, iy),
-         RUpperBound(2.5),RLowerBound(0.5),SegmentNum(6) {};
+         RUpperBound(2.5),RLowerBound(0.5),SegmentNum(6) ,SegmentID(1) {};
 
       /**
        * Assign initial voltage values to grid points.
        */
-      void Initialize(int SegmentID);
-      bool CalculatePotential(EMethod method=kSOR2,int SegmentID=1);
+      void Initialize();
+      bool CalculatePotential(EMethod method=kSOR2);
 
       ClassDef(Segmented2D,1);
 };
