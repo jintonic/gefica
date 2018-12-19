@@ -10,7 +10,7 @@
 #include "Units.h"
 using namespace GeFiCa;
 
-X::X(int nx) : TObject(), n1(nx), n(nx), Csor(1.95), Precision(1e-7),
+X::X(int nx) : TNamed("X","X"), n1(nx), n(nx), Csor(1.95), Precision(1e-7),
    MaxIterations(100000), V0(0), V1(2000*volt), NotImpurityPotential(true)
 { 
    if (n<10) { n=11; n1=11; }

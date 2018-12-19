@@ -1,7 +1,7 @@
 #ifndef GeFiCa_X_H
 #define GeFiCa_X_H
 
-#include <TObject.h>
+#include <TNamed.h>
 #include <string>
 
 class TF1;
@@ -33,7 +33,7 @@ namespace GeFiCa {
  * description of SOR method. It will have some error compared with actual data
  * but should be close.  Analytic solution is also provided for comparison.
  */
-class GeFiCa::X : public TObject 
+class GeFiCa::X : public TNamed 
 {
    public:
       int n1; ///< number of grid points along the 1st coordinate
