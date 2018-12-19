@@ -1,5 +1,4 @@
 // create C-V curve for an ideal planar detector
-#include<math.h>
 // definition of necessary units
 static const double cm=1;
 static const double cm3=cm*cm*cm;
@@ -20,25 +19,35 @@ double VtoC(double V,double totalD)
    //V=-ax^2/2, solve V when x=d
    if (d>totalD)d=totalD;
    //when it depleted whole detector
-   double Cap=epsilon0*epsilonGe/d;
-   return Cap;
-
+   double Cap=epsilon0*epsilonGe*1*cm*cm/d;
+   return Cap*1e12;
 }
+//______________________________________________________________________________
+//
 void CV()
 {
-   int n=200;
+   const int n=101;
    double Cap[n],V[n];
-   for (int i=1;i<=n;i++)
-   {
-      V[i-1]=i*10*volt;
-      Cap[i-1]=VtoC(V[i-1],1*cm);
+   for (int i=0; i<n; i++) {
+      V[i]=(i+1)*10*volt;
+      Cap[i]=VtoC(V[i],1*cm);
    }
+   // pick up a good default drawing style to modify
+   gROOT->SetStyle("Plain");
+   gStyle->SetLabelFont(132,"XY");
+   gStyle->SetTitleFont(132,"XY");
+   gStyle->SetLabelSize(0.05,"XY");
+   gStyle->SetTitleSize(0.05,"XY");
+   gStyle->SetTitleOffset(0.7,"Y");
+   gStyle->SetPadRightMargin(0.01);
+   gStyle->SetPadLeftMargin(0.08);
+   gStyle->SetPadTopMargin(0.01);
+   // draw C VS V
    TGraph *gr  = new TGraph(n,V,Cap);
-   TCanvas *c1 = new TCanvas("c1","Graph Draw Options",
-                                         200,10,600,400);
-
-   // draw the graph with axis, continuous line, and put
-   // a * at each point
-   gr->Draw("AC*");
-
+   gr->Draw("ac");
+   gr->SetTitle("");
+   gr->SetLineWidth(2);
+   gr->GetXaxis()->SetTitle("Bias voltage [V]");
+   gr->GetYaxis()->SetTitle("Capacitance [pC]");
+   gPad->Print("CV.png");
 }
