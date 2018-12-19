@@ -32,7 +32,7 @@ double NumericalFieldGenerate(double V, double totalD)
    double d=0;
    for(int i=0;i<n-1;i++)
    {
-      if(detector->DepletedData[i]&&totalD*i/(n-1)>d&&(connect[i-1]))
+      if(detector->fIsDepleted[i]&&totalD*i/(n-1)>d&&(connect[i-1]))
       {
          connect[i]=true;
          d=totalD*i/(n-1);
@@ -57,11 +57,11 @@ double Vtod(double V,double totalD)
 void UndepletedPlanarCompartoAnalytic()
 {
    TCanvas *c1 = new TCanvas("c1","A Simple Graph Example",200,10,500,300);
-   int n=50;
+   int n=20;
    double thickess=1*cm;
    Double_t V[n], diff[n];
    for (Int_t i=1;i<n;i++) {
-      V[i] = i*10;
+      V[i] = i*50;
       diff[i] = NumericalFieldGenerate(V[i],thickess)-Vtod(V[i],thickess); 
    }
    TGraph* gr = new TGraph(n,V,diff);

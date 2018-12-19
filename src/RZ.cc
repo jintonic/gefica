@@ -55,16 +55,16 @@ void RZ::SOR2(int idx,bool NotImpurityPotential)
    if(tmp<min)
    {
       fPotential[idx]=min;
-      DepletedData[idx]=false;
+      fIsDepleted[idx]=false;
    }
    else if(tmp>max)
    {
       fPotential[idx]=max;
-      DepletedData[idx]=false;
+      fIsDepleted[idx]=false;
    }
    else
-      DepletedData[idx]=true;
-   if(DepletedData[idx]||!NotImpurityPotential)
+      fIsDepleted[idx]=true;
+   if(fIsDepleted[idx]||!NotImpurityPotential)
    {
       tmp=Csor*(tmp-oldP)+oldP;
       fPotential[idx]=tmp;

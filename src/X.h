@@ -45,7 +45,7 @@ class GeFiCa::X : public TNamed
       double V0;///< voltage of one electrode
       double V1;///< voltage of the other electrode
 
-      bool *DepletedData;///<is a grid depleted
+      bool *fIsDepleted;///<is a grid depleted
       bool NotImpurityPotential;///<ignore depleted test
 
    public:

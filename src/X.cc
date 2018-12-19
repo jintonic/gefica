@@ -15,8 +15,8 @@ X::X(int nx) : TNamed("X","X"), n1(nx), n(nx), Csor(1.95), Precision(1e-7),
 { 
    if (n<10) { n=11; n1=11; }
 
-   DepletedData=new bool[n];
-   for(int i=0;i<n;i++)DepletedData[i]=true;
+   fIsDepleted=new bool[n];
+   for(int i=0;i<n;i++)fIsDepleted[i]=true;
 
    fIsLoaded=false;
    fE1=new double[n];
@@ -55,7 +55,7 @@ X::~X()
    if (fdC1m) delete[] fdC1m;
    if (fIsFixed) delete[] fIsFixed;
    if (fImpurity) delete[] fImpurity;
-   if (DepletedData) delete[] DepletedData;
+   if (fIsDepleted) delete[] fIsDepleted;
 }
 //_____________________________________________________________________________
 //
@@ -128,7 +128,7 @@ bool X::IsDepleted()
   for(int i=0;i<n;i++)
   {
      SOR2(i,0);
-     if (!DepletedData[i])return false;
+     if (!fIsDepleted[i])return false;
   }
   return true;
 }
@@ -215,16 +215,16 @@ void X::SOR2(int idx,bool NotImpurityPotential)
    if(tmp<min)
    {
       fPotential[idx]=min;
-      DepletedData[idx]=false;
+      fIsDepleted[idx]=false;
    }
    else if(tmp>max)
    {
       fPotential[idx]=max;
-      DepletedData[idx]=false;
+      fIsDepleted[idx]=false;
    }
    else
-      DepletedData[idx]=true;
-   if(DepletedData[idx]||!NotImpurityPotential)
+      fIsDepleted[idx]=true;
+   if(fIsDepleted[idx]||!NotImpurityPotential)
    {
       //over relax
       tmp=Csor*(tmp-oldP)+oldP;
@@ -398,7 +398,7 @@ to find capacitance
          for(int j=0;j<n;j++)
          {
             fImpurity[j]=0;
-            if(!fIsFixed[j]&&!DepletedData[j])fIsFixed[j]=true;
+            if(!fIsFixed[j]&&!fIsDepleted[j])fIsFixed[j]=true;
          }
          break;
       }
@@ -415,7 +415,7 @@ to find capacitance
       double dx=fdC1p[i];
       SumofElectricField+=(e1*e1)*dx;
 
-      if(!DepletedData[i])fIsFixed[i]=false;
+      if(!fIsDepleted[i])fIsFixed[i]=false;
       //   std::cout<<" "<<fE1[i];
 
    }
