@@ -52,36 +52,37 @@ void RZ::SOR2(int idx,bool NotImpurityPotential)
    //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    //if need calculate depleted voltage
    double oldP=fPotential[idx];
-      tmp=Csor*(tmp-oldP)+oldP;
-   if(tmp<min)
-   {
+   tmp=Csor*(tmp-oldP)+oldP;
+   /*
+      if(tmp<min)
+      {
       fPotential[idx]=min;
       fIsDepleted[idx]=false;
-   }
-   else if(tmp>max)
-   {
+      }
+      else if(tmp>max)
+      {
       fPotential[idx]=max;
       fIsDepleted[idx]=false;
-   }
-   else
+      }
+      else
       fIsDepleted[idx]=true;
-   if(fIsDepleted[idx]||!NotImpurityPotential)
-   {
+      if(fIsDepleted[idx]||!NotImpurityPotential)
+      {
       fPotential[idx]=tmp;
-   }
+      }
+      */
 
-   if (prp<0)   std::cout<<"index "<<idx<<"prm "<<prm<<"prp "<<prp<<"pzp "<<pzp<<"pzm "<<pzm<<"min "<<min<<"tmp "<<tmp<<"\n"; 
-
+   fPotential[idx]=tmp;
 
 }
 void RZ::CalculateCapacitance()
 {
    /*
-   http://bgaowww.physics.utoledo.edu/teaching/LectureNotes/Phys2080/Chapter16.htm
-   https://en.wikipedia.org/wiki/Electric_field#Energy_in_the_electric_field
-   use Energy in a charged capacitor= total energy U stored in the electric field in a given volume V 
-   to find capacitance
-   */
+http://bgaowww.physics.utoledo.edu/teaching/LectureNotes/Phys2080/Chapter16.htm
+https://en.wikipedia.org/wiki/Electric_field#Energy_in_the_electric_field
+use Energy in a charged capacitor= total energy U stored in the electric field in a given volume V 
+to find capacitance
+*/
    //only work when impurity are zero
    for(int i=0;i<n;i++)
    {
