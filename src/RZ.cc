@@ -41,6 +41,7 @@ void RZ::SOR2(int idx,bool NotImpurityPotential)
    if(min>prp)min=prp;
    if (min>pzp)min=pzp;
    if (min>pzm)min=pzm;
+   
    //find max
    if(max<prp)max=prp;
    if (max<pzp)max=pzp;
@@ -51,7 +52,7 @@ void RZ::SOR2(int idx,bool NotImpurityPotential)
    //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    //if need calculate depleted voltage
    double oldP=fPotential[idx];
-   
+      tmp=Csor*(tmp-oldP)+oldP;
    if(tmp<min)
    {
       fPotential[idx]=min;
@@ -66,10 +67,10 @@ void RZ::SOR2(int idx,bool NotImpurityPotential)
       fIsDepleted[idx]=true;
    if(fIsDepleted[idx]||!NotImpurityPotential)
    {
-      tmp=Csor*(tmp-oldP)+oldP;
       fPotential[idx]=tmp;
    }
 
+   if (prp<0)   std::cout<<"index "<<idx<<"prm "<<prm<<"prp "<<prp<<"pzp "<<pzp<<"pzm "<<pzm<<"min "<<min<<"tmp "<<tmp<<"\n"; 
 
 
 }

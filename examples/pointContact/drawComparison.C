@@ -1,9 +1,9 @@
 {
    // draw MJD result
    TCanvas *c1 = new TCanvas;
-   TTree *tm = new TTree("tm","tm");
-   tm->ReadFile("ev.new", "r:z:v:e:er:ez");
-   tm->Draw("z:r:v","","colz");
+   TTree *tm1 = new TTree("1tm","1tm");
+   tm1->ReadFile("ev.new", "r:z:v:e:er:ez");
+   tm1->Draw("z:r:v","","colz");
    //t->AddFriend("t2=t","point2dSOR2.root");
    //t->Draw("z:(t2.p-v)","z!=1&r!=1&z<1&r>34.&r<34.5","");
    //TCanvas *can = new TCanvas;

@@ -1,34 +1,21 @@
 {
+
+
    // calculate fields
-   GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(11);
-   detector->MaxIterations=10;
+   GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(301);
+   detector->MaxIterations=1e5;
    detector->Csor=1.95;
-   detector->UpperBound=0.175*GeFiCa::cm;
-   detector->V1=1000*GeFiCa::volt;
+   detector->UpperBound=1*GeFiCa::cm;
+   detector->V1=500*GeFiCa::volt;
    detector->V0=0*GeFiCa::volt;
-   //detector->SetImpurity(1e10/GeFiCa::cm3);
+   TF1 *im=new TF1("f","-1e10");
+   detector->SetImpurity(im);
 //   detector->Impurity="1e10";
 
    detector->CalculatePotential(GeFiCa::kSOR2);
    detector->SaveField("planar1dSOR2.root");
-  /* 
      
- //  detector->Impurity="0";
-   for (int i=0;i<10;i++)
-   {
-      detector->MaxIterations=30*i;
-      detector->CalculatePotential(GeFiCa::kSOR2);
-      detector->SaveField("planar1dSOR2.root");
-      TCanvas * cvs=new TCanvas();
-      TChain *tn = new TChain("t");
- 
-      tn->Add("planar1dSOR2.root");
-      tn->Draw("p:c1");
-
-  
-   }
-  
-
+/*
 
 
    TCanvas * cvs=new TCanvas();
@@ -49,8 +36,8 @@
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
 
    TChain *ta = new TChain("t");
-   ta->Add("planar1dTrue.root");
-   ta->Draw("p:c1");
+   ta->Add("point2dSOR2.root");
+   ta->Draw("p:c2","c1<0.1&&c1>-0.1");
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
 
    // make final plot
@@ -69,10 +56,9 @@
    TLegend *leg = new TLegend(0.2,0.6,0.5,0.8);
    leg->SetBorderSize(0);
    leg->AddEntry(gn,"SOR2","p");
-   leg->AddEntry(ga,"Analyic","l");
+   leg->AddEntry(ga,"Analyic","p");
    leg->SetTextSize(0.05);
    leg->Draw();
-   
+*/   
    //cvs->SaveAs("planar1d.png");
-*/
 }

@@ -3,8 +3,8 @@
    detector2->Radius=3.45;
    detector2->ZUpperBound=5.05;
    detector2->PointR=0.14;
-   detector2->PointDepth=0.;//21;
-   detector2->ContactInnerR=1.450;
+   detector2->PointDepth=0.21;
+   detector2->ContactInnerR=3.450;
 
    //TF2 *im=new TF2("f","-0.19175e10-0.025e10*y");
    TF2 *im=new TF2("f","-0.318e10+0.025e10*y");
@@ -13,7 +13,7 @@
    detector2->MaxIterations=1e5;
    detector2->Precision=1e-6;
    detector2->Csor=1.994;
-   detector2->V0=800*GeFiCa::volt;
+   detector2->V0=2500*GeFiCa::volt;
    detector2->V1=0*GeFiCa::volt;
 
    //TF1 *im=new TF1("","pol1",-0.318e10,0.025e10)
@@ -25,7 +25,7 @@
    detector2->SaveField("point2dSOR2.root");
    //detector2->LoadField("point21dSOR23.root");
 
-   TCanvas * cvs=new TCanvas();
+   //TCanvas * cvs=new TCanvas();
    gStyle->SetOptTitle(kFALSE);
    gStyle->SetPadTopMargin(0.02);
    gStyle->SetPadRightMargin(0.01);
@@ -43,7 +43,7 @@
    TH2F* h= new TH2F("hist","",10,-3.45,3.45,10,0,5.05);
    TChain *ta = new TChain("t");
    ta->Add("point2dSOR2.root");
-   ta->Draw("c2:c1:p>>hist","","colz");
+//   ta->Draw("c2:c1:p>>hist","","colz");
    h->GetYaxis()->SetTitle("Thickness [cm]");
    h->GetXaxis()->SetTitle("Radius [cm]");
    //th->FillN(ta->Get("c1"),ta->Get("c2"),ta->Get("p"));
