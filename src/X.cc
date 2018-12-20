@@ -358,6 +358,7 @@ void X::LoadField(const char * fin)
 //
 void X::SetImpurity(TF1 *fi1)
 {
+   Initialize();
    for (int i=n;i-->0;) fImpurity[i]=fi1->Eval(fC1[i]);
 }
 //_____________________________________________________________________________

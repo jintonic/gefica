@@ -60,8 +60,8 @@ void PointContactRZ::BoundaryOnPointcontact()
 void PointContactRZ::Initialize()
 {
    if (n1%2==1) {
-      Error("Initialize", "Number of grids in R cannot be odd, abort!");
-      abort();
+         Error("Initialize", "Number of grids in R cannot be odd, abort!");
+         abort();
    }
 
    // The step length is calculated with the following equation:
@@ -94,7 +94,7 @@ void PointContactRZ::Initialize()
 
    // set initial potential values
    for(int i=n;i-->0;) {
-      //fPotential[i]=(V0+V1)/2;//common this line for finding depleat voltage
+      fPotential[i]=(V0+V1)/2;//common this line for finding depleat voltage
       // set potential for inner electrodes
       if(fC1[i]>=PointBegin&&fC1[i]<=PointEnd&&fC2[i]<=PointDepth) {
          fPotential[i]=V1;

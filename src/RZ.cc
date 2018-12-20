@@ -23,7 +23,7 @@ void RZ::SOR2(int idx,bool NotImpurityPotential)
    double dzp=fdC2p[idx];
    double pzm,pzp,prm,prp; // pzm: potential_z_plus
    if(idx>=n1)pzm=fPotential[idx-n1];
-   else pzm=fPotential[idx];
+   else pzm=fPotential[idx+n1];
    if(idx>=n-n1)pzp=fPotential[idx];
    else pzp=fPotential[idx+n1];
    if(idx%n1==0)prm=fPotential[idx];
@@ -53,26 +53,23 @@ void RZ::SOR2(int idx,bool NotImpurityPotential)
    //if need calculate depleted voltage
    double oldP=fPotential[idx];
    tmp=Csor*(tmp-oldP)+oldP;
-   /*
-      if(tmp<min)
-      {
+   if(tmp<min)
+   {
       fPotential[idx]=min;
       fIsDepleted[idx]=false;
-      }
-      else if(tmp>max)
-      {
+   }
+   else if(tmp>max)
+   {
       fPotential[idx]=max;
       fIsDepleted[idx]=false;
-      }
-      else
+   }
+   else
       fIsDepleted[idx]=true;
-      if(fIsDepleted[idx]||!NotImpurityPotential)
-      {
+   if(fIsDepleted[idx]||!NotImpurityPotential)
+   {
       fPotential[idx]=tmp;
-      }
-      */
+   }
 
-   fPotential[idx]=tmp;
 
 }
 void RZ::CalculateCapacitance()
