@@ -45,7 +45,7 @@ class GeFiCa::X : public TNamed
       double V0;///< voltage of one electrode
       double V1;///< voltage of the other electrode
 
-      bool *fIsDepleted;///<is a grid depleted
+      bool *fIsDepleted;///< [n] is a grid depleted
       bool NotImpurityPotential;///<ignore depleted test
 
    public:
@@ -109,14 +109,14 @@ class GeFiCa::X : public TNamed
       ClassDef(X,1);
 
    protected:
-      bool * fIsFixed; ///< Is used to check if a value is fixed or if it can be modified. It is usually used to check boundary conditions and find out if you are on the edge.
+      bool * fIsFixed; ///< [n] Is used to check if a value is fixed or if it can be modified. It is usually used to check boundary conditions and find out if you are on the edge.
       bool fIsLoaded; ///< fIsLoaded is used to check if points in the grid have a value or not. If fIsLoaded returns true, the points if the grid have value and you do not need to initialize, if it returns false you do.
-      double *fE1; ///< Electric field under the first coordinate (x, r, or rho) direction 
-      double  *fPotential; ///< Potential in the referenced grid
-      double *fC1; ///< the location under the first coordinate (x, r, or rho) direction
-      double *fdC1p; ///< distance between this and next grid points alone C1
-      double *fdC1m; ///< distance between this and previous grid points alone C1
-      double *fImpurity; ///< Value of the impurity level at a point on the grid
+      double *fE1; ///< [n] Electric field under the first coordinate (x, r, or rho) direction 
+      double *fPotential; ///< [n] Potential in the referenced grid
+      double *fC1; ///< [n] the location under the first coordinate (x, r, or rho) direction
+      double *fdC1p; ///< [n] distance between this and next grid points alone C1
+      double *fdC1m; ///< [n] distance between this and previous grid points alone C1
+      double *fImpurity; ///< [n] Value of the impurity level at a point on the grid
       /**
        * Sets the field step length.
        */
