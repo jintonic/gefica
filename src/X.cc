@@ -211,6 +211,7 @@ void X::SOR2(int idx,bool NotImpurityPotential)
    
    //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    double oldP=fPotential[idx];
+      tmp=Csor*(tmp-oldP)+oldP;
    
    if(tmp<min)
    {
@@ -227,7 +228,6 @@ void X::SOR2(int idx,bool NotImpurityPotential)
    if(fIsDepleted[idx]||!NotImpurityPotential)
    {
       //over relax
-      tmp=Csor*(tmp-oldP)+oldP;
       fPotential[idx]=tmp;
    }
 }
