@@ -1,11 +1,10 @@
-namespace GeFiCa;
-voltage(){
+{
    GeFiCa::PointContactRZ *wholedetector = new GeFiCa::PointContactRZ(690,505);
    wholedetector->Radius=3.45*GeFiCa::cm;
    wholedetector->ZUpperBound=5.05*GeFiCa::cm;
    wholedetector->PointR=0.14*GeFiCa::cm;
-   wholedetector->PointDepth=0*GeFiCa::cm;
-   detector2->ContactInnerR=1.450;
+   wholedetector->PointDepth=0.21*GeFiCa::cm;
+   wholedetector->ContactInnerR=1.450;
 
    wholedetector->MaxIterations=1e5;
    wholedetector->Precision=1e-7*GeFiCa::volt;
@@ -22,7 +21,7 @@ voltage(){
    justimpurity->Radius=3.45;
    justimpurity->ZUpperBound=5.05;
    justimpurity->PointR=0.14;
-   justimpurity->PointDepth=0.;
+   justimpurity->PointDepth=0.21;
    justimpurity->ContactInnerR=1.450;
 
    justimpurity->MaxIterations=1e5;
@@ -44,7 +43,7 @@ voltage(){
    weightingPotential->Radius=3.45*GeFiCa::cm;
    weightingPotential->ZUpperBound=5.05*GeFiCa::cm;
    weightingPotential->PointR=0.14*GeFiCa::cm;
-   weightingPotential->PointDepth=0.*GeFiCa::cm;
+   weightingPotential->PointDepth=0.21*GeFiCa::cm;
    weightingPotential->ContactInnerR=1.450;
 
    weightingPotential->MaxIterations=1e5;

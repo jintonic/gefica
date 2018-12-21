@@ -21,6 +21,7 @@ class GeFiCa::PointContactRZ : public GeFiCa::RZ
        * Move grids close to point contact boundary to the boundary.
        */
       void BoundaryOnPointcontact();
+      void BoundaryonWarpAround();
       bool CalculatePotential(EMethod method=kSOR2);
 
       ClassDef(PointContactRZ,1);

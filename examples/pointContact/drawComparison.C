@@ -1,7 +1,7 @@
 {
    // draw MJD result
    TCanvas *c1 = new TCanvas;
-   TTree *tm1 = new TTree("1tm","1tm");
+   TTree *tm1 = new TTree("tm1","tm1");
    tm1->ReadFile("ev.new", "r:z:v:e:er:ez");
    tm1->Draw("z:r:v","","colz");
    //t->AddFriend("t2=t","point2dSOR2.root");

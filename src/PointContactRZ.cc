@@ -57,6 +57,33 @@ void PointContactRZ::BoundaryOnPointcontact()
       fdC1p[idxNeg+i*n1-1]=fdC1m[idxNeg+i*n1];
    }
 }
+void PointContactRZ::BoundaryonWarpAround()
+{
+   int index=FindIdx(ContactInnerR,0,0,n2-1);
+   if (index>n1)index-=n1;
+   for(int i=index;i<n;i+=n1)
+   {
+      fC1[i]=ContactInnerR;
+      fdC1m[i]=fC1[i]-fC1[i-1];
+      fdC1p[i]=fC1[i+1]-fC1[i];
+      fdC1m[i+1]=fdC1p[i];
+      fdC1p[i-1]=fdC1m[i];
+
+   }
+
+   index=FindIdx(-ContactInnerR,0,0,n2-1)-1;
+   if (index>n1)index-=n1;
+
+   for(int i=index;i<n;i+=n1)
+   {
+      fC1[i]=-ContactInnerR;
+      fdC1m[i]=fC1[i]-fC1[i-1];
+      fdC1p[i]=fC1[i+1]-fC1[i];
+      fdC1m[i+1]=fdC1p[i];
+      fdC1p[i-1]=fdC1m[i];
+
+   }
+}
 void PointContactRZ::Initialize()
 {
    if (n1%2==1) {
@@ -91,6 +118,7 @@ void PointContactRZ::Initialize()
       fC1[i]=fC1[i]+RLowerBound;
    } 
    BoundaryOnPointcontact();
+   BoundaryonWarpAround();
 
    // set initial potential values
    for(int i=n;i-->0;) {
@@ -114,7 +142,7 @@ void PointContactRZ::Initialize()
    }
    for (int i=0;i<n1;i++)
    {
-      if(fC1[i]>ContactInnerR||fC1[i]<-ContactInnerR)
+      if(fC1[i]>=ContactInnerR||fC1[i]<=-ContactInnerR)
       {
          fIsFixed[i]=true;
          fPotential[i]=V0;
