@@ -59,12 +59,12 @@
    weightingPotential->SaveField("wp");
    weightingPotential->LoadField("wp");
    weightingPotential->CalculateCapacitance();
-   //wholedetector->Copy(*weightingPotential);
-   wholedetector->LoadField("wp");
+   wholedetector = (GeFiCa::X*) weightingPotential.Clone("newX")
+   //wholedetector->LoadField("wp");
    (*wholedetector) *= (double)2;
    GeFiCa::PointContactRZ * multiweightPotential=new GeFiCa::PointContactRZ(100,100);
-    //multiweightPotential  ->Copy(weightingPotential);
-    multiweightPotential  ->LoadField("wp");
+   multiweightPotential = (GeFiCa::X*) weightingPotential.Clone("newX")
+   // multiweightPotential  ->LoadField("wp");
    (*wholedetector) += justimpurity;
    wholedetector->SaveField("beforejump");
    int stepsize=2;
@@ -81,8 +81,8 @@
    while(lower<=upper)
    {
       mid=(upper+lower)/2;
-      //wholedetector->Copy(weightingPotential);
-      wholedetector->LoadField("wp");
+      wholedetector = (GeFiCa::X*) weightingPotential.Clone("newX")
+      //wholedetector->LoadField("wp");
       (*wholedetector)*=mid;
       (*wholedetector)+=justimpurity;
       if(wholedetector->IsDepleted())
