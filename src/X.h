@@ -101,7 +101,6 @@ class GeFiCa::X : public TNamed
        * Returns the potential.
        */ 
       double GetPotential(double x){return GetData(x,kPotential);};
-      void CopyFrom(const X&);
       double  CalculateCapacitance();
       /**
        *This defines the class for the cint dictionary.

@@ -29,23 +29,6 @@ X::X(int nx) : TNamed("X","X"), n1(nx), n(nx), Csor(1.95), Precision(1e-7),
 }
 //_____________________________________________________________________________
 //
-void X::CopyFrom(const X &xp)
-{
-   n=xp.n; n1=xp.n1;
-   fIsLoaded=xp.fIsLoaded;
-   for (int i=0; i<n; i++) {
-      fE1[i]=xp.fE1[i];
-      fC1[i]=xp.fC1[i];
-      fPotential[i]=xp.fPotential[i];
-      fIsFixed[i]=xp.fIsFixed[i];
-      fdC1p[i]=xp.fdC1p[i];
-      fdC1m[i]=xp.fdC1m[i];
-      fImpurity[i]=xp.fImpurity[i];
-   }
-   V0=xp.V0; V1=xp.V1;
-}
-//_____________________________________________________________________________
-//
 X::~X()
 {
    if (fE1) delete[] fE1;
@@ -64,6 +47,12 @@ bool X::Analytic()
    Printf("There is no analytic solution for this setup");
    return false; 
 }
+//_____________________________________________________________________________
+//
+//X& X::operator=(GeFiCa::X *anotherfield)
+//{
+//    return (GeFiCa::X)anotherfield.Clone("newfield");
+//}
 //_____________________________________________________________________________
 //
 X& X::operator+=(GeFiCa::X *anotherfield)
@@ -275,7 +264,7 @@ void X::SaveField(const char * fout)
    TVectorD v(10);
 
    v[7]=(double)n1;
-   v[8]=1;;
+   v[8]=1;
    v[9]=1;
    v[0]=(double)MaxIterations;
    v[1]=(double)n;
