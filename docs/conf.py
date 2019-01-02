@@ -20,7 +20,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'GeFiCa'
-copyright = '2018, Byron Li, Jing Liu'
+copyright = '2019, Byron Li, Jing Liu'
 author = 'Byron Li, Jing Liu'
 
 # The short X.Y version
@@ -41,11 +41,8 @@ release = '0.0.1'
 extensions = [
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
-    'sphinx.ext.todo',
     'sphinx.ext.coverage',
     'sphinx.ext.imgmath',
-    'sphinx.ext.ifconfig',
-    'sphinx.ext.viewcode',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -136,7 +133,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'GeFiCa.tex', 'GeFiCa Documentation',
-     'Jing Liu, Byron Li', 'manual'),
+     'Byron Li, Jing Liu', 'manual'),
 ]
 
 
@@ -186,8 +183,3 @@ epub_exclude_files = ['search.html']
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/': None}
-
-# -- Options for todo extension ----------------------------------------------
-
-# If true, `todo` and `todoList` produce output, else they produce nothing.
-todo_include_todos = True

@@ -1,5 +1,5 @@
 .. GeFiCa documentation master file, created by
-   sphinx-quickstart on Sun Dec 23 11:46:28 2018.
+   sphinx-quickstart on Tue Jan  1 22:23:05 2019.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
