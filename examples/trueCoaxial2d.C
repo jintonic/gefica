@@ -12,10 +12,12 @@
   detector2->InnerRadius=0.14;//-3.45;
    detector2->OuterRadius=3.45;
    detector2->height=5.05;
-   detector2->Impurity="-0.318e10+0.025e10*y";
-   
+
 
    TF2 *im=new TF2("f","-0.318e10+0.025e10*y");
+   detector2->SetImpurity(im);
+   
+
    //TF1 *im1=new TF1("f","-0.318e10+0.025e10*x",0,6.9);
    detector2->MaxIterations=1e5;
    detector2->Csor=1.994;
@@ -24,10 +26,10 @@
    //TF1 *im=new TF1("","pol1",-0.318e10,0.025e10)
    //detector2->SetImpurity(im);//-0.1e10/GeFiCa::cm3);
    //detector2->SetImpurity(-0.318e10/GeFiCa::cm3);
-   detector2->CalculateField(GeFiCa::kSOR2);
+   detector2->CalculatePotential(GeFiCa::kSOR2);
    detector2->SaveField("trueCoaxial2d.root");
 
-   detector->CalculateField(GeFiCa::kAnalytic);
+   detector->CalculatePotential(GeFiCa::kAnalytic);
    detector->SaveField("trueCoaxial1dTrue.root");
 
    // generate graphics

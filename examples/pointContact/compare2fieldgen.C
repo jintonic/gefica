@@ -38,9 +38,9 @@ void generateField()
    ppc->Csor=1.990;
    ppc->V0=0*GeFiCa::volt;
    ppc->V1=-2500*GeFiCa::volt;
-   ppc->Impurity="-0.318e10+0*y";
+   ppc->SetImpurity(-0.318e10);
 
-   ppc->CalculateField(GeFiCa::kSOR2);
+   ppc->CalculatePotential(GeFiCa::kSOR2);
    ppc->SaveField("full.root");
 }
 

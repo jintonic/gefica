@@ -9,8 +9,8 @@
    tc1d->InnerRadius=0.13;
    tc1d->OuterRadius=3.45;
 
-   tc1d->Impurity="-0.318e10";
-   tc1d->CalculateField(GeFiCa::kAnalytic);
+   tc1d->SetImpurity(-0.318e10);
+   tc1d->CalculatePotential(GeFiCa::kAnalytic);
    tc1d->SaveField("tca2.root");
 
    // compare 

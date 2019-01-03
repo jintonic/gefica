@@ -14,8 +14,8 @@
    ppc->Csor=1.996;
    ppc->V0=2500*GeFiCa::volt;
    ppc->V1=0*GeFiCa::volt;
-   ppc->Impurity="-0.318e10+0*y";
-   ppc->CalculateField(GeFiCa::kSOR2);
+   ppc->SetImpurity(-0.318e10);
+   ppc->CalculatePotential(GeFiCa::kSOR2);
    //ppc->SaveField("pc2d.root");
    
    
@@ -31,8 +31,8 @@
    hppc->Csor=1.993;
    hppc->V0=2500*GeFiCa::volt;
    hppc->V1=0*GeFiCa::volt;
-   hppc->Impurity="-0.318e10+0*y";
-   hppc->CalculateField(GeFiCa::kSOR2);
+   hppc->SetImpurity(-0.318e10);
+   hppc->CalculatePotential(GeFiCa::kSOR2);
    //hppc->SaveField("hpc2d.root");
    
      // compare 
