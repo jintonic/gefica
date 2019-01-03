@@ -27,19 +27,6 @@ XYZ::~XYZ()
 }
 //_____________________________________________________________________________
 //
-void XYZ::CopyFrom(const XYZ &xp)
-{
-   XY::CopyFrom(xp);
-   n3=xp.n3;
-   for (int i=0; i<n; i++) {
-      fE3[i]=xp.fE3[i];
-      fC3[i]=xp.fC3[i];
-      fdC3p[i]=xp.fdC3p[i];
-      fdC3m[i]=xp.fdC3m[i];
-   }
-}
-//_____________________________________________________________________________
-//
 void XYZ::SetStepLength(double steplength1,double steplength2,double steplength3)
 {
    XY::SetStepLength(steplength1,steplength2); 

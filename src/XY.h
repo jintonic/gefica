@@ -41,7 +41,6 @@ class GeFiCa::XY : public GeFiCa::X
    	* This is used for a variable impurity level that changes with x
    	*/
       void SetImpurity(TF2 *Im);
-      void CopyFrom(const XY&);
 		/**
 		* This defines the class for the CINT library
 		*/

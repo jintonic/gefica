@@ -27,7 +27,6 @@ class GeFiCa::XYZ : public GeFiCa::XY
       virtual double GetE2(double x,double y,double z){return GetData(x,y,z,kE2);};
       virtual double GetE3(double x,double y,double z){return GetData(x,y,z,kE3);};
       virtual double GetImpurity(double x,double y,double z){return GetData(x,y,z,kImpurity);};
-      void CopyFrom(const XYZ&);
       ClassDef(XYZ,1);
 
    protected:

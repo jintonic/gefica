@@ -26,19 +26,6 @@ XY::~XY()
 }
 //_____________________________________________________________________________
 //
-void XY::CopyFrom(const XY &xp)
-{
-   X::CopyFrom(xp);
-   n2=xp.n2;
-   for (int i=0; i<n; i++) {
-      fE2[i]=xp.fE2[i];
-      fC2[i]=xp.fC2[i];
-      fdC2p[i]=xp.fdC2p[i];
-      fdC2m[i]=xp.fdC2m[i];
-   }
-}
-//_____________________________________________________________________________
-//
 void XY::SetStepLength(double steplength1,double steplength2)
 {
    //set field step length

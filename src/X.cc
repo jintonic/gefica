@@ -3,7 +3,6 @@
 #include <TChain.h>
 #include <TVectorD.h>
 #include <TF1.h>
-#include <Math/GSLMinimizer.h>
 #include <Math/Functor.h>
 
 #include "X.h"
