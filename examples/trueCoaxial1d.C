@@ -6,11 +6,11 @@
    detector->OuterRadius=3.45;
 
    detector->MaxIterations=1e5;
-   detector->Impurity="-0.318e10";
+   detector->SetImpurity(-0.318e10);
    detector->Csor=1.95;
-   d=detector->CalculateField(GeFiCa::kSOR2);
+   detector->CalculatePotential(GeFiCa::kSOR2);
    detector->SaveField("trueCoaxial1d.root");
-   detector->CalculateField(GeFiCa::kAnalytic);
+   detector->CalculatePotential(GeFiCa::kAnalytic);
    detector->SaveField("trueCoaxial1dTrue.root");
 
    // generate graphics

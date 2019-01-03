@@ -4,16 +4,16 @@
    detector2->Csor=1.995;
    detector2->V0=2000*GeFiCa::volt;
    detector2->V1=0*GeFiCa::volt;
-   detector2->Impurity="1e10";
-   detector2->CalculateField(GeFiCa::kSOR2);
+   detector2->SetImpurity(1e10);
+   detector2->CalculatePotential(GeFiCa::kSOR2);
    detector2->SaveField("planar2dSOR2.root");
 
    // calculate fields
    GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(101);
    detector->V0=2000*GeFiCa::volt;
    detector->V1=0*GeFiCa::volt;
-   detector->Impurity="1e10";
-   detector->CalculateField(GeFiCa::kAnalytic);
+   detector->SetImpurity(1e10);
+   detector->CalculatePotential(GeFiCa::kAnalytic);
    detector->SaveField("planar1dTrue.root");
 
    // generate graphics

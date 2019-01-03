@@ -8,23 +8,28 @@
    detector->UpperBound=1*GeFiCa::cm;
    detector->V0=0*GeFiCa::volt;
    detector->V1=2000*GeFiCa::volt;
-   detector->Impurity="0e10";
+   TF1 *im=new TF1("f","-1e10");
+   detector->SetImpurity(im);
    detector->CalculatePotential(GeFiCa::kAnalytic);
    detector->SaveField("p0planar1dSOR2.root");
 
-   detector->Impurity="1.5e10";
+   TF1 *im=new TF1("f","1.5e10");
+   detector->SetImpurity(im);
    detector->CalculatePotential(GeFiCa::kAnalytic);
    detector->SaveField("p1planar1dSOR2.root");
 
-   detector->Impurity="3.5e10";
+   TF1 *im=new TF1("f","3.5e10");
+   detector->SetImpurity(im);
    detector->CalculatePotential(GeFiCa::kAnalytic);
    detector->SaveField("p3planar1dSOR2.root");
    
-   detector->Impurity="-1.5e10";
+   TF1 *im=new TF1("f","-1.5e10");
+   detector->SetImpurity(im);
    detector->CalculatePotential(GeFiCa::kAnalytic);
    detector->SaveField("n1planar1dSOR2.root");
    
-   detector->Impurity="-3.5e10";
+   TF1 *im=new TF1("f","-3.5e10");
+   detector->SetImpurity(im);
    detector->CalculatePotential(GeFiCa::kAnalytic);
    detector->SaveField("n3planar1dSOR2.root");
 

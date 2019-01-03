@@ -4,11 +4,11 @@
    detector->Csor=1.9;
    detector->V1=0*GeFiCa::volt;
    detector->V0=2000*GeFiCa::volt;
-   detector->Impurity="1e10";
-   detector->CalculateField(GeFiCa::kAnalytic);
+   detector->SetImpurity(1e10);
+   detector->CalculatePotential(GeFiCa::kAnalytic);
    detector->SaveField("sphere1dTrue.root");
 
-   detector->CalculateField(GeFiCa::kSOR2);
+   detector->CalculatePotentia(GeFiCa::kSOR2);
    detector->SaveField("sphere1dSOR2.root");
 
    // generate graphics
