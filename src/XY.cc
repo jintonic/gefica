@@ -54,24 +54,52 @@ void XY::SOR2(int idx,bool elec)
    double h3=fdC1p[idx];
    double h4=fdC2m[idx];
    double h1=fdC2p[idx];
-   double Pym1,Pyp1,Pxm1,Pxp1;
-   if(idx>=n1)Pym1=fPotential[idx-n1];
-   else Pym1=fPotential[idx];
-   if(idx>=n-n1)Pyp1=fPotential[idx];
-   else Pyp1=fPotential[idx+n1];
-   if(idx%n1==0)Pxm1=fPotential[idx];
-   else Pxm1=fPotential[idx-1];
-   if(idx%n1==n1-1)Pxp1=fPotential[idx];
-   else Pxp1=fPotential[idx+1];
-   //double tmp=(density/epsilon+1/fC1[idx]*(Pxp1-Pxm1)/(h2+h3)+(Pxp1/h2+Pxm1/h3)*2/(h2+h3)+(Pyp1/h1+Pym1/h4)*2/(h1+h4))/
-   double tmp=(density/epsilon+(Pxp1/h2+Pxm1/h3)*2/(h2+h3)+(Pyp1/h1+Pym1/h4)*2/(h1+h4))/
+   double pym,pyp,pxm,pxp;
+   if(idx>=n1)pym=fPotential[idx-n1];
+   else pym=fPotential[idx];
+   if(idx>=n-n1)pyp=fPotential[idx];
+   else pyp=fPotential[idx+n1];
+   if(idx%n1==0)pxm=fPotential[idx];
+   else pxm=fPotential[idx-1];
+   if(idx%n1==n1-1)pxp=fPotential[idx];
+   else pxp=fPotential[idx+1];
+   //double tmp=(density/epsilon+1/fC1[idx]*(pxp-pxm)/(h2+h3)+(pxp/h2+pxm/h3)*2/(h2+h3)+(pyp/h1+pym/h4)*2/(h1+h4))/
+   double tmp=(density/epsilon+(pxp/h2+pxm/h3)*2/(h2+h3)+(pyp/h1+pym/h4)*2/(h1+h4))/
       ((1/h2+1/h3)*2/(h2+h3)+(1/h1+1/h4)*2/(h1+h4));
-   // cout<<tmp<<endl;
-   fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
-   if(elec)
+   //find minmium and maxnium of all five grid, the new one should not go overthem.
+   //find min
+   double min=prm;
+   double max=prm;
+   if(min>prp)min=prp;
+   if (min>pzp)min=pzp;
+   if (min>pzm)min=pzm;
+   
+   //find max
+   if(max<prp)max=prp;
+   if (max<pzp)max=pzp;
+   if (max<pzm)max=pzm;
+//if tmp is greater or smaller than max and min, set tmp to it.
+   
+      //over relax
+   //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
+   //if need calculate depleted voltage
+   double oldP=fPotential[idx];
+   tmp=Csor*(tmp-oldP)+oldP;
+   if(tmp<min)
    {
-      fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
-      fE2[idx]=(Pyp1-Pym1)/(h1+h4);
+      fPotential[idx]=min;
+      fIsDepleted[idx]=false;
+   }
+   else if(tmp>max)
+   {
+      fPotential[idx]=max;
+      fIsDepleted[idx]=false;
+   }
+   else
+      fIsDepleted[idx]=true;
+   if(fIsDepleted[idx]||!NotImpurityPotential)
+   {
+      fPotential[idx]=tmp;
    }
 }
 //_____________________________________________________________________________

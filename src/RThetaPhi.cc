@@ -24,42 +24,71 @@ void RThetaPhi::SOR2(int idx,bool elec)
    double h5=fdC3p[idx];
 
    // get potentials of points around point idx
-   double Pym1,Pyp1,Pxm1,Pxp1,Pzp1,Pzm1;
-   if (idx<n1*n2) Pzm1=fPotential[idx+n-n1*n2];
-   else Pzm1=fPotential[idx-n1*n2];
-   if (idx>=n-n1*n2) Pzp1=fPotential[idx-(n-n1*n2)];
-   else Pzp1=fPotential[idx+n1*n2];
+   double pthetam,pthetap,prm,prp,pphip,pphim;
+   if (idx<n1*n2) pphim=fPotential[idx+n-n1*n2];
+   else pphim=fPotential[idx-n1*n2];
+   if (idx>=n-n1*n2) pphip=fPotential[idx-(n-n1*n2)];
+   else pphip=fPotential[idx+n1*n2];
    if (idx%(n1*n2)>(n1*n2)-n1-1) {
-      if(idx<n/2) Pyp1=fPotential[idx+n/2];
-      else Pyp1=fPotential[idx-n/2];
+      if(idx<n/2) pthetap=fPotential[idx+n/2];
+      else pthetap=fPotential[idx-n/2];
    } else
-      Pyp1=fPotential[idx+n1];
+      pthetap=fPotential[idx+n1];
    if (idx%(n1*n2)<n1) {
-      if(idx<n/2)Pym1=fPotential[idx+n/2];
-      else Pym1=fPotential[idx-n/2];
+      if(idx<n/2)pthetam=fPotential[idx+n/2];
+      else pthetam=fPotential[idx-n/2];
    } else
-      Pym1=fPotential[idx-n1];
-   if ((idx%(n1*n2))%n1==n1-1) Pxp1=fPotential[idx];
-   else Pxp1=fPotential[idx+1];
-   if ((idx%(n1*n2))%n1==0) Pxm1=fPotential[idx];
-   else Pxm1=fPotential[idx-1];
+      pthetam=fPotential[idx-n1];
+   if ((idx%(n1*n2))%n1==n1-1) prp=fPotential[idx];
+   else prp=fPotential[idx+1];
+   if ((idx%(n1*n2))%n1==0) prm=fPotential[idx];
+   else prm=fPotential[idx-1];
 
    double r=fC1[idx];
    double O=fC2[idx];
    double Ptmp = (density/epsilon/2
-         +(Pxp1-Pxm1)/r/(h2+h3)
-         +(Pyp1-Pym1)/r/r/(h1+h4)/sin(O)*cos(O)/2
-         +(Pxp1/h3+Pxm1/h2)/(h3+h2)
-         +(Pyp1/h1+Pym1/h4)/r/r/(h4+h1)
-         +(Pzp1/h5+Pzm1/h0)/r/r/sin(O)/sin(O)/(h0+h5))
+         +(prp-prm)/r/(h2+h3)
+         +(pthetap-pthetam)/r/r/(h1+h4)/sin(O)*cos(O)/2
+         +(prp/h3+prm/h2)/(h3+h2)
+         +(pthetap/h1+pthetam/h4)/r/r/(h4+h1)
+         +(pphip/h5+pphim/h0)/r/r/sin(O)/sin(O)/(h0+h5))
       /(     1/h2/h3
             +1/r/r/h1/h4
             +1/r/r/sin(O)/sin(O)/h5/h0);
-   fPotential[idx]=Csor*(Ptmp-fPotential[idx])+fPotential[idx];
-   if(elec) {
-      fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
-      fE2[idx]=(Pyp1-Pym1)/(h1+h4);
-      fE3[idx]=(Pzp1-Pzm1)/(h0+h5);
+   double min=prm;
+   double max=prm;
+   if(min>prp)min=prp;
+   if (min>pphip)min=pphip;
+   if (min>pphim)min=pphim;
+   if (min>pthetam)min=pthetam;
+   if (min>pthetam)min=pthetam;
+   
+   //find max
+   if(max<prp)max=prp;
+   if (max<pphip)min=pphip;
+   if (max<pphim)max=pphim;
+   if (max<pthetam)max=pthetam;
+   if (max<pthetam)max=pthetam;
+//if tmp is greater or smaller than max and min, set tmp to it.
+   //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
+   //if need calculate depleted voltage
+   double oldP=fPotential[idx];
+   tmp=Csor*(tmp-oldP)+oldP;
+   if(tmp<min)
+   {
+      fPotential[idx]=min;
+      fIsDepleted[idx]=false;
+   }
+   else if(tmp>max)
+   {
+      fPotential[idx]=max;
+      fIsDepleted[idx]=false;
+   }
+   else
+      fIsDepleted[idx]=true;
+   if(fIsDepleted[idx]||!NotImpurityPotential)
+   {
+      fPotential[idx]=tmp;
    }
 }
 //_____________________________________________________________________________

@@ -19,10 +19,28 @@ void R::SOR2(int idx,bool elec)
    double h3=fdC1p[idx];
    double tmp=(+density/epsilon*(h2+h3)*0.5+1/fC1[idx]*(fPotential[idx+1]-fPotential[idx-1])
          +fPotential[idx+1]/h2+fPotential[idx-1]/h3)/(1/h2+1/h3);
-   // over-relaxation if Csor>1
-   fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
 
-   if(elec)fE1[idx]=(fPotential[idx+1]-fPotential[idx-1])/(h2+h3);
+   //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
+   double oldP=fPotential[idx];
+      tmp=Csor*(tmp-oldP)+oldP;
+   
+   if(tmp<min)
+   {
+      fPotential[idx]=min;
+      fIsDepleted[idx]=false;
+   }
+   else if(tmp>max)
+   {
+      fPotential[idx]=max;
+      fIsDepleted[idx]=false;
+   }
+   else
+      fIsDepleted[idx]=true;
+   if(fIsDepleted[idx]||!NotImpurityPotential)
+   {
+      //over relax
+      fPotential[idx]=tmp;
+   }
 }
 //_____________________________________________________________________________
 //

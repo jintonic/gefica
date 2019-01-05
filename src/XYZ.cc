@@ -55,34 +55,62 @@ void XYZ::SOR2(int idx,bool elec)
    double h1=fdC2p[idx];
    double h0=fdC3m[idx];
    double h5=fdC3p[idx];
-   double Pym1,Pyp1,Pxm1,Pxp1,Pzp1,Pzm1;
-   if(idx<n1*n2)Pzm1=fPotential[idx];
-   else Pzm1=fPotential[idx-n1*n2];
-   if(idx>=n-n1*n2)Pzp1=fPotential[idx];
-   else Pzp1=fPotential[idx+n1*n2];
-   if(idx%(n1*n2)>(n1*n2)-n1-1) Pyp1=fPotential[idx];
-   else Pyp1=fPotential[idx+n1];
-   if(idx%(n1*n2)<n1)Pym1=fPotential[idx];
-   else Pym1=fPotential[idx-n1];
-   if((idx%(n1*n2))%n1==n1-1)Pxp1=fPotential[idx];
-   else Pxp1=fPotential[idx+1];
-   if((idx%(n1*n2))%n1==0)Pxm1=fPotential[idx];
-   else Pxm1=fPotential[idx-1];
+   double pym,pyp,pxm,pxp,pzp,pzm;
+   if(idx<n1*n2)pzm=fPotential[idx];
+   else pzm=fPotential[idx-n1*n2];
+   if(idx>=n-n1*n2)pzp=fPotential[idx];
+   else pzp=fPotential[idx+n1*n2];
+   if(idx%(n1*n2)>(n1*n2)-n1-1) pyp=fPotential[idx];
+   else pyp=fPotential[idx+n1];
+   if(idx%(n1*n2)<n1)pym=fPotential[idx];
+   else pym=fPotential[idx-n1];
+   if((idx%(n1*n2))%n1==n1-1)pxp=fPotential[idx];
+   else pxp=fPotential[idx+1];
+   if((idx%(n1*n2))%n1==0)pxm=fPotential[idx];
+   else pxm=fPotential[idx-1];
 
    double tmp= (
          -density/epsilon*h0*h1*h2*h3*h4*h5*(h1+h4)*(h2+h3)*(h0+h5)/2
-         +(Pxp1*h3+Pxm1*h2)*h0*h1*h4*h5*(h1+h4)*(h0+h5)
-         +(Pyp1*h4+Pym1*h1)*h0*h2*h3*h5*(h0+h5)*(h2+h3)
-         +(Pzp1*h5+Pzm1*h0)*h1*h2*h3*h4*(h1+h4)*(h2+h3)	
+         +(pxp*h3+pxm*h2)*h0*h1*h4*h5*(h1+h4)*(h0+h5)
+         +(pyp*h4+pym*h1)*h0*h2*h3*h5*(h0+h5)*(h2+h3)
+         +(pzp*h5+pzm*h0)*h1*h2*h3*h4*(h1+h4)*(h2+h3)	
          )
       /((h0+h5)*(h1+h4)*(h2+h3)*(h0*h1*h4*h5+h0*h2*h3*h5+h1*h2*h3*h4));
 
-   fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
-   if(elec)
+   double min=pxm;
+   double max=pxm;
+   if(min>pxp)min=pxp;
+   if (min>pphip)min=pphip;
+   if (min>pphim)min=pphim;
+   if (min>pthetam)min=pthetam;
+   if (min>pthetam)min=pthetam;
+   
+   //find max
+   if(max<pxp)max=pxp;
+   if (max<pyp)min=pyp;
+   if (max<pym)max=pym;
+   if (max<pzm)max=pzm;
+   if (max<pzm)max=pzm;
+//if tmp is greater or smaller than max and min, set tmp to it.
+   //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
+   //if need calculate depleted voltage
+   double oldP=fPotential[idx];
+   tmp=Csor*(tmp-oldP)+oldP;
+   if(tmp<min)
    {
-      fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
-      fE2[idx]=(Pyp1-Pym1)/(h1+h4);
-      fE3[idx]=(Pzp1-Pzm1)/(h0+h5);
+      fPotential[idx]=min;
+      fIsDepleted[idx]=false;
+   }
+   else if(tmp>max)
+   {
+      fPotential[idx]=max;
+      fIsDepleted[idx]=false;
+   }
+   else
+      fIsDepleted[idx]=true;
+   if(fIsDepleted[idx]||!NotImpurityPotential)
+   {
+      fPotential[idx]=tmp;
    }
 }
 //_____________________________________________________________________________
