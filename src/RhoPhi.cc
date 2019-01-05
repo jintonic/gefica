@@ -13,25 +13,51 @@ void RhoPhi::SOR2(int idx,bool elec)
    double h3=fdC1p[idx];
    double h4=fdC2m[idx];
    double h1=fdC2p[idx];
-   double Pym1,Pyp1,Pxm1,Pxp1;
-   if(idx>=n1)Pym1=fPotential[idx-n1];
-   else Pym1=fPotential[idx+n-n1];
-   if(idx>=n-n1)Pyp1=fPotential[idx-n+n1];
-   else Pyp1=fPotential[idx+n1];
-   if(idx%n1==0)Pxm1=fPotential[idx];
-   else Pxm1=fPotential[idx-1];
-   if(idx%n1==n1-1)Pxp1=fPotential[idx];
-   else Pxp1=fPotential[idx+1];
-   double tmp = (Pxp1/(h3*(h2+h3))+Pxm1/(h2*(h2+h3))
-         +Pyp1/r/r/h4/(h1+h4)+Pym1/r/r/h1/(h1+h4)
-         -density/epsilon/2+(Pxp1-Pxm1)/2/r/(h2+h3))
+   double pphim,pphip,prhom,prhop;
+   if(idx>=n1)pphim=fPotential[idx-n1];
+   else pphim=fPotential[idx+n-n1];
+   if(idx>=n-n1)pphip=fPotential[idx-n+n1];
+   else pphip=fPotential[idx+n1];
+   if(idx%n1==0)prhom=fPotential[idx];
+   else prhom=fPotential[idx-1];
+   if(idx%n1==n1-1)prhop=fPotential[idx];
+   else prhop=fPotential[idx+1];
+   double tmp = (prhop/(h3*(h2+h3))+prhom/(h2*(h2+h3))
+         +pphip/r/r/h4/(h1+h4)+pphim/r/r/h1/(h1+h4)
+         -density/epsilon/2+(prhop-prhom)/2/r/(h2+h3))
       /(1/h3/(h2+h3)+1/h2/(h2+h3)
             +1/r/r/h1/(h1+h4)+1/r/r/h4/(h1+h4));
    fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
-   if(elec)
+   double min=prhom;
+   double max=prhom;
+   if(min>prhop)min=prhop;
+   if (min>pphip)min=pphip;
+   if (min>pphim)min=pphim;
+   
+   //find max
+   if(max<prhop)max=prhop;
+   if (max<pphip)min=pphip;
+   if (max<pphim)max=pphim;
+//if tmp is greater or smaller than max and min, set tmp to it.
+   //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
+   //if need calculate depleted voltage
+   double oldP=fPotential[idx];
+   tmp=Csor*(tmp-oldP)+oldP;
+   if(tmp<min)
    {
-      fE1[idx]=(Pxp1-Pxm1)/(h2+h3);
-      fE2[idx]=(Pyp1-Pym1)/(h1+h4);
+      fPotential[idx]=min;
+      fIsDepleted[idx]=false;
+   }
+   else if(tmp>max)
+   {
+      fPotential[idx]=max;
+      fIsDepleted[idx]=false;
+   }
+   else
+      fIsDepleted[idx]=true;
+   if(fIsDepleted[idx]||!NotImpurityPotential)
+   {
+      fPotential[idx]=tmp;
    }
 }
 //_____________________________________________________________________________
