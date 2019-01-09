@@ -68,17 +68,17 @@ void XY::SOR2(int idx,bool elec)
       ((1/h2+1/h3)*2/(h2+h3)+(1/h1+1/h4)*2/(h1+h4));
    //find minmium and maxnium of all five grid, the new one should not go overthem.
    //find min
-   double min=prm;
-   double max=prm;
-   if(min>prp)min=prp;
-   if (min>pzp)min=pzp;
-   if (min>pzm)min=pzm;
+   double min=pxm;
+   double max=pxm;
+   if(min>pxp)min=pxp;
+   if (min>pyp)min=pyp;
+   if (min>pym)min=pym;
    
    //find max
-   if(max<prp)max=prp;
-   if (max<pzp)max=pzp;
-   if (max<pzm)max=pzm;
-//if tmp is greater or smaller than max and min, set tmp to it.
+   if(max<pxp)max=pxp;
+   if (max<pyp)max=pyp;
+   if (max<pym)max=pym;
+   //if tmp is greater or smaller than max and min, set tmp to it.
    
       //over relax
    //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];

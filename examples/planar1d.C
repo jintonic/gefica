@@ -1,64 +1,67 @@
+// calculate field for 1D planar detector
 {
-
-
-   // calculate fields
-   GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(301);
+   // define detector
+   GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(101);
    detector->MaxIterations=1e5;
    detector->Csor=1.95;
    detector->UpperBound=1*GeFiCa::cm;
-   detector->V1=500*GeFiCa::volt;
    detector->V0=0*GeFiCa::volt;
-   TF1 *im=new TF1("f","-1e10");
-   detector->SetImpurity(im);
-//   detector->Impurity="1e10";
+   detector->V1=800*GeFiCa::volt;
+   TF1 *fim=new TF1("fim","1e10");
+   detector->SetImpurity(fim);
+   detector->Dump();
+   cout<<"press any key to continue"<<endl;
+   cin.get();
 
+   // calculate fields with two different methods
    detector->CalculatePotential(GeFiCa::kSOR2);
-   detector->SaveField("planar1dSOR2.root");
-     
-/*
+   detector->SaveField("planar1dSOR.root");
+   detector->CalculatePotential(GeFiCa::kAnalytic);
+   detector->SaveField("planar1dANA.root");
 
-   //draw the result
-   TCanvas * cvs=new TCanvas();
-   gStyle->SetPadTopMargin(0.02);
-   gStyle->SetPadRightMargin(0.01);
-   gStyle->SetPadLeftMargin(0.13);
-   gStyle->SetLabelFont(22,"XY");
-   gStyle->SetLabelSize(0.06,"XY");
+   // prepare drawing style
+   gROOT->SetStyle("Plain"); // pick up a good drawing style to modify
+   gStyle->SetLegendBorderSize(0);
+   gStyle->SetLegendFont(132);
+   gStyle->SetLabelFont(132,"XY");
+   gStyle->SetTitleFont(132,"XY");
+   gStyle->SetLabelSize(0.05,"XY");
    gStyle->SetTitleSize(0.05,"XY");
-   gStyle->SetTitleFont(22,"XY");
-   gStyle->SetLegendFont(22);
-   //gStyle->SetLegendTextSize(0.04);
+   gStyle->SetPadRightMargin(0.01);
+   gStyle->SetPadLeftMargin(0.12);
+   gStyle->SetPadTopMargin(0.02);
 
-   // generate graphics
+   // compare numerical result to analytic calculation
    TChain *tn = new TChain("t");
-   tn->Add("planar1dSOR2.root");
+   tn->Add("planar1dSOR.root");
    tn->Draw("p:c1");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
 
    TChain *ta = new TChain("t");
-   ta->Add("point2dSOR2.root");
-   ta->Draw("p:c2","c1<0.1&&c1>-0.1");
+   ta->Add("planar1dANA.root");
+   ta->Draw("p:c1");
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
 
-   // make final plot
    gn->SetMarkerColor(kBlue);
-   gn->SetMarkerStyle(8);
+   gn->SetMarkerStyle(kCircle);
    gn->SetMarkerSize(0.8);
-   ga->SetLineColor(kRed);
-   gn->SetTitle("");
-   gn->GetXaxis()->SetTitle("Thickness [cm]");
-   gn->GetYaxis()->SetTitle("Potential [V]");
-   gn->GetYaxis()->SetTitleOffset(1.2);
-
+   gn->SetTitle(";Thickness [cm];Potential [V]");
+   gn->GetXaxis()->SetRangeUser(0,1);
+   gn->GetYaxis()->SetRangeUser(0,800);
+   //gn->GetYaxis()->SetTitleOffset(1.2);
    gn->Draw("ap");
+
+   ga->SetLineColor(kRed);
    ga->Draw("l");
 
-   TLegend *leg = new TLegend(0.2,0.6,0.5,0.8);
-   leg->SetBorderSize(0);
-   leg->AddEntry(gn,"SOR2","p");
-   leg->AddEntry(ga,"Analyic","p");
-   leg->SetTextSize(0.05);
-   leg->Draw();
-*/   
-   //cvs->SaveAs("planar1d.png");
+   TLegend *l = new TLegend(0.2,0.6,0.4,0.8);
+   l->AddEntry(ga,"Analytic","l");
+   l->AddEntry(gn,"SOR2","p");
+   l->Draw();
+
+   gPad->Print("planar1d.png");
+
+   // calculate capacitance
+   double c = detector->GetCapacitance()/GeFiCa::pF;
+   cout<<"capacitance is "<<c<<" pF"<<endl;
 }

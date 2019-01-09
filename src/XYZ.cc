@@ -80,10 +80,10 @@ void XYZ::SOR2(int idx,bool elec)
    double min=pxm;
    double max=pxm;
    if(min>pxp)min=pxp;
-   if (min>pphip)min=pphip;
-   if (min>pphim)min=pphim;
-   if (min>pthetam)min=pthetam;
-   if (min>pthetam)min=pthetam;
+   if (min>pyp)min=pyp;
+   if (min>pym)min=pym;
+   if (min>pzm)min=pzm;
+   if (min>pzm)min=pzm;
    
    //find max
    if(max<pxp)max=pxp;

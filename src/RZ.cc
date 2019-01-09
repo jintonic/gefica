@@ -72,38 +72,42 @@ void RZ::SOR2(int idx,bool NotImpurityPotential)
 
 
 }
-void RZ::CalculateCapacitance()
+//_____________________________________________________________________________
+//
+double RZ::GetCapacitance()
 {
-   /*
-http://bgaowww.physics.utoledo.edu/teaching/LectureNotes/Phys2080/Chapter16.htm
-https://en.wikipedia.org/wiki/Electric_field#Energy_in_the_electric_field
-use Energy in a charged capacitor= total energy U stored in the electric field in a given volume V 
-to find capacitance
-*/
-   //only work when impurity are zero
-   for(int i=0;i<n;i++)
-   {
-      if(fImpurity[i]!=0)
-      {
+   cout<<"Calculate detector capacitance..."<<endl;
+   // set impurity to zero
+   double *tmpImpurity=fImpurity;
+   for (int i=0;i<n;i++) {
+      if (fImpurity[i]!=0) {
          //impurity not clear,return
-         return;
+         //return -1;
+         fImpurity=new double[n];
+         for (int j=0;j<n;j++) {
+            fImpurity[j]=0;
+            if (!fIsFixed[j] && !fIsDepleted[j]) fIsFixed[j]=true;
+         }
+         break;
       }
    }
-   double V=1*volt;
-   //debug:cout<<V<<endl;
+   // calculate potential without impurity
+   CalculatePotential(GeFiCa::kSOR2);
+   // set impurity back
+   if(fImpurity!=tmpImpurity) delete []fImpurity;
+   fImpurity=tmpImpurity;
+
+   // calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
+   double dV=V0-V1; if(dV<0)dV=-dV;
    double SumofElectricField=0;
-   for(int i=0;i<n;i++)
-   {
-      if(fC1[i]<0)continue;
-      //integral over electric field
+   for(int i=0;i<n;i++) {
       double e1=fE1[i];
       double e2=fE2[i];
       double dr=fdC1p[i];
       double dz=fdC2p[i];
       SumofElectricField+=(e1*e1+e2*e2)*fC1[i]*dr*dz;
-
    }
-   double Capacitance=SumofElectricField*2*3.14159*epsilon/V/V;
-   cout<<"Calculated capacitance is "<<Capacitance/pF<<endl;
+   cout<<"Done."<<endl;
+   return SumofElectricField*2*3.14159*epsilon/dV/dV;
 }
 

@@ -2,12 +2,14 @@
 #include <TTree.h>
 #include <TChain.h>
 #include <TVectorD.h>
+#include <TStopwatch.h>
 #include <TF1.h>
 #include <Math/Functor.h>
 
 #include "X.h"
 #include "Units.h"
 using namespace GeFiCa;
+using namespace std;
 
 X::X(int nx) : TNamed("X","X"), n1(nx), n(nx), Csor(1.95), Precision(1e-7),
    MaxIterations(100000), V0(0), V1(2000*volt), NotImpurityPotential(true)
@@ -148,7 +150,9 @@ int* X::FindSurroundingMatrix(int idx)
 //
 bool X::CalculatePotential(EMethod method)
 {
+   TStopwatch watch; watch.Start();
    if (method==kAnalytic) return Analytic();
+   cout<<" Calculate field ..."<<endl;
    int cnt=0;
    if (V0==0&&V1==0)NotImpurityPotential=false;
    else NotImpurityPotential=true;
@@ -164,11 +168,16 @@ bool X::CalculatePotential(EMethod method)
          if(diff>0)XUpSum+=(diff);
          else XUpSum-=(diff);
       }
-      if(cnt%10==0)
-         std::cout<<cnt<<"  "<<XUpSum/XDownSum<<" down: "<<XDownSum<<", up: "<<XUpSum<<std::endl;
+      double cp = XUpSum/XDownSum; // current precision
+      if (cnt%100==0)
+         Printf("  %05d, target precision: %e, current precision: %e", 
+               cnt, Precision, cp);
 
-      if (XUpSum/XDownSum<Precision) {
+      if (cp<Precision) {
          for (int i=0; i<n; i++) if (!CalculateField(i)) return false;
+         Printf("  %05d, target precision: %e, current precision: %e", 
+               cnt, Precision, cp);
+         cout<<" Done. Spent "; watch.Stop(); watch.Print();
          return true;
       }
    }
@@ -367,50 +376,36 @@ bool X::CalculateField(int idx)
 
 //_____________________________________________________________________________
 //
-double  X::CalculateCapacitance()
+double X::GetCapacitance()
 {
-   /*
-http://bgaowww.physics.utoledo.edu/teaching/LectureNotes/Phys2080/Chapter16.htm
-https://en.wikipedia.org/wiki/Electric_field#Energy_in_the_electric_field
-use Energy in a charged capacitor= total energy U stored in the electric field in a given volume V 
-to find capacitance
-*/
-   //only work when impurity are zero
-   double * tmpImpurity=fImpurity;
-   for(int i=0;i<n;i++)
-   {
-      if(fImpurity[i]!=0)
-      {
+   cout<<"Calculate detector capacitance..."<<endl;
+   // set impurity to zero
+   double *tmpImpurity=fImpurity;
+   for (int i=0;i<n;i++) {
+      if (fImpurity[i]!=0) {
          //impurity not clear,return
          //return -1;
          fImpurity=new double[n];
-         for(int j=0;j<n;j++)
-         {
+         for (int j=0;j<n;j++) {
             fImpurity[j]=0;
-            if(!fIsFixed[j]&&!fIsDepleted[j])fIsFixed[j]=true;
+            if (!fIsFixed[j] && !fIsDepleted[j]) fIsFixed[j]=true;
          }
          break;
       }
    }
+   // calculate potential without impurity
    CalculatePotential(GeFiCa::kSOR2);
-   double V=1*volt;
-   //debug:cout<<V<<endl;
-   double SumofElectricField=0;
-   for(int i=0;i<n;i++)
-   {
-      if(fC1[i]<0)continue;
-      //integral over electric field
-      double e1=fE1[i];
-      double dx=fdC1p[i];
-      SumofElectricField+=(e1*e1)*dx;
-
-      if(!fIsDepleted[i])fIsFixed[i]=false;
-      //   std::cout<<" "<<fE1[i];
-
-   }
-   if(fImpurity!=tmpImpurity)delete []fImpurity;
+   // set impurity back
+   if(fImpurity!=tmpImpurity) delete []fImpurity;
    fImpurity=tmpImpurity;
-   double Capacitance=SumofElectricField*2*epsilon/V/V;
-   std::cout<<"Calculated capacitance is "<<Capacitance/pF<<" "<<SumofElectricField<<" "<<fE1[10]<<std::endl;
-   return Capacitance/pF;
+
+   // calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
+   double dV=V0-V1; if(dV<0)dV=-dV;
+   double SumofElectricField=0;
+   for(int i=0;i<n;i++) {
+      SumofElectricField+=fE1[i]*fE1[i]*fdC1p[i]*cm*cm;
+      if (!fIsDepleted[i]) fIsFixed[i]=false;
+   }
+   cout<<"Done."<<endl;
+   return SumofElectricField*epsilon/dV/dV;
 }

@@ -23,24 +23,6 @@ void R::SOR2(int idx,bool elec)
    //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    double oldP=fPotential[idx];
       tmp=Csor*(tmp-oldP)+oldP;
-   
-   if(tmp<min)
-   {
-      fPotential[idx]=min;
-      fIsDepleted[idx]=false;
-   }
-   else if(tmp>max)
-   {
-      fPotential[idx]=max;
-      fIsDepleted[idx]=false;
-   }
-   else
-      fIsDepleted[idx]=true;
-   if(fIsDepleted[idx]||!NotImpurityPotential)
-   {
-      //over relax
-      fPotential[idx]=tmp;
-   }
 }
 //_____________________________________________________________________________
 //

@@ -101,7 +101,11 @@ class GeFiCa::X : public TNamed
        * Returns the potential.
        */ 
       double GetPotential(double x){return GetData(x,kPotential);};
-      double  CalculateCapacitance();
+      /**
+       * Get Capacitance, Cdet.
+       * calculate Cdet based on CV^2/2 = epsilon int E^2 dx^3 / 2
+       */
+      double GetCapacitance();
       /**
        *This defines the class for the cint dictionary.
        */
@@ -115,7 +119,7 @@ class GeFiCa::X : public TNamed
       double *fC1; ///< [n] the location under the first coordinate (x, r, or rho) direction
       double *fdC1p; ///< [n] distance between this and next grid points alone C1
       double *fdC1m; ///< [n] distance between this and previous grid points alone C1
-      double *fImpurity; ///< [n] Value of the impurity level at a point on the grid
+      double *fImpurity; ///< [n] Net impurity concentration (Nacceptor-Ndonor)
       /**
        * Sets the field step length.
        */

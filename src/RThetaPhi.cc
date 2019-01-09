@@ -46,7 +46,7 @@ void RThetaPhi::SOR2(int idx,bool elec)
 
    double r=fC1[idx];
    double O=fC2[idx];
-   double Ptmp = (density/epsilon/2
+   double tmp = (density/epsilon/2
          +(prp-prm)/r/(h2+h3)
          +(pthetap-pthetam)/r/r/(h1+h4)/sin(O)*cos(O)/2
          +(prp/h3+prm/h2)/(h3+h2)

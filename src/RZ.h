@@ -1,10 +1,3 @@
-///////////////////////
-//                   //
-//RZ                 //
-//                   //
-//2D Field based on X//
-//it will create a 2D Field using cartesian coordinate and calculate the result
-///////////////////////
 #ifndef GeFiCa_RZ_H
 #define GeFiCa_RZ_H
 
@@ -13,6 +6,10 @@ class TF2;
 
 namespace GeFiCa { class RZ; }
 
+/**
+ *2D Field based on X
+ * it will create a 2D Field using cartesian coordinate and calculate the result
+ */
 class GeFiCa::RZ : public GeFiCa::XY
 {
    public:
@@ -21,8 +18,9 @@ class GeFiCa::RZ : public GeFiCa::XY
        */
       RZ(unsigned short n1=101, unsigned short n2=101):XY(n1,n2){};
 
+      double GetCapacitance();
+
       ClassDef(RZ,1);
-      void CalculateCapacitance();
 
    protected:
       virtual void SOR2(int idx,bool elec);
