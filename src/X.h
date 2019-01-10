@@ -4,7 +4,7 @@
 #include <TNamed.h>
 #include <string>
 
-class TF1;
+class TF3;
 
 namespace GeFiCa { 
    enum EMethod ///< Different methods to calculate fields
@@ -86,7 +86,7 @@ class GeFiCa::X : public TNamed
       /**
        * Set impurity that changes with x.
        */
-      void SetImpurity(TF1 *fi1);
+      virtual void SetImpurity(TF3 *fi1);
       /**
        * Returns the value for E under the first direction.
        */

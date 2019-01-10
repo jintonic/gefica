@@ -3,7 +3,7 @@
 #include <TChain.h>
 #include <TVectorD.h>
 #include <TStopwatch.h>
-#include <TF1.h>
+#include <TF3.h>
 #include <Math/Functor.h>
 
 #include "X.h"
@@ -353,7 +353,7 @@ void X::LoadField(const char * fin)
 }
 //_____________________________________________________________________________
 //
-void X::SetImpurity(TF1 *fi1)
+void X::SetImpurity(TF3 *fi1)
 {
    Initialize();
    for (int i=n;i-->0;) fImpurity[i]=fi1->Eval(fC1[i]);

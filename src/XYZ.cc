@@ -216,6 +216,7 @@ void XYZ::LoadField(const char * fin)
 //
 void XYZ::SetImpurity(TF3 * Im)
 {
+   Initialize();
    for (int i=n;i-->0;) fImpurity[i] = Im->Eval(fC1[i], fC2[i], fC3[i]);
 }
 //_____________________________________________________________________________

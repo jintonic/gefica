@@ -228,7 +228,7 @@ void XY::LoadField(const char * fin)
 }
 //_____________________________________________________________________________
 //
-void XY::SetImpurity(TF2 *Im)
+void XY::SetImpurity(TF3 *Im)
 {
    Initialize();
    for (int i=n;i-->0;) fImpurity[i] = Im->Eval(fC1[i], fC2[i]);
