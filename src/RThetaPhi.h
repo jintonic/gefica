@@ -7,7 +7,6 @@ namespace GeFiCa { class RThetaPhi; }
 
 class GeFiCa::RThetaPhi : public GeFiCa::XYZ
 {
-
    public:
       RThetaPhi(unsigned short n_r=0, unsigned short n_theta=0,unsigned short n_phi=0): 
          XYZ(n_r, n_theta, n_phi*2) {};
