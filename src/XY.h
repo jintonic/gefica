@@ -2,7 +2,6 @@
 #define GeFiCa_XY_H
 
 #include "X.h"
-class TF2;
 
 namespace GeFiCa { class XY; }
 

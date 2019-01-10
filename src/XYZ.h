@@ -1,8 +1,6 @@
 #ifndef GeFiCa_XYZ_H
 #define GeFiCa_XYZ_H
 
-class TF3;
-
 #include "XY.h"
 
 namespace GeFiCa { class XYZ; }
