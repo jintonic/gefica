@@ -25,7 +25,7 @@ all: $(LIBRARY)
 #  The flag "-shared" is used to create shared libs
 #  $@ represents the target, that is, $(LIBRARY)
 #  $^ represents all the prerequisites, i.e., all *.o files
-$(LIBRARY): $(OBJECTS) $(DIC_SRC:.cc=.o)
+$(LIBRARY): $(DIC_SRC:.cc=.o) $(OBJECTS)
 	@echo
 	@echo "creating shared library:"
 	$(CXX) $^ $(CXXFLAGS) -shared $(LIBS) -o $@
