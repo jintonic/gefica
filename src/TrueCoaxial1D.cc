@@ -44,7 +44,6 @@ bool TrueCoaxial1D::Analytic()
       fE1[i]=(fPotential[i+1]-fPotential[i-1])
          /(fdC1p[i]+fdC1m[i]);
    }
-   cout<<"Voltage: "<<density/epsilon*(fC1[n-1]*log(fC1[0]/fC1[n-1])/2+(fC1[n-1]*fC1[n-1]-fC1[0]*fC1[0])/4);
    return true;
 }
 //_____________________________________________________________________________
