@@ -1,4 +1,4 @@
-// calculate field for 1D planar detector
+// compare numerical result to analytic calculation for 1D planar detector
 {
    // define detector
    GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(101);

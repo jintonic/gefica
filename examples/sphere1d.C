@@ -8,7 +8,7 @@
    detector->CalculatePotential(GeFiCa::kAnalytic);
    detector->SaveField("sphere1dTrue.root");
 
-   detector->CalculatePotentia(GeFiCa::kSOR2);
+   detector->CalculatePotential(GeFiCa::kSOR2);
    detector->SaveField("sphere1dSOR2.root");
 
    // generate graphics
