@@ -4,7 +4,7 @@
    detector2->Csor=1.995;
    detector2->V0=2000*GeFiCa::volt;
    detector2->V1=0*GeFiCa::volt;
-   detector2->SetImpurity(1e10);
+   detector2->SetAverageImpurity(1e10/GefiCa::cm3);
    detector2->CalculatePotential(GeFiCa::kSOR2);
    detector2->SaveField("planar2dSOR2.root");
 
@@ -12,7 +12,7 @@
    GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(101);
    detector->V0=2000*GeFiCa::volt;
    detector->V1=0*GeFiCa::volt;
-   detector->SetImpurity(1e10);
+   detector->SetAverageImpurity(1e10/GefiCa::cm3);
    detector->CalculatePotential(GeFiCa::kAnalytic);
    detector->SaveField("planar1dTrue.root");
 

@@ -81,7 +81,7 @@ class GeFiCa::X : public TNamed
       /**
        * Set average impurity of the crystal as a single number.
        */
-      void SetImpurity(double density)
+      void SetAverageImpurity(double density)
       { for (int i=0; i<n; i++) fImpurity[i]=density; }
       /**
        * Set impurity that changes with x.

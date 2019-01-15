@@ -6,7 +6,7 @@
    detector->OuterRadius=3.05;
 
    detector->MaxIterations=1e5;
-   detector->SetImpurity(-0.318e10);
+   detector->SetAverageImpurity(-0.318e10/GeFiCa::cm3);
    detector->Csor=1.95;
    detector->CalculatePotential(GeFiCa::kSOR2);
    detector->SaveField("trueCoaxial1d.root");

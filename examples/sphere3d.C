@@ -4,7 +4,7 @@
    sphere1d->V0=2000*GeFiCa::volt;
    sphere1d->InnerRadius=0.5*GeFiCa::cm;
    sphere1d->OuterRadius=2.5*GeFiCa::cm;
-   sphere1d->SetImpurity(1e10/GeFiCa::cm3);
+   sphere1d->SetAverageImpurity(1e10/GeFiCa::cm3);
    sphere1d->CalculatePotential(GeFiCa::kAnalytic);
    sphere1d->SaveField("sphere1dTrue.root");
 
@@ -15,7 +15,7 @@
    sphere3d->V0=2000*GeFiCa::volt;
    sphere3d->InnerRadius=0.5*GeFiCa::cm;
    sphere3d->OuterRadius=2.5*GeFiCa::cm;
-   sphere3d->GeFiCa::X::SetImpurity(1e10/GeFiCa::cm3);
+   sphere3d->SetAverageImpurity(1e10/GeFiCa::cm3);
    sphere3d->CalculatePotential(GeFiCa::kSOR2);
    sphere3d->SaveField("sphere3dSOR2.root");
 
