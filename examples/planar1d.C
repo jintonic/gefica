@@ -7,7 +7,7 @@
    detector->UpperBound=1*GeFiCa::cm;
    detector->V0=0*GeFiCa::volt;
    detector->V1=800*GeFiCa::volt;
-   TF1 *fim=new TF1("fim","1e10");
+   TF3 *fim=new TF3("fim","1e10");
    detector->SetImpurity(fim);
    detector->Dump();
    cout<<"press any key to continue"<<endl;
