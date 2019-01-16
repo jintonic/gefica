@@ -3,7 +3,7 @@
    GeFiCa::Planar2D *detector2 = new GeFiCa::Planar2D(101,101);
    detector2->MaxIterations=1e5;
    detector2->Csor=1.995;
-   detector2->V0=2000*GeFiCa::volt;
+   detector2->V0=800*GeFiCa::volt;
    detector2->V1=0*GeFiCa::volt;
    detector2->SetAverageImpurity(1e10/GeFiCa::cm3);
    detector2->Dump();
@@ -12,7 +12,7 @@
 
    //use analytic method from 1D planar
    GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(101);
-   detector->V0=2000*GeFiCa::volt;
+   detector->V0=800*GeFiCa::volt;
    detector->V1=0*GeFiCa::volt;
    detector->SetAverageImpurity(1e10/GeFiCa::cm3);
 
@@ -54,7 +54,7 @@
    gn->Draw("ap");
    ga->Draw("l");
 
-   TLegend *l = new TLegend(0.5,0.6,0.7,0.8);
+   TLegend *l = new TLegend(0.7,0.6,0.9,0.8);
    l->AddEntry(ga,"Analytic","l");
    l->AddEntry(gn,"SOR2","p");
    l->Draw();

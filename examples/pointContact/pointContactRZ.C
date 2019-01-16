@@ -7,7 +7,7 @@
    detector2->ContactInnerR=1.450;
 
    //TF2 *im=new TF2("f","-0.19175e10-0.025e10*y");
-   TF2 *im=new TF2("f","-0.318e10+0.025e10*y");
+   TF3 *im=new TF3("f","-0.318e10+0.025e10*y");
    //TF1 *im1=new TF1("f","-0.318e10+0.025e10*x",0,6.9);
 
    detector2->MaxIterations=1e5;
@@ -28,14 +28,13 @@
    //TCanvas * cvs=new TCanvas();
    gStyle->SetOptTitle(kFALSE);
    gStyle->SetPadTopMargin(0.02);
-   gStyle->SetPadRightMargin(0.01);
+   gStyle->SetPadRightMargin(1.01);
    gStyle->SetPadLeftMargin(0.0999999999);
    gStyle->SetLabelFont(22,"XY");
    gStyle->SetLabelSize(0.06,"XY");
    gStyle->SetTitleSize(0.05,"XY");
    gStyle->SetTitleFont(22,"XY");
    gStyle->SetLegendFont(22);
-   gStyle->SetCanvasColor(kBlack);
    gStyle->SetOptStat(0);
    //gStyle->SetPalette(1);
 
@@ -43,7 +42,7 @@
    TH2F* h= new TH2F("hist","",10,-3.45,3.45,10,0,5.05);
    TChain *ta = new TChain("t");
    ta->Add("point2dSOR2.root");
-//   ta->Draw("c2:c1:p>>hist","","colz");
+   ta->Draw("c2:c1:p>>hist","","colz");
    h->GetYaxis()->SetTitle("Thickness [cm]");
    h->GetXaxis()->SetTitle("Radius [cm]");
    //th->FillN(ta->Get("c1"),ta->Get("c2"),ta->Get("p"));
