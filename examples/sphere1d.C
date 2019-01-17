@@ -16,7 +16,7 @@
    detector->CalculatePotential(GeFiCa::kSOR2);
    detector->SaveField("sphere1dSOR2.root");
    detector->CalculatePotential(GeFiCa::kAnalytic);
-   detector->SaveField("sphere1dTrue.root");
+   detector->SaveField("sphere1dTRUE.root");
 
    // prepare drawing style
    gROOT->SetStyle("Plain"); // pick up a good drawing style to modify
@@ -44,7 +44,7 @@
    gn->SetMarkerColor(kBlue);
    gn->SetMarkerStyle(kCircle);
    gn->SetMarkerSize(0.8);
-   gn->SetTitle(";Thickness [cm];Potential [V]");
+   gn->SetTitle(";Radius [cm];Potential [V]");
    gn->GetXaxis()->SetRangeUser(0,3);
    gn->GetYaxis()->SetRangeUser(0,900);
    gn->Draw("ap");
