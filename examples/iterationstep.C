@@ -7,8 +7,7 @@
    detector->UpperBound=1.175*GeFiCa::cm;
    detector->V1=300*GeFiCa::volt;
    detector->V0=0*GeFiCa::volt;
-   detector->SetImpurity(1e10/GeFiCa::cm3);
-   //detector->Impurity="1e10";
+   detector->SetAverageImpurity(1e10/GeFiCa::cm3);
 
    int n=10;
       TCanvas *C = new TCanvas();
@@ -27,7 +26,6 @@
       mg->Add(tg);
    }
    mg->SetTitle("; Thickness [cm]; Potential [V]");
-   mg->SetTextSize(0.05);
    
    mg->Draw("ap");
 
