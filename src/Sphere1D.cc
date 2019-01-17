@@ -1,5 +1,6 @@
 #include "Sphere1D.h"
 #include "Units.h"
+#include <iostream>
 using namespace GeFiCa;
 
 void Sphere1D::Initialize()
