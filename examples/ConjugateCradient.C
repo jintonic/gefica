@@ -1,8 +1,15 @@
+// 1.introduction of CG:
+//   https://www.cs.cmu.edu/~quake-papers/painless-conjugate-gradient.pdf
+// 2.using CG to solve Poisson's equation:
+//   http://www.cs.ucsb.edu/~gilbert/cs240a/old/cs240aSpr2011/hw2/hw2.pdf
+// 3.using ROOT to minimize quadratic function defined in Ref. 2:
+//   https://root.cern.ch/numerical-minimization
 #include "Math/GSLMinimizer.h"
 #include "Math/Functor.h"
 #include <TMatrixDSparse.h> 
 #include <TVectorD.h> 
 #include <TSystem.h> 
+
 const int n=20;
 TMatrixD *mA;
 double RosenBrock(const double *xx )
@@ -27,7 +34,7 @@ double RosenBrock(const double *xx )
    return 0.5*vx1*vx2-vb*vx2;
 }
  
-int minimizertest()
+int ConjugateGradient()
 {
    // Choose method upon creation between:
    // kConjugateFR, kConjugatePR, kVectorBFGS,
