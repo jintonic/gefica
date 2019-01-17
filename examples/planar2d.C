@@ -20,7 +20,7 @@
    detector2->CalculatePotential(GeFiCa::kSOR2);
    detector2->SaveField("planar2dSOR2.root");
    detector->CalculatePotential(GeFiCa::kAnalytic);
-   detector->SaveField("planar1dTrue.root");
+   detector->SaveField("planar1dTRUE.root");
 
    // prepare drawing style
    gROOT->SetStyle("Plain"); // pick up a good drawing style to modify
@@ -41,7 +41,7 @@
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
 
    TChain *ta = new TChain("t");
-   ta->Add("planar1dTrue.root");
+   ta->Add("planar1dTRUE.root");
    ta->Draw("p:c1");
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
 
@@ -63,5 +63,5 @@
 
    // calculate capacitance
    double c = detector->GetCapacitance()/GeFiCa::pF;
-   cout<<"capacitance is "<<c<<" pF"<<endl;
+   cout<<"capacitance is "<<c<<" pF per cm2"<<endl;
 }

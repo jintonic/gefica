@@ -63,5 +63,5 @@
 
    // calculate capacitance
    double c = detector->GetCapacitance()/GeFiCa::pF;
-   cout<<"capacitance is "<<c<<" pF"<<endl;
+   cout<<"capacitance is "<<c<<" pF per cm2"<<endl;
 }
