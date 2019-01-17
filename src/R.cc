@@ -17,18 +17,47 @@ void R::SOR2(int idx,bool elec)
    double density=fImpurity[idx]*Qe;
    double h2=fdC1m[idx];
    double h3=fdC1p[idx];
-   double tmp=(+density/epsilon*(h2+h3)*0.5+1/fC1[idx]*(fPotential[idx+1]-fPotential[idx-1])
-         +fPotential[idx+1]/h2+fPotential[idx-1]/h3)/(1/h2+1/h3);
+   double p2=fPotential[idx-1];
+   double p3=fPotential[idx+1];
+   double tmp=(+density/epsilon*(h2+h3)*0.5+1/fC1[idx]*(p3-p2)
+         +p3/h2+p2/h3)/(1/h2+1/h3);
+
+   //find minmium and maxnium of all five grid, the new one should not go overthem.
+   //find min
+   double min=p2;
+   double max=p2;
+   if(min>p3)min=p3;
+   //find max
+   if(max<p3)max=p3;
+   //if tmp is greater or smaller than max and min, set tmp to it.
 
    //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    double oldP=fPotential[idx];
-      tmp=Csor*(tmp-oldP)+oldP;
+   tmp=Csor*(tmp-oldP)+oldP;
+
+   if(tmp<min)
+   {
+      fPotential[idx]=min;
+      fIsDepleted[idx]=false;
+   }
+   else if(tmp>max)
+   {
+      fPotential[idx]=max;
+      fIsDepleted[idx]=false;
+   }
+   else
+      fIsDepleted[idx]=true;
+   if(fIsDepleted[idx]||!NotImpurityPotential)
+   {
+      //over relax
+      fPotential[idx]=tmp;
+   }
 }
 //_____________________________________________________________________________
 //
 void R::SOR4(int idx)
 { 
-  if (fIsFixed[idx])return;
+   if (fIsFixed[idx])return;
 
    double density=fImpurity[idx]*1.6e-19;
    double h2=fdC1m[idx];
