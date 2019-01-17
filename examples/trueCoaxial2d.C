@@ -11,8 +11,8 @@
    detector2->InnerRadius=0.14;//-3.45;
    detector2->OuterRadius=3.45;
 
-   TF2 *im=new TF2("f","-0.318e10+0.025e10*y");
-   detector2->SetImpurityDistribution(im);
+   TF3 *im=new TF3("f","-0.318e10+0.025e10*y");
+   detector2->SetImpurity(im);
 
 
    //TF1 *im1=new TF1("f","-0.318e10+0.025e10*x",0,6.9);
