@@ -33,7 +33,8 @@ class GeFiCa::XYZ : public GeFiCa::XY
    protected:
       virtual double GetData(double tarx,double tary,double tarz, EOutput output);
       virtual void SetStepLength(double steplength1,double steplength2,double steplength3);
-      double *fE3,*fC3;
+      double *fE3; /**< Electric field under the third coordinate (x, r, or rho) direction */
+      double *fC3; /**< The location under the thirdcoordinate (x, r, or rho) direction*/
       double *fdC3p; ///< distance between this and next grid points alone C3
       double *fdC3m; ///< distance between this and previous grid points alone C3
       virtual int FindIdx(double tarx,double tary,
