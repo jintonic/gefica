@@ -173,10 +173,10 @@ void XY::SaveField(const char * fout)
    v.Write("v");
    TTree * tree=(TTree*)file->Get("t");
    double E2s,C2s,dC2m,dC2p;
-   TBranch *be2 = tree->Branch("e2",&E2s,"e2/D"); // Electric field in y
-   TBranch *bc2 = tree->Branch("c2",&C2s,"c2/D"); // persition in y
-   TBranch *bsl=tree->Branch("sl",&dC2m,"dC2m/D"); // Step length to next point in x
-   TBranch *bsr=tree->Branch("sr",&dC2p,"dC2p/D"); // Step length to before point in x
+   TBranch *be2 = tree->Branch("e2",&E2s,"e2/D");
+   TBranch *bc2 = tree->Branch("c2",&C2s,"c2/D"); 
+   TBranch *bsl=tree->Branch("dC2m",&dC2m,"dC2m/D"); 
+   TBranch *bsr=tree->Branch("dC2p",&dC2p,"dC2p/D");
 
    for(int i=0;i<n;i++) {
       E2s=fE2[i];
@@ -208,8 +208,8 @@ void XY::LoadField(const char * fin)
    double Ey,Py,dC2m,dC2p;
    t->SetBranchAddress("c2",&Py);
    t->SetBranchAddress("e2",&Ey);
-   t->SetBranchAddress("sl",&dC2m);
-   t->SetBranchAddress("sr",&dC2p);
+   t->SetBranchAddress("dC2m",&dC2m);
+   t->SetBranchAddress("dC2p",&dC2p);
 
    fE2=new double[n];
    fC2=new double[n];

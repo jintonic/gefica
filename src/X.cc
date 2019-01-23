@@ -310,6 +310,8 @@ void X::LoadField(const char * fin)
    //will calculate electric field after load
    fIsLoaded=true;
    TFile *file=new TFile(fin);
+   if (file->IsZombie()) exit(-1);
+
    TVectorD *v1=(TVectorD*)file->Get("v");
    double * v=v1->GetMatrixArray();
    n1		=(int)	v[7];

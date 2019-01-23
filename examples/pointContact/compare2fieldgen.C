@@ -1,35 +1,9 @@
-compare2fieldgen(){
-   GeFiCa::PointContactRZ *detector2 = new GeFiCa::PointContactRZ(1036,506);
-   detector2->LoadField("point2dSOR2.root");
-
-   ifstream infile("ev.new");
-   ofstream outfile("result.txt");
-
-   double x,y,v,er,ez,e,anotherV,E1,E2,E,sizeofr,sizeofz;
-   while (infile>>x>>y>>v>>e>>er>>ez) {
-      sizeofr=x;
-      sizeofz=y;
-   }
-   outfile.seekg(0, std::ios::beg); 
-   while (infile>>x>>y>>v>>e>>er>>ez) {
-      sizeofr=x;
-      sizeofz=y;
-      anotherV=detector2->GetPotential(x/10,y/10);
-      E1=detector2->GetE1(x/10,y/10);
-      E2=detector2->GetE2(x/10,y/10);
-      E=sqrt(E1*E1+E2*E2);
-      outfile<<x<<"  "<<y<<"  "<<anotherV<<"  "<<v-anotherV<<"  "<<E1<<"  "<<E2<<"  "<<E<<"  "<<er-E1<<"  "<<ez-E2<<"  "<<e-E<<endl;
-   }
-   infile.close();
-   outfile.close();
-
-   drawresult();
-}
-drawresult(){
+void drawresult()
+{
    // draw MJD result
    TCanvas *c1 = new TCanvas;
    TTree *tm1 = new TTree("tm1","tm1");
-   tm1->ReadFile("ev.new", "r:z:v:e:er:ez");
+   tm1->ReadFile("ev.dat", "r:z:v:e:er:ez");
    tm1->Draw("z:r:v","","colz");
    //t->AddFriend("t2=t","point2dSOR2.root");
    //t->Draw("z:(t2.p-v)","z!=1&r!=1&z<1&r>34.&r<34.5","");
@@ -62,4 +36,31 @@ drawresult(){
    
    c9->SetFillColor(kBlue);
    tg->Draw("z:r:de","","colz");
+}
+
+//______________________________________________________________________________
+//
+void compare2fieldgen(const char *gefica="point2dSOR2.root",
+      const char *fieldgen="ev.dat")
+{
+   GeFiCa::PointContactRZ *detector2 = new GeFiCa::PointContactRZ(1036,506);
+   detector2->LoadField("point2dSOR2.root");
+
+   ifstream infile("ev.dat"); if (!infile.is_open()) exit(-1);
+   ofstream outfile("result.txt");
+
+   double x,y,v,er,ez,e,anotherV,E1,E2,E,sizeofr,sizeofz;
+   while (infile>>x>>y>>v>>e>>er>>ez) {
+      sizeofr=x;
+      sizeofz=y;
+      anotherV=detector2->GetPotential(x/10,y/10);
+      E1=detector2->GetE1(x/10,y/10);
+      E2=detector2->GetE2(x/10,y/10);
+      E=sqrt(E1*E1+E2*E2);
+      outfile<<x<<"  "<<y<<"  "<<anotherV<<"  "<<v-anotherV<<"  "<<E1<<"  "<<E2<<"  "<<E<<"  "<<er-E1<<"  "<<ez-E2<<"  "<<e-E<<endl;
+   }
+   infile.close();
+   outfile.close();
+
+   drawresult();
 }

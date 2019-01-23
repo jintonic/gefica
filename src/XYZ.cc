@@ -172,18 +172,24 @@ void XYZ::SaveField(const char * fout)
    v[9]=(double)n3;
    v.Write();
    TTree * tree=(TTree*)file->Get("t");
-   double E3s,C3s;
-   tree->Branch("e3",&E3s,"e3/D"); // Electric field in z
-   tree->Branch("c3",&C3s,"c3/D"); // persition in z
+   double E3s,C3s, dC3p, dC3m;
+   TBranch *be3 = tree->Branch("e3",&E3s,"e3/D");
+   TBranch *bc3 = tree->Branch("c3",&C3s,"c3/D");
+   TBranch *bdc3p = tree->Branch("dC3p",&dC3p,"dC3p/D");
+   TBranch *bdc3m = tree->Branch("dC3m",&dC3m,"dC3m/D");
    for(int i=0;i<n;i++) {
       E3s=fE3[i];
       C3s=fC3[i];
-      tree->Fill();
+      dC3p=fdC3p[i];
+      dC3m=fdC3m[i];
+      be3->Fill();
+      bc3->Fill();
+      bdc3p->Fill();
+      bdc3m->Fill();
    }
    file->Write();
    file->Close();
    delete file;
-
 }
 //_____________________________________________________________________________
 //
