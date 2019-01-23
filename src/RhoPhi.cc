@@ -3,7 +3,7 @@
 using namespace GeFiCa;
 #include <iostream>
 using namespace std;
-void RhoPhi::SOR2(int idx,bool elec)
+void RhoPhi::SOR2(int idx,bool NotImpurityPotential)
 {
 
    if (fIsFixed[idx])return;

@@ -11,7 +11,7 @@ using namespace std;
 #include "Units.h"
 using namespace GeFiCa;
 
-void R::SOR2(int idx,bool elec)
+void R::SOR2(int idx,bool NotImpurityPotential)
 {
    if (fIsFixed[idx])return ;
    double density=fImpurity[idx]*Qe;

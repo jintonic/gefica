@@ -7,7 +7,7 @@
 #include "Units.h"
 using namespace GeFiCa;
 
-void RhoPhiZ::SOR2(int idx,bool elec)
+void RhoPhiZ::SOR2(int idx,bool NotImpurityPotential)
 {//need update
    if (fIsFixed[idx])return;
    double density=-fImpurity[idx]*Qe;

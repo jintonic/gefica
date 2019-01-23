@@ -11,7 +11,7 @@ using namespace GeFiCa;
 #include <iostream>
 using namespace std;
 
-void RThetaPhi::SOR2(int idx,bool elec)
+void RThetaPhi::SOR2(int idx,bool NotImpurityPotential)
 {
    if (fIsFixed[idx])return;
 

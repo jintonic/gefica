@@ -12,7 +12,7 @@ using namespace GeFiCa;
 using namespace std;
 
 X::X(int nx) : TNamed("X","X"), n1(nx), n(nx), Csor(1.95), Precision(1e-7),
-   MaxIterations(100000), V0(0), V1(2000*volt), NotImpurityPotential(true)
+   MaxIterations(100000), V0(0), V1(2000*volt)
 { 
    if (n<10) { n=11; n1=11; }
 
@@ -154,6 +154,7 @@ bool X::CalculatePotential(EMethod method)
    if (method==kAnalytic) return Analytic();
    cout<<" Calculate field ..."<<endl;
    int cnt=0;
+   bool NotImpurityPotential;
    if (V0==0&&V1==0)NotImpurityPotential=false;
    else NotImpurityPotential=true;
    while (cnt++<MaxIterations) {

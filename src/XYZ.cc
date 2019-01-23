@@ -45,7 +45,7 @@ void XYZ::SetStepLength(double steplength1,double steplength2,double steplength3
 }
 //_____________________________________________________________________________
 //
-void XYZ::SOR2(int idx,bool elec)
+void XYZ::SOR2(int idx,bool NotImpurityPotential)
 {
    if (fIsFixed[idx])return;
    double density=-fImpurity[idx]*Qe;

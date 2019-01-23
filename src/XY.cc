@@ -45,7 +45,7 @@ void XY::SetStepLength(double steplength1,double steplength2)
 //
 #include <iostream>
 using namespace std;
-void XY::SOR2(int idx,bool elec)
+void XY::SOR2(int idx,bool NotImpurityPotential)
 {
    // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return;
