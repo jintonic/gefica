@@ -1,81 +1,65 @@
-void compare2fieldgen()
-{
-   double r,z,p;
+compare2fieldgen(){
+   GeFiCa::PointContactRZ *detector2 = new GeFiCa::PointContactRZ(1036,506);
+   detector2->LoadField("point2dSOR2.root");
 
-   //TH2F *hmjd = new TH2F("hmjd","",346,0,346,506,0,506);
-   //ifstream ff("ev.dat");
-   //for (int i = 0; i < 346; i++) {
-   //  for (int j = 0; j < 506; j++) {
-   //     ff>>r>>z>>p;
-   //     hmjd->SetBinContent(i,j,p);
-   //  } 
-   //}
+   ifstream infile("ev.new");
+   ofstream outfile("result.txt");
 
-   TH2F *hgfc = new TH2F("hgfc","",346,0,346,506,0,506);
-   ifstream fg("full.txt");
-   for (int i = 0; i < 346; i++) {
-     for (int j = 0; j < 506; j++) {
-        fg>>r>>z>>p;
-        hgfc->SetBinContent(i,j,p);
-     } 
+   double x,y,v,er,ez,e,anotherV,E1,E2,E,sizeofr,sizeofz;
+   while (infile>>x>>y>>v>>e>>er>>ez) {
+      sizeofr=x;
+      sizeofz=y;
    }
-
-   //hmjd->Draw("colz");
-   //TCanvas *can = new TCanvas;
-   hgfc->Draw("colz");
-}
-
-void generateField()
-{
-   GeFiCa::PointContactRZ *ppc = new GeFiCa::PointContactRZ(200,101);
-   ppc->Radius=0.5;
-   ppc->ZUpperBound=1;
-   ppc->PointR=0.1;
-   ppc->PointDepth=0.01;
-
-   ppc->MaxIterations=1e6;
-   ppc->Precision=1e-8;
-   ppc->Csor=1.990;
-   ppc->V0=0*GeFiCa::volt;
-   ppc->V1=-2500*GeFiCa::volt;
-   ppc->SetImpurity(-0.318e10);
-
-   ppc->CalculatePotential(GeFiCa::kSOR2);
-   ppc->SaveField("full.root");
-}
-
-void printapoint()
-{
-   GeFiCa::halfPointContactRZ *ppc = new GeFiCa::halfPointContactRZ;
-   ppc->LoadField("point2dSOR2.root");
-   cout<<ppc->GetPotential(0,5.04)<<endl;
-   //cout<<ppc->GetPotential(0.,0.)<<endl;
-   //cout<<ppc->GetPotential(0.,1)<<endl;
-   //cout<<ppc->GetPotential(0.,0.5)<<endl;
-}
-
-void r2t()
-{
-   GeFiCa::halfPointContactRZ *ppc = new GeFiCa::halfPointContactRZ(1036,506);
-   ppc->LoadField("full.root");
-
-   ofstream fo("full.txt" );
-   for (int i = 0; i < 346; i++) {
-     for (int j = 0; j < 506; j++) {
-        fo<<1.0*i*0.5/346<<"\t"<<1.0*j*1/506<<"\t"
-           <<ppc->GetPotential(1.0*i*0.5/346,1.0*j*1/506)<<endl;
-      } 
+   outfile.seekg(0, std::ios::beg); 
+   while (infile>>x>>y>>v>>e>>er>>ez) {
+      sizeofr=x;
+      sizeofz=y;
+      anotherV=detector2->GetPotential(x/10,y/10);
+      E1=detector2->GetE1(x/10,y/10);
+      E2=detector2->GetE2(x/10,y/10);
+      E=sqrt(E1*E1+E2*E2);
+      outfile<<x<<"  "<<y<<"  "<<anotherV<<"  "<<v-anotherV<<"  "<<E1<<"  "<<E2<<"  "<<E<<"  "<<er-E1<<"  "<<ez-E2<<"  "<<e-E<<endl;
    }
-   fo.close(); 
+   infile.close();
+   outfile.close();
+
+   drawresult();
 }
-void treedraw()
-{
-   TTree *t = new TTree("t","t");
-   t->ReadFile("full.txt", "r:z:v");
+drawresult(){
+   // draw MJD result
+   TCanvas *c1 = new TCanvas;
+   TTree *tm1 = new TTree("tm1","tm1");
+   tm1->ReadFile("ev.new", "r:z:v:e:er:ez");
+   tm1->Draw("z:r:v","","colz");
    //t->AddFriend("t2=t","point2dSOR2.root");
    //t->Draw("z:(t2.p-v)","z!=1&r!=1&z<1&r>34.&r<34.5","");
    //TCanvas *can = new TCanvas;
    //t->Draw("r:(t2.p-v)","z>=0&z<0.2","");
-   t->Draw("z:r:v","","colz");
+   //t->Draw("z:r:d","z<50","colz");
+   // draw GeFiCa result
+   TCanvas *c2 = new TCanvas;
+   TTree *tg = new TTree("tg","tg");
+   tg->ReadFile("result.txt", "r:z:v:d:e1:e2:e:de1:de2:de");
+   tg->Draw("z:r:v","","colz");
+   TCanvas *c4 = new TCanvas;
+   
+   c4->SetFillColor(kBlue);
+   
+   tg->Draw("z:r:e","","colz");
+   TCanvas *c5 = new TCanvas;
+   tg->Draw("z:r:e1","","colz");
+   TCanvas *c6 = new TCanvas;
+   tg->Draw("z:r:e2","","colz");
 
+   // draw difference
+   TCanvas *c3 = new TCanvas;
+   tg->Draw("z:r:d","","colz");
+   TCanvas *c7 = new TCanvas;
+   tg->Draw("z:r:de1","","colz");
+   TCanvas *c8 = new TCanvas;
+   tg->Draw("z:r:de2","","colz");
+   TCanvas *c9 = new TCanvas;
+   
+   c9->SetFillColor(kBlue);
+   tg->Draw("z:r:de","","colz");
 }
