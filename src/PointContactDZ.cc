@@ -199,7 +199,7 @@ bool PointContactDZ::CalculateField(int idx)
    return true;
 }
 #include <fstream>
-bool PointContactDZ::SaveFieldasFieldgen(const char * fout)
+bool PointContactDZ::SaveFieldAsFieldgen(const char * fout)
 {
    ofstream outfile(fout);
 
