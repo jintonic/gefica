@@ -1,9 +1,9 @@
-#include "halfPointContactRZ.h"
+#include "PointContactRZ.h"
 #include "iostream"
 #include "Units.h"
 using namespace GeFiCa;
 
-void halfPointContactRZ::Initialize()
+void PointContactRZ::Initialize()
 {
    // The step length is calculated with the following equation:
    // BEGIN_HTML
@@ -55,7 +55,7 @@ void halfPointContactRZ::Initialize()
 }
 //_____________________________________________________________________________
 //
-bool halfPointContactRZ::CalculatePotential(EMethod method)
+bool PointContactRZ::CalculatePotential(EMethod method)
 {
    if(!fIsLoaded)Initialize();
    return RZ::CalculatePotential(method);
