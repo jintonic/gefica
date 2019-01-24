@@ -1,10 +1,10 @@
 {
    GeFiCa::PointContactDZ *detector2 = new GeFiCa::PointContactDZ(692,505);
-   detector2->Radius=3.45;
-   detector2->ZUpperBound=5.05;
-   detector2->PointR=0.14;
-   detector2->PointDepth=0.21;
-   detector2->ContactInnerR=1.450;
+   detector2->Radius=3.45*GeFiCa::cm;
+   detector2->ZUpperBound=5.05*GeFiCa::cm;
+   detector2->PointR=0.14*GeFiCa::cm;
+   detector2->PointDepth=0.21*GeFiCa::cm;
+   detector2->ContactInnerR=1.450*GeFiCa::cm;
 
    //TF2 *im=new TF2("f","-0.19175e10-0.025e10*y");
    TF3 *im=new TF3("f","-0.318e10+0.025e10*y");
@@ -23,7 +23,7 @@
    detector2->CalculatePotential(GeFiCa::kSOR2);
    //cout<<detector2->IsDepleted()<<endl;
    detector2->SaveField("point2dSOR2.root");
-   detector2->SaveFieldasFieldgen("point2dSOR2.txt");
+   detector2->SaveFieldAsFieldgen("point2dSOR2.txt");
    //detector2->LoadField("point21dSOR23.root");
 
    //TCanvas * cvs=new TCanvas();

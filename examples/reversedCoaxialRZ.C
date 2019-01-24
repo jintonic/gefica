@@ -1,17 +1,17 @@
 //an example of reversed pointact detector 
 {
    //basic geometry setup
-   GeFiCa::ReversedPointContactRZ *detector2 = new GeFiCa::ReversedPointContactRZ(692,506);
-   detector2->RUpperBound=3.45;
-   detector2->RLowerBound=-3.45;
-   detector2->ZUpperBound=5.05;
-   detector2->PointBegin=-1.45;
-   detector2->PointEnd=1.4500;
-   detector2->DHole=1.0;
-   detector2->OutterRadiusHole=1;
-   detector2->InnerRadiusHole=0.5;
-   detector2->removedConnorradius=1;
-   detector2->removedConnorheight=1;
+   GeFiCa::ReversedCoaxialRZ *detector2 = new GeFiCa::ReversedCoaxialRZ(692,506);
+   detector2->RUpperBound=3.45*GeFiCa::cm;
+   detector2->RLowerBound=-3.45*GeFiCa::cm;
+   detector2->ZUpperBound=5.05*GeFiCa::cm;
+   detector2->PointBegin=-1.45*GeFiCa::cm;
+   detector2->PointEnd=1.4500*GeFiCa::cm;
+   detector2->DHole=1.0*GeFiCa::cm;
+   detector2->OutterRadiusHole=1*GeFiCa::cm;
+   detector2->InnerRadiusHole=0.5*GeFiCa::cm;
+   detector2->removedConnorradius=1*GeFiCa::cm;
+   detector2->removedConnorheight=1*GeFiCa::cm;
    TF3 *im=new TF3("f","-0.318e10+0.025e10*y");
    detector2->SetImpurity(im);
    detector2->V0=2500*GeFiCa::volt;
@@ -24,7 +24,7 @@
 
    //calculate field
    detector2->CalculatePotential(GeFiCa::kSOR2);
-   detector2->SaveField("rpoint2dSOR2.root");
+   detector2->SaveField("rcpcSOR2.root");
    
    //prepare drawing style
    gStyle->SetOptTitle(kTRUE);
@@ -40,9 +40,9 @@
    //generate graphics
    TH2F* h= new TH2F("hist","",10,-3.45,3.45,10,0,5.05);
    TChain *ta = new TChain("t");
-   ta->Add("rpoint2dSOR2.root");
+   ta->Add("rcpcSOR2.root");
    ta->Draw("c2:c1:p>>hist","","colz");
-   h->GetYaxis()->SetTitle("Thickness [cm]");
+   h->GetYaxis()->SetTitle("Height [cm]");
    h->GetXaxis()->SetTitle("Radius [cm]");
   
 
