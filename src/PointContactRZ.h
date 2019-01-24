@@ -23,6 +23,7 @@ class GeFiCa::PointContactRZ : public GeFiCa::RZ
       void BoundaryOnPointcontact();
       void BoundaryonWarpAround();
       bool CalculatePotential(EMethod method=kSOR2);
+      bool SaveFieldasFieldgen(const char * fout);
 
       ClassDef(PointContactRZ,1);
 

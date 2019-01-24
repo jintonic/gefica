@@ -23,6 +23,7 @@
    detector2->CalculatePotential(GeFiCa::kSOR2);
    //cout<<detector2->IsDepleted()<<endl;
    detector2->SaveField("point2dSOR2.root");
+   detector2->SaveFieldasFieldgen("point2dSOR2.txt");
    //detector2->LoadField("point21dSOR23.root");
 
    //TCanvas * cvs=new TCanvas();

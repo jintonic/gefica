@@ -198,3 +198,27 @@ bool PointContactRZ::CalculateField(int idx)
 
    return true;
 }
+#include <fstream>
+bool PointContactRZ::SaveFieldasFieldgen(const char * fout)
+{
+   ofstream outfile(fout);
+
+   outfile<<"# height "<< ZUpperBound-ZLowerBound;        
+   outfile<<"\n# xtal_radius "<<Radius;
+   outfile<<"\n# pc_length   "<<PointDepth;        
+   outfile<<"\n# pc_radius   "<<PointR;         
+   outfile<<"\n# wrap_around_radius "<<ContactInnerR; 
+   outfile<<"\n# grid size on r "<<fdC1p[0];
+   outfile<<"\n# grid size on z "<<fdC2p[0];
+   outfile<<"\n# impurity_z0  "<<fImpurity[0];
+   outfile<<"\n# xtal_HV      "<<V1;
+   outfile<<"\n# max_iterations "<<MaxIterations;
+   outfile<<"\n# ";
+   outfile<<"\n## r (mm), z (mm), V (V),  E (V/cm), E_r (V/cm), E_z (V/cm)";
+   for (int i=0;i<n;i++) {
+      double E=sqrt(fE1[i]*fE1[i]+fE2[i]*fE2[i]);
+      outfile<<"\n"<<fC1[i]<<"  "<<fC2[i]<<"  "<<fPotential[i]<<"  "<<E<<"  "<<fE1[i]<<"  "<<fE2[i];
+   }
+   outfile.close();
+   return true;
+}

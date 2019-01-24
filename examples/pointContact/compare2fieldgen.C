@@ -47,7 +47,7 @@ void compare2fieldgen(const char *gefica="point2dSOR2.root",
    detector2->LoadField("point2dSOR2.root");
 
    ifstream infile("ev.dat"); if (!infile.is_open()) exit(-1);
-   ofstream outfile("result.txt");
+   ofstream outfile("gVSf.txt");
 
    double x,y,v,er,ez,e,anotherV,E1,E2,E,sizeofr,sizeofz;
    while (infile>>x>>y>>v>>e>>er>>ez) {
