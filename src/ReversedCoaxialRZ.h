@@ -3,9 +3,9 @@
 
 #include "RZ.h"
 
-namespace GeFiCa { class ReversedPointContactRZ; }
+namespace GeFiCa { class ReversedCoaxialRZ; }
 
-class GeFiCa::ReversedPointContactRZ : public GeFiCa::RZ
+class GeFiCa::ReversedCoaxialRZ : public GeFiCa::RZ
 {
   public:
     double RUpperBound, RLowerBound, ZUpperBound, ZLowerBound, PointBegin,
@@ -13,7 +13,7 @@ class GeFiCa::ReversedPointContactRZ : public GeFiCa::RZ
            removedConnorheight, DHole; // bounds for X and Y and point start and end
 
    public :
-     ReversedPointContactRZ(int ix,int iy) : RZ(ix,iy), RUpperBound(1),
+     ReversedCoaxialRZ(int ix,int iy) : RZ(ix,iy), RUpperBound(1),
      RLowerBound(0), ZUpperBound(1), ZLowerBound(0), PointBegin(0.4),
      PointEnd(0.6), InnerRadiusHole(0.3), OutterRadiusHole(0.5),
      removedConnorradius(0.2), removedConnorheight(0.3), DHole(0.2) {};
@@ -21,7 +21,7 @@ class GeFiCa::ReversedPointContactRZ : public GeFiCa::RZ
      void Initialize();
      bool CalculatePotential(EMethod method=kSOR2);
 
-     ClassDef(ReversedPointContactRZ,1);
+     ClassDef(ReversedCoaxialRZ,1);
 };
 
 #endif

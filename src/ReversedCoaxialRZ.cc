@@ -1,10 +1,10 @@
-#include "ReversedPointContactRZ.h"
+#include "ReversedCoaxialRZ.h"
 #include "iostream"
 #include "Units.h"
 #include <cmath>
 using namespace GeFiCa;
 
-void ReversedPointContactRZ::Initialize()
+void ReversedCoaxialRZ::Initialize()
 {
    // The step length is calculated with the following equation:
    // BEGIN_HTML
@@ -83,7 +83,7 @@ void ReversedPointContactRZ::Initialize()
 }
 //_____________________________________________________________________________
 //
-bool ReversedPointContactRZ::CalculatePotential(EMethod method)
+bool ReversedCoaxialRZ::CalculatePotential(EMethod method)
 {
    if(!fIsLoaded)Initialize();
    return RZ::CalculatePotential(method);
