@@ -16,7 +16,7 @@
 #pragma link C++ class GeFiCa::Planar2D+;
 #pragma link C++ class GeFiCa::PointContactDZ+;
 #pragma link C++ class GeFiCa::PointContactRZ+;
-#pragma link C++ class GeFiCa::ReversedPointContactRZ+;
+#pragma link C++ class GeFiCa::ReversedCoaxialRZ+;
 #pragma link C++ class GeFiCa::Sphere1D+;
 #pragma link C++ class GeFiCa::Segmented2D+;
 #endif
