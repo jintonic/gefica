@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include "PointContactRZ.h"
+#include "PointContactDZ.h"
 #include "iostream"
 #include "Units.h"
 using namespace GeFiCa;
@@ -9,7 +9,7 @@ using namespace std;
 //a great different potential on space close to point contact the current
 //design does not include when point contact is close to boundary of the whole
 //detector.
-void PointContactRZ::BoundaryOnPointcontact()
+void PointContactDZ::BoundaryOnPointcontact()
 {
    int index=FindIdx(PointR,PointDepth,0,n2-1);
    //cout<<index<<" "<<fC1[index]<<" "<<fC2[index]<<endl;
@@ -57,7 +57,7 @@ void PointContactRZ::BoundaryOnPointcontact()
       fdC1p[idxNeg+i*n1-1]=fdC1m[idxNeg+i*n1];
    }
 }
-void PointContactRZ::BoundaryonWarpAround()
+void PointContactDZ::BoundaryonWarpAround()
 {
    int index=FindIdx(ContactInnerR,0,0,n2-1);
    if (index>n1)index-=n1;
@@ -84,7 +84,7 @@ void PointContactRZ::BoundaryonWarpAround()
 
    }
 }
-void PointContactRZ::Initialize()
+void PointContactDZ::Initialize()
 {
    if (n1%2==1) {
          Error("Initialize", "Number of grids in R cannot be odd, abort!");
@@ -151,7 +151,7 @@ void PointContactRZ::Initialize()
 }
 //_____________________________________________________________________________
 //
-bool PointContactRZ::CalculatePotential(EMethod method)
+bool PointContactDZ::CalculatePotential(EMethod method)
 {
    if (!fIsLoaded) Initialize();
 // this commentd block are slow depletion voltage finder
@@ -182,7 +182,7 @@ bool PointContactRZ::CalculatePotential(EMethod method)
 }
 //_____________________________________________________________________________
 //
-bool PointContactRZ::CalculateField(int idx)
+bool PointContactDZ::CalculateField(int idx)
 {
    if (!XY::CalculateField(idx)) return false;
 
@@ -199,7 +199,7 @@ bool PointContactRZ::CalculateField(int idx)
    return true;
 }
 #include <fstream>
-bool PointContactRZ::SaveFieldasFieldgen(const char * fout)
+bool PointContactDZ::SaveFieldasFieldgen(const char * fout)
 {
    ofstream outfile(fout);
 

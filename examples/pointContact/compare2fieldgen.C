@@ -43,7 +43,7 @@ void drawresult()
 void compare2fieldgen(const char *gefica="point2dSOR2.root",
       const char *fieldgen="ev.dat")
 {
-   GeFiCa::PointContactRZ *detector2 = new GeFiCa::PointContactRZ(1036,506);
+   GeFiCa::PointContactDZ *detector2 = new GeFiCa::PointContactDZ(1036,506);
    detector2->LoadField("point2dSOR2.root");
 
    ifstream infile("ev.dat"); if (!infile.is_open()) exit(-1);
