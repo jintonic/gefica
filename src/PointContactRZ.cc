@@ -3,6 +3,22 @@
 #include "Units.h"
 using namespace GeFiCa;
 
+void PointContactRZ::BoundaryOnPointcontact()
+{
+   for(int i=0;i<n;i++)
+   {
+      //only change fdc1m when it is right close to bound
+      if(fC1[i]-Rpc<fdC1m[i]&&fC1[i]>Rpc&&fC2[i]<Zpc)
+      {
+         fdC1m[i]=fC1[i]-Rpc;
+      }
+      //only change fdc2m when it is right close to bound
+      if(fC2[i]-Zpc<fdC2m[i]&&fC2[i]>Zpc&&fC1[i]<Rpc)
+      {
+         fdC2m[i]=fC2[i]-Zpc;
+      }
+   }
+}
 void PointContactRZ::Initialize()
 {
    // The step length is calculated with the following equation:
@@ -13,25 +29,25 @@ void PointContactRZ::Initialize()
    // END_HTML
    // If the inner radius is not larger than the outer radius,
    // no grid will be created
-   if (ZLowerBound>=ZUpperBound) {
+   if (Z0>=Z) {
       Warning("Initialize",
             "Lower bound (%f) >= upper bound (%f)! No grid is created!",
-            ZLowerBound, ZUpperBound);
+            Z0, Z);
       return;
    }
    double RUpperBound,RLowerBound,PointBegin,PointEnd;
    RUpperBound=Radius;
    RLowerBound=(2.0*Radius/(2*n1-1))/2;
-   PointBegin=RLowerBound;
-   PointEnd=PointR;
-   double steplength1=(RUpperBound-RLowerBound)/(n1-1);
-   double steplength2=(ZUpperBound-ZLowerBound)/(n2-1);
+   PointBegin=0;
+   PointEnd=Rpc;
+   double steplength1=(RUpperBound)/(n1-1);
+   double steplength2=(Z-Z0)/(n2-1);
    SetStepLength(steplength1,steplength2);
    for(int i=n;i-->0;) 
    {
       fC1[i]=fC1[i]+RLowerBound;
       fPotential[i]=(V0+V1)/2;
-      if(fC1[i]>PointBegin&&fC1[i]<PointEnd&&fC2[i]<PointDepth)
+      if(fC1[i]>PointBegin&&fC1[i]<PointEnd&&fC2[i]<Zpc)
       {
 	    fPotential[i]=V1;
 	    fIsFixed[i]=true;
@@ -52,6 +68,7 @@ void PointContactRZ::Initialize()
       //fPotential[i]=V0;
       fPotential[i+n1-1]=V0;
    }
+   BoundaryOnPointcontact();
 }
 //_____________________________________________________________________________
 //

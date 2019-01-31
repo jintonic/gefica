@@ -14,23 +14,23 @@ void ReversedCoaxialRZ::Initialize()
    // END_HTML
    // If the inner radius is not larger than the outer radius,
    // no grid will be created
-   if (RLowerBound>=RUpperBound||ZLowerBound>=ZUpperBound) {
+   if (Radius<=OutterRadiusHole||Radius<=InnerRadiusHole) {
       Warning("Initialize",
             "Lower bound (%f) >= upper bound (%f)! No grid is created!",
-            RLowerBound, RUpperBound);
+            Radius, OutterRadiusHole);
       return;
    }
-   double steplength1=(RUpperBound-RLowerBound)/(n1-1);
-   double steplength2=(ZUpperBound-ZLowerBound)/(n2-1);
+   double steplength1=(Radius*2)/(n1-1);
+   double steplength2=(Z-Z0)/(n2-1);
    SetStepLength(steplength1,steplength2);
    double x1=OutterRadiusHole,
-	  y1=ZUpperBound,
+	  y1=Z,
 	  x2=InnerRadiusHole,
-	  y2=ZUpperBound-DHole,
-	  x3=RUpperBound-removedConnorradius,
-	  y3=ZUpperBound,
-	  x4=RUpperBound,
-	  y4=ZUpperBound-removedConnorheight;
+	  y2=Z-DHole,
+	  x3=Radius-removedConnorradius,
+	  y3=Z,
+	  x4=Radius,
+	  y4=Z-removedConnorheight;
    double k1=(y1-y2)/(x1-x2);
    double b1=y1-k1*x1;
    double k2=(y3-y4)/(x3-x4);
@@ -38,14 +38,14 @@ void ReversedCoaxialRZ::Initialize()
 
    for(int i=n;i-->0;) 
    {
-      fC1[i]=fC1[i]+RLowerBound;
+      fC1[i]=fC1[i]-Radius;
       fPotential[i]=(V0+V1)/2;
    }
    // set potential for electrodes
    for(int i=n-1;i>=n-n1;i--) {
       fIsFixed[i]=true;
       fPotential[i]=V0;
-      if(fC1[n-1-i]>=PointBegin-0.001&&fC1[n-1-i]<=PointEnd+0.001) {
+      if(fC1[n-1-i]>=Rpc-0.001&&fC1[n-1-i]<=-Rpc+0.001) {
          fPotential[n-1-i]=V1;
          fIsFixed[n-1-i]=true;
       }

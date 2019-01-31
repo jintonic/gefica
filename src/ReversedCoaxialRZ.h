@@ -8,14 +8,12 @@ namespace GeFiCa { class ReversedCoaxialRZ; }
 class GeFiCa::ReversedCoaxialRZ : public GeFiCa::RZ
 {
   public:
-    double RUpperBound, RLowerBound, ZUpperBound, ZLowerBound, PointBegin,
-           PointEnd, InnerRadiusHole, OutterRadiusHole, removedConnorradius,
+    double Radius, Z,Z0, Rpc, Zpc,InnerRadiusHole, OutterRadiusHole, removedConnorradius,
            removedConnorheight, DHole; // bounds for X and Y and point start and end
 
    public :
-     ReversedCoaxialRZ(int ix,int iy) : RZ(ix,iy), RUpperBound(1),
-     RLowerBound(0), ZUpperBound(1), ZLowerBound(0), PointBegin(0.4),
-     PointEnd(0.6), InnerRadiusHole(0.3), OutterRadiusHole(0.5),
+     ReversedCoaxialRZ(int ix,int iy) : RZ(ix,iy), Radius(1),
+     Z(1), Z0(0), Rpc(0.4),Zpc(0), InnerRadiusHole(0.3), OutterRadiusHole(0.5),
      removedConnorradius(0.2), removedConnorheight(0.3), DHole(0.2) {};
 
      void Initialize();
