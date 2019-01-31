@@ -30,9 +30,9 @@ double GetVdep(double impurity, double thickness)
    if (impurity==0) return 0; // nothing to deplete
 
    TF1 *det=new TF1("det", V, 0, thickness, 3); // potential distr.
-   double vlower=0*volt, vupper=2e4*volt; // range of search
+   double bias, vlower=0*volt, vupper=2e4*volt; // range of search
    while (vupper-vlower>1e-3*volt) { // binary search
-      double bias=(vupper+vlower)/2; // bias voltage
+      bias=(vupper+vlower)/2; // bias voltage
       det->SetParameters(thickness, bias, impurity);
       if (det->Derivative(0)*det->Derivative(thickness)<0) vlower=bias;
       else vupper=bias;
