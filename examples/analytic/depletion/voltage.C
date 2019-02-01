@@ -3,7 +3,7 @@ static const double cm=1;
 static const double cm3=cm*cm*cm;
 static const double volt=1;
 static const double C=1; // Coulomb
-static const double Qe=1.6e-19*C; // elementary charge
+static const double Qe=-1.6e-19*C; // electron charge
 static const double epsilon0=8.854187817e-14*C/volt/cm; // vacuum permittivity
 // https://link.springer.com/chapter/10.1007/10832182_519
 static const double epsilonGe=15.8; // Ge dielectric constant
@@ -30,9 +30,9 @@ double GetVdep(double impurity, double thickness)
    if (impurity==0) return 0; // nothing to deplete
 
    TF1 *det=new TF1("det", V, 0, thickness, 3); // potential distr.
-   double vlower=0*volt, vupper=2e4*volt; // range of search
+   double bias, vlower=0*volt, vupper=2e4*volt; // range of search
    while (vupper-vlower>1e-3*volt) { // binary search
-      double bias=(vupper+vlower)/2; // bias voltage
+      bias=(vupper+vlower)/2; // bias voltage
       det->SetParameters(thickness, bias, impurity);
       if (det->Derivative(0)*det->Derivative(thickness)<0) vlower=bias;
       else vupper=bias;
@@ -44,8 +44,8 @@ double GetVdep(double impurity, double thickness)
 void voltage(double thickness=1*cm)
 {
    const int n=10; // number of points
-   double vdep[n], impurity[n]={1e9/cm3, 2e9/cm3, 4e9/cm3, 8e9/cm3, 1e10/cm3,
-      2e10/cm3, 4e10/cm3, 8e10/cm3, 1e11/cm3, 1.2e11/cm3};
+   double vdep[n], impurity[n]={-1e9/cm3, -2e9/cm3, -4e9/cm3, -8e9/cm3,
+      -1e10/cm3, -2e10/cm3, -4e10/cm3, -8e10/cm3, -1e11/cm3, -1.2e11/cm3};
    for (int i=0; i<n; i++) vdep[i] = GetVdep(impurity[i], thickness);
 
    gROOT->SetStyle("Plain"); // pick up a good default drawing style
