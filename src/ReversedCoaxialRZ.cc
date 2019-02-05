@@ -3,7 +3,67 @@
 #include "Units.h"
 #include <cmath>
 using namespace GeFiCa;
+void ReversedCoaxialRZ::Boundary()
+{
+   double x1=OutterRadiusHole,
+	  y1=Z,
+	  x2=InnerRadiusHole,
+	  y2=Z-DHole,
+	  x3=Radius-removedConnorradius,
+	  y3=Z,
+	  x4=Radius,
+	  y4=Z-removedConnorheight;
+   double k1=(y1-y2)/(x1-x2);
+   double b1=y1-k1*x1;
+   double k2=(y3-y4)/(x3-x4);
+   double b2=(y3-k2*x3);
+   for (int i=0;i<n;i++)
+   {
+      //right side of hole
+      if(fC1[i]-k1*fC2[i]-b1<fdC1m[i]&&fC2[i]>DHole)
+      {
+         fdC1m[i]=fC1[i]-k1*fC2[i]-b1;
+      }
+      //right of edge
+      if(fC1[i]-k2*fC2[i]-b2<fdC1m[i]&&fC2[i]>y4)
+      {
+         fdC1m[i]=fC1[i]-k2*fC2[i]-b2;
+      }
+      //left side of hole
+      if(fC1[i]+k1*fC2[i]-b1<fdC1m[i]&&fC2[i]>DHole)
+      {
+         fdC1m[i]=-fC1[i]-k1*fC2[i]-b1;
+      }
+      //left of edge
+      if(fC1[i]+k2*fC2[i]-b2<fdC1m[i]&&fC2[i]>y4)
+      {
+         fdC1m[i]=-fC1[i]-k2*fC2[i]-b2;
+      }
+      //down right side of hole
+      if(-fC2[i]+fC1[i]/k1+b1/k1<fdC2m[i]&&fC1[i]>x2)
+      {
+         fdC2m[i]=-fC1[i]+fC2[i]/k1+b1/k1;
+      }
+      //down right of edge
+      if(-fC2[i]+fC1[i]/k2+b2/k2<fdC2m[i]&&fC1[i]>x2)
+      {
+         fdC2m[i]=-fC1[i]+fC2[i]/k2+b2/k2;
+      }
+      //left side of hole
+      if(-fC2[i]-fC1[i]/k1-b1/k2<fdC2m[i]&&fC1[i]>x2)
+      {
+         fdC2m[i]=-fC1[i]-fC2[i]/k1-b1/k1;
+      }
+      //left of edge
+      if(-fC2[i]-fC1[i]/k2-b2/k2<fdC2m[i]&&fC1[i]>x2)
+      {
+         fdC2m[i]=-fC1[i]-fC2[i]/k2-b2/k2;
+      }
 
+
+   }
+
+}
 void ReversedCoaxialRZ::Initialize()
 {
    // The step length is calculated with the following equation:
@@ -80,6 +140,7 @@ void ReversedCoaxialRZ::Initialize()
      }
 
    }
+   Boundary();
 }
 //_____________________________________________________________________________
 //
