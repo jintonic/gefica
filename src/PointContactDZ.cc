@@ -148,6 +148,29 @@ void PointContactDZ::Initialize()
          fPotential[i]=V0;
       }
    }
+   for(int i=0;i<n;i++)
+   {
+      if(fC2[i]>=fC1[i]-TaperLength)
+      {
+         fIsFixed[i]=true;
+         fPotential[i]=V0;
+      }
+      if(fC2[i]<=-fC1[i]-TaperLength)
+      {
+         fIsFixed[i]=true;
+         fPotential[i]=V0;
+      }
+      if(fC2[i]-(fC1[i]-TaperLength)<fdC2m[i])
+      {
+         fdC2m[i]=fC2[i]-(fC1[i]-TaperLength);
+         fdC1p[i]=fC2[i]+TaperLength-fC1[i];
+      }
+      if(fC2[i]-(-fC1[i]-TaperLength)<fdC2m[i])
+      {
+         fdC2m[i]=fC2[i]-(-fC1[i]-TaperLength);
+         fdC1m[i]=-fC2[i]-TaperLength-fC1[i];
+      }
+   }
 }
 //_____________________________________________________________________________
 //
