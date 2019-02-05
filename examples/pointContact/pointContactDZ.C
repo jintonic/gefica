@@ -4,7 +4,8 @@
    detector2->Z=5.05*GeFiCa::cm;
    detector2->Rpc=0.14*GeFiCa::cm;
    detector2->Zpc=0.21*GeFiCa::cm;
-   detector2->RwrapArround=1.450*GeFiCa::cm;
+   detector2->RwrapArround=3.350*GeFiCa::cm;
+   detector2->TaperLength=1*GeFiCa::cm;
 
    //TF2 *im=new TF2("f","-0.19175e10-0.025e10*y");
    TF3 *im=new TF3("f","-0.318e10+0.025e10*y");

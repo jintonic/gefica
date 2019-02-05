@@ -148,27 +148,28 @@ void PointContactDZ::Initialize()
          fPotential[i]=V0;
       }
    }
+   double b=Radius-TaperLength;
    for(int i=0;i<n;i++)
    {
-      if(fC2[i]>=fC1[i]-TaperLength)
+      if(fC2[i]<=fC1[i]-b)
       {
          fIsFixed[i]=true;
          fPotential[i]=V0;
       }
-      if(fC2[i]<=-fC1[i]-TaperLength)
+      if(fC2[i]<=-fC1[i]-b)
       {
          fIsFixed[i]=true;
          fPotential[i]=V0;
       }
-      if(fC2[i]-(fC1[i]-TaperLength)<fdC2m[i])
+      if(fC2[i]-(fC1[i]-b)<fdC2m[i]*0.9)
       {
-         fdC2m[i]=fC2[i]-(fC1[i]-TaperLength);
-         fdC1p[i]=fC2[i]+TaperLength-fC1[i];
-      }
-      if(fC2[i]-(-fC1[i]-TaperLength)<fdC2m[i])
+         fdC2m[i]=fC2[i]-(fC1[i]-b);
+         fdC1p[i]=fC2[i]+b-fC1[i];
+      } 
+      if(fC2[i]-(-fC1[i]-b)<fdC2m[i]*0.9)
       {
-         fdC2m[i]=fC2[i]-(-fC1[i]-TaperLength);
-         fdC1m[i]=-fC2[i]-TaperLength-fC1[i];
+         fdC2m[i]=fC2[i]-(-fC1[i]-b);
+         fdC1m[i]=fC2[i]+b+fC1[i];
       }
    }
 }
