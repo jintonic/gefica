@@ -8,14 +8,14 @@ void PointContactRZ::BoundaryOnPointcontact()
    for(int i=0;i<n;i++)
    {
       //only change fdc1m when it is right close to bound
-      if(fC1[i]-Rpc<fdC1m[i]&&fC1[i]>Rpc&&fC2[i]<Zpc)
+      if(fC1[i]-PointContactR<fdC1m[i]&&fC1[i]>PointContactR&&fC2[i]<PointContactZ)
       {
-         fdC1m[i]=fC1[i]-Rpc;
+         fdC1m[i]=fC1[i]-PointContactR;
       }
       //only change fdc2m when it is right close to bound
-      if(fC2[i]-Zpc<fdC2m[i]&&fC2[i]>Zpc&&fC1[i]<Rpc)
+      if(fC2[i]-PointContactZ<fdC2m[i]&&fC2[i]>PointContactZ&&fC1[i]<PointContactR)
       {
-         fdC2m[i]=fC2[i]-Zpc;
+         fdC2m[i]=fC2[i]-PointContactZ;
       }
    }
 }
@@ -39,7 +39,7 @@ void PointContactRZ::Initialize()
    RUpperBound=Radius;
    RLowerBound=(2.0*Radius/(2*n1-1))/2;
    PointBegin=0;
-   PointEnd=Rpc;
+   PointEnd=PointContactR;
    double steplength1=(RUpperBound)/(n1-1);
    double steplength2=(Z-Z0)/(n2-1);
    SetStepLength(steplength1,steplength2);
@@ -47,7 +47,7 @@ void PointContactRZ::Initialize()
    {
       fC1[i]=fC1[i]+RLowerBound;
       fPotential[i]=(V0+V1)/2;
-      if(fC1[i]>PointBegin&&fC1[i]<PointEnd&&fC2[i]<Zpc)
+      if(fC1[i]>PointBegin&&fC1[i]<PointEnd&&fC2[i]<PointContactZ)
       {
 	    fPotential[i]=V1;
 	    fIsFixed[i]=true;

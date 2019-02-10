@@ -5,14 +5,14 @@
 using namespace GeFiCa;
 void ReversedCoaxialRZ::Boundary()
 {
-   double x1=OutterRadiusHole,
+   double x1=HoleOutterR,
 	  y1=Z,
-	  x2=InnerRadiusHole,
-	  y2=Z-DHole,
-	  x3=Radius-removedConnorradius,
+	  x2=HoleInnerR,
+	  y2=Z-HoleZ,
+	  x3=Radius-ConnorLength,
 	  y3=Z,
 	  x4=Radius,
-	  y4=Z-removedConnorheight;
+	  y4=Z-ConnorZ;
    double k1=(y1-y2)/(x1-x2);
    double b1=y1-k1*x1;
    double k2=(y3-y4)/(x3-x4);
@@ -20,7 +20,7 @@ void ReversedCoaxialRZ::Boundary()
    for (int i=0;i<n;i++)
    {
       //right side of hole
-      if(fC1[i]-k1*fC2[i]-b1<fdC1m[i]&&fC2[i]>DHole)
+      if(fC1[i]-k1*fC2[i]-b1<fdC1m[i]&&fC2[i]>HoleZ)
       {
          fdC1m[i]=fC1[i]-k1*fC2[i]-b1;
       }
@@ -30,7 +30,7 @@ void ReversedCoaxialRZ::Boundary()
          fdC1m[i]=fC1[i]-k2*fC2[i]-b2;
       }
       //left side of hole
-      if(fC1[i]+k1*fC2[i]-b1<fdC1m[i]&&fC2[i]>DHole)
+      if(fC1[i]+k1*fC2[i]-b1<fdC1m[i]&&fC2[i]>HoleZ)
       {
          fdC1m[i]=-fC1[i]-k1*fC2[i]-b1;
       }
@@ -74,23 +74,23 @@ void ReversedCoaxialRZ::Initialize()
    // END_HTML
    // If the inner radius is not larger than the outer radius,
    // no grid will be created
-   if (Radius<=OutterRadiusHole||Radius<=InnerRadiusHole) {
+   if (Radius<=HoleOutterR||Radius<=HoleInnerR) {
       Warning("Initialize",
             "Lower bound (%f) >= upper bound (%f)! No grid is created!",
-            Radius, OutterRadiusHole);
+            Radius, HoleOutterR);
       return;
    }
    double steplength1=(Radius*2)/(n1-1);
    double steplength2=(Z-Z0)/(n2-1);
    SetStepLength(steplength1,steplength2);
-   double x1=OutterRadiusHole,
+   double x1=HoleOutterR,
 	  y1=Z,
-	  x2=InnerRadiusHole,
-	  y2=Z-DHole,
-	  x3=Radius-removedConnorradius,
+	  x2=HoleInnerR,
+	  y2=Z-HoleZ,
+	  x3=Radius-ConnorLength,
 	  y3=Z,
 	  x4=Radius,
-	  y4=Z-removedConnorheight;
+	  y4=Z-ConnorZ;
    double k1=(y1-y2)/(x1-x2);
    double b1=y1-k1*x1;
    double k2=(y3-y4)/(x3-x4);
@@ -105,7 +105,7 @@ void ReversedCoaxialRZ::Initialize()
    for(int i=n-1;i>=n-n1;i--) {
       fIsFixed[i]=true;
       fPotential[i]=V0;
-      if(fC1[n-1-i]>=Rpc-0.001&&fC1[n-1-i]<=-Rpc+0.001) {
+      if(fC1[n-1-i]>=PointContactR-0.001&&fC1[n-1-i]<=-PointContactR+0.001) {
          fPotential[n-1-i]=V1;
          fIsFixed[n-1-i]=true;
       }

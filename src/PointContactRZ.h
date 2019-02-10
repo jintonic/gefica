@@ -8,10 +8,10 @@ namespace GeFiCa { class PointContactRZ; }
 class GeFiCa::PointContactRZ : public GeFiCa::RZ
 {
   public:
-    double Radius,Z,Z0,Rpc,Zpc;//bounds for X and Y and point start and end
+    double Radius,Z,Z0,PointContactR,PointContactZ;//bounds for X and Y and point start and end
    public :
      PointContactRZ(int ix=0,int iy=0) : RZ(ix,iy),
-     Radius(1),Z(1),Z0(0), Rpc(0.4),Zpc(0.2){};
+     Radius(1),Z(1),Z0(0), PointContactR(0.4),PointContactZ(0.2){};
 
      void Initialize();
      bool CalculatePotential(EMethod method=kSOR2);
