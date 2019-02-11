@@ -57,6 +57,8 @@ void PointContactDZ::BoundaryOnPointcontact()
       fdC1p[idxNeg+i*n1-1]=fdC1m[idxNeg+i*n1];
    }
 }
+//_____________________________________________________________________________
+//
 void PointContactDZ::BoundaryonWarpAround()
 {
    int index=FindIdx(WrapArroundR,0,0,n2-1);
@@ -83,11 +85,13 @@ void PointContactDZ::BoundaryonWarpAround()
 
    }
 }
+//_____________________________________________________________________________
+//
 void PointContactDZ::Initialize()
 {
    if (n1%2==1) {
-         Error("Initialize", "Number of grids in R cannot be odd, abort!");
-         abort();
+      Error("Initialize", "Number of grids in R cannot be odd, abort!");
+      abort();
    }
 
    // The step length is calculated with the following equation:
@@ -179,30 +183,30 @@ void PointContactDZ::Initialize()
 bool PointContactDZ::CalculatePotential(EMethod method)
 {
    if (!fIsLoaded) Initialize();
-// this commentd block are slow depletion voltage finder
- while(0)
- {
-    RZ::CalculatePotential(method);
-    if(!X::IsDepleted())
-    {
-        int maxn=Findmax();
-        int minn=Findmin();
-        if(V0>V1)
-        {
-           V0=(fPotential[maxn]-V0)*1.01+V0;
-           V1=-(V1-fPotential[minn])*1.01+V1;
-        }
-        else
-        {
-           V1=(fPotential[maxn]-V1)*1.01+V1;
-           V0=-(V0-fPotential[minn])*1.01+V0;
-        }
-        Initialize();
-        RZ::CalculatePotential(method);
-        cout<<V0<<" "<<V1<<endl;
-    }
-    else break;
- }
+   // this commentd block are slow depletion voltage finder
+   while(0)
+   {
+      RZ::CalculatePotential(method);
+      if(!X::IsDepleted())
+      {
+         int maxn=Findmax();
+         int minn=Findmin();
+         if(V0>V1)
+         {
+            V0=(fPotential[maxn]-V0)*1.01+V0;
+            V1=-(V1-fPotential[minn])*1.01+V1;
+         }
+         else
+         {
+            V1=(fPotential[maxn]-V1)*1.01+V1;
+            V0=-(V0-fPotential[minn])*1.01+V0;
+         }
+         Initialize();
+         RZ::CalculatePotential(method);
+         cout<<V0<<" "<<V1<<endl;
+      }
+      else break;
+   }
    return RZ::CalculatePotential(method);
 }
 //_____________________________________________________________________________
@@ -223,6 +227,8 @@ bool PointContactDZ::CalculateField(int idx)
 
    return true;
 }
+//_____________________________________________________________________________
+//
 #include <fstream>
 bool PointContactDZ::SaveFieldAsFieldgen(const char * fout)
 {
