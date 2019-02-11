@@ -85,10 +85,8 @@ int X::Findmax()
 {
    double max=fPotential[0];
    int maxn=0;
-   for(int i=1;i<n;i++)
-   {
-      if(fPotential[i]>max)
-      {
+   for(int i=1;i<n;i++) {
+      if(fPotential[i]>max) {
          maxn=i;
          max=fPotential[i];
       }
@@ -101,10 +99,8 @@ int X::Findmin()
 {
    double min=fPotential[0];
    int minn=0;
-   for(int i=1;i<n;i++)
-   {
-      if(fPotential[i]<min)
-      {
+   for(int i=1;i<n;i++) {
+      if(fPotential[i]<min) {
          minn=i;
          min=fPotential[i];
       }
@@ -115,12 +111,11 @@ int X::Findmin()
 //
 bool X::IsDepleted()
 {
-  for(int i=0;i<n;i++)
-  {
-     SOR2(i,0);
-     if (!fIsDepleted[i])return false;
-  }
-  return true;
+   for(int i=0;i<n;i++) {
+      SOR2(i,0);
+      if (!fIsDepleted[i]) return false;
+   }
+   return true;
 }
 //_____________________________________________________________________________
 //
@@ -171,13 +166,13 @@ bool X::CalculatePotential(EMethod method)
       }
       double cp = XUpSum/XDownSum; // current precision
       if (cnt%100==0)
-         Printf("  %05d, target precision: %e, current precision: %e", 
-               cnt, Precision, cp);
+         Printf("  %05d iterations, current precision: %e (target: %e)", 
+               cnt, cp, Precision);
 
       if (cp<Precision) {
          for (int i=0; i<n; i++) if (!CalculateField(i)) return false;
-         Printf("  %05d, target precision: %e, current precision: %e", 
-               cnt, Precision, cp);
+         Printf("  %05d iterations, current precision: %e (target: %e)", 
+               cnt, cp, Precision);
          cout<<" Done. Spent "; watch.Stop(); watch.Print();
          return true;
       }
@@ -196,8 +191,9 @@ void X::SOR2(int idx,bool NotImpurityPotential)
    double p2=fPotential[idx-1];
    double p3=fPotential[idx+1];
 
-   double tmp=-density/epsilon*h2*h3/2+(h3*fPotential[idx-1]+h2*fPotential[idx+1])/(h2+h3);
-   
+   double tmp=-density/epsilon*h2*h3/2
+      + (h3*fPotential[idx-1]+h2*fPotential[idx+1])/(h2+h3);
+
    //find minmium and maxnium of all five grid, the new one should not go overthem.
    //find min
    double min=p2;
@@ -205,26 +201,22 @@ void X::SOR2(int idx,bool NotImpurityPotential)
    if(min>p3)min=p3;
    //find max
    if(max<p3)max=p3;
-//if tmp is greater or smaller than max and min, set tmp to it.
-   
+   //if tmp is greater or smaller than max and min, set tmp to it.
+
    //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
    double oldP=fPotential[idx];
-      tmp=Csor*(tmp-oldP)+oldP;
-   
-   if(tmp<min)
-   {
+   tmp=Csor*(tmp-oldP)+oldP;
+
+   if(tmp<min) {
       fPotential[idx]=min;
       fIsDepleted[idx]=false;
-   }
-   else if(tmp>max)
-   {
+   } else if(tmp>max) {
       fPotential[idx]=max;
       fIsDepleted[idx]=false;
-   }
-   else
+   } else
       fIsDepleted[idx]=true;
-   if(fIsDepleted[idx]||!NotImpurityPotential)
-   {
+
+   if(fIsDepleted[idx]||!NotImpurityPotential) {
       //over relax
       fPotential[idx]=tmp;
    }
@@ -371,9 +363,9 @@ bool X::CalculateField(int idx)
       fE1[idx]=(fPotential[idx]-fPotential[idx+1])/fdC1p[idx];
    else if (idx%n1==n1-1) // C1 upper boundary
       fE1[idx]=(fPotential[idx]-fPotential[idx-1])/fdC1m[idx];
-   else { // bulk
+   else // bulk
       fE1[idx]=(fPotential[idx-1]-fPotential[idx+1])/(fdC1m[idx]+fdC1p[idx]);
-   }
+ 
    return true;
 }
 
