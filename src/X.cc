@@ -112,7 +112,9 @@ int X::Findmin()
 bool X::IsDepleted()
 {
    for(int i=0;i<n;i++) {
-      SOR2(i,0);
+      SOR2(i,0); // calculate one more time in case that
+      // 1. the field is loaded from disk, where fIsDepeted is not saved
+      // 2. add two fields together, one is depleted, the other is not
       if (!fIsDepleted[i]) return false;
    }
    return true;
@@ -348,10 +350,10 @@ void X::LoadField(const char * fin)
 }
 //_____________________________________________________________________________
 //
-void X::SetImpurity(TF3 *fi1)
+void X::SetImpurity(TF3 *fi)
 {
    Initialize();
-   for (int i=n;i-->0;) fImpurity[i]=fi1->Eval(fC1[i]);
+   for (int i=n;i-->0;) fImpurity[i]=fi->Eval(fC1[i]);
 }
 //_____________________________________________________________________________
 

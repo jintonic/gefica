@@ -85,7 +85,7 @@ class GeFiCa::X : public TNamed
       /**
        * Set impurity that changes with x.
        */
-      virtual void SetImpurity(TF3 *fi1);
+      virtual void SetImpurity(TF3 *fi);
       /**
        * Returns the value for E under the first direction.
        */
