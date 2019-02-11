@@ -13,7 +13,7 @@
    detector2->MaxIterations=1e5;
    detector2->Precision=1e-8;
    detector2->Csor=1.994;
-   detector2->V0=500*GeFiCa::volt;
+   detector2->V0=1500*GeFiCa::volt;
    detector2->V1=0*GeFiCa::volt;
 
    //TF1 *im=new TF1("","pol1",-0.318e10,0.025e10)

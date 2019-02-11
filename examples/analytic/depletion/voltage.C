@@ -3,7 +3,7 @@ static const double cm=1;
 static const double cm3=cm*cm*cm;
 static const double volt=1;
 static const double C=1; // Coulomb
-static const double Qe=1.6e-19*C; // elementary charge
+static const double Qe=-1.6e-19*C; // eletron charge
 static const double epsilon0=8.854187817e-14*C/volt/cm; // vacuum permittivity
 // https://link.springer.com/chapter/10.1007/10832182_519
 static const double epsilonGe=15.8; // Ge dielectric constant
@@ -44,9 +44,13 @@ double GetVdep(double impurity, double thickness)
 void voltage(double thickness=1*cm)
 {
    const int n=10; // number of points
-   double vdep[n], impurity[n]={1e9/cm3, 2e9/cm3, 4e9/cm3, 8e9/cm3, 1e10/cm3,
-      2e10/cm3, 4e10/cm3, 8e10/cm3, 1e11/cm3, 1.2e11/cm3};
-   for (int i=0; i<n; i++) vdep[i] = GetVdep(impurity[i], thickness);
+   double impurity[n]={-1e9/cm3, -2e9/cm3, -4e9/cm3, -8e9/cm3, -1e10/cm3,
+      -2e10/cm3, -4e10/cm3, -8e10/cm3, -1e11/cm3, -1.2e11/cm3}; // n-type
+   double absi[n], vdep[n];
+   for (int i=0; i<n; i++) {
+      vdep[i] = GetVdep(impurity[i], thickness);
+      absi[i] = abs(impurity[i]);
+   }
 
    gROOT->SetStyle("Plain"); // pick up a good default drawing style
    // modify the default style
@@ -64,8 +68,8 @@ void voltage(double thickness=1*cm)
    gStyle->SetPadBottomMargin(0.12);
    
    // Vdep VS impurity
-   TGraph *g = new TGraph(n,impurity,vdep);
-   g->SetTitle(";Impurity [cm^{-3}];Depletion Voltage [V]");
+   TGraph *g = new TGraph(n,absi,vdep);
+   g->SetTitle(";Net Impurity [cm^{-3}];Depletion Voltage [V]");
    g->Draw("apc");
    TText *t1 = new TText(2e9, 6000, Form(
             "%.0f cm thick planar detector", thickness/cm));

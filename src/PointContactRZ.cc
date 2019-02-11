@@ -37,11 +37,11 @@ void PointContactRZ::Initialize()
    }
    double RUpperBound,RLowerBound,PointBegin,PointEnd;
    RUpperBound=Radius;
-   RLowerBound=(2.0*Radius/(2*n1-1))/2;
    PointBegin=0;
    PointEnd=PointContactR;
    double steplength1=(RUpperBound)/(n1-1);
    double steplength2=(Z-Z0)/(n2-1);
+   RLowerBound=steplength1/2;//(2.0*Radius/(2*n1-1))/2;
    SetStepLength(steplength1,steplength2);
    for(int i=n;i-->0;) 
    {
