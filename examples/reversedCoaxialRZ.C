@@ -5,18 +5,18 @@
    detector2->Radius=3.45*GeFiCa::cm;
    detector2->Z=5.05*GeFiCa::cm;
    detector2->PointContactR=1.45*GeFiCa::cm;
-   detector2->HoleZ=1.0*GeFiCa::cm;
-   detector2->HoleOutterR=1*GeFiCa::cm;
+   detector2->HoleZ=2.0*GeFiCa::cm;
+   detector2->HoleOutterR=1.2*GeFiCa::cm;
    detector2->HoleInnerR=0.5*GeFiCa::cm;
-   detector2->ConnorZ=1*GeFiCa::cm;
-   detector2->ConnorLength=1*GeFiCa::cm;
+   detector2->ConnorZ=1.2*GeFiCa::cm;
+   detector2->ConnorLength=1.3*GeFiCa::cm;
    TF3 *im=new TF3("f","-0.318e10+0.025e10*y");
    detector2->SetImpurity(im);
    detector2->V0=2500*GeFiCa::volt;
    detector2->V1=0*GeFiCa::volt;
 
    //calculation config
-   detector2->MaxIterations=1e6;
+   detector2->MaxIterations=2e3;
    detector2->Precision=1e-8;
    detector2->Csor=1.992;
 

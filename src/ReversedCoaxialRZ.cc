@@ -20,44 +20,49 @@ void ReversedCoaxialRZ::Boundary()
    for (int i=0;i<n;i++)
    {
       //right side of hole
-      if(fC1[i]-fC2[i]/k1+b1/k1<fdC1m[i]&&fC2[i]>HoleZ)
+      if(fC1[i]-fC2[i]/k1+b1/k1<fdC1m[i]&&fC2[i]>Z-HoleZ&&fC1[i]-fC2[i]/k1+b1/k1>-0)
       {
          fdC1m[i]=fC1[i]-fC2[i]/k1+b1/k1;
       }
       //right of edge
-      if(fC1[i]+fC2[i]/k2+b2/k2<fdC1m[i]&&fC2[i]>y4)
+      if(fC1[i]+fC2[i]/k2-b2/k2>0&&fC1[i]+fC2[i]/k2-b2/k2<fdC1m[i]&&fC2[i]>y4)
       {
-         fdC1m[i]=fC1[i]+fC2[i]/k2+b2/k2;
+         fdC1m[i]=fC1[i]+fC2[i]/k2-b2/k2;
       }
       //left side of hole
-      if(-fC1[i]-fC2[i]/k1-b1/k1<fdC1m[i]&&fC2[i]>HoleZ)
+      if(-fC1[i]-fC2[i]/k1+b1/k1>0&&-fC1[i]-fC2[i]/k1+b1/k1<fdC1p[i]&&fC2[i]>Z-HoleZ)
       {
-         fdC1m[i]=-fC1[i]-fC2[i]/k1-b1/k1;
+         fdC1p[i]=-fC1[i]-fC2[i]/k1+b1/k1;
       }
       //left of edge
-      if(-fC1[i]+fC2[i]/k2-b2/k2<fdC1m[i]&&fC2[i]>y4)
+      if(-fC1[i]+fC2[i]/k2-b2/k2>0&&-fC1[i]+fC2[i]/k2-b2/k2<fdC1p[i]&&fC2[i]>y4)
       {
-         fdC1m[i]=-fC1[i]+fC2[i]/k2-b2/k2;
+         fdC1p[i]=-fC1[i]+fC2[i]/k2-b2/k2;
       }
       //down right side of hole
-      if(-fC2[i]+fC1[i]*k1+b1<fdC2m[i]&&fC1[i]>x2)
+      if(-fC2[i]+fC1[i]*k1+b1>0&&-fC2[i]+fC1[i]*k1+b1<fdC2p[i]&&fC2[i]>Z-HoleZ)
       {
-         fdC2m[i]=-fC1[i]+fC2[i]*k1+b1;
+         fdC2p[i]=-fC2[i]+fC1[i]*k1+b1;
       }
       //down right of edge
-      if(-fC2[i]-fC1[i]*k2+b2<fdC2m[i]&&fC1[i]>x2)
+      if(-fC2[i]-fC1[i]*k2+b2>0&&-fC2[i]-fC1[i]*k2+b2<fdC2p[i]&&fC2[i]>Z-ConnorZ)
       {
-         fdC2m[i]=-fC1[i]-fC2[i]*k2+b2;
+         fdC2p[i]=-fC2[i]-fC1[i]*k2+b2;
       }
       //down left side of hole
-      if(-fC2[i]-fC1[i]*k1+b1<fdC2m[i]&&fC1[i]>x2)
+      if(-fC2[i]-fC1[i]*k1+b1>0&&-fC2[i]-fC1[i]*k1+b1<fdC2p[i]&&fC2[i]>Z-HoleZ)
       {
-         fdC2m[i]=-fC1[i]-fC2[i]*k1+b1;
+         fdC2p[i]=-fC2[i]-fC1[i]*k1+b1;
       }
       //down left of edge
-      if(-fC2[i]+fC1[i]*k2+b2<fdC2m[i]&&fC1[i]>x2)
+      if(-fC2[i]+fC1[i]*k2+b2>0&&-fC2[i]+fC1[i]*k2+b2<fdC2p[i]&&fC2[i]>Z-ConnorZ)
       {
-         fdC2m[i]=-fC1[i]+fC2[i]*k2+b2;
+         fdC2p[i]=-fC2[i]+fC1[i]*k2+b2;
+      }
+      //down center of hole
+      if(Z-HoleZ-fC2[i]<fdC2p[i]&&fC1[i]>-HoleInnerR&&fC1[i]<HoleInnerR)
+      {
+         fdC2p[i]=Z-HoleZ-fC2[i];
       }
 
 
@@ -105,7 +110,7 @@ void ReversedCoaxialRZ::Initialize()
    for(int i=n-1;i>=n-n1;i--) {
       fIsFixed[i]=true;
       fV[i]=V0;
-      if(fC1[n-1-i]>=PointContactR-0.001&&fC1[n-1-i]<=-PointContactR+0.001) {
+      if(fC1[n-1-i]>=-PointContactR-0.001&&fC1[n-1-i]<=PointContactR+0.001) {
          fV[n-1-i]=V1;
          fIsFixed[n-1-i]=true;
       }
@@ -140,7 +145,7 @@ void ReversedCoaxialRZ::Initialize()
      }
 
    }
-   //Boundary();
+   Boundary();
 }
 //_____________________________________________________________________________
 //
