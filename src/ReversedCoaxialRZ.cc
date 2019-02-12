@@ -97,26 +97,17 @@ void ReversedCoaxialRZ::Initialize()
    }
    for (int i=0;i<n;i++)
    {
-     if(((fC2[i]>-k1*(fC1[i])+b1-steplength2/2  && fC2[i]>y2-steplength2/2)||(fC2[i]>-k2*(fC1[i])+b2-steplength2/2))&&fC1[i]<0)
+     if(((fC2[i]>-k1*(fC1[i])+b1  && fC2[i]>y2)||(fC2[i]>-k2*(fC1[i])+b2))&&fC1[i]<0)
+     {
+       fIsFixed[i]=true;
+       fV[i]=V0;
+     }
+     if(((fC2[i]>k1*(fC1[i])+b1  && fC2[i]>y2)||(fC2[i]>k2*(fC1[i])+b2))&&fC1[i]>0)
      {
        fIsFixed[i]=true;
        fV[i]=V0;
      }
 
-     if(((fC2[i]>-k1*(fC1[i])+b1+steplength2 && fC2[i]>y2+steplength2)||fC2[i]>-k2*(fC1[i])+b2+steplength2)&&fC1[i]<0)
-     {
-       fV[i]=0;
-     }
-     if(((fC2[i]>k1*(fC1[i])+b1-steplength2/2  && fC2[i]>y2-steplength2/2)||(fC2[i]>k2*(fC1[i])+b2-steplength2/2))&&fC1[i]>0)
-     {
-       fIsFixed[i]=true;
-       fV[i]=V0;
-     }
-
-     if(((fC2[i]>k1*(fC1[i])+b1+steplength2 && fC2[i]>y2+steplength2)||fC2[i]>k2*(fC1[i])+b2+steplength2)&&fC1[i]>0)
-     {
-       fV[i]=0;
-     }
    }
    SetupBoundary();
 }
