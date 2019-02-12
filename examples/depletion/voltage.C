@@ -43,7 +43,7 @@ void voltage()
    weightingPotential->MaxIterations=1e5;
    weightingPotential->Precision=1e-7*volt;
 
-   weightingPotential->SetImpurity(new TF3("wpi","0"));
+   weightingPotential->SetImpurity(new TF3("wpi","0")); // no impurity
 
    if (FILE *input = fopen("weighting.root","r")) { // already calculated
       fclose(input);
@@ -53,53 +53,15 @@ void voltage()
       weightingPotential->SaveField("weighting.root");
    }
 
-   // potentials from both impurity and bias
-   PointContactDZ *totalPotential = new PointContactDZ(690,505);
-
-   totalPotential->V0=2500*volt;
-   totalPotential->V1=0*volt;
-
-   totalPotential->Z=5.05*cm;
-   totalPotential->Radius=3.45*cm;
-   totalPotential->PointContactZ=0.21*cm;
-   totalPotential->PointContactR=0.14*cm;
-
-   totalPotential->Csor=1.994;
-   totalPotential->MaxIterations=1e5;
-   totalPotential->Precision=1e-7*volt;
-
-   totalPotential->SetImpurity(impurityDistribution);
-
-   totalPotential = (PointContactDZ*) weightingPotential->Clone("total");
-   (*totalPotential) *= 2.;
-
-   PointContactDZ *multiweightPotential = new PointContactDZ(100,100);
-   multiweightPotential = (PointContactDZ*) weightingPotential->Clone("total");
-
-   (*totalPotential) += impurityPotential;
-   totalPotential->SaveField("beforejump");
-   int stepsize=2;
-   while(totalPotential->IsDepleted()==false) {
-      (*multiweightPotential)*=(double)2;
-      (*totalPotential)+=multiweightPotential;
-      stepsize=stepsize*2;
+   double bias, vlower=0*volt, vupper=2e4*volt; // range of search
+   while (vupper-vlower>1e-3*volt) { // binary search
+      bias=(vupper+vlower)/2; // bias voltage
+      PointContactDZ totalPotential = *(PointContactDZ*) weightingPotential->Clone();
+      totalPotential*=bias;
+      totalPotential+=impurityPotential;
+      if(totalPotential.IsDepleted()) vlower=bias;
+      else vupper=bias;
    }
-   double upper=stepsize;
-   std::cout<<stepsize;
-   double lower=0;
-   double mid=upper/2;
-   while(lower<=upper) {
-      mid=(upper+lower)/2;
-      totalPotential = (PointContactDZ*) weightingPotential->Clone("total");
-      //totalPotential->LoadField("wp");
-      (*totalPotential)*=mid;
-      (*totalPotential)+=impurityPotential;
-      if(totalPotential->IsDepleted()) {
-         upper=mid-1e-5;
-      } else {
-         lower=mid+1e-5;
-      }
-   }
-   totalPotential->SaveField("result.root");
+   cout<<"depletion voltage: "<<bias<<endl;
 }
 
