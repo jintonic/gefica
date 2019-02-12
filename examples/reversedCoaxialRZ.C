@@ -2,16 +2,14 @@
 {
    //basic geometry setup
    GeFiCa::ReversedCoaxialRZ *detector2 = new GeFiCa::ReversedCoaxialRZ(692,506);
-   detector2->RUpperBound=3.45*GeFiCa::cm;
-   detector2->RLowerBound=-3.45*GeFiCa::cm;
-   detector2->ZUpperBound=5.05*GeFiCa::cm;
-   detector2->PointBegin=-1.45*GeFiCa::cm;
-   detector2->PointEnd=1.4500*GeFiCa::cm;
-   detector2->DHole=1.0*GeFiCa::cm;
-   detector2->OutterRadiusHole=1*GeFiCa::cm;
-   detector2->InnerRadiusHole=0.5*GeFiCa::cm;
-   detector2->removedConnorradius=1*GeFiCa::cm;
-   detector2->removedConnorheight=1*GeFiCa::cm;
+   detector2->Radius=3.45*GeFiCa::cm;
+   detector2->Z=5.05*GeFiCa::cm;
+   detector2->PointContactR=1.45*GeFiCa::cm;
+   detector2->HoleZ=1.0*GeFiCa::cm;
+   detector2->HoleOutterR=1*GeFiCa::cm;
+   detector2->HoleInnerR=0.5*GeFiCa::cm;
+   detector2->ConnorZ=1*GeFiCa::cm;
+   detector2->ConnorLength=1*GeFiCa::cm;
    TF3 *im=new TF3("f","-0.318e10+0.025e10*y");
    detector2->SetImpurity(im);
    detector2->V0=2500*GeFiCa::volt;

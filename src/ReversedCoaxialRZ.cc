@@ -20,44 +20,44 @@ void ReversedCoaxialRZ::Boundary()
    for (int i=0;i<n;i++)
    {
       //right side of hole
-      if(fC1[i]-k1*fC2[i]-b1<fdC1m[i]&&fC2[i]>HoleZ)
+      if(fC1[i]-fC2[i]/k1+b1/k1<fdC1m[i]&&fC2[i]>HoleZ)
       {
-         fdC1m[i]=fC1[i]-k1*fC2[i]-b1;
+         fdC1m[i]=fC1[i]-fC2[i]/k1+b1/k1;
       }
       //right of edge
-      if(fC1[i]-k2*fC2[i]-b2<fdC1m[i]&&fC2[i]>y4)
+      if(fC1[i]+fC2[i]/k2+b2/k2<fdC1m[i]&&fC2[i]>y4)
       {
-         fdC1m[i]=fC1[i]-k2*fC2[i]-b2;
+         fdC1m[i]=fC1[i]+fC2[i]/k2+b2/k2;
       }
       //left side of hole
-      if(fC1[i]+k1*fC2[i]-b1<fdC1m[i]&&fC2[i]>HoleZ)
+      if(-fC1[i]-fC2[i]/k1-b1/k1<fdC1m[i]&&fC2[i]>HoleZ)
       {
-         fdC1m[i]=-fC1[i]-k1*fC2[i]-b1;
+         fdC1m[i]=-fC1[i]-fC2[i]/k1-b1/k1;
       }
       //left of edge
-      if(fC1[i]+k2*fC2[i]-b2<fdC1m[i]&&fC2[i]>y4)
+      if(-fC1[i]+fC2[i]/k2-b2/k2<fdC1m[i]&&fC2[i]>y4)
       {
-         fdC1m[i]=-fC1[i]-k2*fC2[i]-b2;
+         fdC1m[i]=-fC1[i]+fC2[i]/k2-b2/k2;
       }
       //down right side of hole
-      if(-fC2[i]+fC1[i]/k1+b1/k1<fdC2m[i]&&fC1[i]>x2)
+      if(-fC2[i]+fC1[i]*k1+b1<fdC2m[i]&&fC1[i]>x2)
       {
-         fdC2m[i]=-fC1[i]+fC2[i]/k1+b1/k1;
+         fdC2m[i]=-fC1[i]+fC2[i]*k1+b1;
       }
       //down right of edge
-      if(-fC2[i]+fC1[i]/k2+b2/k2<fdC2m[i]&&fC1[i]>x2)
+      if(-fC2[i]-fC1[i]*k2+b2<fdC2m[i]&&fC1[i]>x2)
       {
-         fdC2m[i]=-fC1[i]+fC2[i]/k2+b2/k2;
+         fdC2m[i]=-fC1[i]-fC2[i]*k2+b2;
       }
-      //left side of hole
-      if(-fC2[i]-fC1[i]/k1-b1/k2<fdC2m[i]&&fC1[i]>x2)
+      //down left side of hole
+      if(-fC2[i]-fC1[i]*k1+b1<fdC2m[i]&&fC1[i]>x2)
       {
-         fdC2m[i]=-fC1[i]-fC2[i]/k1-b1/k1;
+         fdC2m[i]=-fC1[i]-fC2[i]*k1+b1;
       }
-      //left of edge
-      if(-fC2[i]-fC1[i]/k2-b2/k2<fdC2m[i]&&fC1[i]>x2)
+      //down left of edge
+      if(-fC2[i]+fC1[i]*k2+b2<fdC2m[i]&&fC1[i]>x2)
       {
-         fdC2m[i]=-fC1[i]-fC2[i]/k2-b2/k2;
+         fdC2m[i]=-fC1[i]+fC2[i]*k2+b2;
       }
 
 
@@ -126,7 +126,7 @@ void ReversedCoaxialRZ::Initialize()
 
      if(((fC2[i]>-k1*(fC1[i])+b1+steplength2 && fC2[i]>y2+steplength2)||fC2[i]>-k2*(fC1[i])+b2+steplength2)&&fC1[i]<0)
      {
-       fPotential[i]=0;
+       fPotential[i]=V1;
      }
      if(((fC2[i]>k1*(fC1[i])+b1-steplength2/2  && fC2[i]>y2-steplength2/2)||(fC2[i]>k2*(fC1[i])+b2-steplength2/2))&&fC1[i]>0)
      {
@@ -136,11 +136,11 @@ void ReversedCoaxialRZ::Initialize()
 
      if(((fC2[i]>k1*(fC1[i])+b1+steplength2 && fC2[i]>y2+steplength2)||fC2[i]>k2*(fC1[i])+b2+steplength2)&&fC1[i]>0)
      {
-       fPotential[i]=0;
+       fPotential[i]=V1;
      }
 
    }
-   Boundary();
+   //Boundary();
 }
 //_____________________________________________________________________________
 //
