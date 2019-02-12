@@ -10,21 +10,20 @@ namespace GeFiCa {
 class GeFiCa::Rho : public X 
 {
    public:
-      /**
-	  * Rho is a constructor, if given a number, no input is needed
-	  */
-      Rho(int nx=101): X(nx){};
-	  /**
-	  * This defines the class R for the cint dictionary.
-	  */
-      ClassDef(Rho,1);
-      virtual double GetPotential(double rho){return GetData(rho,kPotential);};
-      virtual double GetE1(double rho,double phi,double z){return GetData(rho,kE1);};
-      virtual double GetImpurity(double rho){return GetData(rho,kImpurity);};
-   protected:
+      Rho(int nx=101): X(nx) {SetName("Rho"); SetTitle("Rho"); }
 
-      virtual void SOR2(int idx,bool elec); // 2nd-order Runge-Kutta Successive Over-Relaxation
-      virtual void SOR4(int idx); ///< 4th-order Runge-Kutta Successive Over-Relaxation
+      virtual double GetPotential(double rho)
+      {return GetData(rho,kPotential);};
+      virtual double GetE1(double rho,double phi,double z)
+      {return GetData(rho,kE1);};
+      virtual double GetImpurity(double rho)
+      {return GetData(rho,kImpurity);};
+
+      ClassDef(Rho,1);
+
+   protected:
+      virtual void DoSOR2(int idx);
+      virtual void DoSOR4(int idx);
 };
 #endif
 

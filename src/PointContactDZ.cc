@@ -125,30 +125,30 @@ void PointContactDZ::Initialize()
 
    // set initial potential values
    for(int i=n;i-->0;) {
-      fPotential[i]=(V0+V1)/2;//common this line for finding depleat voltage
+      fV[i]=(V0+V1)/2;//common this line for finding depleat voltage
       // set potential for inner electrodes
       if(fC1[i]>=PointBegin&&fC1[i]<=PointEnd&&fC2[i]<=PointContactZ) {
-         fPotential[i]=V1;
+         fV[i]=V1;
          fIsFixed[i]=true;
       }
    }
    // set potential for outer electrodes
    for(int i=n-1;i>=n-n1;i--) {
       fIsFixed[i]=true;
-      fPotential[i]=V0;
+      fV[i]=V0;
    }
    for(int i=0;i<n-n1;i=i+n1) {
       fIsFixed[i]=true;
       fIsFixed[i+n1-1]=true;
-      fPotential[i]=V0;
-      fPotential[i+n1-1]=V0;
+      fV[i]=V0;
+      fV[i+n1-1]=V0;
    }
    for (int i=0;i<n1;i++)
    {
       if(fC1[i]>=WrapArroundR||fC1[i]<=-WrapArroundR)
       {
          fIsFixed[i]=true;
-         fPotential[i]=V0;
+         fV[i]=V0;
       }
    }
    double k=TaperZ/(TaperLength);
@@ -159,12 +159,12 @@ void PointContactDZ::Initialize()
       if(fC2[i]>=fC1[i]*k-TaperLength)
       {
          fIsFixed[i]=true;
-         fPotential[i]=V0;
+         fV[i]=V0;
       }
       if(fC2[i]<=-fC1[i]*k+b)
       {
          fIsFixed[i]=true;
-         fPotential[i]=V0;
+         fV[i]=V0;
       }
       if(fC2[i]-(fC1[i]*k+b)<fdC2m[i])
       {
@@ -189,17 +189,17 @@ bool PointContactDZ::CalculatePotential(EMethod method)
       RZ::CalculatePotential(method);
       if(!X::IsDepleted())
       {
-         int maxn=Findmax();
-         int minn=Findmin();
+         int maxn=GetIdxOfMaxV();
+         int minn=GetIdxOfMinV();
          if(V0>V1)
          {
-            V0=(fPotential[maxn]-V0)*1.01+V0;
-            V1=-(V1-fPotential[minn])*1.01+V1;
+            V0=(fV[maxn]-V0)*1.01+V0;
+            V1=-(V1-fV[minn])*1.01+V1;
          }
          else
          {
-            V1=(fPotential[maxn]-V1)*1.01+V1;
-            V0=-(V0-fPotential[minn])*1.01+V0;
+            V1=(fV[maxn]-V1)*1.01+V1;
+            V0=-(V0-fV[minn])*1.01+V0;
          }
          Initialize();
          RZ::CalculatePotential(method);
@@ -217,13 +217,13 @@ bool PointContactDZ::CalculateField(int idx)
 
    if (fC2[idx]>PointContactZ-fdC2m[idx]
          && fC2[idx]<PointContactZ+fdC2p[idx]) // PC top boundary
-      fE2[idx]=(fPotential[idx]-fPotential[idx+n1])/fdC2p[idx];
+      fE2[idx]=(fV[idx]-fV[idx+n1])/fdC2p[idx];
    if (fC1[idx]>-PointContactR-fdC1m[idx]
          && fC1[idx]<-PointContactR+fdC1p[idx]) // PC left boundary
-      fE1[idx]=(fPotential[idx]-fPotential[idx-1])/fdC1m[idx];
+      fE1[idx]=(fV[idx]-fV[idx-1])/fdC1m[idx];
    if (fC1[idx]>PointContactR-fdC1m[idx]
          && fC1[idx]<PointContactR+fdC1p[idx]) // PC right boundary
-      fE1[idx]=(fPotential[idx]-fPotential[idx+1])/fdC1p[idx];
+      fE1[idx]=(fV[idx]-fV[idx+1])/fdC1p[idx];
 
    return true;
 }
@@ -248,7 +248,7 @@ bool PointContactDZ::SaveFieldAsFieldgen(const char * fout)
    outfile<<"\n## r (mm), z (mm), V (V),  E (V/cm), E_r (V/cm), E_z (V/cm)";
    for (int i=0;i<n;i++) {
       double E=sqrt(fE1[i]*fE1[i]+fE2[i]*fE2[i]);
-      outfile<<"\n"<<fC1[i]<<"  "<<fC2[i]<<"  "<<fPotential[i]<<"  "<<E<<"  "<<fE1[i]<<"  "<<fE2[i];
+      outfile<<"\n"<<fC1[i]<<"  "<<fC2[i]<<"  "<<fV[i]<<"  "<<E<<"  "<<fE1[i]<<"  "<<fE2[i];
    }
    outfile.close();
    return true;

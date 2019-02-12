@@ -1,23 +1,24 @@
 // compare numerical result to analytic calculation for 1D planar detector
+using namespace GeFiCa;
+void planar1d()
 {
    // define detector
-   GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(101);
+   Planar1D *detector = new Planar1D(101);
    detector->MaxIterations=1e5;
    detector->Csor=1.95;
-   detector->UpperBound=1*GeFiCa::cm;
-   detector->V0=0*GeFiCa::volt;
-   detector->V1=800*GeFiCa::volt;
-   TF3 *fim=new TF3("fim","1e10");
-   detector->SetImpurity(fim);
+   detector->UpperBound=1*cm;
+   detector->V0=0*volt;
+   detector->V1=800*volt;
+   detector->SetAverageImpurity(1e10/cm3);
    detector->Dump();
    cout<<"press any key to continue"<<endl;
    cin.get();
 
    // calculate fields with two different methods
-   detector->CalculatePotential(GeFiCa::kSOR2);
-   detector->SaveField("planar1dSOR.root");
-   detector->CalculatePotential(GeFiCa::kAnalytic);
-   detector->SaveField("planar1dANA.root");
+   detector->CalculatePotential(kSOR2);
+   detector->SaveField("planar1dSOR2.root");
+   detector->CalculatePotential(kAnalytic);
+   detector->SaveField("planar1dTRUE.root");
 
    // prepare drawing style
    gROOT->SetStyle("Plain"); // pick up a good drawing style to modify
@@ -33,13 +34,13 @@
 
    // compare numerical result to analytic calculation
    TChain *tn = new TChain("t");
-   tn->Add("planar1dSOR.root");
-   tn->Draw("p:c1");
+   tn->Add("planar1dSOR2.root");
+   tn->Draw("v:c1");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
 
    TChain *ta = new TChain("t");
-   ta->Add("planar1dANA.root");
-   ta->Draw("p:c1");
+   ta->Add("planar1dTRUE.root");
+   ta->Draw("v:c1");
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
 
    gn->SetMarkerColor(kBlue);
@@ -62,6 +63,6 @@
    gPad->Print("planar1d.png");
 
    // calculate capacitance
-   double c = detector->GetCapacitance()/GeFiCa::pF;
+   double c = detector->GetCapacitance()/pF;
    cout<<"capacitance is "<<c<<" pF per cm2"<<endl;
 }

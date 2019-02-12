@@ -17,7 +17,7 @@ void Sphere1D::Initialize()
    fIsFixed[0]=true;
    fIsFixed[n-1]=true;
    double slope = (V1-V0)/(n-1);
-   for (int i=0; i<n; i++) fPotential[i]=V0+slope*i;
+   for (int i=0; i<n; i++) fV[i]=V0+slope*i;
 }
 //_____________________________________________________________________________
 //
@@ -36,9 +36,9 @@ bool Sphere1D::Analytic()
       /(1/fC1[n-1]-1/fC1[0]);
    double c2=V0+density/epsilon/6*fC1[0]*fC1[0]-c1/fC1[0];
    for (int i=0; i<n; i++) {
-      fPotential[i] = -density/6/epsilon*fC1[i]*fC1[i]+c1/fC1[i]+c2;
+      fV[i] = -density/6/epsilon*fC1[i]*fC1[i]+c1/fC1[i]+c2;
       // Fixme:
-      if (i!=0||i!=n-1)fE1[i]=(fPotential[i+1]-fPotential[i-1])/(fdC1p[i]+fdC1m[i]);
+      if (i!=0||i!=n-1)fE1[i]=(fV[i+1]-fV[i-1])/(fdC1p[i]+fdC1m[i]);
    }
    return true;
 }

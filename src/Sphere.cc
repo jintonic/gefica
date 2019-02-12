@@ -17,8 +17,8 @@ void Sphere::Initialize()
    for(int i=n;i-->0;) fC2[i]=fC2[i]+3.14159265/2/n2;
 
    for (int i=0; i<n; i+=n1) {
-      fPotential[i]=V0;
-      fPotential[i+n1-1]=V1;
+      fV[i]=V0;
+      fV[i+n1-1]=V1;
       fIsFixed[i]=true;
       fIsFixed[i+n1-1]=true;
    }

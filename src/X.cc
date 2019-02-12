@@ -14,26 +14,25 @@ using namespace std;
 X::X(int nx) : TNamed("X","X"), n1(nx), n(nx), Csor(1.95), Precision(1e-7),
    MaxIterations(100000), V0(0), V1(2000*volt)
 { 
-   if (n<10) { n=11; n1=11; }
+   if (n<10) { Info("X","n<10, set it to 11"); n=11; n1=11; }
 
-   fIsDepleted=new bool[n];
-   for(int i=0;i<n;i++)fIsDepleted[i]=true;
-
-   fIsLoaded=false;
+   fIsLoaded=false; // a fresh calculation, not loaded from a ROOT file
+   fV=new double[n];
    fE1=new double[n];
    fC1=new double[n];
-   fPotential=new double[n];
    fIsFixed=new bool[n];
    fdC1p=new double[n];
    fdC1m=new double[n];
    fImpurity=new double[n];
+   fIsDepleted=new bool[n];
+   for (int i=0;i<n;i++) fIsDepleted[i]=true;
 }
 //_____________________________________________________________________________
 //
 X::~X()
 {
+   if (fV) delete[] fV;
    if (fE1) delete[] fE1;
-   if (fPotential) delete[] fPotential;
    if (fC1) delete[] fC1;
    if (fdC1p) delete[] fdC1p;
    if (fdC1m) delete[] fdC1m;
@@ -45,27 +44,20 @@ X::~X()
 //
 bool X::Analytic()
 {
-   Printf("There is no analytic solution for this setup");
+   Info("Analytic", "There is no analytic solution for this setup");
    return false; 
 }
-//_____________________________________________________________________________
-//
-//X& X::operator=(GeFiCa::X *anotherfield)
-//{
-//    return (GeFiCa::X)anotherfield.Clone("newfield");
-//}
 //_____________________________________________________________________________
 //
 X& X::operator+=(GeFiCa::X *anotherfield)
 {
    if (n!=anotherfield->n) {
-      Warning("Add", 
+      Warning("+=", 
             "Only same type of detector can be added together! Do nothing.");
       return *this; 
    }
-   for (int i=0; i<n; i++)
-   {
-      fPotential[i]=fPotential[i]+anotherfield->fPotential[i];
+   for (int i=0; i<n; i++) {
+      fV[i]=fV[i]+anotherfield->fV[i];
       fImpurity[i]+=anotherfield->fImpurity[i];
    }
    V0+=anotherfield->V0; V1+=anotherfield->V1; 
@@ -75,34 +67,34 @@ X& X::operator+=(GeFiCa::X *anotherfield)
 //
 X& X::operator*=(double p)
 {
-   for (int i=0; i<n; i++) fPotential[i]=fPotential[i]*p;
+   for (int i=0; i<n; i++) fV[i]=fV[i]*p;
    V0*=p; V1*=p;
    return *this;
 }
 //_____________________________________________________________________________
 //
-int X::Findmax()
+int X::GetIdxOfMaxV()
 {
-   double max=fPotential[0];
+   double max=fV[0];
    int maxn=0;
    for(int i=1;i<n;i++) {
-      if(fPotential[i]>max) {
+      if(fV[i]>max) {
          maxn=i;
-         max=fPotential[i];
+         max=fV[i];
       }
    }
    return maxn;
 }
 //_____________________________________________________________________________
 //
-int X::Findmin()
+int X::GetIdxOfMinV()
 {
-   double min=fPotential[0];
+   double min=fV[0];
    int minn=0;
    for(int i=1;i<n;i++) {
-      if(fPotential[i]<min) {
+      if(fV[i]<min) {
          minn=i;
-         min=fPotential[i];
+         min=fV[i];
       }
    }
    return minn;
@@ -112,9 +104,8 @@ int X::Findmin()
 bool X::IsDepleted()
 {
    for(int i=0;i<n;i++) {
-      SOR2(i,0); // calculate one more time in case that
-      // 1. the field is loaded from disk, where fIsDepeted is not saved
-      // 2. add two fields together, one is depleted, the other is not
+      DoSOR2(i); // calculate one more time in case of 
+      //adding two fields together, one is depleted, the other is not
       if (!fIsDepleted[i]) return false;
    }
    return true;
@@ -151,29 +142,26 @@ bool X::CalculatePotential(EMethod method)
    if (method==kAnalytic) return Analytic();
    cout<<" Calculate field ..."<<endl;
    int cnt=0;
-   bool NotImpurityPotential;
-   if (V0==0&&V1==0)NotImpurityPotential=false;
-   else NotImpurityPotential=true;
    while (cnt++<MaxIterations) {
       double XUpSum=0;
       double XDownSum=0;
       for (int i=n-1;i>=0;i--) {
-         double old=fPotential[i];
-         SOR2(i,NotImpurityPotential);
+         double old=fV[i];
+         DoSOR2(i);
          if(old>0)XDownSum+=old;
          else XDownSum-=old;
-         double diff=fPotential[i]-old;
+         double diff=fV[i]-old;
          if(diff>0)XUpSum+=(diff);
          else XUpSum-=(diff);
       }
       double cp = XUpSum/XDownSum; // current precision
       if (cnt%100==0)
-         Printf("  %05d iterations, current precision: %e (target: %e)", 
+         Printf("  %05d iterations, precision: %e (target: %.0e)", 
                cnt, cp, Precision);
 
       if (cp<Precision) {
          for (int i=0; i<n; i++) if (!CalculateField(i)) return false;
-         Printf("  %05d iterations, current precision: %e (target: %e)", 
+         Printf("  %05d iterations, precision: %e (target: %.0e)", 
                cnt, cp, Precision);
          cout<<" Done. Spent "; watch.Stop(); watch.Print();
          return true;
@@ -183,18 +171,18 @@ bool X::CalculatePotential(EMethod method)
 }
 //_____________________________________________________________________________
 //
-void X::SOR2(int idx,bool NotImpurityPotential)
+void X::DoSOR2(int idx)
 {
    // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return ;
-   double density=-fImpurity[idx]*Qe;
+   double rho=-fImpurity[idx]*Qe;
    double h2=fdC1m[idx];
    double h3=fdC1p[idx];
-   double p2=fPotential[idx-1];
-   double p3=fPotential[idx+1];
+   double p2=fV[idx-1];
+   double p3=fV[idx+1];
 
-   double tmp=-density/epsilon*h2*h3/2
-      + (h3*fPotential[idx-1]+h2*fPotential[idx+1])/(h2+h3);
+   double tmp=-rho/epsilon*h2*h3/2
+      + (h3*fV[idx-1]+h2*fV[idx+1])/(h2+h3);
 
    //find minmium and maxnium of all five grid, the new one should not go overthem.
    //find min
@@ -205,23 +193,20 @@ void X::SOR2(int idx,bool NotImpurityPotential)
    if(max<p3)max=p3;
    //if tmp is greater or smaller than max and min, set tmp to it.
 
-   //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
-   double oldP=fPotential[idx];
+   //fV[idx]=Csor*(tmp-fV[idx])+fV[idx];
+   double oldP=fV[idx];
    tmp=Csor*(tmp-oldP)+oldP;
 
    if(tmp<min) {
-      fPotential[idx]=min;
+      fV[idx]=min;
       fIsDepleted[idx]=false;
    } else if(tmp>max) {
-      fPotential[idx]=max;
+      fV[idx]=max;
       fIsDepleted[idx]=false;
    } else
       fIsDepleted[idx]=true;
 
-   if(fIsDepleted[idx]||!NotImpurityPotential) {
-      //over relax
-      fPotential[idx]=tmp;
-   }
+   if(fIsDepleted[idx]||V0==V1) fV[idx]=tmp;
 }
 //_____________________________________________________________________________
 //
@@ -243,7 +228,7 @@ double X::GetData(double tarx, EOutput output)
       switch (output) {
          case 0:return fImpurity[idx];
          case 2:return fE1[idx];
-         case 1:return fPotential[idx];
+         case 1:return fV[idx];
          default: return -1;
       }
    }
@@ -251,7 +236,7 @@ double X::GetData(double tarx, EOutput output)
    double aa=1-ab;
    switch(output) {
       case 2:return fE1[idx]*ab+fE1[idx-1]*aa;
-      case 1:return fPotential[idx]*ab+fC1[idx-1]*aa;
+      case 1:return fV[idx]*ab+fC1[idx-1]*aa;
       case 0:return fImpurity[idx]*ab+fImpurity[idx-1]*aa;
       default: return -1;
    }
@@ -259,94 +244,105 @@ double X::GetData(double tarx, EOutput output)
 }
 //_____________________________________________________________________________
 //
-void X::SaveField(const char * fout)
+void X::SaveField(const char *fout)
 {
-   TFile * file=new TFile(fout,"recreate","data");
-   TTree * tree=new TTree("t","1D");
+   Info("SaveField", "%s", fout);
 
-   TVectorD v(10);
+   TFile *file = new TFile(fout,"recreate");
+   TTree *tree = new TTree("t","field tree"); // create it inside the file
 
-   v[7]=(double)n1;
-   v[8]=1;
-   v[9]=1;
-   v[0]=(double)MaxIterations;
-   v[1]=(double)n;
-   v[2]=Csor;
-   v.Write("v");
-   bool fIsFixeds;
+   // variables
+   TVectorD var(10);
+   var[0]=(double)MaxIterations;
+   var[1]=(double)n; // n=n1xn2xn3
+   var[2]=Csor;
+   var[7]=(double)n1;
+   var[8]=1; // n2
+   var[9]=1; // n3
+   var.Write("v");
 
-   double E1s,C1s,Ps,dC1p,dC1m,impuritys;
-   tree->Branch("e1",&E1s,"e1/D"); // Electric X in x
-   tree->Branch("c1",&C1s,"c1/D"); // persition in x
-   tree->Branch("p",&Ps,"p/D"); // electric potential
-   tree->Branch("dC1p",&dC1p,"dC1p/D"); // Step length to next point in x
-   tree->Branch("dC1m",&dC1m,"dC1m/D"); // Step length to before point in x
-   tree->Branch("ib",&fIsFixeds,"ib/O"); // check is initial point
-   tree->Branch("im",&impuritys,"im/D"); // Impurity
+   // fields
+   bool fix,dep; double e1,c1,v,dc1p,dc1m,im;
+   tree->Branch("e1",&e1,"e1/D"); // electric field in the 1st coordinate
+   tree->Branch("c1",&c1,"c1/D"); // 1st coordinate
+   tree->Branch("v",&v,"v/D"); // electric potential
+   tree->Branch("dc1p",&dc1p,"dc1p/D"); // step length to next point in c1
+   tree->Branch("dc1m",&dc1m,"dc1m/D"); // step length to previous point in c1
+   tree->Branch("fix",&fix,"fix/O"); // are the values fixed on this point
+   tree->Branch("dep",&dep,"dep/O"); // is this point depleted
+   tree->Branch("im",&im,"im/D"); // impurity
+
    for(int i=0;i<n;i++) {
-      impuritys=fImpurity[i];
-      E1s=fE1[i];
-      C1s=fC1[i];
-      Ps=fPotential[i];
-      dC1p=fdC1p[i];
-      dC1m=fdC1m[i];
-      fIsFixeds=fIsFixed[i];
+      v = fV[i];
+      e1 =fE1[i];
+      c1 =fC1[i];
+      im =fImpurity[i];
+      fix=fIsFixed[i];
+      dep=fIsDepleted[i];
+      dc1p=fdC1p[i];
+      dc1m=fdC1m[i];
+
       tree->Fill();
    }
    file->Write();
-   file->Close();
+   file->Close(); // tree is deleted here
    delete file;
 }
 //_____________________________________________________________________________
 //
-void X::LoadField(const char * fin)
+void X::LoadField(const char *fin)
 {
-   //will calculate electric field after load
-   fIsLoaded=true;
-   TFile *file=new TFile(fin);
-   if (file->IsZombie()) exit(-1);
+   TFile *file = new TFile(fin);
+   if (file->IsZombie()) Fatal("LoadField", "%s cannot be loaded", fin);
 
-   TVectorD *v1=(TVectorD*)file->Get("v");
-   double * v=v1->GetMatrixArray();
-   n1		=(int)	v[7];
-   MaxIterations	=(int)	v[0];
-   n		=(int)	v[1];
-   Csor		=	v[2];
+   // load list of variables
+   TVectorD *variables = (TVectorD*) file->Get("v");
+   double *var = variables->GetMatrixArray();
+   MaxIterations = (int)var[0];
+   n = (int)var[1];
+   Csor = var[2];
+   n1	= (int)var[7];
 
+   file->Close();
+   delete file;
 
-   TChain *t =new TChain("t");
+   // load fields
+   TChain *t = new TChain("t");
    t->Add(fin);
-   bool IsFixed;
-   double E1,C1,P,dC1p,dC1m,fimpurity;
-   t->SetBranchAddress("e1",&E1);
-   t->SetBranchAddress("c1",&C1);
-   t->SetBranchAddress("p",&P);
-   t->SetBranchAddress("dC1p",&dC1p);
-   t->SetBranchAddress("dC1m",&dC1m);
-   t->SetBranchAddress("ib",&IsFixed);
-   t->SetBranchAddress("im",&fimpurity);
+   bool fix,dep; double e1,c1,v,dc1p,dc1m,im;
+   t->SetBranchAddress("e1",&e1);
+   t->SetBranchAddress("c1",&c1);
+   t->SetBranchAddress("v",&v);
+   t->SetBranchAddress("dc1p",&dc1p);
+   t->SetBranchAddress("dc1m",&dc1m);
+   t->SetBranchAddress("im",&im);
+   t->SetBranchAddress("fix",&fix);
+   t->SetBranchAddress("dep",&dep);
 
-   fE1=new double[n];
-   fC1=new double[n];
-   fPotential=new double[n];
-   fIsFixed=new bool[n];
-   fdC1p=new double[n];
-   fdC1m=new double[n];
-   fImpurity=new double[n];
+   this->~X(); // delete old arrays if there are
+   fV = new double[n];
+   fE1 = new double[n];
+   fC1 = new double[n];
+   fdC1p = new double[n];
+   fdC1m = new double[n];
+   fImpurity = new double[n];
+   fIsFixed = new bool[n];
+   fIsDepleted = new bool[n];
 
    for (int i=0;i<n;i++) {
       t->GetEntry(i);
-      fE1[i]=E1;
-      fC1[i]=C1;
-      fPotential[i]=P;
-      fIsFixed[i]=IsFixed;  
-      fdC1p[i]=dC1p;
-      fdC1m[i]=dC1m;
-      fImpurity[i]=fimpurity;
+      fV[i]=v;
+      fE1[i]=e1;
+      fC1[i]=c1;
+      fdC1p[i]=dc1p;
+      fdC1m[i]=dc1m;
+      fImpurity[i]=im;
+      fIsFixed[i]=fix;
+      fIsDepleted[i]=dep;
    }
-   file->Close();
-   delete file;
-   for(int idx=0;idx-->n;)SOR2(idx,1);
+
+   fIsLoaded=true;
+   delete t;
 }
 //_____________________________________________________________________________
 //
@@ -362,11 +358,11 @@ bool X::CalculateField(int idx)
    if (fdC1p[idx]==0 || fdC1m[idx]==0) return false;
 
    if (idx%n1==0) // C1 lower boundary
-      fE1[idx]=(fPotential[idx]-fPotential[idx+1])/fdC1p[idx];
+      fE1[idx]=(fV[idx]-fV[idx+1])/fdC1p[idx];
    else if (idx%n1==n1-1) // C1 upper boundary
-      fE1[idx]=(fPotential[idx]-fPotential[idx-1])/fdC1m[idx];
+      fE1[idx]=(fV[idx]-fV[idx-1])/fdC1m[idx];
    else // bulk
-      fE1[idx]=(fPotential[idx-1]-fPotential[idx+1])/(fdC1m[idx]+fdC1p[idx]);
+      fE1[idx]=(fV[idx-1]-fV[idx+1])/(fdC1m[idx]+fdC1p[idx]);
  
    return true;
 }

@@ -45,7 +45,7 @@ void XY::SetStepLength(double steplength1,double steplength2)
 //
 #include <iostream>
 using namespace std;
-void XY::SOR2(int idx,bool NotImpurityPotential)
+void XY::DoSOR2(int idx)
 {
    // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return;
@@ -55,15 +55,14 @@ void XY::SOR2(int idx,bool NotImpurityPotential)
    double h4=fdC2m[idx];
    double h1=fdC2p[idx];
    double pym,pyp,pxm,pxp;
-   if(idx>=n1)pym=fPotential[idx-n1];
-   else pym=fPotential[idx];
-   if(idx>=n-n1)pyp=fPotential[idx];
-   else pyp=fPotential[idx+n1];
-   if(idx%n1==0)pxm=fPotential[idx];
-   else pxm=fPotential[idx-1];
-   if(idx%n1==n1-1)pxp=fPotential[idx];
-   else pxp=fPotential[idx+1];
-   //double tmp=(density/epsilon+1/fC1[idx]*(pxp-pxm)/(h2+h3)+(pxp/h2+pxm/h3)*2/(h2+h3)+(pyp/h1+pym/h4)*2/(h1+h4))/
+   if(idx>=n1)pym=fV[idx-n1];
+   else pym=fV[idx];
+   if(idx>=n-n1)pyp=fV[idx];
+   else pyp=fV[idx+n1];
+   if(idx%n1==0)pxm=fV[idx];
+   else pxm=fV[idx-1];
+   if(idx%n1==n1-1)pxp=fV[idx];
+   else pxp=fV[idx+1];
    double tmp=(density/epsilon+(pxp/h2+pxm/h3)*2/(h2+h3)+(pyp/h1+pym/h4)*2/(h1+h4))/
       ((1/h2+1/h3)*2/(h2+h3)+(1/h1+1/h4)*2/(h1+h4));
    //find minmium and maxnium of all five grid, the new one should not go overthem.
@@ -80,27 +79,20 @@ void XY::SOR2(int idx,bool NotImpurityPotential)
    if (max<pym)max=pym;
    //if tmp is greater or smaller than max and min, set tmp to it.
    
-      //over relax
-   //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
+   //fV[idx]=Csor*(tmp-fV[idx])+fV[idx];
    //if need calculate depleted voltage
-   double oldP=fPotential[idx];
+   double oldP=fV[idx];
    tmp=Csor*(tmp-oldP)+oldP;
-   if(tmp<min)
-   {
-      fPotential[idx]=min;
+   if(tmp<min) {
+      fV[idx]=min;
       fIsDepleted[idx]=false;
-   }
-   else if(tmp>max)
-   {
-      fPotential[idx]=max;
+   } else if(tmp>max) {
+      fV[idx]=max;
       fIsDepleted[idx]=false;
-   }
-   else
+   } else
       fIsDepleted[idx]=true;
-   if(fIsDepleted[idx]||!NotImpurityPotential)
-   {
-      fPotential[idx]=tmp;
-   }
+
+   if(fIsDepleted[idx]||V0==V1) fV[idx]=tmp;
 }
 //_____________________________________________________________________________
 //
@@ -124,10 +116,10 @@ double XY::GetData(double tarx, double tary, EOutput output)
 
    //test
    //cout<<"index:"<<idx<<endl;
-   //cout<<"(0,0)c1: "<<fC1[idx]<<" c2: "<<fC2[idx]<<" p: "<<fPotential[idx]<<endl;
-   //cout<<"(0,1)c1: "<<fC1[idx-1]<<" c2: "<<fC2[idx-1]<<" p: "<<fPotential[idx-1]<<endl;
-   //cout<<"(1,0)c1: "<<fC1[idx-n1]<<" c2: "<<fC2[idx-n1]<<" p: "<<fPotential[idx-n1]<<endl;
-   //cout<<"(1,1)c1: "<<fC1[idx-n1-1]<<" c2: "<<fC2[idx-n1-1]<<" p: "<<fPotential[idx-n1-1]<<endl;
+   //cout<<"(0,0)c1: "<<fC1[idx]<<" c2: "<<fC2[idx]<<" p: "<<fV[idx]<<endl;
+   //cout<<"(0,1)c1: "<<fC1[idx-1]<<" c2: "<<fC2[idx-1]<<" p: "<<fV[idx-1]<<endl;
+   //cout<<"(1,0)c1: "<<fC1[idx-n1]<<" c2: "<<fC2[idx-n1]<<" p: "<<fV[idx-n1]<<endl;
+   //cout<<"(1,1)c1: "<<fC1[idx-n1-1]<<" c2: "<<fC2[idx-n1-1]<<" p: "<<fV[idx-n1-1]<<endl;
    //
    //cout<<idx<<" "<<n<<endl;
    double ab=(-tarx+fC1[idx])/fdC1m[idx];
@@ -140,7 +132,7 @@ double XY::GetData(double tarx, double tary, EOutput output)
    double tar0,tar1,tar2,tar3,*tar=NULL;
    switch(output) {
       case 0:tar= fImpurity;break;
-      case 1:tar= fPotential;break;
+      case 1:tar= fV;break;
       case 2:tar= fE1;break;
       case 3:tar= fE2;break;
       default:break;
@@ -164,29 +156,26 @@ double XY::GetData(double tarx, double tary, EOutput output)
 }
 //_____________________________________________________________________________
 //
-void XY::SaveField(const char * fout)
+void XY::SaveField(const char *fout)
 {
    X::SaveField(fout);
-   TFile *file=new TFile(fout,"update");
-   TVectorD  v=*(TVectorD*)file->Get("v");
-   v[8]=(double)n2;
-   v.Write("v");
-   TTree * tree=(TTree*)file->Get("t");
-   double E2s,C2s,dC2m,dC2p;
-   TBranch *be2 = tree->Branch("e2",&E2s,"e2/D");
-   TBranch *bc2 = tree->Branch("c2",&C2s,"c2/D"); 
-   TBranch *bsl=tree->Branch("dC2m",&dC2m,"dC2m/D"); 
-   TBranch *bsr=tree->Branch("dC2p",&dC2p,"dC2p/D");
+
+   TFile *file = new TFile(fout,"update");
+
+   TVectorD var=*(TVectorD*)file->Get("v");
+   var[8]=(double)n2;
+   var.Write("v");
+
+   TTree *tree = (TTree*)file->Get("t");
+   double e2,c2,dc2p,dc2m;
+   TBranch *be2 = tree->Branch("e2",&e2,"e2/D");
+   TBranch *bc2 = tree->Branch("c2",&c2,"c2/D"); 
+   TBranch *bsr = tree->Branch("dc2p",&dc2p,"dc2p/D");
+   TBranch *bsl = tree->Branch("dc2m",&dc2m,"dc2m/D"); 
 
    for(int i=0;i<n;i++) {
-      E2s=fE2[i];
-      C2s=fC2[i];
-      dC2m=fdC2m[i];
-      dC2p=fdC2p[i];
-      be2->Fill();
-      bc2->Fill();
-      bsl->Fill();
-      bsr->Fill();
+      e2=fE2[i]; c2=fC2[i]; dc2p=fdC2p[i]; dc2m=fdC2m[i];
+      be2->Fill(); bc2->Fill(); bsl->Fill(); bsr->Fill();
    }
    file->Write();
    file->Close();
@@ -196,21 +185,24 @@ void XY::SaveField(const char * fout)
 //
 void XY::LoadField(const char * fin)
 {
-   //will calculate electric field after load
    X::LoadField(fin);
-   TFile *file=new TFile(fin);
-   TVectorD *v1=(TVectorD*)file->Get("v");
-   double * v=v1->GetMatrixArray();
-   n2	= (int)v[8];
 
-   TChain *t =new TChain("t");
+   TFile *file = new TFile(fin);
+   TVectorD *variables = (TVectorD*)file->Get("v");
+   double *var = variables->GetMatrixArray();
+   n2	= (int)var[8];
+   file->Close();
+   delete file;
+
+   TChain *t = new TChain("t");
    t->Add(fin);
-   double Ey,Py,dC2m,dC2p;
-   t->SetBranchAddress("c2",&Py);
-   t->SetBranchAddress("e2",&Ey);
-   t->SetBranchAddress("dC2m",&dC2m);
-   t->SetBranchAddress("dC2p",&dC2p);
+   double e2,c2,dc2p,dc2m;
+   t->SetBranchAddress("c2",&c2);
+   t->SetBranchAddress("e2",&e2);
+   t->SetBranchAddress("dc2p",&dc2p);
+   t->SetBranchAddress("dc2m",&dc2m);
 
+   this->~XY(); // delete arrays if there are
    fE2=new double[n];
    fC2=new double[n];
    fdC2p=new double[n];
@@ -218,13 +210,13 @@ void XY::LoadField(const char * fin)
 
    for (int i=0;i<n;i++) {
       t->GetEntry(i);
-      fE2[i]=Ey;
-      fC2[i]=Py;
-      fdC2p[i]=dC2p;
-      fdC2m[i]=dC2m;
+      fE2[i]=e2;
+      fC2[i]=c2;
+      fdC2m[i]=dc2m;
+      fdC2p[i]=dc2p;
    }
-   file->Close();
-   delete file;
+
+   delete t;
 }
 //_____________________________________________________________________________
 //
@@ -241,11 +233,11 @@ bool XY::CalculateField(int idx)
    if (fdC2p[idx]==0 || fdC2m[idx]==0) return false;
 
    if (idx%(n1*n2)<n1) // C2 lower boundary
-      fE2[idx]=(fPotential[idx]-fPotential[idx+n1])/fdC2p[idx];
+      fE2[idx]=(fV[idx]-fV[idx+n1])/fdC2p[idx];
    else if (idx%(n1*n2)>=n-n1) // C2 upper boundary
-      fE2[idx]=(fPotential[idx]-fPotential[idx-n1])/fdC2m[idx];
+      fE2[idx]=(fV[idx]-fV[idx-n1])/fdC2m[idx];
    else { // bulk
-      fE2[idx]=(fPotential[idx-n1]-fPotential[idx+n1])/(fdC2m[idx]+fdC2p[idx]);
+      fE2[idx]=(fV[idx-n1]-fV[idx+n1])/(fdC2m[idx]+fdC2p[idx]);
    }
    return true;
 }

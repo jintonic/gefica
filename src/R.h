@@ -14,22 +14,20 @@ namespace GeFiCa {
 class GeFiCa::R : public X 
 {
    public:
-      /**
-	  * R is a constructor, if given a number, no input is needed
-	  */
-      R(int nx=101): X(nx){};
-	  /**
-	  * This defines the class R for the cint dictionary.
-	  */
+      R(int nx=101): X(nx) { SetName("R"); SetTitle("R"); }
+
       ClassDef(R,1);
 
-      virtual double GetPotential(double r){return GetData(r,kPotential);};
-      virtual double GetE1(double r,double theta,double phi){return GetData(r,kE1);};
-      virtual double GetImpurity(double r){return GetData(r,kImpurity);};
-   protected:
+      virtual double GetPotential(double r)
+      {return GetData(r,kPotential);};
+      virtual double GetE1(double r,double theta,double phi)
+      {return GetData(r,kE1);};
+      virtual double GetImpurity(double r)
+      {return GetData(r,kImpurity);};
 
-      virtual void SOR2(int idx,bool elec); // 2nd-order Runge-Kutta Successive Over-Relaxation
-      virtual void SOR4(int idx); ///< 4th-order Runge-Kutta Successive Over-Relaxation
+   protected:
+      virtual void DoSOR2(int idx);
+      virtual void DoSOR4(int idx);
 };
 #endif
 

@@ -19,7 +19,7 @@ void TrueCoaxial1D::Initialize()
    fIsFixed[0]=true;
    fIsFixed[n-1]=true;
    double slope = (V0-V1)/(n-1);
-   for (int i=0; i<n; i++) fPotential[i]=V1+slope*i;
+   for (int i=0; i<n; i++) fV[i]=V1+slope*i;
 }
 //_____________________________________________________________________________
 //
@@ -34,14 +34,14 @@ bool TrueCoaxial1D::Analytic()
       return false;
    }
    double density=fImpurity[0]*Qe;
-   double b=(fPotential[n-1]-fPotential[0] 
+   double b=(fV[n-1]-fV[0] 
          + density*(fC1[n-1]*fC1[n-1]-fC1[0]*fC1[0])/epsilon/4)
       /(log(fC1[n-1]/fC1[0]));
-   double a=fPotential[0]+density*fC1[0]*fC1[0]/epsilon/4-b*log(fC1[0]);
+   double a=fV[0]+density*fC1[0]*fC1[0]/epsilon/4-b*log(fC1[0]);
    for (int i=0; i<n; i++) {
-      fPotential[i] = a+b*log(fC1[i])-density/4/epsilon*fC1[i]*fC1[i];
+      fV[i] = a+b*log(fC1[i])-density/4/epsilon*fC1[i]*fC1[i];
 
-      fE1[i]=(fPotential[i+1]-fPotential[i-1])
+      fE1[i]=(fV[i+1]-fV[i-1])
          /(fdC1p[i]+fdC1m[i]);
    }
    return true;

@@ -2,24 +2,6 @@
 using namespace GeFiCa;
 void voltage()
 {
-   // potentials from both impurity and bias
-   PointContactDZ *totalPotential = new PointContactDZ(690,505);
-
-   totalPotential->V0=2500*volt;
-   totalPotential->V1=0*volt;
-
-   totalPotential->Z=5.05*cm;
-   totalPotential->Radius=3.45*cm;
-   totalPotential->PointContactZ=0.21*cm;
-   totalPotential->PointContactR=0.14*cm;
-
-   totalPotential->Csor=1.994;
-   totalPotential->MaxIterations=1e5;
-   totalPotential->Precision=1e-7*volt;
-
-   TF3 *impurityDistribution = new TF3("fi","-0.318e10+0.025e10*y");
-   totalPotential->SetImpurity(impurityDistribution);
-
    // potential due to space charge alone
    PointContactDZ *impurityPotential = new PointContactDZ(690,505);
 
@@ -35,11 +17,16 @@ void voltage()
    impurityPotential->MaxIterations=1e5;
    impurityPotential->Precision=1e-7*volt;
 
+   TF3 *impurityDistribution = new TF3("fi","-0.318e10+0.025e10*y");
    impurityPotential->SetImpurity(impurityDistribution);
 
-   impurityPotential->CalculatePotential(kSOR2);
-   //impurityPotential->SaveField("im");
-   //impurityPotential->LoadField("im");
+   if (FILE *input = fopen("impurity.root","r")) { // already calculated
+      fclose(input);
+      impurityPotential->LoadField("impurity.root");
+   } else { // calculate the fields if not yet calculated
+      impurityPotential->CalculatePotential(kSOR2);
+      impurityPotential->SaveField("impurity.root");
+   }
 
    // weighting potential
    PointContactDZ *weightingPotential = new PointContactDZ(690,505);
@@ -58,9 +45,30 @@ void voltage()
 
    weightingPotential->SetImpurity(new TF3("wpi","0"));
 
-   weightingPotential->CalculatePotential(kSOR2);
-   //weightingPotential->SaveField("wp");
-   //weightingPotential->LoadField("wp");
+   if (FILE *input = fopen("weighting.root","r")) { // already calculated
+      fclose(input);
+      weightingPotential->LoadField("weighting.root");
+   } else { // calculate the fields if not yet calculated
+      weightingPotential->CalculatePotential(kSOR2);
+      weightingPotential->SaveField("weighting.root");
+   }
+
+   // potentials from both impurity and bias
+   PointContactDZ *totalPotential = new PointContactDZ(690,505);
+
+   totalPotential->V0=2500*volt;
+   totalPotential->V1=0*volt;
+
+   totalPotential->Z=5.05*cm;
+   totalPotential->Radius=3.45*cm;
+   totalPotential->PointContactZ=0.21*cm;
+   totalPotential->PointContactR=0.14*cm;
+
+   totalPotential->Csor=1.994;
+   totalPotential->MaxIterations=1e5;
+   totalPotential->Precision=1e-7*volt;
+
+   totalPotential->SetImpurity(impurityDistribution);
 
    totalPotential = (PointContactDZ*) weightingPotential->Clone("total");
    (*totalPotential) *= 2.;
@@ -71,7 +79,7 @@ void voltage()
    (*totalPotential) += impurityPotential;
    totalPotential->SaveField("beforejump");
    int stepsize=2;
-   while(!totalPotential->IsDepleted()) {
+   while(totalPotential->IsDepleted()==false) {
       (*multiweightPotential)*=(double)2;
       (*totalPotential)+=multiweightPotential;
       stepsize=stepsize*2;

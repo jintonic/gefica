@@ -41,27 +41,27 @@ void Segmented2D::Initialize()
       if(i%n1==0)
       {
          fIsFixed[i]=true;
-         if(SegmentID==0)fPotential[i]=V1;
-         else fPotential[i]=V0;
+         if(SegmentID==0)fV[i]=V1;
+         else fV[i]=V0;
       }
       else if(i%n1==n1-1)
          //need shift boundary as pointcontact
       {
          fIsFixed[i]=true;
-         if(SegmentID==0)fPotential[i]=V0;
+         if(SegmentID==0)fV[i]=V0;
          else if(fC2[i]<=SegmentUpperBound&&fC2[i]>=SegmentLowerBound)
          {
-            fPotential[i]=V1;
+            fV[i]=V1;
          }
          else if(fC2[i]>=SegmentUpperBound||fC2[i]<=SegmentLowerBound)
          {
-            fPotential[i]=V0;
+            fV[i]=V0;
          }
       }
       else 
       {
          fIsFixed[i]=false;
-         fPotential[i]=0;
+         fV[i]=0;
       }
 
 

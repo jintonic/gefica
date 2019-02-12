@@ -46,27 +46,27 @@ void PointContactRZ::Initialize()
    for(int i=n;i-->0;) 
    {
       fC1[i]=fC1[i]+RLowerBound;
-      fPotential[i]=(V0+V1)/2;
+      fV[i]=(V0+V1)/2;
       if(fC1[i]>PointBegin&&fC1[i]<PointEnd&&fC2[i]<PointContactZ)
       {
-	    fPotential[i]=V1;
+	    fV[i]=V1;
 	    fIsFixed[i]=true;
       }
    }
    // set potential for electrodes
    for(int i=n-1;i>=n-n1;i--) {
       fIsFixed[i]=true;
-      fPotential[i]=V0;
+      fV[i]=V0;
       if(fC1[n-1-i]>=PointBegin-0.001&&fC1[n-1-i]<=PointEnd+0.001) {
-         fPotential[n-1-i]=V1;
+         fV[n-1-i]=V1;
          fIsFixed[n-1-i]=true;
       }
    }
    for(int i=0;i<n-n1;i=i+n1) {
       //fIsFixed[i]=true;
       fIsFixed[i+n1-1]=true;
-      //fPotential[i]=V0;
-      fPotential[i+n1-1]=V0;
+      //fV[i]=V0;
+      fV[i+n1-1]=V0;
    }
    BoundaryOnPointcontact();
 }

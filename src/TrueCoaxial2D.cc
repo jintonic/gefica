@@ -23,8 +23,8 @@ void TrueCoaxial2D::Initialize()
    for(int i=n;i-->0;) fC1[i]=fC1[i]+InnerRadius;
    for (int i=0;i<n;i=i+n1)
    {
-      fPotential[i]=V1;
-      fPotential[i+n1-1]=V0;
+      fV[i]=V1;
+      fV[i+n1-1]=V0;
       fIsFixed[i]=true;
       fIsFixed[i+n1-1]=true;
    }

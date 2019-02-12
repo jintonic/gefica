@@ -22,14 +22,14 @@ void RZ::SOR2(int idx,bool NotImpurityPotential)
    double dzm=fdC2m[idx];
    double dzp=fdC2p[idx];
    double pzm,pzp,prm,prp; // pzm: potential_z_plus
-   if(idx>=n1)pzm=fPotential[idx-n1];
-   else pzm=fPotential[idx+n1];
-   if(idx>=n-n1)pzp=fPotential[idx];
-   else pzp=fPotential[idx+n1];
-   if(idx%n1==0)prm=fPotential[idx];
-   else prm=fPotential[idx-1];
-   if(idx%n1==n1-1)prp=fPotential[idx];
-   else prp=fPotential[idx+1];
+   if(idx>=n1)pzm=fV[idx-n1];
+   else pzm=fV[idx+n1];
+   if(idx>=n-n1)pzp=fV[idx];
+   else pzp=fV[idx+n1];
+   if(idx%n1==0)prm=fV[idx];
+   else prm=fV[idx-1];
+   if(idx%n1==n1-1)prp=fV[idx];
+   else prp=fV[idx+1];
    double tmp=(density/epsilon
          + 1/fC1[idx]*(prp-prm)/(drm+drp) +(prp/drp+prm/drm)*2/(drm+drp)
          + (pzp/dzp+pzm/dzm)*2/(dzp+dzm))/
@@ -49,25 +49,25 @@ void RZ::SOR2(int idx,bool NotImpurityPotential)
 //if tmp is greater or smaller than max and min, set tmp to it.
    
       //over relax
-   //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
+   //fV[idx]=Csor*(tmp-fV[idx])+fV[idx];
    //if need calculate depleted voltage
-   double oldP=fPotential[idx];
+   double oldP=fV[idx];
    tmp=Csor*(tmp-oldP)+oldP;
    if(tmp<min)
    {
-      fPotential[idx]=min;
+      fV[idx]=min;
       fIsDepleted[idx]=false;
    }
    else if(tmp>max)
    {
-      fPotential[idx]=max;
+      fV[idx]=max;
       fIsDepleted[idx]=false;
    }
    else
       fIsDepleted[idx]=true;
    if(fIsDepleted[idx]||!NotImpurityPotential)
    {
-      fPotential[idx]=tmp;
+      fV[idx]=tmp;
    }
 
 
