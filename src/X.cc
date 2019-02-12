@@ -49,18 +49,18 @@ bool X::Analytic()
 }
 //_____________________________________________________________________________
 //
-X& X::operator+=(GeFiCa::X *anotherfield)
+X& X::operator+=(GeFiCa::X *other)
 {
-   if (n!=anotherfield->n) {
+   if (n!=other->n) {
       Warning("+=", 
             "Only same type of detector can be added together! Do nothing.");
       return *this; 
    }
    for (int i=0; i<n; i++) {
-      fV[i]=fV[i]+anotherfield->fV[i];
-      fImpurity[i]+=anotherfield->fImpurity[i];
+      fV[i]=fV[i]+other->fV[i];
+      fImpurity[i]+=other->fImpurity[i];
    }
-   V0+=anotherfield->V0; V1+=anotherfield->V1; 
+   V0+=other->V0; V1+=other->V1; 
    return *this;
 }
 //_____________________________________________________________________________

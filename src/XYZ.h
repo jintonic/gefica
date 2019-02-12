@@ -33,10 +33,10 @@ class GeFiCa::XYZ : public GeFiCa::XY
       ClassDef(XYZ,1);
 
    protected:
-      double *fE3; ///< electric field along the 3rd coordinate
-      double *fC3; ///< the 3rd coordinate
-      double *fdC3p; ///< step length to next grid point alone C3
-      double *fdC3m; ///< step length to previous grid point alone C3
+      double *fE3; ///< [n] electric field along the 3rd coordinate
+      double *fC3; ///< [n] the 3rd coordinate
+      double *fdC3p; ///< [n] step length to next grid point alone C3
+      double *fdC3m; ///< [n] step length to previous grid point alone C3
 
       virtual double GetData
          (double tarx,double tary,double tarz, EOutput output);

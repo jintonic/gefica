@@ -58,8 +58,8 @@ class GeFiCa::X : public TNamed
       
       bool IsDepleted(); ///< check if the detector is depleted
 
-      X& operator*=(double p);
-      X& operator+=(X *anotherfield);
+      X& operator*=(double);
+      X& operator+=(X*);
       
       virtual void Initialize() {};
       /**

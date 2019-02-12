@@ -46,10 +46,10 @@ class GeFiCa::XY : public GeFiCa::X
       ClassDef(XY,1);
 
    protected:
-      double *fE2; ///< electric field along the 2nd coordinate
-      double *fC2; ///< the 2nd coordinate
-      double *fdC2p; ///< step length to next grid point along C2
-      double *fdC2m; ///< step length to previous grid point along C2
+      double *fE2; ///< [n] electric field along the 2nd coordinate
+      double *fC2; ///< [n] the 2nd coordinate
+      double *fdC2p; ///< [n] step length to next grid point along C2
+      double *fdC2m; ///< [n] step length to previous grid point along C2
 
       void SetStepLength(double steplength1,double steplength2); 
       /**
