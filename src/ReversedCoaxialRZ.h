@@ -18,7 +18,7 @@ class GeFiCa::ReversedCoaxialRZ : public GeFiCa::RZ
 
      void Initialize();
      bool CalculatePotential(EMethod method=kSOR2);
-     void Boundary();
+     void SetupBoundary();
 
      ClassDef(ReversedCoaxialRZ,1);
 };

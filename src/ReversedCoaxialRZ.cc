@@ -3,7 +3,7 @@
 #include "Units.h"
 #include <cmath>
 using namespace GeFiCa;
-void ReversedCoaxialRZ::Boundary()
+void ReversedCoaxialRZ::SetupBoundary()
 {
    double x1=HoleOutterR,
 	  y1=Z,
@@ -13,72 +13,46 @@ void ReversedCoaxialRZ::Boundary()
 	  y3=Z,
 	  x4=Radius,
 	  y4=Z-ConnorZ;
+   // y = k x + b
    double k1=(y1-y2)/(x1-x2);
    double b1=y1-k1*x1;
    double k2=(y3-y4)/(x3-x4);
-   double b2=(y3-k2*x3);
-   for (int i=0;i<n;i++)
-   {
+   double b2=y3-k2*x3;
+
+   for (int i=0;i<n;i++) {
       //right side of hole
-      if(fC1[i]-fC2[i]/k1+b1/k1<fdC1m[i]&&fC2[i]>Z-HoleZ&&fC1[i]-fC2[i]/k1+b1/k1>-0)
-      {
-         fdC1m[i]=fC1[i]-fC2[i]/k1+b1/k1;
-      }
-      //right of edge
-      if(fC1[i]+fC2[i]/k2-b2/k2>0&&fC1[i]+fC2[i]/k2-b2/k2<fdC1m[i]&&fC2[i]>y4)
-      {
-         fdC1m[i]=fC1[i]+fC2[i]/k2-b2/k2;
-      }
+      if(fC1[i]-fC2[i]/k1+b1/k1<fdC1m[i] && fC2[i]>y2 &&
+            fC1[i]-fC2[i]/k1+b1/k1>0) fdC1m[i]=fC1[i]-fC2[i]/k1+b1/k1;
+      //left corner
+      if(fC1[i]+fC2[i]/k2-b2/k2>0 && fC1[i]+fC2[i]/k2-b2/k2<fdC1m[i] &&
+            fC2[i]>y4) fdC1m[i]=fC1[i]+fC2[i]/k2-b2/k2;
       //left side of hole
-      if(-fC1[i]-fC2[i]/k1+b1/k1>0&&-fC1[i]-fC2[i]/k1+b1/k1<fdC1p[i]&&fC2[i]>Z-HoleZ)
-      {
+      if(-fC1[i]-fC2[i]/k1+b1/k1>0&&-fC1[i]-fC2[i]/k1+b1/k1<fdC1p[i]&&fC2[i]>y2)
          fdC1p[i]=-fC1[i]-fC2[i]/k1+b1/k1;
-      }
-      //left of edge
+      //right corner
       if(-fC1[i]+fC2[i]/k2-b2/k2>0&&-fC1[i]+fC2[i]/k2-b2/k2<fdC1p[i]&&fC2[i]>y4)
-      {
          fdC1p[i]=-fC1[i]+fC2[i]/k2-b2/k2;
-      }
       //down right side of hole
-      if(-fC2[i]+fC1[i]*k1+b1>0&&-fC2[i]+fC1[i]*k1+b1<fdC2p[i]&&fC2[i]>Z-HoleZ)
-      {
+      if(-fC2[i]+fC1[i]*k1+b1>0&&-fC2[i]+fC1[i]*k1+b1<fdC2p[i]&&fC2[i]>y2)
          fdC2p[i]=-fC2[i]+fC1[i]*k1+b1;
-      }
-      //down right of edge
-      if(-fC2[i]-fC1[i]*k2+b2>0&&-fC2[i]-fC1[i]*k2+b2<fdC2p[i]&&fC2[i]>Z-ConnorZ)
-      {
+      //down right of corner
+      if(-fC2[i]-fC1[i]*k2+b2>0&&-fC2[i]-fC1[i]*k2+b2<fdC2p[i]&&fC2[i]>y4)
          fdC2p[i]=-fC2[i]-fC1[i]*k2+b2;
-      }
       //down left side of hole
-      if(-fC2[i]-fC1[i]*k1+b1>0&&-fC2[i]-fC1[i]*k1+b1<fdC2p[i]&&fC2[i]>Z-HoleZ)
-      {
+      if(-fC2[i]-fC1[i]*k1+b1>0&&-fC2[i]-fC1[i]*k1+b1<fdC2p[i]&&fC2[i]>y2)
          fdC2p[i]=-fC2[i]-fC1[i]*k1+b1;
-      }
-      //down left of edge
-      if(-fC2[i]+fC1[i]*k2+b2>0&&-fC2[i]+fC1[i]*k2+b2<fdC2p[i]&&fC2[i]>Z-ConnorZ)
-      {
+      //down left of corner
+      if(-fC2[i]+fC1[i]*k2+b2>0&&-fC2[i]+fC1[i]*k2+b2<fdC2p[i]&&fC2[i]>y4)
          fdC2p[i]=-fC2[i]+fC1[i]*k2+b2;
-      }
       //down center of hole
-      if(Z-HoleZ-fC2[i]<fdC2p[i]&&fC1[i]>-HoleInnerR&&fC1[i]<HoleInnerR)
-      {
-         fdC2p[i]=Z-HoleZ-fC2[i];
-      }
-
-
+      if(y2-fC2[i]<fdC2p[i]&&fC1[i]>-HoleInnerR&&fC1[i]<HoleInnerR)
+         fdC2p[i]=y2-fC2[i];
    }
-
 }
+//_____________________________________________________________________________
+//
 void ReversedCoaxialRZ::Initialize()
 {
-   // The step length is calculated with the following equation:
-   // BEGIN_HTML
-   // <pre>
-   //      double stepLength=(UpperBound-LowerBound)/(n-1);
-   // </pre>
-   // END_HTML
-   // If the inner radius is not larger than the outer radius,
-   // no grid will be created
    if (Radius<=HoleOutterR||Radius<=HoleInnerR) {
       Warning("Initialize",
             "Lower bound (%f) >= upper bound (%f)! No grid is created!",
@@ -143,9 +117,8 @@ void ReversedCoaxialRZ::Initialize()
      {
        fV[i]=0;
      }
-
    }
-   Boundary();
+   SetupBoundary();
 }
 //_____________________________________________________________________________
 //
