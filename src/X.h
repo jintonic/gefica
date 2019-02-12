@@ -7,13 +7,13 @@
 class TF3;
 
 namespace GeFiCa { 
-   enum EMethod ///< Different methods to calculate fields
+   enum EMethod ///< Methods to calculate fields
    {
       kAnalytic,
       kSOR2, ///< Successove over-relaxation method to the 2nd order
       kSOR4, ///< Successove over-relaxation method to the 4th order
    };
-   enum EOutput ///< Different output of the calculate field
+   enum EOutput ///< Different components of the fields
    {
       kImpurity,
       kPotential,
@@ -57,8 +57,6 @@ class GeFiCa::X : public TNamed
       bool CalculatePotential(EMethod method=kSOR2);
       
       bool IsDepleted(); ///< check if the detector is depleted
-      int Findmax();
-      int Findmin();
 
       X& operator*=(double p);
       X& operator+=(X *anotherfield);
@@ -69,12 +67,11 @@ class GeFiCa::X : public TNamed
        */
       virtual int* FindSurroundingMatrix(int idx);
       /**
-       * This function creates a new TFile and TTree and fills it from data
-       * created by X::CalculatePotential.    
+       * Save fields to a ROOT file.
        */
       virtual void SaveField(const char *fout);
       /**
-       * calculate electric field after load
+       * Load field from a ROOT file.
        */
       virtual void LoadField(const char *fin);
       /**
@@ -83,42 +80,32 @@ class GeFiCa::X : public TNamed
       void SetAverageImpurity(double density)
       { for (int i=0; i<n; i++) fImpurity[i]=density; }
       /**
-       * Set impurity that changes with x.
+       * Set impurity that changes with position.
        */
-      virtual void SetImpurity(TF3 *fi1);
-      /**
-       * Returns the value for E under the first direction.
-       */
+      virtual void SetImpurity(TF3 *fi);
+ 
       double GetE1(double x){return GetData(x,kE1);};
       double GetE2(double x){return 0;};
       double GetE3(double x){return 0;};
-      /**
-       * Returns the impurity level.
-       */ 
       double GetImpurity(double x){return GetData(x,kImpurity);};
-      /**
-       * Returns the potential.
-       */ 
       double GetPotential(double x){return GetData(x,kPotential);};
       /**
        * Get Capacitance, Cdet.
        * calculate Cdet based on CV^2/2 = epsilon int E^2 dx^3 / 2
        */
       double GetCapacitance();
-      /**
-       *This defines the class for the cint dictionary.
-       */
+
       ClassDef(X,1);
 
    protected:
-      bool * fIsFixed; ///< [n] Is used to check if a value is fixed or if it can be modified. It is usually used to check boundary conditions and find out if you are on the edge.
-      bool fIsLoaded; ///< fIsLoaded is used to check if points in the grid have a value or not. If fIsLoaded returns true, the points if the grid have value and you do not need to initialize, if it returns false you do.
-      double *fE1; ///< [n] Electric field under the first coordinate (x, r, or rho) direction 
-      double *fPotential; ///< [n] Potential in the referenced grid
-      double *fC1; ///< [n] the location under the first coordinate (x, r, or rho) direction
-      double *fdC1p; ///< [n] distance between this and next grid points alone C1
-      double *fdC1m; ///< [n] distance between this and previous grid points alone C1
-      double *fImpurity; ///< [n] Net impurity concentration (Nacceptor-Ndonor)
+      bool * fIsFixed; ///< [n] are the values fixed at a grid point
+      bool fIsLoaded; ///< is the grid data loaded from a ROOT file
+      double *fE1; ///< [n] electric field along the 1st coordinate
+      double *fV; ///< [n] electric potential
+      double *fC1; ///< [n] the 1st coordinate
+      double *fdC1p; ///< [n] step length to next grid point alone C1
+      double *fdC1m; ///< [n] step length to previous grid point alone C1
+      double *fImpurity; ///< [n] net impurity concentration (Nacceptor-Ndonor)
       /**
        * Sets the field step length.
        */
@@ -136,13 +123,16 @@ class GeFiCa::X : public TNamed
        */
       double GetData(double tarx, EOutput output); 
       /**
-       * Uses Second order Successive Over-Relaxation method to calculate the field.
+       * Calculate fields at @para idx using SOR2.
        */
-      virtual void SOR2(int idx,bool NotImpurityPotential); 
+      virtual void DoSOR2(int idx); 
       /**
        * Calculate electric field after CalculatePotential.
        */
       virtual bool CalculateField(int idx);
+
+      int GetIdxOfMaxV();
+      int GetIdxOfMinV();
 };
 #endif
 

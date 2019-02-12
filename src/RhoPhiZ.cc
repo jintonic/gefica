@@ -7,7 +7,7 @@
 #include "Units.h"
 using namespace GeFiCa;
 
-void RhoPhiZ::SOR2(int idx,bool NotImpurityPotential)
+void RhoPhiZ::DoSOR2(int idx)
 {//need update
    if (fIsFixed[idx])return;
    double density=-fImpurity[idx]*Qe;
@@ -18,22 +18,25 @@ void RhoPhiZ::SOR2(int idx,bool NotImpurityPotential)
    double h0=fdC3m[idx];
    double h5=fdC3p[idx];
    double pphim,pphip,prhom,prhop,pzp,pzm;
-   if(idx<n1*n2)pzm=fPotential[idx];
-   else pzm=fPotential[idx-n1*n2];
-   if(idx>=n-n1*n2)pzp=fPotential[idx];
-   else pzp=fPotential[idx+n1*n2];
-   if(idx%(n1*n2)>(n1*n2)-n1-1) pphip=fPotential[idx-n1*n2+n1];
-   else pphip=fPotential[idx+n1];
-   if(idx%(n1*n2)<n1)pphim=fPotential[idx+n1*n2-n1];
-   else pphim=fPotential[idx-n1];
-   if((idx%(n1*n2))%n1==n1-1)prhop=fPotential[idx];
-   else prhop=fPotential[idx+1];
-   if((idx%(n1*n2))%n1==0)prhom=fPotential[idx];
-   else prhom=fPotential[idx-1];
+   if(idx<n1*n2)pzm=fV[idx];
+   else pzm=fV[idx-n1*n2];
+   if(idx>=n-n1*n2)pzp=fV[idx];
+   else pzp=fV[idx+n1*n2];
+   if(idx%(n1*n2)>(n1*n2)-n1-1) pphip=fV[idx-n1*n2+n1];
+   else pphip=fV[idx+n1];
+   if(idx%(n1*n2)<n1)pphim=fV[idx+n1*n2-n1];
+   else pphim=fV[idx-n1];
+   if((idx%(n1*n2))%n1==n1-1)prhop=fV[idx];
+   else prhop=fV[idx+1];
+   if((idx%(n1*n2))%n1==0)prhom=fV[idx];
+   else prhom=fV[idx-1];
    double r=fC1[idx];
-   double tmp= (-density/2/epsilon+(prhop-prhom)/(2*r*(h2+h3))+prhop/h3/(h2+h3)+prhom/h2/(h2+h3)+pphip/h4/(h1+h4)/r/r+pphim/h1/(h1+h4)/r/r+pzp/h5/(h0+h5)+pzm/h0/(h0+h5))
-      /(1/h2/(h2+h3)+1/h3/(h2+h3)+1/h4/(h1+h4)/r/r+1/h1/(h1+h4)/r/r+1/h0/(h0+h5)+1/h5/(h0+h5));
-   fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
+   double tmp= (-density/2/epsilon+(prhop-prhom)/(2*r*(h2+h3))+prhop/h3/(h2+h3)
+         +prhom/h2/(h2+h3)+pphip/h4/(h1+h4)/r/r
+         +pphim/h1/(h1+h4)/r/r+pzp/h5/(h0+h5)+pzm/h0/(h0+h5))
+      /(1/h2/(h2+h3)+1/h3/(h2+h3)+1/h4/(h1+h4)/r/r
+            +1/h1/(h1+h4)/r/r+1/h0/(h0+h5)+1/h5/(h0+h5));
+   fV[idx]=Csor*(tmp-fV[idx])+fV[idx];
    double min=prhom;
    double max=prhom;
    if(min>prhop)min=prhop;
@@ -41,34 +44,28 @@ void RhoPhiZ::SOR2(int idx,bool NotImpurityPotential)
    if (min>pphim)min=pphim;
    if (min>pzm)min=pzm;
    if (min>pzm)min=pzm;
-   
+
    //find max
    if(max<prhop)max=prhop;
    if (max<pphip)min=pphip;
    if (max<pphim)max=pphim;
    if (max<pzm)max=pzm;
    if (max<pzm)max=pzm;
-//if tmp is greater or smaller than max and min, set tmp to it.
-   //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
+   //if tmp is greater or smaller than max and min, set tmp to it.
+   //fV[idx]=Csor*(tmp-fV[idx])+fV[idx];
    //if need calculate depleted voltage
-   double oldP=fPotential[idx];
+   double oldP=fV[idx];
    tmp=Csor*(tmp-oldP)+oldP;
-   if(tmp<min)
-   {
-      fPotential[idx]=min;
+   if(tmp<min) {
+      fV[idx]=min;
       fIsDepleted[idx]=false;
-   }
-   else if(tmp>max)
-   {
-      fPotential[idx]=max;
+   } else if(tmp>max) {
+      fV[idx]=max;
       fIsDepleted[idx]=false;
-   }
-   else
+   } else
       fIsDepleted[idx]=true;
-   if(fIsDepleted[idx]||!NotImpurityPotential)
-   {
-      fPotential[idx]=tmp;
-   }
+
+   if(fIsDepleted[idx]||V0==V1) fV[idx]=tmp;
 }
 //_____________________________________________________________________________
 //
@@ -86,7 +83,7 @@ double RhoPhiZ::GetData(double tarx, double tary, double tarz, EOutput output)
    switch(output)
    {
       case 0:tar= fImpurity;break;
-      case 1:tar= fPotential;break;
+      case 1:tar= fV;break;
       case 2:tar= fE1;break;
       case 3:tar= fE2;break;
       case 4:tar= fE3;break;

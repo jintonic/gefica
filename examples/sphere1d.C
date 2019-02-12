@@ -33,12 +33,12 @@
    // generate graphics
    TChain *tn = new TChain("t");
    tn->Add("sphere1dSOR2.root");
-   tn->Draw("p:c1");
+   tn->Draw("v:c1");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
 
    TChain *ta = new TChain("t");
    ta->Add("sphere1dTRUE.root");
-   ta->Draw("p:c1");
+   ta->Draw("v:c1");
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
 
    gn->SetMarkerColor(kBlue);

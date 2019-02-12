@@ -17,8 +17,8 @@ class GeFiCa::XY : public GeFiCa::X
 
       virtual ~XY();
 
-      virtual void SaveField(const char *fout=NULL);
-      virtual void LoadField(const char *fin=NULL);
+      virtual void SaveField(const char *fout);
+      virtual void LoadField(const char *fin);
       /**
        * Returns the potential in two dimensions
        */
@@ -46,11 +46,12 @@ class GeFiCa::XY : public GeFiCa::X
       ClassDef(XY,1);
 
    protected:
-      virtual void SOR2(int idx,bool elec);
-      double *fE2; /**< Electric field under the second coordinate (x, r, or rho) direction */
-      double *fC2; /**< The location under the second coordinate (x, r, or rho) direction*/
-      double *fdC2p; ///< distance between this and next grid points alone C2
-      double *fdC2m; ///< distance between this and previous grid points alone C2
+      double *fE2; ///< electric field along the 2nd coordinate
+      double *fC2; ///< the 2nd coordinate
+      double *fdC2p; ///< step length to next grid point along C2
+      double *fdC2m; ///< step length to previous grid point along C2
+
+      void SetStepLength(double steplength1,double steplength2); 
       /**
        * Uses a binary search to return the index in two dimensions
        */
@@ -59,7 +60,7 @@ class GeFiCa::XY : public GeFiCa::X
        * Returns data for various variables. 
        */
       double GetData(double tarx,double tary,EOutput output); 
-      void SetStepLength(double steplength1,double steplength2); 
+      virtual void DoSOR2(int idx);
       virtual bool CalculateField(int idx);
 };
 #endif 

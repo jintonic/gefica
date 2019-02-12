@@ -16,8 +16,8 @@ void Planar1D::Initialize()
    fIsFixed[0]=true;
    fIsFixed[n-1]=true;
    double slope = (V1-V0)/(n-1);
-   for (int i=0; i<n; i++) fPotential[i]=V0+slope*i;
-   fPotential[n-1]=V1;
+   for (int i=0; i<n; i++) fV[i]=V0+slope*i;
+   fV[n-1]=V1;
 }
 //_____________________________________________________________________________
 //
@@ -33,14 +33,14 @@ bool Planar1D::Analytic()
    }
    double d=UpperBound-LowerBound;//thickness or depth of the detector
    double a=-fImpurity[n-1]*Qe/2/epsilon;
-   double b=(fPotential[n-1]-fPotential[0]-a*d*d)/d;
-   double c=fPotential[0];
-   for (int i=0; i<n; i++) fPotential[i] = a*fC1[i]*fC1[i]+b*fC1[i]+c;
+   double b=(fV[n-1]-fV[0]-a*d*d)/d;
+   double c=fV[0];
+   for (int i=0; i<n; i++) fV[i] = a*fC1[i]*fC1[i]+b*fC1[i]+c;
 
    for (int i=1; i<n-1; i++)
-      fE1[i]=(fPotential[i+1]-fPotential[i-1])/(fdC1p[i]+fdC1m[i]);
-   fE1[0]=(fPotential[1]-fPotential[0])/fdC1p[0];
-   fE1[n-1]=(fPotential[n-1]-fPotential[n-2])/fdC1m[n-1];
+      fE1[i]=(fV[i+1]-fV[i-1])/(fdC1p[i]+fdC1m[i]);
+   fE1[0]=(fV[1]-fV[0])/fdC1p[0];
+   fE1[n-1]=(fV[n-1]-fV[n-2])/fdC1m[n-1];
 
    return true;
 }

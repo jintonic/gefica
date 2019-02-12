@@ -19,7 +19,7 @@
       detector->SaveField("planar1dSOR2.root");
       TChain *tn=new TChain("t");
       tn->Add("planar1dSOR2.root");
-      tn->Draw("p:c1");
+      tn->Draw("v:c1");
       TGraph *tg=new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
       tg->SetMarkerColor(i+2);
       tg->SetMarkerStyle(6);

@@ -11,7 +11,7 @@ using namespace GeFiCa;
 #include <iostream>
 using namespace std;
 
-void RThetaPhi::SOR2(int idx,bool NotImpurityPotential)
+void RThetaPhi::DoSOR2(int idx)
 {
    if (fIsFixed[idx])return;
 
@@ -25,24 +25,24 @@ void RThetaPhi::SOR2(int idx,bool NotImpurityPotential)
 
    // get potentials of points around point idx
    double pthetam,pthetap,prm,prp,pphip,pphim;
-   if (idx<n1*n2) pphim=fPotential[idx+n-n1*n2];
-   else pphim=fPotential[idx-n1*n2];
-   if (idx>=n-n1*n2) pphip=fPotential[idx-(n-n1*n2)];
-   else pphip=fPotential[idx+n1*n2];
+   if (idx<n1*n2) pphim=fV[idx+n-n1*n2];
+   else pphim=fV[idx-n1*n2];
+   if (idx>=n-n1*n2) pphip=fV[idx-(n-n1*n2)];
+   else pphip=fV[idx+n1*n2];
    if (idx%(n1*n2)>(n1*n2)-n1-1) {
-      if(idx<n/2) pthetap=fPotential[idx+n/2];
-      else pthetap=fPotential[idx-n/2];
+      if(idx<n/2) pthetap=fV[idx+n/2];
+      else pthetap=fV[idx-n/2];
    } else
-      pthetap=fPotential[idx+n1];
+      pthetap=fV[idx+n1];
    if (idx%(n1*n2)<n1) {
-      if(idx<n/2)pthetam=fPotential[idx+n/2];
-      else pthetam=fPotential[idx-n/2];
+      if(idx<n/2)pthetam=fV[idx+n/2];
+      else pthetam=fV[idx-n/2];
    } else
-      pthetam=fPotential[idx-n1];
-   if ((idx%(n1*n2))%n1==n1-1) prp=fPotential[idx];
-   else prp=fPotential[idx+1];
-   if ((idx%(n1*n2))%n1==0) prm=fPotential[idx];
-   else prm=fPotential[idx-1];
+      pthetam=fV[idx-n1];
+   if ((idx%(n1*n2))%n1==n1-1) prp=fV[idx];
+   else prp=fV[idx+1];
+   if ((idx%(n1*n2))%n1==0) prm=fV[idx];
+   else prm=fV[idx-1];
 
    double r=fC1[idx];
    double O=fC2[idx];
@@ -62,34 +62,28 @@ void RThetaPhi::SOR2(int idx,bool NotImpurityPotential)
    if (min>pphim)min=pphim;
    if (min>pthetam)min=pthetam;
    if (min>pthetam)min=pthetam;
-   
+
    //find max
    if(max<prp)max=prp;
    if (max<pphip)min=pphip;
    if (max<pphim)max=pphim;
    if (max<pthetam)max=pthetam;
    if (max<pthetam)max=pthetam;
-//if tmp is greater or smaller than max and min, set tmp to it.
-   //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
+   //if tmp is greater or smaller than max and min, set tmp to it.
+   //fV[idx]=Csor*(tmp-fV[idx])+fV[idx];
    //if need calculate depleted voltage
-   double oldP=fPotential[idx];
+   double oldP=fV[idx];
    tmp=Csor*(tmp-oldP)+oldP;
-   if(tmp<min)
-   {
-      fPotential[idx]=min;
+   if(tmp<min) {
+      fV[idx]=min;
       fIsDepleted[idx]=false;
-   }
-   else if(tmp>max)
-   {
-      fPotential[idx]=max;
+   } else if(tmp>max) {
+      fV[idx]=max;
       fIsDepleted[idx]=false;
-   }
-   else
+   } else
       fIsDepleted[idx]=true;
-   if(fIsDepleted[idx]||!NotImpurityPotential)
-   {
-      fPotential[idx]=tmp;
-   }
+
+   if(fIsDepleted[idx]||V0==V1) fV[idx]=tmp;
 }
 //_____________________________________________________________________________
 //
@@ -106,7 +100,7 @@ double RThetaPhi::GetData(double tarx, double tary, double tarz, EOutput output)
    switch(output)
    {
       case 0:tar= fImpurity;break;
-      case 1:tar= fPotential;break;
+      case 1:tar= fV;break;
       case 2:tar= fE1;break;
       case 3:tar= fE2;break;
       case 4:tar= fE3;break;
@@ -117,15 +111,23 @@ double RThetaPhi::GetData(double tarx, double tary, double tarz, EOutput output)
    tar6=-1;
    tar7=-1;
    tar0=tar[idx];
-   if(idx>=(n-n1*n2)){tar4=tar[idx-n+n1*n2];tar5=tar[idx-n+n1*n2+1];tar6=tar[idx-n+n1*n2+n1];tar7=tar[idx-n+n1*n2+n1+1];}
-   else{tar4=tar[idx+n1*n2];}
-   if(idx%(n1*n2)%n1==n1-1){tar2=0;tar3=0;tar6=0;tar7=0;}
-   else{tar2=tar[idx+n1];}
-   if(idx%(n1*n2)/n1==n2-1){tar1=0;tar3=0;tar5=0;tar7=0;}
-   else{tar1=tar[idx+1];}
+   if(idx>=(n-n1*n2)) {
+      tar4=tar[idx-n+n1*n2];
+      tar5=tar[idx-n+n1*n2+1];
+      tar6=tar[idx-n+n1*n2+n1];
+      tar7=tar[idx-n+n1*n2+n1+1];
+   } else
+      tar4=tar[idx+n1*n2];
+
+   if(idx%(n1*n2)%n1==n1-1) {tar2=0;tar3=0;tar6=0;tar7=0;}
+   else {tar2=tar[idx+n1];}
+   if(idx%(n1*n2)/n1==n2-1) {tar1=0;tar3=0;tar5=0;tar7=0;}
+   else {tar1=tar[idx+1];}
    if(tar3==-1)tar3=tar[idx+n1+1];
    if(tar5==-1)tar5=tar[idx+n1*n2+1];
    if(tar6==-1)tar6=tar[idx+n1*n2+n1];
    if(tar7==-1)tar7=tar[idx+n1*n2+n1+1];
-   return ((tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb)*ac+((tar4*aa+tar5*ab)*ba+(tar6*aa+tar7*ab)*bb)*ca;
+
+   return ((tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb)*ac
+      +((tar4*aa+tar5*ab)*ba+(tar6*aa+tar7*ab)*bb)*ca;
 }

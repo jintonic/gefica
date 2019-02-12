@@ -9,20 +9,20 @@
    detector->SetAverageImpurity(-0.318e10/GeFiCa::cm3);
    detector->Csor=1.95;
    detector->CalculatePotential(GeFiCa::kSOR2);
-   detector->SaveField("trueCoaxial1d.root");
+   detector->SaveField("trueCoaxial1dSOR2.root");
    detector->CalculatePotential(GeFiCa::kAnalytic);
-   detector->SaveField("trueCoaxial1dTrue.root");
+   detector->SaveField("trueCoaxial1dTRUE.root");
 
    // generate graphics
    TChain *tn = new TChain("t");
-   tn->Add("trueCoaxial1d.root");
-   tn->Draw("p:c1*10");
+   tn->Add("trueCoaxial1dSOR2.root");
+   tn->Draw("v:c1*10");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
 
 
    TChain *ta = new TChain("t");
-   ta->Add("trueCoaxial1dTrue.root");
-   ta->Draw("p:c1*10");
+   ta->Add("trueCoaxial1dTRUE.root");
+   ta->Draw("v:c1*10");
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
 
    // make final plot

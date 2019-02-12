@@ -45,7 +45,7 @@ void XYZ::SetStepLength(double steplength1,double steplength2,double steplength3
 }
 //_____________________________________________________________________________
 //
-void XYZ::SOR2(int idx,bool NotImpurityPotential)
+void XYZ::DoSOR2(int idx)
 {
    if (fIsFixed[idx])return;
    double density=-fImpurity[idx]*Qe;
@@ -56,18 +56,18 @@ void XYZ::SOR2(int idx,bool NotImpurityPotential)
    double h0=fdC3m[idx];
    double h5=fdC3p[idx];
    double pym,pyp,pxm,pxp,pzp,pzm;
-   if(idx<n1*n2)pzm=fPotential[idx];
-   else pzm=fPotential[idx-n1*n2];
-   if(idx>=n-n1*n2)pzp=fPotential[idx];
-   else pzp=fPotential[idx+n1*n2];
-   if(idx%(n1*n2)>(n1*n2)-n1-1) pyp=fPotential[idx];
-   else pyp=fPotential[idx+n1];
-   if(idx%(n1*n2)<n1)pym=fPotential[idx];
-   else pym=fPotential[idx-n1];
-   if((idx%(n1*n2))%n1==n1-1)pxp=fPotential[idx];
-   else pxp=fPotential[idx+1];
-   if((idx%(n1*n2))%n1==0)pxm=fPotential[idx];
-   else pxm=fPotential[idx-1];
+   if(idx<n1*n2)pzm=fV[idx];
+   else pzm=fV[idx-n1*n2];
+   if(idx>=n-n1*n2)pzp=fV[idx];
+   else pzp=fV[idx+n1*n2];
+   if(idx%(n1*n2)>(n1*n2)-n1-1) pyp=fV[idx];
+   else pyp=fV[idx+n1];
+   if(idx%(n1*n2)<n1)pym=fV[idx];
+   else pym=fV[idx-n1];
+   if((idx%(n1*n2))%n1==n1-1)pxp=fV[idx];
+   else pxp=fV[idx+1];
+   if((idx%(n1*n2))%n1==0)pxm=fV[idx];
+   else pxm=fV[idx-1];
 
    double tmp= (
          -density/epsilon*h0*h1*h2*h3*h4*h5*(h1+h4)*(h2+h3)*(h0+h5)/2
@@ -84,34 +84,28 @@ void XYZ::SOR2(int idx,bool NotImpurityPotential)
    if (min>pym)min=pym;
    if (min>pzm)min=pzm;
    if (min>pzm)min=pzm;
-   
+
    //find max
    if(max<pxp)max=pxp;
    if (max<pyp)min=pyp;
    if (max<pym)max=pym;
    if (max<pzm)max=pzm;
    if (max<pzm)max=pzm;
-//if tmp is greater or smaller than max and min, set tmp to it.
-   //fPotential[idx]=Csor*(tmp-fPotential[idx])+fPotential[idx];
+   //if tmp is greater or smaller than max and min, set tmp to it.
+   //fV[idx]=Csor*(tmp-fV[idx])+fV[idx];
    //if need calculate depleted voltage
-   double oldP=fPotential[idx];
+   double oldP=fV[idx];
    tmp=Csor*(tmp-oldP)+oldP;
-   if(tmp<min)
-   {
-      fPotential[idx]=min;
+   if(tmp<min) {
+      fV[idx]=min;
       fIsDepleted[idx]=false;
-   }
-   else if(tmp>max)
-   {
-      fPotential[idx]=max;
+   } else if(tmp>max) {
+      fV[idx]=max;
       fIsDepleted[idx]=false;
-   }
-   else
+   } else
       fIsDepleted[idx]=true;
-   if(fIsDepleted[idx]||!NotImpurityPotential)
-   {
-      fPotential[idx]=tmp;
-   }
+
+   if(fIsDepleted[idx]||V0==V1) fV[idx]=tmp;
 }
 //_____________________________________________________________________________
 //
@@ -140,7 +134,7 @@ double XYZ::GetData(double tarx, double tary, double tarz, EOutput output )
    switch(output)
    {
       case 0:tar= fImpurity;break;
-      case 1:tar= fPotential;break;
+      case 1:tar= fV;break;
       case 2:tar= fE1;break;
       case 3:tar= fE2;break;
       case 4:tar= fE3;break;
@@ -160,32 +154,29 @@ double XYZ::GetData(double tarx, double tary, double tarz, EOutput output )
    if(tar5==-1)tar5=tar[idx-n1*n2-1];
    if(tar6==-1)tar6=tar[idx-n1*n2-n1];
    if(tar7==-1)tar7=tar[idx-n1*n2-n1-1];
-   return ((tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb)*ac+((tar4*aa+tar5*ab)*ba+(tar6*aa+tar7*ab)*bb)*ca;
+   return ((tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb)*ac
+      +((tar4*aa+tar5*ab)*ba+(tar6*aa+tar7*ab)*bb)*ca;
 }
 //_____________________________________________________________________________
 //
 void XYZ::SaveField(const char * fout)
 {
    XY::SaveField(fout);
-   TFile *file=new TFile(fout,"update");
-   TVectorD  v=*(TVectorD*)file->Get("v");
-   v[9]=(double)n3;
-   v.Write();
-   TTree * tree=(TTree*)file->Get("t");
-   double E3s,C3s, dC3p, dC3m;
-   TBranch *be3 = tree->Branch("e3",&E3s,"e3/D");
-   TBranch *bc3 = tree->Branch("c3",&C3s,"c3/D");
-   TBranch *bdc3p = tree->Branch("dC3p",&dC3p,"dC3p/D");
-   TBranch *bdc3m = tree->Branch("dC3m",&dC3m,"dC3m/D");
+
+   TFile *file = new TFile(fout,"update");
+   TVectorD var = *(TVectorD*)file->Get("v");
+   var[9]=(double)n3;
+   var.Write();
+
+   TTree *tree = (TTree*) file->Get("t");
+   double e3,c3, dc3p, dc3m;
+   TBranch *be3 = tree->Branch("e3",&e3,"e3/D");
+   TBranch *bc3 = tree->Branch("c3",&c3,"c3/D");
+   TBranch *bdc3p = tree->Branch("dc3p",&dc3p,"dc3p/D");
+   TBranch *bdc3m = tree->Branch("dc3m",&dc3m,"dc3m/D");
    for(int i=0;i<n;i++) {
-      E3s=fE3[i];
-      C3s=fC3[i];
-      dC3p=fdC3p[i];
-      dC3m=fdC3m[i];
-      be3->Fill();
-      bc3->Fill();
-      bdc3p->Fill();
-      bdc3m->Fill();
+      e3=fE3[i]; c3=fC3[i]; dc3p=fdC3p[i]; dc3m=fdC3m[i];
+      be3->Fill(); bc3->Fill(); bdc3p->Fill(); bdc3m->Fill();
    }
    file->Write();
    file->Close();
@@ -196,27 +187,31 @@ void XYZ::SaveField(const char * fout)
 void XYZ::LoadField(const char * fin)
 {
    XY::LoadField(fin);
-   TFile *file=new TFile(fin);
-   TVectorD *v1=(TVectorD*)file->Get("v");
-   double * v=v1->GetMatrixArray();
-   n3 = (int) v[9];
+
+   TFile *file = new TFile(fin);
+   TVectorD *variables = (TVectorD*)file->Get("v");
+   double *var = variables->GetMatrixArray();
+   n3 = (int) var[9];
+   file->Close();
+   delete file;
 
    TChain *t =new TChain("t");
    t->Add(fin);
-   double fEz,fPz;
-   t->SetBranchAddress("c3",&fPz);
-   t->SetBranchAddress("e3",&fEz);
+   double e3,c3;
+   t->SetBranchAddress("c3",&c3);
+   t->SetBranchAddress("e3",&e3);
 
+   this->~XYZ(); // delete arrays if there are
    fE3=new double[n];
    fC3=new double[n];
 
    for (int i=0;i<n;i++) {
       t->GetEntry(i);
-      fE3[i]=fEz;
-      fC3[i]=fPz;
+      fE3[i]=e3;
+      fC3[i]=c3;
    }
-   file->Close();
-   delete file;
+
+   delete t;
 }
 //_____________________________________________________________________________
 //
@@ -233,11 +228,11 @@ bool XYZ::CalculateField(int idx)
    if (fdC3p[idx]==0 || fdC3m[idx]==0) return false;
 
    if (idx<n1*n2) // C3 lower border
-      fE3[idx]=(fPotential[idx]-fPotential[idx+n1])/fdC3p[idx];
+      fE3[idx]=(fV[idx]-fV[idx+n1])/fdC3p[idx];
    else if (idx>=n-n1*n2) // C3 upper border
-      fE3[idx]=(fPotential[idx]-fPotential[idx-n1])/fdC3m[idx];
+      fE3[idx]=(fV[idx]-fV[idx-n1])/fdC3m[idx];
    else { // bulk
-      fE3[idx]=(fPotential[idx-n1]-fPotential[idx+n1])/(fdC3m[idx]+fdC3p[idx]);
+      fE3[idx]=(fV[idx-n1]-fV[idx+n1])/(fdC3m[idx]+fdC3p[idx]);
    }
    return true;
 }
