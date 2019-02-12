@@ -292,6 +292,7 @@ void X::SaveField(const char *fout)
 //
 void X::LoadField(const char *fin)
 {
+   Info("LoadField", "%s", fin);
    TFile *file = new TFile(fin);
    if (file->IsZombie()) Fatal("LoadField", "%s cannot be loaded", fin);
 
