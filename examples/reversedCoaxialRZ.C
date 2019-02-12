@@ -41,7 +41,7 @@
    TH2F* h= new TH2F("hist","",10,-3.45,3.45,10,0,5.05);
    TChain *ta = new TChain("t");
    ta->Add("rcpcSOR2.root");
-   ta->Draw("c2:c1:p>>hist","","colz");
+   ta->Draw("c2:c1:v>>hist","","colz");
    h->GetYaxis()->SetTitle("Height [cm]");
    h->GetXaxis()->SetTitle("Radius [cm]");
   
