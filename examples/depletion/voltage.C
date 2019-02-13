@@ -2,66 +2,88 @@
 using namespace GeFiCa;
 void voltage()
 {
+   TFile *fi, *fw;
+   PointContactDZ *vi, *vw, *vt;
+
    // potential due to space charge alone
-   PointContactDZ *impurityPotential = new PointContactDZ(690,505);
-
-   impurityPotential->V0=0; // no bias
-   impurityPotential->V1=0; // no bias
-
-   impurityPotential->Z=5.05*cm;
-   impurityPotential->Radius=3.45*cm;
-   impurityPotential->PointContactZ=0.21*cm;
-   impurityPotential->PointContactR=0.14*cm;
-
-   impurityPotential->Csor=1.994;
-   impurityPotential->MaxIterations=1e5;
-   impurityPotential->Precision=1e-7*volt;
-
-   TF3 *impurityDistribution = new TF3("fi","-0.318e10+0.025e10*y");
-   impurityPotential->SetImpurity(impurityDistribution);
-
-   if (FILE *input = fopen("impurity.root","r")) { // already calculated
+   if (FILE *input = fopen("impurity.root","r")) { // if already calculated
       fclose(input);
-      impurityPotential->LoadField("impurity.root");
-   } else { // calculate the fields if not yet calculated
-      impurityPotential->CalculatePotential(kSOR2);
-      impurityPotential->SaveField("impurity.root");
+      fi = new TFile("impurity.root"); // read only
+      vi = (PointContactDZ*) fi->Get("vi");
+   } else { // if not calculated before
+      fi = new TFile("impurity.root", "recreate");
+
+      vi = new PointContactDZ(690,505);
+      vi->SetName("vi");
+
+      vi->V0=0; // no bias
+      vi->V1=0; // no bias
+
+      vi->Z=5.05*cm;
+      vi->Radius=3.45*cm;
+      vi->PointContactZ=0.21*cm;
+      vi->PointContactR=0.14*cm;
+
+      vi->Csor=1.994;
+      vi->MaxIterations=1e5;
+      vi->Precision=1e-7*volt;
+
+      TF3 *impurityDistribution = new TF3("fi","-0.318e10+0.025e10*y");
+      vi->SetImpurity(impurityDistribution);
+
+      vi->CalculatePotential(kSOR2);
+
+      vi->Write();
    }
+   vi->Dump();
 
    // weighting potential
-   PointContactDZ *weightingPotential = new PointContactDZ(690,505);
-
-   weightingPotential->V0=1*volt;
-   weightingPotential->V1=0*volt;
-
-   weightingPotential->Z=5.05*cm;
-   weightingPotential->Radius=3.45*cm;
-   weightingPotential->PointContactZ=0.21*cm;
-   weightingPotential->PointContactR=0.14*cm;
-
-   weightingPotential->Csor=1.994;
-   weightingPotential->MaxIterations=1e5;
-   weightingPotential->Precision=1e-7*volt;
-
-   weightingPotential->SetImpurity(new TF3("wpi","0")); // no impurity
-
-   if (FILE *input = fopen("weighting.root","r")) { // already calculated
+   if (FILE *input = fopen("weighting.root","r")) { // if already calculated
       fclose(input);
-      weightingPotential->LoadField("weighting.root");
-   } else { // calculate the fields if not yet calculated
-      weightingPotential->CalculatePotential(kSOR2);
-      weightingPotential->SaveField("weighting.root");
+      fw = new TFile("weighting.root"); // read only
+      vw = (PointContactDZ*) fw->Get("vw");
+   } else { // if not calculated before
+      fw = new TFile("weighting.root", "recreate");
+
+      vw = new PointContactDZ(690,505);
+      vw->SetName("vw");
+
+      vw->V0=1*volt;
+      vw->V1=0*volt;
+
+      vw->Z=5.05*cm;
+      vw->Radius=3.45*cm;
+      vw->PointContactZ=0.21*cm;
+      vw->PointContactR=0.14*cm;
+
+      vw->Csor=1.994;
+      vw->MaxIterations=1e5;
+      vw->Precision=1e-7*volt;
+
+      vw->SetImpurity(new TF3("wpi","0")); // no impurity
+
+      vw->CalculatePotential(kSOR2);
+
+      vw->Write();
    }
+   vw->Dump();
 
    double bias, vlower=0*volt, vupper=2e4*volt; // range of search
    while (vupper-vlower>1e-3*volt) { // binary search
       bias=(vupper+vlower)/2; // bias voltage
-      PointContactDZ totalPotential = *(PointContactDZ*) weightingPotential->Clone();
-      totalPotential*=bias;
-      totalPotential+=impurityPotential;
-      if(totalPotential.IsDepleted()) vlower=bias;
+      vt = (PointContactDZ*) vw->Clone("vt");
+      (*vt)*=bias;
+      (*vt)+=vi;
+      if (vt->IsDepleted()) vlower=bias;
       else vupper=bias;
+      delete vt;
+      cout<<"bias: "<<bias<<", u: "<<vupper<<", l: "<<vlower<<endl;
    }
    cout<<"depletion voltage: "<<bias<<endl;
+
+   fw->Close();
+   fi->Close();
+   delete fi;
+   delete fw;
 }
 
