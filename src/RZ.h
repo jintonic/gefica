@@ -23,6 +23,6 @@ class GeFiCa::RZ : public GeFiCa::XY
       ClassDef(RZ,1);
 
    protected:
-      virtual void SOR2(int idx,bool elec);
+      virtual void DoSOR2(int idx);
 };
 #endif 
