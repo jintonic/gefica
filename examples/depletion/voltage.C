@@ -74,7 +74,7 @@ void voltage()
       vt = (PointContactDZ*) vw->Clone("vt");
       (*vt)*=bias;
       (*vt)+=vi;
-      if (vt->IsDepleted()) vlower=bias;
+      if (!vt->IsDepleted()) vlower=bias;
       else vupper=bias;
       delete vt;
       cout<<"bias: "<<bias<<", u: "<<vupper<<", l: "<<vlower<<endl;
