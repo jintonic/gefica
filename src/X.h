@@ -106,10 +106,11 @@ class GeFiCa::X : public TNamed
       double *fdC1p; ///< [n] step length to next grid point alone C1
       double *fdC1m; ///< [n] step length to previous grid point alone C1
       double *fImpurity; ///< [n] net impurity concentration (Nacceptor-Ndonor)
+ 
       /**
-       * Sets the field step length.
+       * Initialize fC1, fdC1p, fdC1m, fIsFixed
        */
-      void SetStepLength(double steplength);
+      void SetStepLength(double stepLength);
       /**
        * Uses a binary search to return the index .
        */

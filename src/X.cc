@@ -112,14 +112,13 @@ bool X::IsDepleted()
 }
 //_____________________________________________________________________________
 //
-void X::SetStepLength(double steplength)
+void X::SetStepLength(double stepLength)
 {
-   //set field step length
    for (int i=n;i-->0;) {
       fIsFixed[i]=false;
-      fC1[i]=i*steplength;
-      fdC1p[i]=steplength;
-      fdC1m[i]=steplength;
+      fC1[i]=i*stepLength;
+      fdC1p[i]=stepLength;
+      fdC1m[i]=stepLength;
    }
 }
 //_____________________________________________________________________________

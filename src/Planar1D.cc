@@ -15,14 +15,21 @@ void Planar1D::Initialize()
       Warning("Initialize", "Thickness(%.1f)<=0, set it to 1*cm", Thickness);
       Thickness=1*cm;
    }
-   double steplength=(UpperBound-LowerBound)/(n-1);
-   SetStepLength(steplength);
-   for (int i=n; i-->0;) fC1[i]=fC1[i]+LowerBound;
-   fIsFixed[0]=true;
-   fIsFixed[n-1]=true;
+   // initialize fC1, fdC1p, fdC1m, fIsFixed
+   SetStepLength(Thickness/(n-1));
+   // fix 1st and last points
+   fIsFixed[0]=true; fIsFixed[n-1]=true;
+   // linear interpolation between V0 and V1
    double slope = (V1-V0)/(n-1);
    for (int i=0; i<n; i++) fV[i]=V0+slope*i;
    fV[n-1]=V1;
+}
+//_____________________________________________________________________________
+//
+bool Planar1D::CalculatePotential(EMethod method)
+{
+   if (!fIsLoaded) Initialize();
+   return X::CalculatePotential(method);
 }
 //_____________________________________________________________________________
 //
@@ -32,11 +39,11 @@ bool Planar1D::Analytic()
    bool isConstantImpurity=true;
    for(int i=0;i+1<n;i++)
       if (fImpurity[i]!=fImpurity[i+1]) isConstantImpurity=false;
-   if(!isConstantImpurity) {
+   if (isConstantImpurity==false) {
       Warning("Analytic","can't handle changing impurity! Return false.");
       return false;
    }
-   double d=UpperBound-LowerBound;//thickness or depth of the detector
+   double d=Thickness; //thickness or depth of the detector
    double a=-fImpurity[n-1]*Qe/2/epsilon;
    double b=(fV[n-1]-fV[0]-a*d*d)/d;
    double c=fV[0];
@@ -48,11 +55,4 @@ bool Planar1D::Analytic()
    fE1[n-1]=(fV[n-1]-fV[n-2])/fdC1m[n-1];
 
    return true;
-}
-//_____________________________________________________________________________
-//
-bool Planar1D::CalculatePotential(EMethod method)
-{
-   if(!fIsLoaded)Initialize();
-   return X::CalculatePotential(method);
 }
