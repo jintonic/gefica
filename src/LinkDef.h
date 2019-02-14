@@ -13,7 +13,6 @@
 #pragma link C++ class GeFiCa::TrueCoaxial2D+;
 #pragma link C++ class GeFiCa::RhoPhiZ+;
 #pragma link C++ class GeFiCa::Planar1D+;
-#pragma link C++ class GeFiCa::Planar2D+;
 #pragma link C++ class GeFiCa::PointContactDZ+;
 #pragma link C++ class GeFiCa::PointContactRZ+;
 #pragma link C++ class GeFiCa::ReversedCoaxialRZ+;
@@ -24,9 +23,6 @@
  * \example planar1d.C
  * ROOT macro showing the usage of GeFiCa::Planar1D class.
  * The numerical result is compared to analytic calculation.
- *
- * \example planar2d.C
- * ROOT macro showing the usage of GeFiCa::Planar2D class.
  *
  * \example trueCoaxial1d.C
  * ROOT macro showing the usage of GeFiCa::TrueCoaxial1D class.
