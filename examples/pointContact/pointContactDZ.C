@@ -2,10 +2,11 @@
    GeFiCa::PointContactDZ *detector2 = new GeFiCa::PointContactDZ(692,505);
    detector2->Radius=3.45*GeFiCa::cm;
    detector2->Z=5.05*GeFiCa::cm;
-   detector2->Rpc=0.14*GeFiCa::cm;
-   detector2->Zpc=0.21*GeFiCa::cm;
-   detector2->RwrapArround=3.350*GeFiCa::cm;
+   detector2->PointContactR=0.14*GeFiCa::cm;
+   detector2->PointContactZ=0.21*GeFiCa::cm;
+   detector2->WrapArroundR=3.350*GeFiCa::cm;
    detector2->TaperLength=1*GeFiCa::cm;
+   detector2->TaperZ=1*GeFiCa::cm;
 
    TF3 *im=new TF3("f","-0.318e10+0.025e10*y");
 

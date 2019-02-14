@@ -9,6 +9,33 @@ using namespace std;
 //a great different potential on space close to point contact the current
 //design does not include when point contact is close to boundary of the whole
 //detector.
+void PointContactDZ::SetBoundary()
+{
+   for(int i=0;i<n;i++)
+   {
+      if(fC2[i]-PointContactZ<fdC2m[i]&&fC2[i]>PointContactZ&&fC1[i]<PointContactR&&fC1[i]>-PointContactR)
+      {
+         fdC2m[i]=fC2[i]-PointContactZ;
+      }
+      if(fC1[i]-PointContactR<fdC1m[i]&&fC1[i]>0&&fC2[i]<PointContactZ)
+      {
+         fdC1m[i]=fC1[i]-PointContactR;
+      }
+      if(-fC1[i]+PointContactR<fdC1m[i]&&fC1[i]<0&&fC2[i]<PointContactZ)
+      {
+         fdC1p[i]=-fC1[i]+PointContactR;
+      }
+      if(WrapArroundR-fC1[i]<fdC1p[i]&&fC1[i]<WrapArroundR)
+      {
+         fdC1p[i]=WrapArroundR-fC1[i];
+      }
+      if(WrapArroundR+fC1[i]<fdC1p[i]&&fC1[i]>-WrapArroundR)
+      {
+         fdC1p[i]=WrapArroundR+fC1[i];
+      }
+      
+   }
+}
 void PointContactDZ::BoundaryOnPointcontact()
 {
    int index=FindIdx(PointContactR,PointContactZ,0,n2-1);
@@ -61,29 +88,6 @@ void PointContactDZ::BoundaryOnPointcontact()
 //
 void PointContactDZ::BoundaryonWarpAround()
 {
-   int index=FindIdx(WrapArroundR,0,0,n2-1);
-   if (index>n1)index-=n1;
-   for(int i=index;i<n;i+=n1)
-   {
-      fC1[i]=WrapArroundR;
-      fdC1m[i]=fC1[i]-fC1[i-1];
-      fdC1p[i]=fC1[i+1]-fC1[i];
-      fdC1m[i+1]=fdC1p[i];
-      fdC1p[i-1]=fdC1m[i];
-   }
-
-   index=FindIdx(-WrapArroundR,0,0,n2-1)-1;
-   if (index>n1)index-=n1;
-
-   for(int i=index;i<n;i+=n1)
-   {
-      fC1[i]=-WrapArroundR;
-      fdC1m[i]=fC1[i]-fC1[i-1];
-      fdC1p[i]=fC1[i+1]-fC1[i];
-      fdC1m[i+1]=fdC1p[i];
-      fdC1p[i-1]=fdC1m[i];
-
-   }
 }
 //_____________________________________________________________________________
 //
@@ -120,8 +124,7 @@ void PointContactDZ::Initialize()
    {
       fC1[i]=fC1[i]+RLowerBound;
    } 
-   BoundaryOnPointcontact();
-   BoundaryonWarpAround();
+   SetBoundary();
 
    // set initial potential values
    for(int i=n;i-->0;) {
@@ -156,7 +159,7 @@ void PointContactDZ::Initialize()
 
    for(int i=0;i<n;i++)
    {
-      if(fC2[i]>=fC1[i]*k-TaperLength)
+      if(fC2[i]<=fC1[i]*k+b)
       {
          fIsFixed[i]=true;
          fV[i]=V0;
