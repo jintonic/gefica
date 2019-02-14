@@ -1,14 +1,19 @@
-#include "Planar1D.h"
 #include "Units.h"
+#include "Planar1D.h"
 using namespace GeFiCa;
 
+Planar1D::Planar1D(int n) : X(n), Thickness(1*cm)
+{
+   SetName("p1d");
+   SetTitle("1D Planar detector");
+} 
+//_____________________________________________________________________________
+//
 void Planar1D::Initialize()
 {
-   if (LowerBound>=UpperBound) {
-      Warning("Initialize",
-            "Lower bound (%f) >= upper bound (%f)! No grid is created!",
-            LowerBound, UpperBound);
-      return;
+   if (Thickness<=0) {
+      Warning("Initialize", "Thickness(%.1f)<=0, set it to 1*cm", Thickness);
+      Thickness=1*cm;
    }
    double steplength=(UpperBound-LowerBound)/(n-1);
    SetStepLength(steplength);
@@ -43,12 +48,6 @@ bool Planar1D::Analytic()
    fE1[n-1]=(fV[n-1]-fV[n-2])/fdC1m[n-1];
 
    return true;
-}
-//_____________________________________________________________________________
-//
-double Planar1D::FindImpuritywithDepletedV(double DepletedV, double SizeofDetector)
-{
-   return -DepletedV*2/SizeofDetector/SizeofDetector;
 }
 //_____________________________________________________________________________
 //

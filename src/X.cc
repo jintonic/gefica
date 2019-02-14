@@ -14,7 +14,7 @@ using namespace std;
 X::X(int nx) : TNamed("X","X"), n1(nx), n(nx), Csor(1.95), Precision(1e-7),
    MaxIterations(100000), V0(0), V1(2000*volt)
 { 
-   if (n<10) { Info("X","n<10, set it to 11"); n=11; n1=11; }
+   if (n<10) { Warning("X","n<10, set it to 11"); n=11; n1=11; }
 
    fIsLoaded=false; // a fresh calculation, not loaded from a ROOT file
    fV=new double[n];
