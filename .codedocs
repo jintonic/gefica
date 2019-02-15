@@ -1,3 +1,2 @@
 # https://codedocs.xyz/static/codedocs_example.txt
 DOXYFILE = Doxyfile
-USE_MDFILE_AS_MAINPAGE = README.md
