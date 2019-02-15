@@ -1,4 +1,5 @@
-[![Documentation](https://codedocs.xyz/monero-project/kovri.svg)](https://codedocs.xyz/jintonic/gefica/)
+[![Doxygen](https://codedocs.xyz/jintonic/gefica.svg)](https://codedocs.xyz/jintonic/gefica/)
+[![ReadTheDocs](https://readthedocs.org/projects/gefica/badge)](https://gefica.readthedocs.io)
 
 ## Introduction
 
