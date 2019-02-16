@@ -1,5 +1,5 @@
 # https://codedocs.xyz/static/codedocs_example.txt
-INPUT = src
+INPUT = src docs/Doxygen.md
 EXAMPLE_PATH = examples
 USE_MDFILE_AS_MAINPAGE = docs/Doxygen.md
 FILE_PATTERNS = *.h *.cc *.C *.md *.py
