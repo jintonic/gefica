@@ -62,5 +62,5 @@ void compare2analytic()
 
    // calculate capacitance
    double c = num->GetCapacitance()/pF;
-   cout<<"capacitance is "<<c<<" pF per cm2"<<endl;
+   cout<<"capacitance is "<<c<<" pF/cm2"<<endl;
 }
