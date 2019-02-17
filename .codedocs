@@ -1,5 +1,9 @@
 # https://codedocs.xyz/static/codedocs_example.txt
-INPUT = src
+
+# load offline doxygen configurations
+DOXYFILE = docs/Doxyfile
+
+# overwrite some configurations for online doxygen generation
+INPUT = src docs/doxygen.md
 EXAMPLE_PATH = examples
-USE_MDFILE_AS_MAINPAGE = docs/Doxygen.md
-FILE_PATTERNS = *.h *.cc *.C *.md *.py
+USE_MDFILE_AS_MAINPAGE = docs/doxygen.md
