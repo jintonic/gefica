@@ -45,8 +45,6 @@ class GeFiCa::X : public TNamed
       double V0;///< voltage of one electrode
       double V1;///< voltage of the other electrode
 
-      bool *fIsDepleted;///< [n] is a grid depleted
-
    public:
       /**
        * Default constructor for GeFiCa::X.
@@ -104,13 +102,14 @@ class GeFiCa::X : public TNamed
       ClassDef(X,1);
 
    protected:
-      bool * fIsFixed; ///< [n] are the values fixed at a grid point
-      double *fE1; ///< [n] electric field along the 1st coordinate
       double *fV; ///< [n] electric potential
+      double *fE1; ///< [n] electric field along the 1st coordinate
       double *fC1; ///< [n] the 1st coordinate
       double *fdC1p; ///< [n] step length to next grid point alone C1
       double *fdC1m; ///< [n] step length to previous grid point alone C1
       double *fImpurity; ///< [n] net impurity concentration (Nacceptor-Ndonor)
+      bool *fIsFixed; ///< [n] true if field values are fixed
+      bool *fIsDepleted;///< [n] true if a grid point is depleted
  
       /**
        * Initialize fC1, fdC1p, fdC1m, fIsFixed
@@ -137,8 +136,8 @@ class GeFiCa::X : public TNamed
        */
       virtual bool CalculateField(int idx);
 
-      int GetIdxOfMaxV();
-      int GetIdxOfMinV();
+      int GetIdxOfMaxV(); ///< Get index of the grid point with max potential
+      int GetIdxOfMinV(); ///< Get index of the grid point with min potential
 };
 #endif
 
