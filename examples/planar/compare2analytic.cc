@@ -1,24 +1,24 @@
-// compare numerical result to analytic calculation for 1D planar detector
+// compare numerical result to analytic calculation for a 1D planar detector
 using namespace GeFiCa;
-void planar1d()
+void compare2analytic()
 {
-   // define detector
-   Planar1D *detector = new Planar1D(101);
-   detector->MaxIterations=1e5;
-   detector->Csor=1.95;
-   detector->UpperBound=1*cm;
-   detector->V0=0*volt;
-   detector->V1=800*volt;
-   detector->SetAverageImpurity(1e10/cm3);
-   detector->Dump();
-   cout<<"press any key to continue"<<endl;
-   cin.get();
+   // configure detector
+   Planar1D *num = new Planar1D;
+   num->Thickness=1*cm;
+   num->V0=0*volt;
+   num->V1=800*volt;
+   num->SetAverageImpurity(1e10/cm3);
+   num->Dump();
+   cout<<"Press any key to continue"<<endl; cin.get();
 
-   // calculate fields with two different methods
-   detector->CalculatePotential(kSOR2);
-   detector->SaveField("planar1dSOR2.root");
-   detector->CalculatePotential(kAnalytic);
-   detector->SaveField("planar1dTRUE.root");
+   // make a copy of the detector configuration
+   Planar1D *ana = (Planar1D*) num->Clone("ana");
+
+   // calculate potential using SOR method
+   num->CalculatePotential(kSOR2);
+
+   // fill grid with analytic result
+   ana->CalculatePotential(kAnalytic);
 
    // prepare drawing style
    gROOT->SetStyle("Plain"); // pick up a good drawing style to modify
@@ -33,13 +33,11 @@ void planar1d()
    gStyle->SetPadTopMargin(0.02);
 
    // compare numerical result to analytic calculation
-   TChain *tn = new TChain("t");
-   tn->Add("planar1dSOR2.root");
+   TTree *tn = num->GetTree();
    tn->Draw("v:c1");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
 
-   TChain *ta = new TChain("t");
-   ta->Add("planar1dTRUE.root");
+   TTree *ta = ana->GetTree();
    ta->Draw("v:c1");
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
 
@@ -63,6 +61,6 @@ void planar1d()
    gPad->Print("planar1d.png");
 
    // calculate capacitance
-   double c = detector->GetCapacitance()/pF;
+   double c = num->GetCapacitance()/pF;
    cout<<"capacitance is "<<c<<" pF per cm2"<<endl;
 }
