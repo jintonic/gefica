@@ -59,8 +59,4 @@ void compare2analytic()
    l->Draw();
 
    gPad->Print("planar1d.png");
-
-   // calculate capacitance
-   double c = num->GetCapacitance()/pF;
-   cout<<"capacitance is "<<c<<" pF/cm2"<<endl;
 }
