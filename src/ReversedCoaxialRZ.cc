@@ -111,10 +111,3 @@ void ReversedCoaxialRZ::Initialize()
    }
    SetupBoundary();
 }
-//_____________________________________________________________________________
-//
-bool ReversedCoaxialRZ::CalculatePotential(EMethod method)
-{
-   if(!fIsLoaded)Initialize();
-   return RZ::CalculatePotential(method);
-}

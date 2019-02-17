@@ -2,13 +2,6 @@
 #include "Planar1D.h"
 using namespace GeFiCa;
 
-Planar1D::Planar1D(int n) : X(n), Thickness(1*cm)
-{
-   SetName("p1d");
-   SetTitle("1D Planar detector");
-} 
-//_____________________________________________________________________________
-//
 void Planar1D::Initialize()
 {
    if (Thickness<=0) {
@@ -23,13 +16,6 @@ void Planar1D::Initialize()
    double slope = (V1-V0)/(n-1);
    for (int i=0; i<n; i++) fV[i]=V0+slope*i;
    fV[n-1]=V1;
-}
-//_____________________________________________________________________________
-//
-bool Planar1D::CalculatePotential(EMethod method)
-{
-   if (!fIsLoaded) Initialize();
-   return X::CalculatePotential(method);
 }
 //_____________________________________________________________________________
 //

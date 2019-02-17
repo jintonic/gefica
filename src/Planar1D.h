@@ -12,11 +12,15 @@ class GeFiCa::Planar1D : public GeFiCa::X
    public :
       double Thickness; ///< thickness of planar detector
 
-      Planar1D(int n=101); ///< default constructor
+      /**
+       * Default constructor for Planar1D.
+       */
+      Planar1D(int n=101, ///< number of grid points
+            const char *name="p1d",
+            const char *title="1D planar detector")
+         : X(n, name, title), Thickness(1*cm) {};
 
-      void Initialize(); ///< initialize data members
-
-      bool CalculatePotential(EMethod method=kSOR2);
+      virtual void Initialize();
 
       ClassDef(Planar1D, 1);
 

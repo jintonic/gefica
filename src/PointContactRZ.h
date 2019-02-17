@@ -14,7 +14,6 @@ class GeFiCa::PointContactRZ : public GeFiCa::RZ
      Radius(1),Z(1),Z0(0), PointContactR(0.4),PointContactZ(0.2){};
 
      void Initialize();
-     bool CalculatePotential(EMethod method=kSOR2);
      void BoundaryOnPointcontact();
 
      ClassDef(PointContactRZ,1);

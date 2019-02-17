@@ -46,10 +46,3 @@ bool TrueCoaxial1D::Analytic()
    }
    return true;
 }
-//_____________________________________________________________________________
-//
-bool TrueCoaxial1D::CalculatePotential(EMethod method)
-{
-   if(!fIsLoaded)Initialize();
-   return X::CalculatePotential(method);
-}

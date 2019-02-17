@@ -48,7 +48,13 @@ class GeFiCa::X : public TNamed
       bool *fIsDepleted;///< [n] is a grid depleted
 
    public:
-      X(int nx=101 /**< [in] Number of grid points */);
+      /**
+       * Default constructor for GeFiCa::X.
+       * \param nx number of grid points
+       * \param name name of an object of this class saved in a ROOT file
+       * \param title description of this class
+       */
+      X(int nx=101, const char *name="x", const char *title="1D grid");
       virtual ~X();
       /**
        * Calculate potential using various methods.
@@ -61,7 +67,7 @@ class GeFiCa::X : public TNamed
       X& operator*=(double);
       X& operator+=(X*);
       
-      virtual void Initialize() {};
+      virtual void Initialize() {}; ///< setup and initialize grid
       /**
        * find surrounding index and return in int array
        */
@@ -99,7 +105,6 @@ class GeFiCa::X : public TNamed
 
    protected:
       bool * fIsFixed; ///< [n] are the values fixed at a grid point
-      bool fIsLoaded; ///< is the grid data loaded from a ROOT file
       double *fE1; ///< [n] electric field along the 1st coordinate
       double *fV; ///< [n] electric potential
       double *fC1; ///< [n] the 1st coordinate

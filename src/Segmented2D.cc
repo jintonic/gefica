@@ -67,10 +67,3 @@ void Segmented2D::Initialize()
 
    }
 }
-//_____________________________________________________________________________
-//
-bool Segmented2D::CalculatePotential(EMethod method)
-{
-   if (!fIsLoaded) Initialize();
-   return RhoPhi::CalculatePotential(method);
-}

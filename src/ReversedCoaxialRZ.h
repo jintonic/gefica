@@ -16,8 +16,7 @@ class GeFiCa::ReversedCoaxialRZ : public GeFiCa::RZ
      Z(1), Z0(0), PointContactR(0.4),PointContactZ(0), HoleInnerR(0.3), HoleOutterR(0.5),
      ConnorLength(0.2), ConnorZ(0.3), HoleZ(0.2) {};
 
-     void Initialize();
-     bool CalculatePotential(EMethod method=kSOR2);
+     virtual void Initialize();
      void SetupBoundary();
 
      ClassDef(ReversedCoaxialRZ,1);

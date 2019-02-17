@@ -70,10 +70,3 @@ void PointContactRZ::Initialize()
    }
    BoundaryOnPointcontact();
 }
-//_____________________________________________________________________________
-//
-bool PointContactRZ::CalculatePotential(EMethod method)
-{
-   if(!fIsLoaded)Initialize();
-   return RZ::CalculatePotential(method);
-}

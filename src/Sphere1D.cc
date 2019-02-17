@@ -42,10 +42,3 @@ bool Sphere1D::Analytic()
    }
    return true;
 }
-//_____________________________________________________________________________
-//
-bool Sphere1D::CalculatePotential(EMethod method)
-{
-   if(!fIsLoaded) Initialize();
-   return X::CalculatePotential(method);
-}

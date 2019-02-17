@@ -183,37 +183,6 @@ void PointContactDZ::Initialize()
 }
 //_____________________________________________________________________________
 //
-bool PointContactDZ::CalculatePotential(EMethod method)
-{
-   if (!fIsLoaded) Initialize();
-   // this commentd block are slow depletion voltage finder
-   while(0)
-   {
-      RZ::CalculatePotential(method);
-      if(!X::IsDepleted())
-      {
-         int maxn=GetIdxOfMaxV();
-         int minn=GetIdxOfMinV();
-         if(V0>V1)
-         {
-            V0=(fV[maxn]-V0)*1.01+V0;
-            V1=-(V1-fV[minn])*1.01+V1;
-         }
-         else
-         {
-            V1=(fV[maxn]-V1)*1.01+V1;
-            V0=-(V0-fV[minn])*1.01+V0;
-         }
-         Initialize();
-         RZ::CalculatePotential(method);
-         cout<<V0<<" "<<V1<<endl;
-      }
-      else break;
-   }
-   return RZ::CalculatePotential(method);
-}
-//_____________________________________________________________________________
-//
 bool PointContactDZ::CalculateField(int idx)
 {
    if (!XY::CalculateField(idx)) return false;

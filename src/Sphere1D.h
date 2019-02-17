@@ -12,9 +12,11 @@ class GeFiCa::Sphere1D : public GeFiCa::R
 
    public :
       Sphere1D(int nx=101) : R(nx),InnerRadius(0.3),OuterRadius(3) {};
+
+      virtual void Initialize();      
+
       ClassDef(Sphere1D, 1);
-      void Initialize();      
-      bool CalculatePotential(EMethod method=kSOR2);
+
    protected:
       /**
        * Analytic calculation of 1D field in spheric coordinates.

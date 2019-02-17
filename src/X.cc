@@ -11,21 +11,30 @@
 using namespace GeFiCa;
 using namespace std;
 
-X::X(int nx) : TNamed("X","X"), n1(nx), n(nx), Csor(1.95), Precision(1e-7),
-   MaxIterations(100000), V0(0), V1(2000*volt)
-{ 
+X::X(int nx, const char *name, const char *title) : TNamed(name,title), n1(nx),
+   n(nx), Csor(1.95), Precision(1e-7), MaxIterations(1e5), V0(0), V1(2e3*volt)
+{
    if (n<10) { Warning("X","n<10, set it to 11"); n=11; n1=11; }
 
-   fIsLoaded=false; // a fresh calculation, not loaded from a ROOT file
    fV=new double[n];
    fE1=new double[n];
    fC1=new double[n];
-   fIsFixed=new bool[n];
    fdC1p=new double[n];
    fdC1m=new double[n];
-   fImpurity=new double[n];
+   fIsFixed=new bool[n];
    fIsDepleted=new bool[n];
-   for (int i=0;i<n;i++) fIsDepleted[i]=true;
+   fImpurity=new double[n];
+
+   for (int i=0;i<n;i++) {
+      fV[i]=0;
+      fE1[i]=0;
+      fC1[i]=0;
+      fdC1m[i]=0;
+      fdC1p[i]=0;
+      fIsFixed[i]=false;
+      fIsDepleted[i]=true;
+      fImpurity[i]=0;
+   }
 }
 //_____________________________________________________________________________
 //
@@ -137,9 +146,11 @@ int* X::FindSurroundingMatrix(int idx)
 //
 bool X::CalculatePotential(EMethod method)
 {
-   TStopwatch watch; watch.Start();
+   if (fdC1p[0]==0) Initialize(); // setup and initialize grid if it's not done
    if (method==kAnalytic) return Analytic();
+
    cout<<" Calculate field ..."<<endl;
+   TStopwatch watch; watch.Start();
    int cnt=0;
    while (cnt++<MaxIterations) {
       double XUpSum=0;
@@ -341,7 +352,6 @@ void X::LoadField(const char *fin)
       fIsDepleted[i]=dep;
    }
 
-   fIsLoaded=true;
    delete t;
 }
 //_____________________________________________________________________________

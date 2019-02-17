@@ -10,12 +10,9 @@ class GeFiCa::TrueCoaxial2D : public GeFiCa::RhoPhi
    public :
       double InnerRadius,OuterRadius;
 
-   public:
-
       TrueCoaxial2D(int r,int O) : RhoPhi(r, O) ,InnerRadius(0.5),OuterRadius(3){};
-      void Initialize(); 
-      bool CalculatePotential(EMethod method=kSOR2);
 
+      virtual void Initialize(); 
 
       ClassDef(TrueCoaxial2D,1);
 };

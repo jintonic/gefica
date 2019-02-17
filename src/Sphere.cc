@@ -23,10 +23,3 @@ void Sphere::Initialize()
       fIsFixed[i+n1-1]=true;
    }
 }
-//_____________________________________________________________________________
-//
-bool Sphere::CalculatePotential(EMethod method)
-{
-   if(!fIsLoaded) Initialize();
-   return X::CalculatePotential(method);
-}
