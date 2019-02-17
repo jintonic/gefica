@@ -2,9 +2,9 @@
 #define GeFiCa_X_H
 
 #include <TNamed.h>
-#include <string>
 
 class TF3;
+class TTree;
 
 namespace GeFiCa { 
    enum EMethod ///< Methods to calculate fields
@@ -99,6 +99,8 @@ class GeFiCa::X : public TNamed
        */
       double GetCapacitance();
 
+      virtual TTree* GetTree(); ///< create &/or return a TTree with field data
+
       ClassDef(X,1);
 
    protected:
@@ -109,7 +111,8 @@ class GeFiCa::X : public TNamed
       double *fdC1m; ///< [n] step length to previous grid point alone C1
       double *fImpurity; ///< [n] net impurity concentration (Nacceptor-Ndonor)
       bool *fIsFixed; ///< [n] true if field values are fixed
-      bool *fIsDepleted;///< [n] true if a grid point is depleted
+      bool *fIsDepleted; ///< [n] true if a grid point is depleted
+      TTree *fTree; ///<! ROOT tree to assist field visualization
  
       /**
        * Initialize fC1, fdC1p, fdC1m, fIsFixed
