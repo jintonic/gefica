@@ -18,7 +18,7 @@ class GeFiCa::Planar1D : public GeFiCa::X
       Planar1D(int n=101, ///< number of grid points
             const char *name="p1d",
             const char *title="1D planar detector")
-         : X(n, name, title), Thickness(1*cm) {};
+         : X(n, name, title), Thickness(1) {};
 
       virtual void Initialize();
 

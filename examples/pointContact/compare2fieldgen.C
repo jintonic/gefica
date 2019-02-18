@@ -5,7 +5,7 @@ void drawresult()
    TTree *tm1 = new TTree("tm1","tm1");
    tm1->ReadFile("ev.dat", "r:z:v:e:er:ez");
    tm1->Draw("z:r:v","","colz");
-   //t->AddFriend("t2=t","point2dSOR2.root");
+   //t->AddFriend("t2=t","ppcSOR2.root");
    //t->Draw("z:(t2.p-v)","z!=1&r!=1&z<1&r>34.&r<34.5","");
    //TCanvas *can = new TCanvas;
    //t->Draw("r:(t2.p-v)","z>=0&z<0.2","");
@@ -13,7 +13,7 @@ void drawresult()
    // draw GeFiCa result
    TCanvas *c2 = new TCanvas;
    TTree *tg = new TTree("tg","tg");
-   tg->ReadFile("result.txt", "r:z:v:d:e1:e2:e:de1:de2:de");
+   tg->ReadFile("gVSf.txt", "r:z:v:d:e1:e2:e:de1:de2:de");
    tg->Draw("z:r:v","","colz");
    TCanvas *c4 = new TCanvas;
    
@@ -40,11 +40,11 @@ void drawresult()
 
 //______________________________________________________________________________
 //
-void compare2fieldgen(const char *gefica="point2dSOR2.root",
+void compare2fieldgen(const char *gefica="ppc2dSOR2.root",
       const char *fieldgen="ev.dat")
 {
    GeFiCa::PointContactDZ *detector2 = new GeFiCa::PointContactDZ(1036,506);
-   detector2->LoadField("point2dSOR2.root");
+   detector2->LoadField("ppc2dSOR2.root");
 
    ifstream infile("ev.dat"); if (!infile.is_open()) exit(-1);
    ofstream outfile("gVSf.txt");

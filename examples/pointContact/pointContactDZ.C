@@ -4,16 +4,16 @@
    detector2->Z=5.05*GeFiCa::cm;
    detector2->PointContactR=0.14*GeFiCa::cm;
    detector2->PointContactZ=0.21*GeFiCa::cm;
-   detector2->WrapArroundR=3.350*GeFiCa::cm;
-   detector2->TaperLength=1*GeFiCa::cm;
-   detector2->TaperZ=1*GeFiCa::cm;
+   detector2->WrapArroundR=3.450*GeFiCa::cm;
+   detector2->TaperLength=0.1;//1*GeFiCa::cm;
+   detector2->TaperZ=0.1;//1*GeFiCa::cm;
 
    TF3 *im=new TF3("f","-0.318e10+0.025e10*y");
 
    detector2->MaxIterations=1e5;
    detector2->Precision=1e-8;
    detector2->Csor=1.994;
-   detector2->V0=500*GeFiCa::volt;
+   detector2->V0=899*GeFiCa::volt;
    detector2->V1=0*GeFiCa::volt;
 
    detector2->SetImpurity(im);

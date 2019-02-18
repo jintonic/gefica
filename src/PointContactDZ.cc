@@ -21,9 +21,9 @@ void PointContactDZ::SetBoundary()
       {
          fdC1m[i]=fC1[i]-PointContactR;
       }
-      if(-fC1[i]+PointContactR<fdC1m[i]&&fC1[i]<0&&fC2[i]<PointContactZ)
+      if(-fC1[i]-PointContactR<fdC1p[i]&&fC1[i]<0&&fC2[i]<PointContactZ)
       {
-         fdC1p[i]=-fC1[i]+PointContactR;
+         fdC1p[i]=-fC1[i]-PointContactR;
       }
       if(WrapArroundR-fC1[i]<fdC1p[i]&&fC1[i]<WrapArroundR)
       {
