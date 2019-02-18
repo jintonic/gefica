@@ -9,6 +9,8 @@ using namespace std;
 //a great different potential on space close to point contact the current
 //design does not include when point contact is close to boundary of the whole
 //detector.
+//_____________________________________________________________________________
+//
 void PointContactDZ::SetBoundary()
 {
    for(int i=0;i<n;i++)
@@ -33,61 +35,33 @@ void PointContactDZ::SetBoundary()
       {
          fdC1p[i]=WrapArroundR+fC1[i];
       }
-      
    }
-}
-void PointContactDZ::BoundaryOnPointcontact()
-{
-   int index=FindIdx(PointContactR,PointContactZ,0,n2-1);
-   //cout<<index<<" "<<fC1[index]<<" "<<fC2[index]<<endl;
-   int idxZ=(index/n1-1)*n1;
-   int idxPos=index%n1-1;
-   //cout<<idxPos<<" "<<fC1[idxPos]<<" "<<fC2[idxPos]<<endl;
-   //cout<<idxZ<<" "<<fC1[idxZ]<<" "<<fC2[idxZ]<<endl;
+   double k=TaperZ/(TaperLength);
+   double b=-(Radius-TaperLength)*k;
 
-   for (int i=0;i<n1;i++) {
-      if (PointContactZ==0) break;
-      fC2[idxZ+i]=PointContactZ;//set z for the line where z is closest to pc's depth
-      //cout<<idxZ+i<<" "<< fC2[idxZ+i]<<"| ";
-
-      //set steps from depthline
-      fdC2m[idxZ+i]=fC2[idxZ+i]-fC2[idxZ+i-n1];
-      fdC2p[idxZ+i]=fC2[idxZ+i+n1]-fC2[idxZ+i];
-
-      //set steps for two line aside depth of pc
-      fdC2m[idxZ+i+n1]=fdC2p[idxZ+i];
-      fdC2p[idxZ+i-n1]=fdC2m[idxZ+i];
+   for(int i=0;i<n;i++)
+   {
+      if(fC2[i]<=fC1[i]*k+b)
+      {
+         fIsFixed[i]=true;
+         fV[i]=V0;
+      }
+      if(fC2[i]<=-fC1[i]*k+b)
+      {
+         fIsFixed[i]=true;
+         fV[i]=V0;
+      }
+      if(fC2[i]-(fC1[i]*k+b)<fdC2m[i])
+      {
+         fdC2m[i]=fC2[i]-(k*fC1[i]+b);
+         fdC1p[i]=fC2[i]-b-k*fC1[i];
+      }
+      if(fC2[i]-(-k*fC1[i]+b)<fdC2m[i])
+      {
+         fdC2m[i]=fC2[i]-(-fC1[i]*k+b);
+         fdC1m[i]=-fC2[i]*k+b-fC1[i];
+      }
    }
-
-   for(int i=0;i<n2;i++) {
-      fC1[idxPos+i*n1]=PointContactR;//set r for the line where r is closest to pc's R 
-
-      //set steps for Radius line
-      fdC1m[idxPos+i*n1]=fC1[idxPos+i*n1]-fC1[idxPos+i*n1-1];
-      fdC1p[idxPos+i*n1]=fC1[idxPos+i*n1+1]-fC1[idxPos+i*n1];
-
-      //set steps for two line aside the previous line
-      fdC1m[idxPos+i*n1+1]=fdC1p[idxPos+i*n1];
-      fdC1p[idxPos+i*n1-1]=fdC1m[idxPos+i*n1];
-   }
-   int idxNeg=n1-idxPos-1;
-   //cout<<idxNeg<<" "<<fC1[idxNeg]<<" "<<fC2[idxNeg]<<endl;
-   for(int i=0;i<n2;i++) {
-      fC1[idxNeg+i*n1]=-PointContactR;//set r for the line where r is closest to pc's R 
-
-      //set steps for Radius line
-      fdC1m[idxNeg+i*n1]=fC1[idxNeg+i*n1]-fC1[idxNeg+i*n1-1];
-      fdC1p[idxNeg+i*n1]=fC1[idxNeg+i*n1+1]-fC1[idxNeg+i*n1];
-
-      //set steps for two line aside the previous line
-      fdC1m[idxNeg+i*n1+1]=fdC1p[idxNeg+i*n1];
-      fdC1p[idxNeg+i*n1-1]=fdC1m[idxNeg+i*n1];
-   }
-}
-//_____________________________________________________________________________
-//
-void PointContactDZ::BoundaryonWarpAround()
-{
 }
 //_____________________________________________________________________________
 //
@@ -124,7 +98,6 @@ void PointContactDZ::Initialize()
    {
       fC1[i]=fC1[i]+RLowerBound;
    } 
-   SetBoundary();
 
    // set initial potential values
    for(int i=n;i-->0;) {
@@ -154,32 +127,8 @@ void PointContactDZ::Initialize()
          fV[i]=V0;
       }
    }
-   double k=TaperZ/(TaperLength);
-   double b=-(Radius-TaperLength)*k;
 
-   for(int i=0;i<n;i++)
-   {
-      if(fC2[i]<=fC1[i]*k+b)
-      {
-         fIsFixed[i]=true;
-         fV[i]=V0;
-      }
-      if(fC2[i]<=-fC1[i]*k+b)
-      {
-         fIsFixed[i]=true;
-         fV[i]=V0;
-      }
-      if(fC2[i]-(fC1[i]*k+b)<fdC2m[i])
-      {
-         fdC2m[i]=fC2[i]-(k*fC1[i]+b);
-         fdC1p[i]=fC2[i]-b-k*fC1[i];
-      }
-      if(fC2[i]-(-k*fC1[i]+b)<fdC2m[i])
-      {
-         fdC2m[i]=fC2[i]-(-fC1[i]*k+b);
-         fdC1m[i]=-fC2[i]*k+b-fC1[i];
-      }
-   }
+   SetBoundary();
 }
 //_____________________________________________________________________________
 //

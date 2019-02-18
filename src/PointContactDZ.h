@@ -20,9 +20,7 @@ class GeFiCa::PointContactDZ : public GeFiCa::RZ
       /**
        * Move grids close to point contact boundary to the boundary.
        */
-      void BoundaryOnPointcontact();
       void SetBoundary();
-      void BoundaryonWarpAround();
       bool SaveFieldAsFieldgen(const char * fout);
 
       ClassDef(PointContactDZ,1);
