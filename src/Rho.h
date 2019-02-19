@@ -3,14 +3,17 @@
 
 #include "X.h"
 
-namespace GeFiCa { 
-   class Rho;
-}
+namespace GeFiCa { class Rho; }
 
+/**
+ * 1D cylindrical coordinates.
+ */
 class GeFiCa::Rho : public X 
 {
    public:
-      Rho(int nx=101): X(nx) {SetName("Rho"); SetTitle("Rho"); }
+      Rho(int n=101, const char *name="rho",
+            const char *title="1D cylindrical coordinates")
+         : X(n, name, title) {};
 
       virtual double GetPotential(double rho)
       {return GetData(rho,kPotential);};

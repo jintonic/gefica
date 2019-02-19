@@ -4,12 +4,10 @@ void compare2analytic()
 {
    // configure detector
    Planar1D *num = new Planar1D;
-   num->Thickness=1*cm;
    num->V0=0*volt;
    num->V1=800*volt;
+   num->Thickness=1*cm;
    num->SetAverageImpurity(1e10/cm3);
-   num->Dump();
-   cout<<"Press any key to continue"<<endl; cin.get();
 
    // make a copy of the detector configuration
    Planar1D *ana = (Planar1D*) num->Clone("ana");
@@ -32,15 +30,15 @@ void compare2analytic()
    gStyle->SetPadLeftMargin(0.12);
    gStyle->SetPadTopMargin(0.02);
 
-   // compare numerical result to analytic calculation
+   // generate graphics
    TTree *tn = num->GetTree();
    tn->Draw("v:c1");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
-
    TTree *ta = ana->GetTree();
    ta->Draw("v:c1");
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
 
+   // compare numerical result to analytic calculation
    gn->SetMarkerColor(kBlue);
    gn->SetMarkerStyle(kCircle);
    gn->SetMarkerSize(0.8);

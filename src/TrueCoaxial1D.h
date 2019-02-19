@@ -5,14 +5,20 @@
 
 namespace GeFiCa { class TrueCoaxial1D; }
 
+/**
+ * Grid setup for 1D true coaxial detectors.
+ */
 class GeFiCa::TrueCoaxial1D : public GeFiCa::Rho
 {
    public :
-      double OuterRadius; // Outer radius of the detector
-      double InnerRadius; // Inner radius of the detector
+      double OuterRadius; ///< Outer radius of the detector
+      double InnerRadius; ///< Inner radius of the detector
 
-   public :
-      TrueCoaxial1D(int nx=50) : Rho(nx),OuterRadius(3),InnerRadius(0.5) {};
+      /**
+       * Default constructor.
+       */
+      TrueCoaxial1D(int n=101, const char *name="tc1",
+            const char *title="1D true coaxial detector");
 
       virtual void Initialize();
 

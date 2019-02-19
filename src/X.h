@@ -45,7 +45,6 @@ class GeFiCa::X : public TNamed
       double V0;///< voltage of one electrode
       double V1;///< voltage of the other electrode
 
-   public:
       /**
        * Default constructor for GeFiCa::X.
        * \param nx number of grid points

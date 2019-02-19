@@ -1,25 +1,22 @@
-#include <iostream>
-using namespace std;
-
-#include "TrueCoaxial1D.h"
 #include "Units.h"
+#include "TrueCoaxial1D.h"
 using namespace GeFiCa;
 
+TrueCoaxial1D::TrueCoaxial1D(int n, const char *name, const char *title)
+   : Rho(n, name, title), OuterRadius(3*cm), InnerRadius(0.5*cm) {};
+//_____________________________________________________________________________
+//
 void TrueCoaxial1D::Initialize()
 {
-   if (InnerRadius>=OuterRadius) {
-      Warning("Initialize",
-            "Lower bound (%f) >= upper bound (%f)! No grid is created!",
-            InnerRadius, OuterRadius);
-      return;
-   }
-   double steplength=(OuterRadius-InnerRadius)/(n-1);
-   SetStepLength(steplength);
-   for(int i=n;i-->0;)fC1[i]=fC1[i]+InnerRadius;
-   fIsFixed[0]=true;
-   fIsFixed[n-1]=true;
-   double slope = (V0-V1)/(n-1);
-   for (int i=0; i<n; i++) fV[i]=V1+slope*i;
+   if (InnerRadius>=OuterRadius) Fatal("Initialize",
+         "Inner R (%.1f) >= Outer R (%.1f)! Abort!", InnerRadius, OuterRadius);
+ 
+   double stepLength=(OuterRadius-InnerRadius)/(n-1);
+   SetStepLength(stepLength);
+   for (int i=n;i-->0;) fC1[i]=fC1[i]+InnerRadius;
+   fIsFixed[0]=true; fIsFixed[n-1]=true;
+   double slope = (V1-V0)/(n-1);
+   for (int i=0; i<n; i++) fV[i]=V0+slope*i;
 }
 //_____________________________________________________________________________
 //
