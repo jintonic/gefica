@@ -1,29 +1,21 @@
-//////////////////////
-//R
-//1D Field under Polar co
-
 #ifndef GeFiCa_R_H
 #define GeFiCa_R_H
 
 #include "X.h"
 
-namespace GeFiCa { 
-   class R;
-}
+namespace GeFiCa { class R; }
 
+/**
+ * 1D spherical coordinate.
+ */
 class GeFiCa::R : public X 
 {
    public:
-      R(int nx=101): X(nx) { SetName("R"); SetTitle("R"); }
+      R(int n=101, const char *name="r",
+            const char *title="1D spherical coordinate")
+         : X(n, name, title) {}; ///< Default constructor
 
       ClassDef(R,1);
-
-      virtual double GetPotential(double r)
-      {return GetData(r,kPotential);};
-      virtual double GetE1(double r,double theta,double phi)
-      {return GetData(r,kE1);};
-      virtual double GetImpurity(double r)
-      {return GetData(r,kImpurity);};
 
    protected:
       virtual void DoSOR2(int idx);

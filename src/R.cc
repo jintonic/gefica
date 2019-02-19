@@ -1,14 +1,5 @@
-#include <iostream>
-using namespace std;
-
-#include <TFile.h>
-#include <TTree.h>
-#include <TChain.h>
-#include <TVectorD.h>
-#include <TF1.h>
-
-#include "R.h"
 #include "Units.h"
+#include "R.h"
 using namespace GeFiCa;
 
 void R::DoSOR2(int idx)

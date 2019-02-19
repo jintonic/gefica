@@ -1,21 +1,20 @@
-#include "Sphere1D.h"
 #include "Units.h"
-#include <iostream>
+#include "Sphere1D.h"
 using namespace GeFiCa;
 
+Sphere1D::Sphere1D(int n, const char *name, const char *title)
+   : R(n, name, title), InnerRadius(0.3*cm), OuterRadius(3*cm) {};
+//_____________________________________________________________________________
+//
 void Sphere1D::Initialize()
 {
-   if (OuterRadius<=InnerRadius) {
-      Warning("Initialize",
-            "Lower bound (%f) >= upper bound (%f)! No grid is created!",
-            InnerRadius, OuterRadius);
-      return;
-   }
-   double steplength=(OuterRadius-InnerRadius)/(n-1);
-   SetStepLength(steplength); // fC1[i] set to [0, (n-1)*steplength]
+   if (OuterRadius<=InnerRadius) Fatal("Initialize",
+         "Inner R (%.1f) >= outer R (%.1f)! Abort!", InnerRadius, OuterRadius);
+
+   double stepLength=(OuterRadius-InnerRadius)/(n-1);
+   SetStepLength(stepLength);
    for (int i=n;i-->0;) fC1[i]=fC1[i]+InnerRadius;
-   fIsFixed[0]=true;
-   fIsFixed[n-1]=true;
+   fIsFixed[0]=true; fIsFixed[n-1]=true;
    double slope = (V1-V0)/(n-1);
    for (int i=0; i<n; i++) fV[i]=V0+slope*i;
 }

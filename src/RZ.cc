@@ -1,17 +1,10 @@
-#include <TF2.h>
-#include <TFile.h>
-#include <TChain.h>
-#include <TVectorD.h>
-
-#include "RZ.h"
 #include "Units.h"
-
+#include "RZ.h"
 using namespace GeFiCa;
 
-//_____________________________________________________________________________
-//
 #include <iostream>
 using namespace std;
+
 void RZ::DoSOR2(int idx)
 {
    if (fIsFixed[idx])return; 

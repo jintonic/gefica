@@ -1,30 +1,27 @@
+// @file compare3d2analytic.cc @example sphere/compare3d2analytic.cc
 // compare numerical result to analytic calculation for 3D sphere detector
+using namespace GeFiCa;
+void compare3d2analytic()
 {
-   GeFiCa::Sphere *sphere3d=new GeFiCa::Sphere(101,10,10);
-   sphere3d->MaxIterations=1e5;
-   sphere3d->Csor=1.96;
-   sphere3d->V1=0*GeFiCa::volt;
-   sphere3d->V0=2000*GeFiCa::volt;
-   sphere3d->InnerRadius=0.5*GeFiCa::cm;
-   sphere3d->OuterRadius=2.5*GeFiCa::cm;
-   sphere3d->SetAverageImpurity(1e10/GeFiCa::cm3);
-   sphere3d->Dump();
-   cout<<"press any key to continue"<<endl;
-   cin.get();
+   // configure detector
+   Sphere3D *num = new Sphere3D;
+   num->InnerRadius=0.5*cm;
+   num->OuterRadius=2.5*cm;
+   num->SetAverageImpurity(3e9/cm3);
+   num->V0=900*volt;
+   num->V1=0*volt;
+   num->Dump();
+   cout<<"press any key to continue"<<endl; cin.get();
+   num->CalculatePotential(kSOR2); // calculate potential using SOR method
 
    //use analytic method from 1D sphere
-   GeFiCa::Sphere1D *sphere1d=new GeFiCa::Sphere1D(101);
-   sphere1d->V1=0*GeFiCa::volt;
-   sphere1d->V0=2000*GeFiCa::volt;
-   sphere1d->InnerRadius=0.5*GeFiCa::cm;
-   sphere1d->OuterRadius=2.5*GeFiCa::cm;
-   sphere1d->SetAverageImpurity(1e10/GeFiCa::cm3);
-
-   // calculate fields with two different methods
-   sphere1d->CalculatePotential(GeFiCa::kAnalytic);
-   sphere1d->SaveField("sphere1dTrue.root");
-   sphere3d->CalculatePotential(GeFiCa::kSOR2);
-   sphere3d->SaveField("sphere3dSOR2.root");
+   Sphere1D *ana = new Sphere1D;
+   ana->InnerRadius=0.5*cm;
+   ana->OuterRadius=2.5*cm;
+   ana->SetAverageImpurity(3e9/cm3);
+   ana->V0=900*volt;
+   ana->V1=0*volt;
+   ana->CalculatePotential(kAnalytic); // fill grid with analytic result
 
    // prepare drawing style
    gROOT->SetStyle("Plain"); // pick up a good drawing style to modify
@@ -39,22 +36,20 @@
    gStyle->SetPadTopMargin(0.02);
 
    // generate graphics
-   TChain *tn = new TChain("t");
-   tn->Add("sphere3dSOR2.root");
+   TTree *tn = num->GetTree();
    tn->Draw("v:c1");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
 
-   TChain *ta = new TChain("t");
-   ta->Add("sphere1dTrue.root");
+   TTree *ta = ana->GetTree();
    ta->Draw("v:c1");
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
 
-   // make final plot
+   // compare numerical result to analytic calculation
    gn->SetMarkerColor(kBlue);
    gn->SetMarkerStyle(kCircle);
    gn->SetMarkerSize(0.8);
    ga->SetLineColor(kRed);
-   gn->SetTitle(";Thickness [cm];Potential [V]");
+   gn->SetTitle(";Radius [cm];Potential [V]");
    gn->Draw("ap");
    ga->Draw("l");
 
@@ -63,5 +58,5 @@
    l->AddEntry(gn,"SOR2","p");
    l->Draw();
 
-   gPad->Print("sphere3d.png");
+   gPad->Print("s3d.png");
 }

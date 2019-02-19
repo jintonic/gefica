@@ -1,3 +1,4 @@
+// @file X.h
 #ifndef GeFiCa_X_H
 #define GeFiCa_X_H
 
@@ -6,7 +7,7 @@
 class TF3;
 class TTree;
 
-namespace GeFiCa { 
+namespace GeFiCa { ///< namespace for all classes
    enum EMethod ///< Methods to calculate fields
    {
       kAnalytic,
@@ -22,17 +23,9 @@ namespace GeFiCa {
       kE3,
    };
 
-   class X;
+   class X; ///< 1D coordinate
 }
 
-/**
- * 1D grid for field calculation.
- *
- * Successive Over-Relaxation (SOR) method is used to calculate the field in a
- * grid. Please refer to https://mediatum.ub.tum.de/node?id=969435 for detailed
- * description of SOR method. It will have some error compared with actual data
- * but should be close.  Analytic solution is also provided for comparison.
- */
 class GeFiCa::X : public TNamed 
 {
    public:

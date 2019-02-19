@@ -1,22 +1,26 @@
+// @file compare1d2analytic.cc @example sphere/compare1d2analytic.cc
 // compare numerical result to analytic calculation for 1D Sphere detector
+using namespace GeFiCa;
+void compare1d2analytic()
 {
-   GeFiCa::Sphere1D *detector=new GeFiCa::Sphere1D(101);
-   detector->MaxIterations=1e5;
-   detector->Csor=1.9;
-   detector->V1=0*GeFiCa::volt;
-   detector->V0=900*GeFiCa::volt;
-   detector->InnerRadius=0.3*GeFiCa::cm;
-   detector->OuterRadius=1*GeFiCa::cm;
-   detector->SetAverageImpurity(1e10/GeFiCa::cm3);
-   detector->Dump();
-   cout<<"press any key to continue"<<endl;
-   cin.get();
+   // configure detector
+   Sphere1D *num=new Sphere1D;
+   num->InnerRadius=0.3*cm;
+   num->OuterRadius=1*cm;
+   num->SetAverageImpurity(3e9/cm3);
+   num->V0=900*volt;
+   num->V1=0*volt;
+   num->Dump();
+   cout<<"press any key to continue"<<endl; cin.get();
 
-   // calculate fields with two different methods
-   detector->CalculatePotential(GeFiCa::kSOR2);
-   detector->SaveField("sphere1dSOR2.root");
-   detector->CalculatePotential(GeFiCa::kAnalytic);
-   detector->SaveField("sphere1dTRUE.root");
+   // make a copy of the detector configuration
+   Sphere1D *ana = (Sphere1D*) num->Clone("ana");
+
+   // calculate potential using SOR method
+   num->CalculatePotential(kSOR2);
+
+   // fill grid with analytic result
+   ana->CalculatePotential(kAnalytic);
 
    // prepare drawing style
    gROOT->SetStyle("Plain"); // pick up a good drawing style to modify
@@ -31,16 +35,15 @@
    gStyle->SetPadTopMargin(0.02);
 
    // generate graphics
-   TChain *tn = new TChain("t");
-   tn->Add("sphere1dSOR2.root");
+   TTree *tn = num->GetTree();
    tn->Draw("v:c1");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
 
-   TChain *ta = new TChain("t");
-   ta->Add("sphere1dTRUE.root");
+   TTree *ta = ana->GetTree();
    ta->Draw("v:c1");
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
 
+   // compare numerical result to analytic calculation
    gn->SetMarkerColor(kBlue);
    gn->SetMarkerStyle(kCircle);
    gn->SetMarkerSize(0.8);
@@ -57,5 +60,5 @@
    l->AddEntry(gn,"SOR2","p");
    l->Draw();
 
-   gPad->Print("sphere1d.png");
+   gPad->Print("s1d.png");
 }
