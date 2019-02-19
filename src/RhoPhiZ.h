@@ -6,6 +6,9 @@ class TF3;
 
 namespace GeFiCa { class RhoPhiZ; }
 
+/**
+ * 3D cylindrical coordinates.
+ */
 class GeFiCa::RhoPhiZ : public GeFiCa::XYZ
 {
    public:

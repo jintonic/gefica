@@ -5,6 +5,10 @@
 
 namespace GeFiCa { class PointContactRZ; }
 
+/**
+ * Grid setup for 2D point contact detectors.
+ * The grid is setup in [0, Radius] and [0, Z0].
+ */
 class GeFiCa::PointContactRZ : public GeFiCa::RZ
 {
   public:

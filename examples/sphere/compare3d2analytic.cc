@@ -1,4 +1,3 @@
-// @file compare3d2analytic.cc @example sphere/compare3d2analytic.cc
 // compare numerical result to analytic calculation for 3D sphere detector
 using namespace GeFiCa;
 void compare3d2analytic()

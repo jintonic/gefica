@@ -6,6 +6,9 @@
 
 namespace GeFiCa { class Segmented2D; }
 
+/**
+ * Grid setup for 2D segmented true coaxial detectors.
+ */
 class GeFiCa::Segmented2D : public GeFiCa::RhoPhi
 {
    public:

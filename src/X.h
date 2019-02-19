@@ -23,9 +23,12 @@ namespace GeFiCa { ///< namespace for all classes
       kE3,
    };
 
-   class X; ///< 1D coordinate
+   class X;
 }
 
+/**
+ * 1D coordinate.
+ */
 class GeFiCa::X : public TNamed 
 {
    public:

@@ -6,7 +6,7 @@
 namespace GeFiCa { class Sphere1D; }
 
 /**
- * Grid setup for 1d spherical detector.
+ * Grid setup for 1d spherical detectors.
  */
 class GeFiCa::Sphere1D : public GeFiCa::R
 {

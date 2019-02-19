@@ -6,7 +6,7 @@
 namespace GeFiCa { class Sphere3D;}
 
 /**
- * Grid setup for 3D sphere detector.
+ * Grid setup for 3D spherical detectors.
  */
 class GeFiCa::Sphere3D: public GeFiCa::RThetaPhi
 {

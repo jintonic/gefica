@@ -5,20 +5,17 @@
 
 namespace GeFiCa { class Planar1D; }
 /**
- * Configuration for 1D planar detectors.
+ * Grid setup for 1D planar detectors.
  */
 class GeFiCa::Planar1D : public GeFiCa::X
 {
    public :
       double Thickness; ///< thickness of planar detector
 
-      /**
-       * Default constructor for Planar1D.
-       */
-      Planar1D(int n=101, ///< number of grid points
+      Planar1D(int n=101, ///< [in] number of grid points
             const char *name="p1d",
             const char *title="1D planar detector")
-         : X(n, name, title), Thickness(1) {};
+         : X(n, name, title), Thickness(1) {}; ///< Default constructor
 
       virtual void Initialize();
 

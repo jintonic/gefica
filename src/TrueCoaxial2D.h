@@ -5,6 +5,9 @@
 
 namespace GeFiCa { class TrueCoaxial2D; }
 
+/**
+ * Grid setup for 2D true coaxial detectors.
+ */
 class GeFiCa::TrueCoaxial2D : public GeFiCa::RhoPhi
 {
    public :
