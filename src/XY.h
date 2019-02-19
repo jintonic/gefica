@@ -6,16 +6,16 @@
 namespace GeFiCa { class XY; }
 
 /**
- * 2D grid for field calculation in Cartesian coordinates.
+ * 2D coordinates.
  */
 class GeFiCa::XY : public GeFiCa::X
 {
    public:
       int n2; ///< number of grid points along the 2nd coordinate
 
-      XY(int nx=101, int ny=101);
-
-      virtual ~XY();
+      XY(int nx=101, int ny=101, const char *name="xy",
+            const char *title="2D coordinates"); ///< Default constructor
+      virtual ~XY(); ///< Destructor
 
       virtual void SaveField(const char *fout);
       virtual void LoadField(const char *fin);

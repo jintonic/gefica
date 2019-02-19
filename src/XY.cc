@@ -7,7 +7,8 @@
 #include "Units.h"
 using namespace GeFiCa;
 
-XY::XY(int nx, int ny): X(nx*ny), n2(ny), fE2(0), fC2(0), fdC2p(0), fdC2m(0)
+XY::XY(int nx, int ny, const char *name, const char *title)
+   : X(nx*ny, name, title), n2(ny), fE2(0), fC2(0), fdC2p(0), fdC2m(0)
 {
    n1=nx; // n1 is set to nx*ny through X constructor, it is fixed here
    fE2=new double[n];

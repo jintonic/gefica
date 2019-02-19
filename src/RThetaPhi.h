@@ -5,11 +5,19 @@
 
 namespace GeFiCa { class RThetaPhi; }
 
+/**
+ * 3D spherical coordinates.
+ */
 class GeFiCa::RThetaPhi : public GeFiCa::XYZ
 {
    public:
-      RThetaPhi(int n_r=0, int n_theta=0, int n_phi=0): 
-         XYZ(n_r, n_theta, n_phi*2) {};
+      /**
+       * Default constructor.
+       */
+      RThetaPhi(int n_r=101, int n_theta=181, int n_phi=180,
+            const char *name="rtp",
+            const char *title="3D spherical coordinates")
+         : XYZ(n_r, n_theta, n_phi*2, name, title) {};
 
       ClassDef(RThetaPhi,1);
 
