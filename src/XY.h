@@ -40,9 +40,9 @@ class GeFiCa::XY : public GeFiCa::X
        * This is used for a variable impurity level that changes with x and y
        */
       virtual void SetImpurity(TF3 *Im);
-      /**
-       * This defines the class for the CINT library
-       */
+
+      virtual TTree* GetTree();
+
       ClassDef(XY,1);
 
    protected:

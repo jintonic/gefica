@@ -242,3 +242,29 @@ bool XY::CalculateField(int idx)
    }
    return true;
 }
+//_____________________________________________________________________________
+//
+TTree* XY::GetTree()
+{
+   X::GetTree(); // create tree
+
+   double e2,c2,dc2p,dc2m;
+   TBranch *be2 = fTree->Branch("e2",&e2,"e2/D");
+   TBranch *bc2 = fTree->Branch("c2",&c2,"c2/D");
+   TBranch *bp2 = fTree->Branch("dc2p",&dc2p,"dc2p/D");
+   TBranch *bm2 = fTree->Branch("dc2m",&dc2m,"dc2m/D");
+
+   for(int j=0;j<n;j++) {
+      e2= fE2[j];
+      c2= fC2[j];
+      dc2p=fdC2p[j];
+      dc2m=fdC2m[j];
+
+      be2->Fill();
+      bc2->Fill();
+      bp2->Fill();
+      bm2->Fill();
+   }
+
+   return fTree;
+}
