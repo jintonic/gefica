@@ -14,7 +14,7 @@ class GeFiCa::RThetaPhi : public GeFiCa::XYZ
       /**
        * Default constructor.
        */
-      RThetaPhi(int n_r=101, int n_theta=181, int n_phi=180,
+      RThetaPhi(int n_r=101, int n_theta=181, int n_phi=10,
             const char *name="rtp",
             const char *title="3D spherical coordinates")
          : XYZ(n_r, n_theta, n_phi*2, name, title) {};

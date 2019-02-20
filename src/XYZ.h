@@ -14,7 +14,7 @@ class GeFiCa::XYZ : public GeFiCa::XY
       int n3; ///< number of grid points along the 3nd coordinate
 
    public:
-      XYZ(int n1=101, int n2=101, int n3=101, const char *name="xyz",
+      XYZ(int n1=101, int n2=101, int n3=11, const char *name="xyz",
             const char *title="3D coordinates"); ///< Default constructor
       virtual ~XYZ();
 
