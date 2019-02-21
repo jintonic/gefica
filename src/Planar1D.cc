@@ -2,6 +2,10 @@
 #include "Planar1D.h"
 using namespace GeFiCa;
 
+Planar1D::Planar1D(int n, const char *name, const char *title)
+   : X(n, name, title), Thickness(1*cm) {};
+//_____________________________________________________________________________
+//
 void Planar1D::Initialize()
 {
    if (Thickness<=0) {
