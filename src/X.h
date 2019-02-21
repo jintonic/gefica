@@ -135,7 +135,7 @@ class GeFiCa::X : public TNamed
        */
       double GetData(double tarx, EOutput output); 
       /**
-       * Calculate fields at @para idx using SOR2.
+       * Calculate fields at @param idx using SOR2.
        */
       virtual void DoSOR2(int idx); 
       /**
