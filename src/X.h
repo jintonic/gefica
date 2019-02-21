@@ -9,24 +9,31 @@
 class TF3;
 class TTree;
 
+/**
+ * The only namespace in GeFiCa.
+ */
 namespace GeFiCa {
-   enum EMethod
-   {
-      kAnalytic,
+   /**
+    * Switches to use different calculation methods.
+    */
+   enum EMethod {
+      kAnalytic, ///< Analytic calculation
       kSOR2, ///< Successove over-relaxation method to the 2nd order
       kSOR4, ///< Successove over-relaxation method to the 4th order
-   }; ///< Methods to calculate fields
-   enum EOutput
-   {
-      kImpurity,
-      kPotential,
-      kE1,
-      kE2,
-      kE3,
-   }; ///< Different components of the fields
+   };
+   /**
+    * Switches to different output.
+    */
+   enum EOutput {
+      kImpurity, ///< crystal impurity concentration
+      kPotential, ///< electric potential
+      kE1, ///< Electric field conponent in the 1st coordinate
+      kE2, ///< Electric field conponent in the 2nd coordinate
+      kE3, ///< Electric field conponent in the 3rd coordinate
+   };
 
    class X;
-} ///< The only namespace in GeFiCa
+}
 
 /**
  * 1D coordinate.
@@ -49,7 +56,7 @@ class GeFiCa::X : public TNamed
        * \param name name of an object of this class saved in a ROOT file
        * \param title description of this class
        */
-      X(int nx=101, const char *name="x", const char *title="1D grid");
+      X(int nx=101, const char *name="x", const char *title="1D coordinate");
       virtual ~X();
       /**
        * Calculate potential using various methods.
