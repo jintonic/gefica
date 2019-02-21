@@ -1,4 +1,6 @@
-// @file X.h
+/** @file X.h
+ * Header defining base class GeFiCa::X.
+ */
 #ifndef GeFiCa_X_H
 #define GeFiCa_X_H
 
@@ -7,24 +9,24 @@
 class TF3;
 class TTree;
 
-namespace GeFiCa { ///< namespace for all classes
-   enum EMethod ///< Methods to calculate fields
+namespace GeFiCa {
+   enum EMethod
    {
       kAnalytic,
       kSOR2, ///< Successove over-relaxation method to the 2nd order
       kSOR4, ///< Successove over-relaxation method to the 4th order
-   };
-   enum EOutput ///< Different components of the fields
+   }; ///< Methods to calculate fields
+   enum EOutput
    {
       kImpurity,
       kPotential,
       kE1,
       kE2,
       kE3,
-   };
+   }; ///< Different components of the fields
 
    class X;
-}
+} ///< The only namespace in GeFiCa
 
 /**
  * 1D coordinate.

@@ -1,3 +1,6 @@
+/** @file Units.h
+ * A file defining commonly used units & constants.
+ */
 #ifndef GeFiCa_UNITS_H
 #define GeFiCa_UNITS_H
 

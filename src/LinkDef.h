@@ -1,3 +1,6 @@
+/** @file LinkDef.h
+ * https://root.cern.ch/selecting-dictionary-entries-linkdefh
+ */
 #ifdef __CLING__
 #pragma link C++ namespace GeFiCa;
 #pragma link C++ class GeFiCa::X+;
