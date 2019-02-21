@@ -6,7 +6,7 @@
 namespace GeFiCa { class Sphere1D; }
 
 /**
- * Grid setup for 1d spherical detectors.
+ * Grid setup for 1D spherical detectors.
  */
 class GeFiCa::Sphere1D : public GeFiCa::R
 {
@@ -14,8 +14,11 @@ class GeFiCa::Sphere1D : public GeFiCa::R
       double InnerRadius; ///< inner radius
       double OuterRadius; ///< outer radius
 
+      /**
+       * Default constructor.
+       */
       Sphere1D(int n=101, const char *name="s1d",
-            const char *title="1D spherical detector"); ///< Default constructor
+            const char *title="1D spherical detector");
 
       virtual void Initialize();      
 
