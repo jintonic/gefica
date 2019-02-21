@@ -26,7 +26,6 @@ void RhoPhi::DoSOR2(int idx)
          -density/epsilon/2+(prhop-prhom)/2/r/(h2+h3))
       /(1/h3/(h2+h3)+1/h2/(h2+h3)
             +1/r/r/h1/(h1+h4)+1/r/r/h4/(h1+h4));
-   fV[idx]=Csor*(tmp-fV[idx])+fV[idx];
    double min=prhom;
    double max=prhom;
    if(min>prhop)min=prhop;
@@ -35,7 +34,7 @@ void RhoPhi::DoSOR2(int idx)
 
    //find max
    if(max<prhop)max=prhop;
-   if (max<pphip)min=pphip;
+   if (max<pphip)max=pphip;
    if (max<pphim)max=pphim;
    //if tmp is greater or smaller than max and min, set tmp to it.
    //fV[idx]=Csor*(tmp-fV[idx])+fV[idx];

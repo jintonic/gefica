@@ -10,7 +10,7 @@ void TrueCoaxial2D::Initialize()
       return;
    }
    double steplength=(OuterRadius-InnerRadius)/(n1-1);
-   SetStepLength(steplength,3.14159265/n2);
+   SetStepLength(steplength,2*3.14159265/n2);
 
    for(int i=n;i-->0;) fC1[i]=fC1[i]+InnerRadius;
    for (int i=0;i<n;i=i+n1) {

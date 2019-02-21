@@ -7,19 +7,19 @@
    detector->InnerRadius=0.14;
    detector->OuterRadius=3.45;
 
-   GeFiCa::TrueCoaxial2D *detector2 = new GeFiCa::TrueCoaxial2D(346,505);
+   GeFiCa::TrueCoaxial2D *detector2 = new GeFiCa::TrueCoaxial2D(34,50);
    detector2->InnerRadius=0.14;//-3.45;
    detector2->OuterRadius=3.45;
 
-   TF3 *im=new TF3("f","-0.318e10+0.025e10*y");
-   detector2->SetImpurity(im);
 
 
    //TF1 *im1=new TF1("f","-0.318e10+0.025e10*x",0,6.9);
    detector2->MaxIterations=1e5;
-   detector2->Csor=1.994;
+   detector2->Csor=1.9;
    detector2->V0=2500*GeFiCa::volt;
    detector2->V1=0*GeFiCa::volt;
+   TF3 *im=new TF3("f","0");//-0.318e10+0.025e10*y");
+   detector2->SetImpurity(im);
    detector2->CalculatePotential(GeFiCa::kSOR2);
    detector2->SaveField("trueCoaxial2d.root");
 
@@ -29,7 +29,7 @@
    // generate graphics
    TChain *tn = new TChain("t");
    tn->Add("trueCoaxial2d.root");
-   tn->Draw("v:c1*10","c2<1");
+   tn->Draw("v:c1","c2<1");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
 
    TChain *ta = new TChain("t");
@@ -44,6 +44,6 @@
    gn->SetMarkerSize(0.8);
    ga->SetLineColor(kRed);
    ga->SetTitle(";Thickness [cm];Potential [V]");
-   ga->Draw("ap");
-   gn->Draw("l");
+   gn->Draw("ap");
+   ga->Draw("l");
 }
