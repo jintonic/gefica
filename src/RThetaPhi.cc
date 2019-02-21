@@ -65,7 +65,7 @@ void RThetaPhi::DoSOR2(int idx)
 
    //find max
    if(max<prp)max=prp;
-   if (max<pphip)min=pphip;
+   if (max<pphip)max=pphip;
    if (max<pphim)max=pphim;
    if (max<pthetam)max=pthetam;
    if (max<pthetam)max=pthetam;
