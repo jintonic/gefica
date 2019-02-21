@@ -6,7 +6,7 @@
 namespace GeFiCa { class Rho; }
 
 /**
- * 1D cylindrical coordinates.
+ * 1D cylindrical coordinate.
  */
 class GeFiCa::Rho : public X 
 {
