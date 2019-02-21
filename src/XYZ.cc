@@ -260,5 +260,6 @@ TTree* XYZ::GetTree()
       bm3->Fill();
    }
 
+   fTree->ResetBranchAddresses(); // disconnect from local variables
    return fTree;
 }

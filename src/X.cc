@@ -444,5 +444,6 @@ TTree* X::GetTree()
       fTree->Fill();
    }
 
+   fTree->ResetBranchAddresses(); // disconnect from local variables
    return fTree;
 }
