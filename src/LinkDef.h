@@ -1,5 +1,5 @@
 /** @file LinkDef.h
- * https://root.cern.ch/selecting-dictionary-entries-linkdefh
+ * <a href="https://root.cern.ch/selecting-dictionary-entries-linkdefh">Purpose of LinkDef.h</a>
  */
 #ifdef __CLING__
 #pragma link C++ namespace GeFiCa;
