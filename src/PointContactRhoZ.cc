@@ -1,9 +1,9 @@
-#include "PointContactRZ.h"
+#include "PointContactRhoZ.h"
 #include "iostream"
 #include "Units.h"
 using namespace GeFiCa;
 
-void PointContactRZ::BoundaryOnPointcontact()
+void PointContactRhoZ::BoundaryOnPointcontact()
 {
    for(int i=0;i<n;i++)
    {
@@ -19,7 +19,7 @@ void PointContactRZ::BoundaryOnPointcontact()
       }
    }
 }
-void PointContactRZ::Initialize()
+void PointContactRhoZ::Initialize()
 {
    // The step length is calculated with the following equation:
    // BEGIN_HTML

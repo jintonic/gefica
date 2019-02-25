@@ -1,7 +1,7 @@
 // Draw weighting potential of a segment of Siegfried (6 segments in phi)
 void CalculateWeightingPotential()
 {
-   GeFiCa::Segmented2D *siegfried = new GeFiCa::Segmented2D;
+   GeFiCa::SegmentedInPhi *siegfried = new GeFiCa::SegmentedInPhi;
    siegfried->V0=0*GeFiCa::volt;
    siegfried->V1=1*GeFiCa::volt;
    siegfried->SegmentNum=6;
@@ -35,7 +35,7 @@ void DrawWeightingPotential()
    // load data and draw
    TChain *t = new TChain("t");
    t->Add("siegfried.root");
-   t->Draw("c1*sin(c2):c1*cos(c2):p","","colz");
+   t->Draw("c1*sin(c2):c1*cos(c2):v","","colz");
    // fine tune plot
    TH2F *h = (TH2F*) gPad->GetPrimitive("htemp");
    h->SetTitle(";x [cm];y [cm];weighting potential [V]");
@@ -51,7 +51,7 @@ void DrawWeightingPotential()
    palette->SetX2NDC(0.94);
    h->Draw("colz"); // let the new setup take effect
    // draw segmentation scheme
-   GeFiCa::Segmented2D *siegfried = new GeFiCa::Segmented2D();
+   GeFiCa::SegmentedInPhi *siegfried = new GeFiCa::SegmentedInPhi();
    double r=siegfried->RUpperBound, x=r*cos(3.14/3), y=r*sin(3.14/3);
    TLine *l1 = new TLine(-r,0,r,0);
    l1->SetLineColor(kWhite);

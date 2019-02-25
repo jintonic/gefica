@@ -11,11 +11,11 @@
 #pragma link C++ class GeFiCa::TrueCoaxial1D+;
 #pragma link C++ class GeFiCa::XY+;
 #pragma link C++ class GeFiCa::RhoPhi+;
-#pragma link C++ class GeFiCa::Segmented2D+;
-#pragma link C++ class GeFiCa::RZ+;
+#pragma link C++ class GeFiCa::SegmentedInPhi+;
+#pragma link C++ class GeFiCa::RhoZ+;
 #pragma link C++ class GeFiCa::TrueCoaxial2D+;
 #pragma link C++ class GeFiCa::PointContactDZ+;
-#pragma link C++ class GeFiCa::PointContactRZ+;
+#pragma link C++ class GeFiCa::PointContactRhoZ+;
 #pragma link C++ class GeFiCa::XYZ+;
 #pragma link C++ class GeFiCa::RhoPhiZ+;
 #pragma link C++ class GeFiCa::RThetaPhi+;

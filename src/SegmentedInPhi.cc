@@ -1,10 +1,10 @@
 #include <stdlib.h>
 
-#include "Segmented2D.h"
+#include "SegmentedInPhi.h"
 #include "Units.h"
 using namespace GeFiCa;
 using namespace std;
-void Segmented2D::Initialize()
+void SegmentedInPhi::Initialize()
 {
    // The step length is calculated with the following equation:
    // BEGIN_HTML

@@ -1,11 +1,11 @@
 #include "Units.h"
-#include "RZ.h"
+#include "RhoZ.h"
 using namespace GeFiCa;
 
 #include <iostream>
 using namespace std;
 
-void RZ::DoSOR2(int idx)
+void RhoZ::DoSOR2(int idx)
 {
    if (fIsFixed[idx])return; 
    // 2nd-order Successive Over-Relaxation
@@ -59,7 +59,7 @@ void RZ::DoSOR2(int idx)
 }
 //_____________________________________________________________________________
 //
-double RZ::GetCapacitance()
+double RhoZ::GetCapacitance()
 {
    cout<<"Calculate detector capacitance..."<<endl;
    // set impurity to zero
