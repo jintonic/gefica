@@ -1,7 +1,7 @@
-#include "TrueCoaxial2D.h"
+#include "SegmentedInZ.h"
 using namespace GeFiCa;
 
-void TrueCoaxial2D::Initialize()
+void SegmentedInZ::Initialize()
 {
    if (InnerRadius>=OuterRadius) {
       Warning("Initialize",
