@@ -1,5 +1,10 @@
+using namespace GeFiCa;
+/**
+ * \file showConvergingSteps.cc
+ * \example planar/showConvergingSteps.cc
+ * \brief Show middle steps of the converging process.
+ */
 {
-
    // calculate fields
    GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(101);
    detector->MaxIterations=1;
@@ -12,8 +17,7 @@
    int n=10;
       TCanvas *C = new TCanvas();
       TMultiGraph *mg = new TMultiGraph();
-   for (int i=0-1;i<n;i++)
-   {
+   for (int i=0-1;i<n;i++) {
       detector->MaxIterations=i*20;
       detector->CalculatePotential(GeFiCa::kSOR2);
       detector->SaveField("planar1dSOR2.root");
@@ -28,5 +32,4 @@
    mg->SetTitle("; Thickness [cm]; Potential [V]");
    
    mg->Draw("ap");
-
 }
