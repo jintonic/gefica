@@ -1,4 +1,8 @@
-//an example of reversed pointact detector 
+/**
+ * \file drawRCPC.cc
+ * \example pointContact/drawRCPC.cc
+ * \brief draw fields of a 2D reversed coaxial point contact detector
+ */
 {
    //basic geometry setup
    GeFiCa::ReversedCoaxialRZ *detector2 = new GeFiCa::ReversedCoaxialRZ(692,506);
@@ -42,6 +46,4 @@
    ta->Draw("c2:c1:v>>hist","","colz");
    h->GetYaxis()->SetTitle("Height [cm]");
    h->GetXaxis()->SetTitle("Radius [cm]");
-  
-
 }
