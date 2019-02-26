@@ -6,16 +6,24 @@
 namespace GeFiCa { class SegmentedInZ; }
 
 /**
- * Grid setup for 2D true coaxial detectors.
+ * Grid setup for 2D segmented true coaxial detectors.
  */
 class GeFiCa::SegmentedInZ : public GeFiCa::RhoZ
 {
    public :
-      double InnerR,OuterR,Height;
-      int SegmentNum;//total segment number
-      int SegmentID;
+      double InnerR;///< inner radius
+      double OuterR;///< outer radius
+      double Z; ///< height of detector along z
+      int Nseg; ///< number of segments 
+      int SegmentId; ///< segment Id
 
-      SegmentedInZ(int r=300,int O=300) : RhoZ(r, O) ,InnerRadius(0.5),OuterRadius(3),Height(3),SegmentNum(6) ,SegmentID(1) {};
+      /**
+       * Default constructor.
+       */
+      SegmentedInZ(int nr=300, ///< [in] number of grid points along r
+            int nt=300, ///< [in] number of grid points along theta
+            const char *name="siz", ///< [in] name of object
+            const char *title="2D true coaxial detector segmented in z");
 
       virtual void Initialize(); 
 
