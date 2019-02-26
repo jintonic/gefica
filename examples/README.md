@@ -1,4 +1,4 @@
-# Alphabetic list
+# Alphabetic list of examples
 
 - analytic/README.md
 - \example analytic/CV.C
