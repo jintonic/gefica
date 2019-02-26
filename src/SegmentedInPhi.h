@@ -7,17 +7,23 @@
 namespace GeFiCa { class SegmentedInPhi; }
 
 /**
- * Grid setup for InPhi segmented true coaxial detectors.
+ * Grid setup for 2D true coaxial detectors segmented in phi.
  */
 class GeFiCa::SegmentedInPhi : public GeFiCa::RhoPhi
 {
    public:
-      double RUpperBound,RLowerBound;
-      int SegmentNum;//total segment number
-      int SegmentID;
+      double OuterR; ///< outer radius
+      double InnerR; ///< inner radius
+      int Nseg; ///< total number of segments
+      int SegmentId; ///< segment Id
  
-      SegmentedInPhi(int ix=360, int iy=301) : RhoPhi(ix, iy),
-         RUpperBound(2.5),RLowerBound(0.5),SegmentNum(6) ,SegmentID(1) {};
+      /**
+       * Default constructor
+       */
+      SegmentedInPhi(int nr=360, ///< [in] number of grid points along rho
+            int np=301, ///< [in] number of grid points along phi
+            const char *name="sip", ///< [in] name of object
+            const char *title="2D true coaxial detector segmented in phi");
 
       virtual void Initialize();
 

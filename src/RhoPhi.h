@@ -11,7 +11,13 @@ namespace GeFiCa { class RhoPhi; }
 class GeFiCa::RhoPhi : public GeFiCa::XY
 {
    public:
-      RhoPhi(int nRho=101, int nPhi=101): XY(nRho,nPhi) {}; 
+      /**
+       * Default constructor
+       */
+      RhoPhi(int n1=101, int n2=101,
+            const char *name="rp",
+            const char *title="2D cylindrical coordinates")
+         : XY(n1, n2, name, title) {}; 
 
       ClassDef(RhoPhi,1);
 
