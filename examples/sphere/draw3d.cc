@@ -1,6 +1,10 @@
-// compare numerical result to analytic calculation for 3D sphere detector
+/**
+ * \file draw3d.cc
+ * \exmaple draw3d.cc
+ * Draw fields of a 3D spherical detector
+ */
 using namespace GeFiCa;
-void compare3d2analytic()
+void draw3d()
 {
    // configure detector
    Sphere3D *num = new Sphere3D;
