@@ -1,7 +1,7 @@
 using namespace GeFiCa;
 /**
  * \file compare2fenics.cc
- * \example compare2fenics.cc
+ * \example pointContact/compare2fenics.cc
  * \brief Compare PointContactDZ to FEniCS
  */
 void compare2fenics()

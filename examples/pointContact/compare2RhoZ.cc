@@ -1,7 +1,7 @@
 using namespace GeFiCa;
 /**
  * \file compare2RhoZ.cc
- * \example compare2RhoZ.cc
+ * \example pointContact/compare2RhoZ.cc
  * \brief Compare PointConactDZ to PointContactRhoZ
  */
 void compare2RhoZ()

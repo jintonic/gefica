@@ -1,3 +1,9 @@
+using namespace GeFiCa;
+/**
+ * \file compare2fieldgen.cc
+ * \example pointContact/compare2fieldgen.cc
+ * \brief Compare PointContactDZ to fieldgen
+ */
 void drawresult()
 {
    // draw MJD result
