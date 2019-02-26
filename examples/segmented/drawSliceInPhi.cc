@@ -1,3 +1,7 @@
+/**
+ * \file drawSliceInPhi.cc
+ * \example segmented/drawSliceInPhi.cc
+ */
 // Draw weighting potential of a segment of Siegfried (6 segments in phi)
 void CalculateWeightingPotential()
 {
@@ -68,7 +72,7 @@ void DrawWeightingPotential()
 }
 //______________________________________________________________________________
 //
-void siegfried()
+void drawSliceInPhi()
 {
    if (1||gSystem->Which(".","siegfried.root")==0) CalculateWeightingPotential();
    DrawWeightingPotential();
