@@ -1,6 +1,10 @@
-// set a very long point contact so that the field is almost the same as a
-// coaxial detector. We then compare the field in the middle part of z with the
-// analytic result of a true coaxial detector field
+using namespace GeFiCa;
+/**
+ * \file compare2fenics.cc
+ * \example compare2fenics.cc
+ * \brief Compare PointContactDZ to FEniCS
+ */
+void compare2fenics()
 {
    // calculate potential for point contact 2D
   // GeFiCa::PointContactRZ *ppc = new GeFiCa::PointContactRZ(1036,506);
