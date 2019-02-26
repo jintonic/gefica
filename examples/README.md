@@ -1,32 +1,32 @@
 # Alphabetic list of examples
 
 - analytic/README.md
-- \example analytic/CV.C
-- \example analytic/coaxial.C
-- \example analytic/planar.C
-- \example analytic/spherical.C
+- analytic/CV.C
+- analytic/coaxial.C
+- analytic/planar.C
+- analytic/spherical.C
 
-- \example depletion/voltage.C
+- depletion/voltage.C
 
-- \example fenics/minippc.py
+- fenics/minippc.py
 
-- \example planar/checkInitialization.cc
-- \example planar/compare2analytic.cc
-- \example planar/calculateC.cc
-- \example planar/showConvergingSteps.cc
+- planar/checkInitialization.cc
+- planar/compare2analytic.cc
+- planar/calculateC.cc
+- planar/showConvergingSteps.cc
 
-- \example pointContact/checkInitialization.cc
-- \example pointContact/comapare2fenics.cc
-- \example pointContact/comapare2fieldgen.cc
-- \example pointContact/comapare2RhoZ.cc
-- \example pointContact/drawRCPC.cc
-- \example pointContact/g2f.cc
+- pointContact/checkInitialization.cc
+- pointContact/comapare2fenics.cc
+- pointContact/comapare2fieldgen.cc
+- pointContact/comapare2RhoZ.cc
+- pointContact/drawRCPC.cc
+- pointContact/g2f.cc
 
-- \example segmented/drawSliceInPhi.cc
-- \example segmented/drawSliceInZ.cc
+- segmented/drawSliceInPhi.cc
+- segmented/drawSliceInZ.cc
 
-- \example sphere/compare2analytic.cc
-- \example sphere/draw3d.cc
+- sphere/compare2analytic.cc
+- sphere/draw3d.cc
 
-- \example trueCoaxial/checkInitialization.cc
-- \example trueCoaxial/compare2analytic.cc
+- trueCoaxial/checkInitialization.cc
+- trueCoaxial/compare2analytic.cc
