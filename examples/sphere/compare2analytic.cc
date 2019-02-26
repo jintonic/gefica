@@ -1,7 +1,10 @@
-// @file compare1d2analytic.cc @example sphere/compare1d2analytic.cc
-// compare numerical result to analytic calculation for 1D Sphere detector
+/**
+ * \file compare2analytic.cc
+ * \example sphere/compare2analytic.cc
+ * Compare numerical result to analytic calculation for 1D spherical detector
+ */
 using namespace GeFiCa;
-void compare1d2analytic()
+void compare2analytic()
 {
    // configure detector
    Sphere1D *num=new Sphere1D;
