@@ -4,6 +4,6 @@
 DOXYFILE = docs/Doxyfile
 
 # overwrite some configurations for online doxygen generation
-INPUT = src docs/doxygen.md examples/README.md
+INPUT = src docs/doxygen.md examples
 EXAMPLE_PATH = examples
 USE_MDFILE_AS_MAINPAGE = docs/doxygen.md
