@@ -1,6 +1,10 @@
 # Alphabetic list
 
-- \example analytic/README.md
+- analytic/README.md
+- \example analytic/CV.C
+- \example analytic/coaxial.C
+- \example analytic/planar.C
+- \example analytic/spherical.C
 
 - \example depletion/voltage.C
 
