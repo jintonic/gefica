@@ -39,6 +39,29 @@ This is one of the reasons why many research groups write their own code for HPG
 
 The purpose of GeFiCa is not to replace any of the existing packages, or even to compete with them. Instead, it is aimed to clearly explain and demonstrate the analytic and numeric methods to solve Poisson's equation, practical coding considerations as well as visualization methods. It does so by providing intensive documentation and example macros, and serves as a one-stop resource for people who want to understand the operating mechanism of such a package under the hood. None of the tools mentioned above fits all applications. Home brewed codes built on top of some existing tools may be the best choice for education and specific applications, as long as the drawbacks mention previously can be effectively overcome through the demonstration provided in GeFiCa.
 
+Basics of numeric solution of Poisson's Equation
+================================================
+
+The electric potential \f$\varphi\f$ can be calculated using Poisson's equation \f$ \nabla^2 \varphi(\mathbf{x}) = - \rho(\mathbf{x})/\epsilon_0/\epsilon_R \f$, where \f$\rho\f$ is the ionized impurity concentration, \f$\mathbf{x}\f$ denotes the coordinates, and \f$\epsilon_0,\epsilon_R\f$ are the permittivity of vacuum and relative permittivity of Ge, respectively. The equation can be simplified to \f$ \mathrm{d}^2\varphi/\mathrm{d}x^2 = - \rho/\epsilon_0/\epsilon_R \f$ in 1D. The second-order derivative \f$ \mathrm{d}^2\varphi/\mathrm{d}x^2 \f$ can be calculated numerically as \f$ \mathrm{d}^2 \varphi / \mathrm{d} x^2 = [\varphi(x_{i-1}) - 2\varphi(x_i) + \varphi(x_{i+1})]/\Delta x^2 \f$, where \f$ x_i \f$ is the coordinate of the _i_-th point in a grid, and \f$ \Delta x \f$ is the step length of the grid. The numerical calculation of the second-order derivative with higher orders of accuracy can be done using the [table][] of Finite difference coefficient in Wikipedia.
+
+[table]:https://en.wikipedia.org/wiki/Finite_difference_coefficient
+
+Numerical calculation
+=====================
+
+showConvergingSteps.C
+
+Verification
+============
+
+Compare to analytic solutions
+-----------------------------
+
+Compare to fieldgen
+-------------------
+
+Compare to FEniCS
+-----------------
 
 Indices and tables
 ==================
