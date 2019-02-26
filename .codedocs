@@ -4,6 +4,7 @@
 DOXYFILE = docs/Doxyfile
 
 # overwrite some configurations for online doxygen generation
-INPUT = src docs/doxygen.md examples
+# \example tags won't be recognized if they are put inside example files
+INPUT = src docs/doxygen.md
 EXAMPLE_PATH = examples
 USE_MDFILE_AS_MAINPAGE = docs/doxygen.md
