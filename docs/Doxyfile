@@ -36,7 +36,7 @@ QT_AUTOBRIEF           = NO
 MULTILINE_CPP_IS_BRIEF = NO
 INHERIT_DOCS           = YES
 SEPARATE_MEMBER_PAGES  = NO
-TAB_SIZE               = 4
+TAB_SIZE               = 3
 ALIASES                =
 TCL_SUBST              =
 OPTIMIZE_OUTPUT_FOR_C  = NO
@@ -112,7 +112,7 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = Doxygen.md ../src
+INPUT                  = Doxygen.md ../src ../examples
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.cc \
@@ -164,7 +164,7 @@ EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = GeFiCa.*
 EXCLUDE_SYMBOLS        =
 EXAMPLE_PATH           = examples
-EXAMPLE_PATTERNS       = *
+EXAMPLE_PATTERNS       = *.cc *.py
 EXAMPLE_RECURSIVE      = YES
 IMAGE_PATH             =
 INPUT_FILTER           =
