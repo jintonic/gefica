@@ -69,19 +69,14 @@ class GeFiCa::X : public TNamed
       X& operator*=(double);
       X& operator+=(X*);
       
-      virtual void Initialize() {}; ///< setup and initialize grid
+      /**
+       * Setup and initialize grid.
+       */
+      virtual void Initialize() {};
       /**
        * find surrounding index and return in int array
        */
       virtual int* FindSurroundingMatrix(int idx);
-      /**
-       * Save fields to a ROOT file.
-       */
-      virtual void SaveField(const char *fout);
-      /**
-       * Load field from a ROOT file.
-       */
-      virtual void LoadField(const char *fin);
       /**
        * Set average impurity of the crystal as a single number.
        */
@@ -102,8 +97,10 @@ class GeFiCa::X : public TNamed
        * calculate Cdet based on CV^2/2 = epsilon int E^2 dx^3 / 2
        */
       double GetCapacitance();
-
-      virtual TTree* GetTree(); ///< create &/or return a TTree with field data
+      /**
+       * create &/or return a TTree with field data
+       */
+      virtual TTree* GetTree();
 
       ClassDef(X,1);
 

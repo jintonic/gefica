@@ -20,9 +20,6 @@ class GeFiCa::XYZ : public GeFiCa::XY
 
       virtual void SetImpurity(TF3 *Im); ///< Set impurity distribution
 
-      virtual void SaveField(const char *fout);
-      virtual void LoadField(const char *fin);
-
       double GetPotential(double x,double y,double z)
       {return GetData(x,y,z,kPotential);};
       virtual double GetE1(double x,double y,double z)

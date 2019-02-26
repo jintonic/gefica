@@ -16,9 +16,6 @@ class GeFiCa::XY : public GeFiCa::X
       XY(int nx=101, int ny=101, const char *name="xy",
             const char *title="2D coordinates"); ///< Default constructor
       virtual ~XY(); ///< Destructor
-
-      virtual void SaveField(const char *fout);
-      virtual void LoadField(const char *fin);
       /**
        * Returns the potential in two dimensions
        */

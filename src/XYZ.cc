@@ -159,62 +159,6 @@ double XYZ::GetData(double tarx, double tary, double tarz, EOutput output )
 }
 //_____________________________________________________________________________
 //
-void XYZ::SaveField(const char * fout)
-{
-   XY::SaveField(fout);
-
-   TFile *file = new TFile(fout,"update");
-   TVectorD var = *(TVectorD*)file->Get("v");
-   var[9]=(double)n3;
-   var.Write();
-
-   TTree *tree = (TTree*) file->Get("t");
-   double e3,c3, dc3p, dc3m;
-   TBranch *be3 = tree->Branch("e3",&e3,"e3/D");
-   TBranch *bc3 = tree->Branch("c3",&c3,"c3/D");
-   TBranch *bdc3p = tree->Branch("dc3p",&dc3p,"dc3p/D");
-   TBranch *bdc3m = tree->Branch("dc3m",&dc3m,"dc3m/D");
-   for(int i=0;i<n;i++) {
-      e3=fE3[i]; c3=fC3[i]; dc3p=fdC3p[i]; dc3m=fdC3m[i];
-      be3->Fill(); bc3->Fill(); bdc3p->Fill(); bdc3m->Fill();
-   }
-   file->Write();
-   file->Close();
-   delete file;
-}
-//_____________________________________________________________________________
-//
-void XYZ::LoadField(const char * fin)
-{
-   XY::LoadField(fin);
-
-   TFile *file = new TFile(fin);
-   TVectorD *variables = (TVectorD*)file->Get("v");
-   double *var = variables->GetMatrixArray();
-   n3 = (int) var[9];
-   file->Close();
-   delete file;
-
-   TChain *t =new TChain("t");
-   t->Add(fin);
-   double e3,c3;
-   t->SetBranchAddress("c3",&c3);
-   t->SetBranchAddress("e3",&e3);
-
-   this->~XYZ(); // delete arrays if there are
-   fE3=new double[n];
-   fC3=new double[n];
-
-   for (int i=0;i<n;i++) {
-      t->GetEntry(i);
-      fE3[i]=e3;
-      fC3[i]=c3;
-   }
-
-   delete t;
-}
-//_____________________________________________________________________________
-//
 void XYZ::SetImpurity(TF3 * Im)
 {
    Initialize();
