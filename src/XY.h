@@ -38,7 +38,7 @@ class GeFiCa::XY : public GeFiCa::X
        */
       virtual void SetImpurity(TF3 *Im);
 
-      virtual TTree* GetTree();
+      virtual TTree* GetTree(bool createNew=false);
 
       ClassDef(XY,1);
 

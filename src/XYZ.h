@@ -31,7 +31,7 @@ class GeFiCa::XYZ : public GeFiCa::XY
       virtual double GetImpurity(double x,double y,double z)
       {return GetData(x,y,z,kImpurity);};
 
-      virtual TTree* GetTree();
+      virtual TTree* GetTree(bool createNew=false);
 
       ClassDef(XYZ,1);
 

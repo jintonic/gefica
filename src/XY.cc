@@ -180,9 +180,9 @@ bool XY::CalculateField(int idx)
 }
 //_____________________________________________________________________________
 //
-TTree* XY::GetTree()
+TTree* XY::GetTree(bool createNew)
 {
-   X::GetTree(); // create tree
+   X::GetTree(createNew); // create tree
 
    double e2,c2,dc2p,dc2m;
    TBranch *be2 = fTree->Branch("e2",&e2,"e2/D");

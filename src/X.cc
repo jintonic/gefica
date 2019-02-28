@@ -309,9 +309,12 @@ double X::GetCapacitance()
 }
 //_____________________________________________________________________________
 //
-TTree* X::GetTree()
+TTree* X::GetTree(bool createNew)
 {
-   if (fTree!=NULL) return fTree;
+   if (fTree!=NULL) {
+      if (createNew) delete fTree;
+      else return fTree;
+   }
 
    bool b,d; double e1,c1,v,dc1p,dc1m,i;
    // define tree
@@ -338,7 +341,7 @@ TTree* X::GetTree()
 
       fTree->Fill();
    }
-
+   // return tree
    fTree->ResetBranchAddresses(); // disconnect from local variables
    return fTree;
 }

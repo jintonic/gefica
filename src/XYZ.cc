@@ -182,9 +182,9 @@ bool XYZ::CalculateField(int idx)
 }
 //_____________________________________________________________________________
 //
-TTree* XYZ::GetTree()
+TTree* XYZ::GetTree(bool createNew)
 {
-   XY::GetTree(); // create tree
+   XY::GetTree(createNew); // create tree
 
    double e3,c3,dc3p,dc3m;
    TBranch *be3 = fTree->Branch("e3",&e3,"e3/D");
