@@ -13,6 +13,7 @@
 #pragma link C++ class GeFiCa::XY+;
 #pragma link C++ class GeFiCa::RhoPhi+;
 #pragma link C++ class GeFiCa::SegmentedInPhi+;
+#pragma link C++ class GeFiCa::SegmentedInZ+;
 #pragma link C++ class GeFiCa::RhoZ+;
 #pragma link C++ class GeFiCa::PointContactDZ+;
 #pragma link C++ class GeFiCa::PointContactRhoZ+;

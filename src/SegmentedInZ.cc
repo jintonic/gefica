@@ -18,8 +18,25 @@ void SegmentedInZ::Initialize()
    for(int i=n;i-->0;) fC1[i]=fC1[i]+InnerR;
    for (int i=0;i<n;i=i+n1) {
       fV[i]=V1;
-      fV[i+n1-1]=V0;
+      fV[i+n1-1]=V1;
       fIsFixed[i]=true;
       fIsFixed[i+n1-1]=true;
+   }
+   SegmentId=SegmentId%Nseg;
+   double segbegin=SegmentId*Z/Nseg;
+   double segend=(SegmentId+1)*Z/Nseg;
+   for (int i=n1-1;i<n;i=i+n1) {
+     if(fC2[i]>=segbegin&&fC2[i]<=segend)
+     {
+        fV[i]=V0;
+     }
+     if(fC2[i]-segend<fdC2m[i]&&fC2[i]>segend)
+     {
+        fdC2m[i]=fC2[i]-segend;
+     }
+     if(-fC2[i]+segend<fdC2p[i]&&fC2[i]<segend)
+     {
+        fdC2p[i]=-fC2[i]+segend;
+     }
    }
 }
