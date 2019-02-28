@@ -10,8 +10,9 @@
 using namespace GeFiCa;
 using namespace std;
 
-X::X(int nx, const char *name, const char *title) : TNamed(name,title), n1(nx),
-   n(nx), Csor(1.95), Precision(1e-7), MaxIterations(1e5), V0(0), V1(2e3*volt)
+X::X(int nx, const char *name, const char *title) : TNamed(name,title), V0(0),
+   V1(2e3*volt), n1(nx), n(nx), MaxIterations(1e4), Nsor(0), Csor(1.95),
+   Precision(1e-7)
 {
    if (n<10) { Warning("X","n<10, set it to 11"); n=11; n1=11; }
 
@@ -152,8 +153,10 @@ bool X::CalculatePotential(EMethod method)
 
    cout<<" Calculate field ..."<<endl;
    TStopwatch watch; watch.Start();
-   int cnt=0;
-   while (cnt++<MaxIterations) {
+   double cp=1; // current presision
+   while (Nsor<MaxIterations) {
+      if (Nsor%100==0) Printf("  %05d steps, precision: %e (target: %.0e)", 
+               Nsor, cp, Precision);
       double XUpSum=0;
       double XDownSum=0;
       for (int i=n-1;i>=0;i--) {
@@ -165,20 +168,14 @@ bool X::CalculatePotential(EMethod method)
          if(diff>0)XUpSum+=(diff);
          else XUpSum-=(diff);
       }
-      double cp = XUpSum/XDownSum; // current precision
-      if (cnt%100==0)
-         Printf("  %05d iterations, precision: %e (target: %.0e)", 
-               cnt, cp, Precision);
-
-      if (cp<Precision) {
-         for (int i=0; i<n; i++) if (!CalculateField(i)) return false;
-         Printf("  %05d iterations, precision: %e (target: %.0e)", 
-               cnt, cp, Precision);
-         cout<<" Done. Spent "; watch.Stop(); watch.Print();
-         return true;
-      }
+      cp = XUpSum/XDownSum;
+      Nsor++;
+      if (cp<Precision) break;
    }
-   return false;
+   for (int i=0; i<n; i++) if (!CalculateField(i)) return false;
+   Printf("  %05d steps, precision: %e (target: %.0e)", Nsor, cp, Precision);
+   cout<<" Done. Spent "; watch.Stop(); watch.Print();
+   return true;
 }
 //_____________________________________________________________________________
 //
@@ -272,7 +269,7 @@ bool X::CalculateField(int idx)
       fE1[idx]=(fV[idx]-fV[idx-1])/fdC1m[idx];
    else // bulk
       fE1[idx]=(fV[idx-1]-fV[idx+1])/(fdC1m[idx]+fdC1p[idx]);
- 
+
    return true;
 }
 //_____________________________________________________________________________
@@ -329,7 +326,7 @@ TTree* X::GetTree()
    fTree->Branch("i",&i,"i/D"); // impurity
    // fill tree
    if (fdC1p[0]==0) Initialize(); // setup & initialize grid
-   for(int j=0;j<n;j++) {
+   for (int j=0; j<n; j++) {
       v = fV[j];
       e1= fE1[j];
       c1= fC1[j];

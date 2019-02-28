@@ -41,14 +41,15 @@ namespace GeFiCa {
 class GeFiCa::X : public TNamed 
 {
    public:
-      int n1; ///< number of grid points along the 1st coordinate
-      int n; ///< total number of grid points (n = n1 in 1D case)
-      double Csor; ///< 1<=Csor<2, used to boost iteration speed
-      double Precision; ///< difference between two consecutive iterations
-      int MaxIterations; ///< maximal iteration to be performed
-
       double V0;///< voltage of one electrode
       double V1;///< voltage of the other electrode
+
+      int n1; ///< number of grid points along the 1st coordinate
+      int n; ///< total number of grid points (n = n1 in 1D case)
+      int MaxIterations; ///< maximal iteration to be performed
+      int Nsor; ///< current number of iterations in SOR process
+      double Csor; ///< 1<=Csor<2, used to boost iteration speed
+      double Precision; ///< difference between two consecutive iterations
 
       /**
        * Default constructor for GeFiCa::X.
@@ -93,14 +94,19 @@ class GeFiCa::X : public TNamed
       double GetImpurity(double x){return GetData(x,kImpurity);};
       double GetPotential(double x){return GetData(x,kPotential);};
       /**
-       * Get Capacitance, Cdet.
-       * calculate Cdet based on CV^2/2 = epsilon int E^2 dx^3 / 2
+       * Get detector capacitance.
+       * calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
        */
       double GetCapacitance();
       /**
-       * create &/or return a TTree with field data
+       * Create &/or return a TTree with field data.
+       * \param [in] createNew is a flag
+       * - if false (default), the function returns the point of an existing
+       *   tree, or create one if there is none.
+       * - if true, the function always create a new tree and delete the old
+       *   one if there is one.
        */
-      virtual TTree* GetTree();
+      virtual TTree* GetTree(bool createNew=false);
 
       ClassDef(X,1);
 
