@@ -7,7 +7,7 @@
 using namespace GeFiCa;
 
 X::X(int nx, const char *name, const char *title) : TNamed(name,title), V0(0),
-   V1(2e3*volt), n1(nx), n(nx), MaxIterations(1e4), Nsor(0), Csor(1.95),
+   V1(2e3*volt), n1(nx), n(nx), MaxIterations(9999), Nsor(0), Csor(1.95),
    Precision(1e-7*volt)
 {
    if (n<10) { Warning("X","n<10, set it to 11"); n=11; n1=11; }
@@ -151,7 +151,7 @@ bool X::CalculatePotential(EMethod method)
    TStopwatch watch; watch.Start();
    double cp=1; // current presision
    while (Nsor<MaxIterations) {
-      if (Nsor%100==0) Printf("  %05d steps, precision: %e (target: %.0e)", 
+      if (Nsor%100==0) Printf("%4d steps, precision: %.1e (target: %.0e)", 
                Nsor, cp, Precision);
       double XUpSum=0;
       double XDownSum=0;
@@ -169,9 +169,8 @@ bool X::CalculatePotential(EMethod method)
       if (cp<Precision) break;
    }
    for (int i=0; i<n; i++) if (!CalculateField(i)) return false;
-   Printf("  %05d steps, precision: %e (target: %.0e)", Nsor, cp, Precision);
-   Info("CalculatePotential", "Done. CPU time: %.1f s, Real time: %.1f s",
-         watch.CpuTime(), watch.RealTime());
+   Printf("%4d steps, precision: %.1e (target: %.0e)", Nsor, cp, Precision);
+   Info("CalculatePotential", "CPU time: %.1f s (CPU)", watch.CpuTime());
    return true;
 }
 //_____________________________________________________________________________

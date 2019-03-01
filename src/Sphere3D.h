@@ -20,9 +20,10 @@ class GeFiCa::Sphere3D: public GeFiCa::RThetaPhi
             const char *name="s3d",
             const char *title="3D sphere detector"); ///< default constructor
 
-      virtual void Initialize();
-
       ClassDef(Sphere3D,1);
+
+   protected:
+      virtual void Initialize();
 };
 #endif
 

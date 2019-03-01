@@ -20,11 +20,10 @@ class GeFiCa::Sphere1D : public GeFiCa::R
       Sphere1D(int n=101, const char *name="s1d",
             const char *title="1D spherical detector");
 
-      virtual void Initialize();      
-
       ClassDef(Sphere1D, 1);
 
    protected:
+      virtual void Initialize();      
       /**
        * Analytic calculation of 1D field in spheric coordinates.
        *

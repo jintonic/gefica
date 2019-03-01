@@ -7,31 +7,48 @@ namespace GeFiCa { class PointContactDZ; }
 
 /**
  * Grid setup for 2D point contact detectors.
- * The grid is setup in [-Radius, Radius] and [0, Z].
+ * The grid is set in [-Radius, Radius] and [0, Height].
  */
 class GeFiCa::PointContactDZ : public GeFiCa::RhoZ
 {
    public:
-      double Z0, HoleInnerR, HoleOutterR, ConnorLength,
-           ConnorZ, HoleZ; // bounds for X and Y and point start and end
-      double Radius,Z,PointContactR,PointContactZ,WrapArroundR,TaperLength,TaperZ;//bounds for X and Y and point start and end
- 
+      double Height; ///< Height of crystal
+      double Radius; ///< Radius of crystal
+
+      double PointContactH; ///< Height of point contact
+      double PointContactR; ///< Radius of point contact
+
+      double HoleH; ///< Depth of bore
+      double HoleInnerR; ///< Inner radius of bore
+      double HoleOuterR; ///< Outer radius of bore
+
+      double TaperW; ///< Width of taper (point contact side)
+      double TaperH; ///<Height of taper (point contact side)
+
+      double CornerW; ///< Width of taper (bore side)
+      double CornerH; ///<Height of taper (bore side)
+
+      double WrapArroundR; ///< Inner radius of outer contact 
+
       /**
        * Default constructor.
        */
-      PointContactDZ(int ix=100, int iy=101, const char *name="pcdz",
+      PointContactDZ(int nd=100, ///< [in] number of points across diameter
+            int nz=101, ///< [in] number of points along height
+            const char *name="pcdz", ///< [in] name of the class object created
             const char *title="2D point contact detector");
 
+      ClassDef(PointContactDZ,1);
+
+   protected:
       virtual void Initialize();
       /**
        * Move grids close to point contact boundary to the boundary.
        */
       void SetBoundary();
+
       bool SaveFieldAsFieldgen(const char * fout);
 
-      ClassDef(PointContactDZ,1);
-
-   protected:
       bool CalculateField(int idx);
 };
 

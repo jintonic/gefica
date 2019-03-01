@@ -11,9 +11,12 @@ namespace GeFiCa { class R; }
 class GeFiCa::R : public X 
 {
    public:
+      /**
+       * Default constructor
+       */
       R(int n=101, const char *name="r",
             const char *title="1D spherical coordinate")
-         : X(n, name, title) {}; ///< Default constructor
+         : X(n, name, title) {};
 
       ClassDef(R,1);
 

@@ -2,7 +2,6 @@
 #define GeFiCa_RHOPHIZ_H
 
 #include "XYZ.h"
-class TF3;
 
 namespace GeFiCa { class RhoPhiZ; }
 

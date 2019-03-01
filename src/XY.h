@@ -13,9 +13,12 @@ class GeFiCa::XY : public GeFiCa::X
    public:
       int n2; ///< number of grid points along the 2nd coordinate
 
+      /**
+       * Default constructor.
+       */
       XY(int nx=101, int ny=101, const char *name="xy",
-            const char *title="2D coordinates"); ///< Default constructor
-      virtual ~XY(); ///< Destructor
+            const char *title="2D coordinates");
+      virtual ~XY();
       /**
        * Returns the potential in two dimensions
        */

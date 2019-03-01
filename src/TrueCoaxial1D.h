@@ -20,11 +20,10 @@ class GeFiCa::TrueCoaxial1D : public GeFiCa::Rho
       TrueCoaxial1D(int n=101, const char *name="tc1",
             const char *title="1D true coaxial detector");
 
-      virtual void Initialize();
-
       ClassDef(TrueCoaxial1D, 1);
 
    protected:
+      virtual void Initialize();
       /**
        * Analytic calculation of 1D field in cylindrical coordinates with fixed
        * impurity concentration.

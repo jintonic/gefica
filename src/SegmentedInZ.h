@@ -25,9 +25,10 @@ class GeFiCa::SegmentedInZ : public GeFiCa::RhoZ
             const char *name="siz", ///< [in] name of object
             const char *title="2D true coaxial detector segmented in z");
 
-      virtual void Initialize(); 
-
       ClassDef(SegmentedInZ,1);
+
+   protected:
+      virtual void Initialize(); 
 };
 #endif
 

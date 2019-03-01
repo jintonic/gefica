@@ -1,6 +1,3 @@
-/** @file X.h
- * Header defining base class GeFiCa::X.
- */
 #ifndef GeFiCa_X_H
 #define GeFiCa_X_H
 
@@ -53,9 +50,9 @@ class GeFiCa::X : public TNamed
 
       /**
        * Default constructor for GeFiCa::X.
-       * \param nx number of grid points
-       * \param name name of an object of this class saved in a ROOT file
-       * \param title description of this class
+       * \param [in] nx number of grid points
+       * \param [in] name name of an object of this class saved in a ROOT file
+       * \param [in] title description of this class
        */
       X(int nx=101, const char *name="x", const char *title="1D coordinate");
       virtual ~X();
@@ -64,20 +61,13 @@ class GeFiCa::X : public TNamed
        * Current available methods are kAnalytic and kSOR2.
        */
       bool CalculatePotential(EMethod method=kSOR2);
-      
-      bool IsDepleted(); ///< check if the detector is depleted
+      /**
+       * Check if detector is depleted.
+       */
+      bool IsDepleted();
 
       X& operator*=(double);
       X& operator+=(X*);
-      
-      /**
-       * Setup and initialize grid.
-       */
-      virtual void Initialize() {};
-      /**
-       * find surrounding index and return in int array
-       */
-      virtual int* FindSurroundingMatrix(int idx);
       /**
        * Set average impurity of the crystal as a single number.
        */
@@ -121,6 +111,14 @@ class GeFiCa::X : public TNamed
       bool *fIsDepleted; ///< [n] true if a grid point is depleted
       TTree *fTree; ///<! ROOT tree to assist field visualization
  
+      /**
+       * Setup and initialize grid.
+       */
+      virtual void Initialize() {};
+      /**
+       * find surrounding index and return in int array
+       */
+      virtual int* FindSurroundingMatrix(int idx);
       /**
        * Initialize fC1, fdC1p, fdC1m, fIsFixed
        */

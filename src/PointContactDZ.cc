@@ -9,26 +9,35 @@ using namespace std;
 //a great different potential on space close to point contact the current
 //design does not include when point contact is close to boundary of the whole
 //detector.
-PointContactDZ::PointContactDZ(int ix, int iy, const char *name,
-      const char *title) : RhoZ(ix, iy), Z0(0),  HoleInnerR(0),
-   HoleOutterR(0), ConnorLength(0.3*cm), ConnorZ(0.3*cm), HoleZ(0), Radius(3*cm),
-   Z(5*cm), PointContactR(0.1*cm), PointContactZ(0.01*cm), WrapArroundR(0.5*cm),
-   TaperLength(0.3*cm), TaperZ(0.3*cm) {};
+PointContactDZ::PointContactDZ(int nd, int nz, const char *name,
+      const char *title) : RhoZ(nd, nz, name, title),
+   Height(5*cm),
+   Radius(3*cm),
+   PointContactH(0.01*cm),
+   PointContactR(0.1*cm),
+   HoleH(0),
+   HoleInnerR(0),
+   HoleOuterR(0),
+   TaperW(0.3*cm),
+   TaperH(0.3*cm)
+   CornerW(0.3*cm),
+   CornerH(0.3*cm),
+   WrapArroundR(0.5*cm) {};
 //_____________________________________________________________________________
 //
 void PointContactDZ::SetBoundary()
 {
    for(int i=0;i<n;i++)
    {
-      if(fC2[i]-PointContactZ<fdC2m[i]&&fC2[i]>PointContactZ&&fC1[i]<PointContactR&&fC1[i]>-PointContactR)
+      if(fC2[i]-PointContactH<fdC2m[i]&&fC2[i]>PointContactH&&fC1[i]<PointContactR&&fC1[i]>-PointContactR)
       {
-         fdC2m[i]=fC2[i]-PointContactZ;
+         fdC2m[i]=fC2[i]-PointContactH;
       }
-      if(fC1[i]-PointContactR<fdC1m[i]&&fC1[i]>0&&fC2[i]<PointContactZ)
+      if(fC1[i]-PointContactR<fdC1m[i]&&fC1[i]>0&&fC2[i]<PointContactH)
       {
          fdC1m[i]=fC1[i]-PointContactR;
       }
-      if(-fC1[i]-PointContactR<fdC1p[i]&&fC1[i]<0&&fC2[i]<PointContactZ)
+      if(-fC1[i]-PointContactR<fdC1p[i]&&fC1[i]<0&&fC2[i]<PointContactH)
       {
          fdC1p[i]=-fC1[i]-PointContactR;
       }
@@ -41,8 +50,8 @@ void PointContactDZ::SetBoundary()
          fdC1p[i]=WrapArroundR+fC1[i];
       }
    }
-   double k=TaperZ/(TaperLength);
-   double b=-(Radius-TaperLength)*k;
+   double k=TaperH/(TaperW);
+   double b=-(Radius-TaperW)*k;
 
    for(int i=0;i<n;i++)
    {
@@ -67,14 +76,14 @@ void PointContactDZ::SetBoundary()
          fdC1m[i]=-fC2[i]*k+b-fC1[i];
       }
    }
-   double x1=HoleOutterR,
-          y1=Z,
+   double x1=HoleOuterR,
+          y1=Height,
           x2=HoleInnerR,
-          y2=Z-HoleZ,
-          x3=Radius-ConnorLength,
-          y3=Z,
+          y2=Height-HoleH,
+          x3=Radius-CornerW,
+          y3=Height,
           x4=Radius,
-          y4=Z-ConnorZ;
+          y4=Height-CornerH;
    // y = k x + b
    double k1=(y1-y2)/(x1-x2);
    double b1=y1-k1*x1;
@@ -115,21 +124,15 @@ void PointContactDZ::SetBoundary()
 //
 void PointContactDZ::Initialize()
 {
-   if (n1%2==1) Fatal("Initialize", "Number of grids in D cannot be odd!");
+   if (n1%2==1) Fatal("Initialize", "Number of points in D cannot be odd!");
 
-   if (Z0>=Z) {
-      Warning("Initialize",
-            "Lower bound (%f) >= upper bound (%f)! No grid is created!",
-            Z0, Z);
-      return;
-   }
    double RUpperBound,RLowerBound,PointBegin,PointEnd;
    RUpperBound=Radius;
    RLowerBound=-Radius;
    PointBegin=-PointContactR;
    PointEnd=PointContactR;
    double steplength1=(RUpperBound-RLowerBound)/(n1-1);
-   double steplength2=(Z-Z0)/(n2-1);
+   double steplength2=Height/(n2-1);
    SetStepLength(steplength1,steplength2);
    for(int i=n;i-->0;) 
    {
@@ -140,7 +143,7 @@ void PointContactDZ::Initialize()
    for(int i=n;i-->0;) {
       fV[i]=(V0+V1)/2;//common this line for finding depleat voltage
       // set potential for inner electrodes
-      if(fC1[i]>=PointBegin&&fC1[i]<=PointEnd&&fC2[i]<=PointContactZ) {
+      if(fC1[i]>=PointBegin&&fC1[i]<=PointEnd&&fC2[i]<=PointContactH) {
          fV[i]=V1;
          fIsFixed[i]=true;
       }
@@ -165,14 +168,14 @@ void PointContactDZ::Initialize()
       }
    }
 
-   double x1=HoleOutterR,
-          y1=Z,
+   double x1=HoleOuterR,
+          y1=Height,
           x2=HoleInnerR,
-          y2=Z-HoleZ,
-          x3=Radius-ConnorLength,
-          y3=Z,
+          y2=Height-HoleH,
+          x3=Radius-CornerW,
+          y3=Height,
           x4=Radius,
-          y4=Z-ConnorZ;
+          y4=Height-CornerH;
    double k1=(y1-y2)/(x1-x2);
    double b1=y1-k1*x1;
    double k2=(y3-y4)/(x3-x4);
@@ -200,8 +203,8 @@ bool PointContactDZ::CalculateField(int idx)
 {
    if (!XY::CalculateField(idx)) return false;
 
-   if (fC2[idx]>PointContactZ-fdC2m[idx]
-         && fC2[idx]<PointContactZ+fdC2p[idx]) // PC top boundary
+   if (fC2[idx]>PointContactH-fdC2m[idx]
+         && fC2[idx]<PointContactH+fdC2p[idx]) // PC top boundary
       fE2[idx]=(fV[idx]-fV[idx+n1])/fdC2p[idx];
    if (fC1[idx]>-PointContactR-fdC1m[idx]
          && fC1[idx]<-PointContactR+fdC1p[idx]) // PC left boundary
@@ -219,9 +222,9 @@ bool PointContactDZ::SaveFieldAsFieldgen(const char * fout)
 {
    ofstream outfile(fout);
 
-   outfile<<"# height "<< Z-Z0;        
+   outfile<<"# height "<< Height;        
    outfile<<"\n# xtal_radius "<<Radius;
-   outfile<<"\n# pc_length   "<<PointContactZ;        
+   outfile<<"\n# pc_length   "<<PointContactH;        
    outfile<<"\n# pc_radius   "<<PointContactR;         
    outfile<<"\n# wrap_around_radius "<<WrapArroundR; 
    outfile<<"\n# grid size on r "<<fdC1p[0];

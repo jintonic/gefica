@@ -11,6 +11,9 @@ namespace GeFiCa { class Rho; }
 class GeFiCa::Rho : public X 
 {
    public:
+      /**
+       * Default constructor.
+       */
       Rho(int n=101, const char *name="rho",
             const char *title="1D cylindrical coordinates")
          : X(n, name, title) {};
