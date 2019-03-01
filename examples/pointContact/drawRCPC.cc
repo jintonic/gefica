@@ -16,7 +16,7 @@ void drawRCPC()
    rcpc->TaperW=4*mm;
    rcpc->CornerH=4*mm;
    rcpc->CornerW=4*mm;
-   //rcpc->WrapArroundR=3.45;
+   rcpc->WrapArroundR=1.45;
    rcpc->V1=0*volt;
    rcpc->V0=3000*volt;
    TF3 *im = new TF3("f","-0.318e10+0.025e10*y");
