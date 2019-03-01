@@ -9,6 +9,11 @@ using namespace std;
 //a great different potential on space close to point contact the current
 //design does not include when point contact is close to boundary of the whole
 //detector.
+PointContactDZ::PointContactDZ(int ix, int iy, const char *name,
+      const char *title) : RhoZ(ix, iy), Z0(0),  HoleInnerR(0),
+   HoleOutterR(0), ConnorLength(0.3*cm), ConnorZ(0.3*cm), HoleZ(0), Radius(3*cm),
+   Z(5*cm), PointContactR(0.1*cm), PointContactZ(0.01*cm), WrapArroundR(0.5*cm),
+   TaperLength(0.3*cm), TaperZ(0.3*cm) {};
 //_____________________________________________________________________________
 //
 void PointContactDZ::SetBoundary()
@@ -63,13 +68,13 @@ void PointContactDZ::SetBoundary()
       }
    }
    double x1=HoleOutterR,
-	  y1=Z,
-	  x2=HoleInnerR,
-	  y2=Z-HoleZ,
-	  x3=Radius-ConnorLength,
-	  y3=Z,
-	  x4=Radius,
-	  y4=Z-ConnorZ;
+          y1=Z,
+          x2=HoleInnerR,
+          y2=Z-HoleZ,
+          x3=Radius-ConnorLength,
+          y3=Z,
+          x4=Radius,
+          y4=Z-ConnorZ;
    // y = k x + b
    double k1=(y1-y2)/(x1-x2);
    double b1=y1-k1*x1;
@@ -161,13 +166,13 @@ void PointContactDZ::Initialize()
    }
 
    double x1=HoleOutterR,
-	  y1=Z,
-	  x2=HoleInnerR,
-	  y2=Z-HoleZ,
-	  x3=Radius-ConnorLength,
-	  y3=Z,
-	  x4=Radius,
-	  y4=Z-ConnorZ;
+          y1=Z,
+          x2=HoleInnerR,
+          y2=Z-HoleZ,
+          x3=Radius-ConnorLength,
+          y3=Z,
+          x4=Radius,
+          y4=Z-ConnorZ;
    double k1=(y1-y2)/(x1-x2);
    double b1=y1-k1*x1;
    double k2=(y3-y4)/(x3-x4);
@@ -175,16 +180,16 @@ void PointContactDZ::Initialize()
 
    for (int i=0;i<n;i++)
    {
-     if(((fC2[i]>-k1*(fC1[i])+b1  && fC2[i]>y2)||(fC2[i]>-k2*(fC1[i])+b2))&&fC1[i]<0)
-     {
-       fIsFixed[i]=true;
-       fV[i]=V0;
-     }
-     if(((fC2[i]>k1*(fC1[i])+b1  && fC2[i]>y2)||(fC2[i]>k2*(fC1[i])+b2))&&fC1[i]>0)
-     {
-       fIsFixed[i]=true;
-       fV[i]=V0;
-     }
+      if(((fC2[i]>-k1*(fC1[i])+b1  && fC2[i]>y2)||(fC2[i]>-k2*(fC1[i])+b2))&&fC1[i]<0)
+      {
+         fIsFixed[i]=true;
+         fV[i]=V0;
+      }
+      if(((fC2[i]>k1*(fC1[i])+b1  && fC2[i]>y2)||(fC2[i]>k2*(fC1[i])+b2))&&fC1[i]>0)
+      {
+         fIsFixed[i]=true;
+         fV[i]=V0;
+      }
 
    }
    SetBoundary();
