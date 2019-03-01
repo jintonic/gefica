@@ -2,9 +2,6 @@
 #include "RhoZ.h"
 using namespace GeFiCa;
 
-#include <iostream>
-using namespace std;
-
 void RhoZ::DoSOR2(int idx)
 {
    if (fIsFixed[idx])return; 
@@ -61,7 +58,7 @@ void RhoZ::DoSOR2(int idx)
 //
 double RhoZ::GetCapacitance()
 {
-   cout<<"Calculate detector capacitance..."<<endl;
+   Info("GetCapacitance", "Start...");
    // set impurity to zero
    double *tmpImpurity=fImpurity;
    for (int i=0;i<n;i++) {
@@ -92,7 +89,7 @@ double RhoZ::GetCapacitance()
       double dz=fdC2p[i];
       SumofElectricField+=(e1*e1+e2*e2)*fC1[i]*dr*dz;
    }
-   cout<<"Done."<<endl;
+   Info("GetCapacitance", "Done.");
    return SumofElectricField*2*3.14159*epsilon/dV/dV;
 }
 
