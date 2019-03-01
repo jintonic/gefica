@@ -170,7 +170,7 @@ bool X::CalculatePotential(EMethod method)
    }
    for (int i=0; i<n; i++) if (!CalculateField(i)) return false;
    Printf("%4d steps, precision: %.1e (target: %.0e)", Nsor, cp, Precision);
-   Info("CalculatePotential", "CPU time: %.1f s (CPU)", watch.CpuTime());
+   Info("CalculatePotential", "CPU time: %.1f s", watch.CpuTime());
    return true;
 }
 //_____________________________________________________________________________
