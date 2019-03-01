@@ -26,8 +26,6 @@ No need to compile before run.
 \example analytic/planar.C
 \example analytic/spherical.C
 
-\example depletion/voltage.C
-
 \example fenics/minippc.py
 
 \example planar/checkInitialization.cc
@@ -41,6 +39,7 @@ No need to compile before run.
 \example pointContact/comapare2RhoZ.cc
 \example pointContact/drawRCPC.cc
 \example pointContact/g2f.cc
+\example pointContact/search4Vd.cc
 
 \example segmented/drawSliceInPhi.cc
 \example segmented/drawSliceInZ.cc
