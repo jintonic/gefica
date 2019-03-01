@@ -3,7 +3,7 @@ using namespace GeFiCa;
 void drawRCPC()
 {
    //const int nr=692, nz=506;
-   const int nr=300, nz=301;
+   const int nr=302, nz=301;
    PointContactDZ *rcpc = new PointContactDZ(nr,nz);
    rcpc->Height=5.05*cm;
    rcpc->Radius=3.45*cm;
@@ -16,6 +16,7 @@ void drawRCPC()
    rcpc->TaperW=4*mm;
    rcpc->CornerH=4*mm;
    rcpc->CornerW=4*mm;
+   //rcpc->WrapArroundR=3.45;
    rcpc->V1=0*volt;
    rcpc->V0=3000*volt;
    TF3 *im = new TF3("f","-0.318e10+0.025e10*y");

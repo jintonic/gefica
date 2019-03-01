@@ -22,7 +22,7 @@ PointContactDZ::PointContactDZ(int nd, int nz, const char *name,
    TaperH(0.3*cm),
    CornerW(0.3*cm),
    CornerH(0.3*cm),
-   WrapArroundR(0.5*cm) {};
+   WrapArroundR(2.5*cm) {};
 //_____________________________________________________________________________
 //
 void PointContactDZ::SetBoundary()
@@ -41,13 +41,13 @@ void PointContactDZ::SetBoundary()
       {
          fdC1p[i]=-fC1[i]-PointContactR;
       }
-      if(WrapArroundR-fC1[i]<fdC1p[i]&&fC1[i]<WrapArroundR)
+      if(WrapArroundR-fC1[i]<fdC1p[i]&&fC1[i]<WrapArroundR&&i<n1)
       {
          fdC1p[i]=WrapArroundR-fC1[i];
       }
-      if(WrapArroundR+fC1[i]<fdC1p[i]&&fC1[i]>-WrapArroundR)
+      if(WrapArroundR+fC1[i]<fdC1p[i]&&fC1[i]>-WrapArroundR&&i<n1)
       {
-         fdC1p[i]=WrapArroundR+fC1[i];
+         fdC1m[i]=WrapArroundR+fC1[i];
       }
    }
    double k=TaperH/(TaperW);
@@ -134,7 +134,7 @@ void PointContactDZ::Initialize()
    for(int i=n;i-->0;) {
       fV[i]=(V0+V1)/2;
       // set potential for inner electrodes
-      if(fC1[i]>=-PointContactR && fC1[i]<=RointContactR
+      if(fC1[i]>=-PointContactR && fC1[i]<=PointContactR
             && fC2[i]<=PointContactH) {
          fV[i]=V1;
          fIsFixed[i]=true;
