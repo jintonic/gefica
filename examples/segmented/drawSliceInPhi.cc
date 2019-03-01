@@ -1,7 +1,3 @@
-/**
- * \file drawSliceInPhi.cc
- * \example segmented/drawSliceInPhi.cc
- */
 // Draw weighting potential of a segment of Siegfried (6 segments in phi)
 void CalculateWeightingPotential()
 {
@@ -49,7 +45,7 @@ void DrawWeightingPotential()
    h->GetYaxis()->CenterTitle();
    h->GetZaxis()->CenterTitle();
    // widen the color palette
-   gPad->Update(); // create the palette by forcely drawing the plot
+   gPad->Update(); // create the palette by forcedly drawing the plot
    TPaletteAxis *palette = 
       (TPaletteAxis*) h->GetListOfFunctions()->FindObject("palette");
    palette->SetX2NDC(0.94);
