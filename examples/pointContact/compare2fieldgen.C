@@ -51,7 +51,7 @@ void compare2fieldgen(const char *gefica="ppc2dSOR2.root",
 {
    TFile *inrootfile=new TFile("rcpc.root","READ");
    GeFiCa::PointContactDZ *detector2;
-   infile ->GetObject("rcpc",inrootfile);
+   inrootfile ->GetObject("rcpc",detector2);
 
    ifstream infile("ev.dat"); if (!infile.is_open()) exit(-1);
    ofstream outfile("gVSf.txt");
