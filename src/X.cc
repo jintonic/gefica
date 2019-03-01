@@ -1,18 +1,14 @@
-#include <TFile.h>
-#include <TChain.h>
-#include <TVectorD.h>
-#include <TStopwatch.h>
 #include <TF3.h>
-#include <Math/Functor.h>
+#include <TTree.h>
+#include <TStopwatch.h>
 
 #include "X.h"
 #include "Units.h"
 using namespace GeFiCa;
-using namespace std;
 
 X::X(int nx, const char *name, const char *title) : TNamed(name,title), V0(0),
    V1(2e3*volt), n1(nx), n(nx), MaxIterations(1e4), Nsor(0), Csor(1.95),
-   Precision(1e-7)
+   Precision(1e-7*volt)
 {
    if (n<10) { Warning("X","n<10, set it to 11"); n=11; n1=11; }
 
@@ -151,7 +147,7 @@ bool X::CalculatePotential(EMethod method)
    if (fdC1p[0]==0) Initialize(); // setup and initialize grid if it's not done
    if (method==kAnalytic) return Analytic();
 
-   cout<<" Calculate field ..."<<endl;
+   Info("CalculatePotential","Start SOR...");
    TStopwatch watch; watch.Start();
    double cp=1; // current presision
    while (Nsor<MaxIterations) {
@@ -174,7 +170,8 @@ bool X::CalculatePotential(EMethod method)
    }
    for (int i=0; i<n; i++) if (!CalculateField(i)) return false;
    Printf("  %05d steps, precision: %e (target: %.0e)", Nsor, cp, Precision);
-   cout<<" Done. Spent "; watch.Stop(); watch.Print();
+   Info("CalculatePotential", "Done. CPU time: %.1f s, Real time: %.1f s",
+         watch.CpuTime(), watch.RealTime());
    return true;
 }
 //_____________________________________________________________________________
@@ -276,7 +273,7 @@ bool X::CalculateField(int idx)
 //
 double X::GetCapacitance()
 {
-   cout<<"Calculate detector capacitance..."<<endl;
+   Info("GetCapacitance","Start...");
    // set impurity to zero
    double *tmpImpurity=fImpurity;
    for (int i=0;i<n;i++) {
@@ -304,7 +301,7 @@ double X::GetCapacitance()
       SumofElectricField+=fE1[i]*fE1[i]*fdC1p[i]*cm*cm;
       if (!fIsDepleted[i]) fIsFixed[i]=false;
    }
-   cout<<"Done."<<endl;
+   Info("GetCapacitance","Done.");
    return SumofElectricField*epsilon/dV/dV;
 }
 //_____________________________________________________________________________
