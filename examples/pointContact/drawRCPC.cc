@@ -1,49 +1,50 @@
-/**
- * \file drawRCPC.cc
- * \example pointContact/drawRCPC.cc
- * \brief draw fields of a 2D reversed coaxial point contact detector
- */
+// demonstrate the advantage of 2D reversed coaxial point contact detector
+using namespace GeFiCa;
+void drawRCPC()
 {
-   //basic geometry setup
-   GeFiCa::ReversedCoaxialRZ *detector2 = new GeFiCa::ReversedCoaxialRZ(692,506);
-   detector2->Radius=3.45*GeFiCa::cm;
-   detector2->Z=5.05*GeFiCa::cm;
-   detector2->PointContactR=1.45*GeFiCa::cm;
-   detector2->HoleZ=2.0*GeFiCa::cm;
-   detector2->HoleOutterR=1.2*GeFiCa::cm;
-   detector2->HoleInnerR=0.5*GeFiCa::cm;
-   detector2->ConnorZ=1.2*GeFiCa::cm;
-   detector2->ConnorLength=1.3*GeFiCa::cm;
-   TF3 *im=new TF3("f","-0.318e10+0.025e10*y");
-   detector2->SetImpurity(im);
-   detector2->V0=2500*GeFiCa::volt;
-   detector2->V1=0*GeFiCa::volt;
-
-   //calculation config
-   detector2->MaxIterations=2e3;
-   detector2->Precision=1e-8;
-   detector2->Csor=1.992;
+   //const int nr=692, nz=506;
+   const int nr=200, nz=202;
+   PointContactDZ *rcpc = new PointContactDZ(nr,nz);
+   rcpc->Height=5.05*cm;
+   rcpc->Radius=3.45*cm;
+   rcpc->PointContactH=0.1*mm;
+   rcpc->PointContactR=1.0*mm;
+   rcpc->HoleH=2.0*cm;
+   rcpc->HoleInnerR=0.5*cm;
+   rcpc->HoleOuterR=1.2*cm;
+   rcpc->TaperH=4*mm;
+   rcpc->TaperW=4*mm;
+   rcpc->CornerH=4*mm;
+   rcpc->CornerW=4*mm;
+   TF3 *im = new TF3("f","-0.318e10+0.025e10*y");
+   rcpc->SetImpurity(im);
+   rcpc->V1=0*volt;
+   rcpc->V0=3000*volt;
 
    //calculate field
-   detector2->CalculatePotential(GeFiCa::kSOR2);
-   detector2->SaveField("rcpcSOR2.root");
+   rcpc->Precision=1e-8;
+   rcpc->Csor=1.992;
+   rcpc->CalculatePotential(kSOR2);
    
-   //prepare drawing style
-   gStyle->SetOptTitle(kTRUE);
+   // prepare drawing style
+   gROOT->SetStyle("Plain"); // pick up a good drawing style to modify
+   gStyle->SetLegendBorderSize(0);
+   gStyle->SetLegendFont(132);
+   gStyle->SetLabelFont(132,"XYZ");
+   gStyle->SetTitleFont(132,"XYZ");
+   gStyle->SetLabelSize(0.05,"XYZ");
+   gStyle->SetTitleSize(0.05,"XYZ");
+   gStyle->SetTitleOffset(0.6,"Y");
+   gStyle->SetTitleOffset(-0.4,"Z");
+   gStyle->SetPadRightMargin(0.12);
+   gStyle->SetPadLeftMargin(0.07);
    gStyle->SetPadTopMargin(0.02);
-   gStyle->SetPadRightMargin(1.01);
-   gStyle->SetPadLeftMargin(0.0999999999);
-   gStyle->SetLabelFont(22,"XY");
-   gStyle->SetLabelSize(0.05,"XY");
-   gStyle->SetTitleSize(0.05,"XY");
-   gStyle->SetTitleFont(22,"XY");
-   gStyle->SetLegendFont(22);
+   gStyle->SetOptStat(0);
 
    //generate graphics
-   TH2F* h= new TH2F("hist","",10,-3.45,3.45,10,0,5.05);
-   TChain *ta = new TChain("t");
-   ta->Add("rcpcSOR2.root");
-   ta->Draw("c2:c1:v>>hist","","colz");
-   h->GetYaxis()->SetTitle("Height [cm]");
-   h->GetXaxis()->SetTitle("Radius [cm]");
+   TTree *t = rcpc->GetTree();
+   TH2D *h = new TH2D("h", ";Radius [cm];Height [cm];Potential [V]",
+         nr-1, -rcpc->Radius, rcpc->Radius, nz-1, 0, rcpc->Height);
+   h->GetZaxis()->CenterTitle();
+   t->Draw("c2:c1:v>>h","","colz");
 }
