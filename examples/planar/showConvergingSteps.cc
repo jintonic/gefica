@@ -10,7 +10,7 @@ void showConvergingSteps()
    detector->V0=0*volt;
 
    // prepare drawing style
-   gROOT->SetStyle("Plain"); // pick up a good drawing style to modify
+   gROOT->SetStyle("Plain"); // pick up a good default style to modify
    gStyle->SetLegendBorderSize(0);
    gStyle->SetLegendFont(132);
    gStyle->SetLabelFont(132,"XY");
@@ -39,7 +39,8 @@ void showConvergingSteps()
       mg->Add(tg);
       lg->AddEntry(tg,Form("%3d iterations",nIter[i]),"l");
    }
-   mg->SetTitle("; Thickness [cm]; Potential [V]");
+   mg->SetTitle(";Position in a one dimensional planar detector [cm]"
+        ";Potential [V]");
    mg->GetXaxis()->SetRangeUser(0,1);
    mg->GetYaxis()->SetRangeUser(0,350);
    mg->Draw("al");
