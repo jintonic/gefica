@@ -110,19 +110,8 @@ void PointContactDZ::SetBoundary()
 //
 void PointContactDZ::Initialize()
 {
-   if (n1%2==1) {
-      Error("Initialize", "Number of grids in R cannot be odd, abort!");
-      abort();
-   }
+   if (n1%2==1) Fatal("Initialize", "Number of grids in D cannot be odd!");
 
-   // The step length is calculated with the following equation:
-   // BEGIN_HTML
-   // <pre>
-   //      double stepLength=(UpperBound-LowerBound)/(n-1);
-   // </pre>
-   // END_HTML
-   // If the inner radius is not larger than the outer radius,
-   // no grid will be created
    if (Z0>=Z) {
       Warning("Initialize",
             "Lower bound (%f) >= upper bound (%f)! No grid is created!",
