@@ -2,7 +2,6 @@
 #define GeFiCa_RhoZ_H
 
 #include "XY.h"
-class TF2;
 
 namespace GeFiCa { class RhoZ; }
 
@@ -12,9 +11,12 @@ namespace GeFiCa { class RhoZ; }
 class GeFiCa::RhoZ : public GeFiCa::XY
 {
    public:
-      RhoZ(int n1=101, int n2=101, const char *name="Rhoz",
+      /**
+       * Default Constructor.
+       */
+      RhoZ(int n1=101, int n2=101, const char *name="rhoz",
             const char *title="2D cylindrical coordinates")
-         : XY(n1, n2, name, title) {}; ///< Default constructor
+         : XY(n1, n2, name, title) {};
 
       double GetCapacitance();
 
