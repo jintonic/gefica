@@ -134,7 +134,7 @@ void PointContactDZ::Initialize()
    for(int i=n;i-->0;) {
       fV[i]=(V0+V1)/2;
       // set potential for inner electrodes
-      if(fC1[i]>=-PointContactR && fC1[i]<=RointContactR
+      if(fC1[i]>=-PointContactR && fC1[i]<=PointContactR
             && fC2[i]<=PointContactH) {
          fV[i]=V1;
          fIsFixed[i]=true;
