@@ -8,31 +8,43 @@ using namespace GeFiCa;
 
 X::X(int nx, const char *name, const char *title) : TNamed(name,title), V0(0),
    V1(2e3*volt), n1(nx), n(nx), MaxIterations(9999), Nsor(0), Csor(1.95),
-   Precision(1e-7*volt)
+   Precision(1e-7*volt), fE2(0), fE3(0), fC2(0), fC3(0),
+   fdC2p(0), fdC2m(0), fdC3p(0), fdC3m(0)
 {
    if (n<10) { Warning("X","n<10, set it to 11"); n=11; n1=11; }
 
    fV=new double[n];
    fE1=new double[n];
+   fE2=new double[n];
+   fE3=new double[n];
    fC1=new double[n];
+   fC2=new double[n];
+   fC3=new double[n];
+
    fdC1p=new double[n];
    fdC1m=new double[n];
+   fdC2m=new double[n];
+   fdC2p=new double[n];
+   fdC3p=new double[n];
+   fdC3m=new double[n];
+
    fIsFixed=new bool[n];
    fIsDepleted=new bool[n];
    fImpurity=new double[n];
 
    for (int i=0;i<n;i++) {
       fV[i]=0;
-      fE1[i]=0;
-      fC1[i]=0;
-      fdC1m[i]=0;
-      fdC1p[i]=0;
+      fE1[i]=0; fE2[i]=0; fE3[i]=0;
+      fC1[i]=0; fC2[i]=0; fC3[i]=0;
+      fdC1m[i]=0; fdC1p[i]=0;
+      fdC2m[i]=0; fdC2p[i]=0;
+      fdC3m[i]=0; fdC3p[i]=0;
       fIsFixed[i]=false;
       fIsDepleted[i]=true;
       fImpurity[i]=0;
    }
 
-   fTree=NULL;
+   fTree=NULL; fImpDist=NULL;
 }
 //_____________________________________________________________________________
 //
@@ -145,6 +157,8 @@ int* X::FindSurroundingMatrix(int idx)
 bool X::CalculatePotential(EMethod method)
 {
    if (fdC1p[0]==0) Initialize(); // setup and initialize grid if it's not done
+   if (fImpDist && fImpurity[0]==0) // set impurity values if it's not done yet
+      for (int i=n;i-->0;) fImpurity[i]=fImpDist->Eval(fC1[i], fC2[i], fC3[i]);
    if (method==kAnalytic) return Analytic();
 
    Info("CalculatePotential","Start SOR...");
@@ -248,13 +262,6 @@ double X::GetData(double tarx, EOutput output)
 }
 //_____________________________________________________________________________
 //
-void X::SetImpurity(TF3 *fi)
-{
-   Initialize();
-   for (int i=n;i-->0;) fImpurity[i]=fi->Eval(fC1[i]);
-}
-//_____________________________________________________________________________
-//
 bool X::CalculateField(int idx)
 {
    if (fdC1p[idx]==0 || fdC1m[idx]==0) return false;
@@ -325,6 +332,8 @@ TTree* X::GetTree(bool createNew)
    fTree->Branch("i",&i,"i/D"); // impurity
    // fill tree
    if (fdC1p[0]==0) Initialize(); // setup & initialize grid
+   if (fImpDist && fImpurity[0]==0) // set impurity values if it's not done yet
+      for (int i=n;i-->0;) fImpurity[i]=fImpDist->Eval(fC1[i], fC2[i], fC3[i]);
    for (int j=0; j<n; j++) {
       v = fV[j];
       e1= fE1[j];

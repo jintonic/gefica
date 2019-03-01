@@ -21,8 +21,6 @@ class GeFiCa::XYZ : public GeFiCa::XY
             const char *title="3D coordinates");
       virtual ~XYZ();
 
-      virtual void SetImpurity(TF3 *Im);
-
       double GetPotential(double x,double y,double z)
       {return GetData(x,y,z,kPotential);};
       virtual double GetE1(double x,double y,double z)
@@ -39,11 +37,6 @@ class GeFiCa::XYZ : public GeFiCa::XY
       ClassDef(XYZ,1);
 
    protected:
-      double *fE3; ///< [n] electric field along the 3rd coordinate
-      double *fC3; ///< [n] the 3rd coordinate
-      double *fdC3p; ///< [n] step length to next grid point alone C3
-      double *fdC3m; ///< [n] step length to previous grid point alone C3
-
       virtual double GetData
          (double tarx,double tary,double tarz, EOutput output);
       virtual void SetStepLength

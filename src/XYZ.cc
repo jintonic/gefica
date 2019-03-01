@@ -8,13 +8,9 @@
 using namespace GeFiCa;
 
 XYZ::XYZ(int nx, int ny, int nz, const char *name, const char *title)
-   : XY(nx, ny*nz, name, title), n3(nz), fE3(0), fC3(0), fdC3p(0), fdC3m(0)
+   : XY(nx, ny*nz, name, title), n3(nz)
 { 
    n2=ny; // n2 is set to ny*nz through XY constructor, it is fixed here
-   fE3=new double[n];
-   fC3=new double[n];
-   fdC3p=new double[n];
-   fdC3m=new double[n];
 }
 //_____________________________________________________________________________
 //
@@ -156,13 +152,6 @@ double XYZ::GetData(double tarx, double tary, double tarz, EOutput output )
    if(tar7==-1)tar7=tar[idx-n1*n2-n1-1];
    return ((tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb)*ac
       +((tar4*aa+tar5*ab)*ba+(tar6*aa+tar7*ab)*bb)*ca;
-}
-//_____________________________________________________________________________
-//
-void XYZ::SetImpurity(TF3 * Im)
-{
-   Initialize();
-   for (int i=n;i-->0;) fImpurity[i] = Im->Eval(fC1[i], fC2[i], fC3[i]);
 }
 //_____________________________________________________________________________
 //

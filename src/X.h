@@ -74,9 +74,10 @@ class GeFiCa::X : public TNamed
       void SetAverageImpurity(double density)
       { for (int i=0; i<n; i++) fImpurity[i]=density; }
       /**
-       * Set impurity that changes with position.
+       * Set impurity distribution.
+       * \param [in] fi is a 3D function, but works for lower dimensions as well.
        */
-      virtual void SetImpurity(TF3 *fi);
+      void SetImpurity(TF3 *fi) { if (fi) fImpDist = fi; }
  
       double GetE1(double x){return GetData(x,kE1);};
       double GetE2(double x){return 0;};
@@ -103,13 +104,24 @@ class GeFiCa::X : public TNamed
    protected:
       double *fV; ///< [n] electric potential
       double *fE1; ///< [n] electric field along the 1st coordinate
+      double *fE2; ///< [n] electric field along the 2nd coordinate
+      double *fE3; ///< [n] electric field along the 3rd coordinate
       double *fC1; ///< [n] the 1st coordinate
+      double *fC2; ///< [n] the 2nd coordinate
+      double *fC3; ///< [n] the 3rd coordinate
+
       double *fdC1p; ///< [n] step length to next grid point alone C1
       double *fdC1m; ///< [n] step length to previous grid point alone C1
+      double *fdC2p; ///< [n] step length to next grid point along C2
+      double *fdC2m; ///< [n] step length to previous grid point along C2
+      double *fdC3p; ///< [n] step length to next grid point alone C3
+      double *fdC3m; ///< [n] step length to previous grid point alone C3
+
       double *fImpurity; ///< [n] net impurity concentration (Nacceptor-Ndonor)
       bool *fIsFixed; ///< [n] true if field values are fixed
       bool *fIsDepleted; ///< [n] true if a grid point is depleted
       TTree *fTree; ///<! ROOT tree to assist field visualization
+      TF3 *fImpDist; ///<! Impurity distribution
  
       /**
        * Setup and initialize grid.
