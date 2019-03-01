@@ -19,7 +19,7 @@ PointContactDZ::PointContactDZ(int nd, int nz, const char *name,
    HoleInnerR(0),
    HoleOuterR(0),
    TaperW(0.3*cm),
-   TaperH(0.3*cm)
+   TaperH(0.3*cm),
    CornerW(0.3*cm),
    CornerH(0.3*cm),
    WrapArroundR(0.5*cm) {};
@@ -124,26 +124,18 @@ void PointContactDZ::SetBoundary()
 //
 void PointContactDZ::Initialize()
 {
+   // we want no grid point right on z-axis
    if (n1%2==1) Fatal("Initialize", "Number of points in D cannot be odd!");
 
-   double RUpperBound,RLowerBound,PointBegin,PointEnd;
-   RUpperBound=Radius;
-   RLowerBound=-Radius;
-   PointBegin=-PointContactR;
-   PointEnd=PointContactR;
-   double steplength1=(RUpperBound-RLowerBound)/(n1-1);
-   double steplength2=Height/(n2-1);
-   SetStepLength(steplength1,steplength2);
-   for(int i=n;i-->0;) 
-   {
-      fC1[i]=fC1[i]+RLowerBound;
-   } 
+   SetStepLength(2*Radius/(n1-1),Height/(n2-1));
+   for(int i=n;i-->0;) fC1[i]=fC1[i]-Radius;
 
    // set initial potential values
    for(int i=n;i-->0;) {
-      fV[i]=(V0+V1)/2;//common this line for finding depleat voltage
+      fV[i]=(V0+V1)/2;
       // set potential for inner electrodes
-      if(fC1[i]>=PointBegin&&fC1[i]<=PointEnd&&fC2[i]<=PointContactH) {
+      if(fC1[i]>=-PointContactR && fC1[i]<=RointContactR
+            && fC2[i]<=PointContactH) {
          fV[i]=V1;
          fIsFixed[i]=true;
       }
@@ -159,10 +151,8 @@ void PointContactDZ::Initialize()
       fV[i]=V0;
       fV[i+n1-1]=V0;
    }
-   for (int i=0;i<n1;i++)
-   {
-      if(fC1[i]>=WrapArroundR||fC1[i]<=-WrapArroundR)
-      {
+   for (int i=0;i<n1;i++) {
+      if(fC1[i]>=WrapArroundR||fC1[i]<=-WrapArroundR) {
          fIsFixed[i]=true;
          fV[i]=V0;
       }
@@ -181,15 +171,14 @@ void PointContactDZ::Initialize()
    double k2=(y3-y4)/(x3-x4);
    double b2=(y3-k2*x3);
 
-   for (int i=0;i<n;i++)
-   {
-      if(((fC2[i]>-k1*(fC1[i])+b1  && fC2[i]>y2)||(fC2[i]>-k2*(fC1[i])+b2))&&fC1[i]<0)
-      {
+   for (int i=0;i<n;i++) {
+      if(((fC2[i]>-k1*(fC1[i])+b1 
+                  && fC2[i]>y2)||(fC2[i]>-k2*(fC1[i])+b2))&&fC1[i]<0) {
          fIsFixed[i]=true;
          fV[i]=V0;
       }
-      if(((fC2[i]>k1*(fC1[i])+b1  && fC2[i]>y2)||(fC2[i]>k2*(fC1[i])+b2))&&fC1[i]>0)
-      {
+      if(((fC2[i]>k1*(fC1[i])+b1
+                  && fC2[i]>y2)||(fC2[i]>k2*(fC1[i])+b2))&&fC1[i]>0) {
          fIsFixed[i]=true;
          fV[i]=V0;
       }
