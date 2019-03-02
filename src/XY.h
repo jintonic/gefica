@@ -35,22 +35,12 @@ class GeFiCa::XY : public GeFiCa::X
        * Returns the two dimensional impurity
        */
       double GetImpurity(double x,double y){return GetData(x,y,kImpurity);};
-      /**
-       * Method involved in setting the impurity. 
-       * This is used for a variable impurity level that changes with x and y
-       */
-      virtual void SetImpurity(TF3 *Im);
 
       virtual TTree* GetTree(bool createNew=false);
 
       ClassDef(XY,1);
 
    protected:
-      double *fE2; ///< [n] electric field along the 2nd coordinate
-      double *fC2; ///< [n] the 2nd coordinate
-      double *fdC2p; ///< [n] step length to next grid point along C2
-      double *fdC2m; ///< [n] step length to previous grid point along C2
-
       void SetStepLength(double steplength1,double steplength2); 
       /**
        * Uses a binary search to return the index in two dimensions

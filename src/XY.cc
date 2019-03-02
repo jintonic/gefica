@@ -8,13 +8,9 @@
 using namespace GeFiCa;
 
 XY::XY(int nx, int ny, const char *name, const char *title)
-   : X(nx*ny, name, title), n2(ny), fE2(0), fC2(0), fdC2p(0), fdC2m(0)
+   : X(nx*ny, name, title), n2(ny)
 {
    n1=nx; // n1 is set to nx*ny through X constructor, it is fixed here
-   fE2=new double[n];
-   fC2=new double[n];
-   fdC2m=new double[n];
-   fdC2p=new double[n];
 }
 //_____________________________________________________________________________
 //
@@ -154,13 +150,6 @@ double XY::GetData(double tarx, double tary, EOutput output)
    //   abort();
    //}
    return (tar1*ab+tar0*aa)*bb+(tar3*ab+tar2*aa)*ba;
-}
-//_____________________________________________________________________________
-//
-void XY::SetImpurity(TF3 *Im)
-{
-   Initialize();
-   for (int i=n;i-->0;) fImpurity[i] = Im->Eval(fC1[i], fC2[i]);
 }
 //_____________________________________________________________________________
 //
