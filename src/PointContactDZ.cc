@@ -65,15 +65,15 @@ void PointContactDZ::SetBoundary()
          fIsFixed[i]=true;
          fV[i]=V0;
       }
-      if(fC2[i]-(fC1[i]*k+b)<fdC2m[i])
+      if(fC2[i]-(fC1[i]*k+b)<fdC2p[i])
       {
          fdC2m[i]=fC2[i]-(k*fC1[i]+b);
-         fdC1p[i]=fC2[i]-b-k*fC1[i];
+         fdC1p[i]=fC1[i]-b/k-fC2[i]/k;
       }
       if(fC2[i]-(-k*fC1[i]+b)<fdC2m[i])
       {
          fdC2m[i]=fC2[i]-(-fC1[i]*k+b);
-         fdC1m[i]=-fC2[i]*k+b-fC1[i];
+         fdC1m[i]=-fC1[i]/k-b/k-fC2[i];
       }
    }
    double x1=HoleOuterR,
