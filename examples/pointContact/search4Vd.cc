@@ -18,12 +18,12 @@ void search4Vd()
 
       vi = new PointContactDZ(690,505); vi->SetName("vi");
       vi->V0=0; vi->V1=0; // no bias
-      vi->Z=5.05*cm; vi->Radius=3.45*cm;
-      vi->PointContactZ=0.21*cm; vi->PointContactR=0.14*cm;
+      vi->Height=5.05*cm; vi->Radius=3.45*cm;
+      vi->PointContactH=0.21*cm; vi->PointContactR=0.14*cm;
 
       // x in TF3 -> r in PointContactDZ, y in TF3 -> z in PointContactDZ
-      TF3 *impurityDistribution = new TF3("fi","-0.318e10+0.025e10*y");
-      vi->SetImpurity(impurityDistribution);
+      TF3 *fid = new TF3("fImpDistr","-0.318e10+0.025e10*y");
+      vi->SetImpurity(fid);
 
       vi->Csor=1.994; // speed up SOR
       vi->CalculatePotential(kSOR2);
@@ -42,9 +42,9 @@ void search4Vd()
 
       vu = new PointContactDZ(690,505); vu->SetName("vu");
       vu->V0=1*volt; vu->V1=0*volt;
-      vu->Z=5.05*cm; vu->Radius=3.45*cm;
-      vu->PointContactZ=0.21*cm; vu->PointContactR=0.14*cm;
-      vu->SetImpurity(new TF3("wpi","0")); // no impurity
+      vu->Height=5.05*cm; vu->Radius=3.45*cm;
+      vu->PointContactH=0.21*cm; vu->PointContactR=0.14*cm;
+      vu->SetAverageImpurity(0); // no impurity
 
       vu->Csor=1.994;
       vu->CalculatePotential(kSOR2);
