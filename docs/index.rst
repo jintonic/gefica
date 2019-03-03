@@ -62,16 +62,16 @@ Compare to fieldgen
 Git submodule of MJD fieldgen
 +++++++++++++++++++++++++++++
 
-Mirror MJD siggen (including fieldgen) subversion repository in GitHub::
+Mirror MJD siggen (including fieldgen) subversion repository in GitHub
 
 .. code-block:: sh
+  
+    apt install git-svn
+    git svn clone https://radware.phy.ornl.gov/MJ/mjd_siggen/ siggen
+    git remote add origin git@github.com:jintonic/siggen.git
+    git push origin master
 
-   apt install git-svn
-   git svn clone https://radware.phy.ornl.gov/MJ/mjd_siggen/ siggen
-   git remote add origin git@github.com:jintonic/siggen.git
-   git push origin master
-
-Add it as a git submodule to GeFiCa::
+Add it as a git submodule to GeFiCa
 
 .. code-block:: sh
 
@@ -80,7 +80,7 @@ Add it as a git submodule to GeFiCa::
    git commit -m "added siggen submodule"
    git push
 
-Clone GeFiCa with fieldgen::
+Clone GeFiCa with fieldgen
 
 .. code-block:: sh
 
@@ -89,7 +89,7 @@ Clone GeFiCa with fieldgen::
    git submodule init
    git submodule update
 
-Update GeFiCa and fieldgen::
+Update GeFiCa and fieldgen
 
 .. code-block:: sh
 
