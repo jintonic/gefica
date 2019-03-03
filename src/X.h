@@ -38,8 +38,8 @@ namespace GeFiCa {
 class GeFiCa::X : public TNamed 
 {
    public:
-      double V0;///< voltage of one electrode
-      double V1;///< voltage of the other electrode
+      double V0;///< voltage of inner/lower electrode
+      double V1;///< voltage of outer/higher electrode
 
       int n1; ///< number of grid points along the 1st coordinate
       int n; ///< total number of grid points (n = n1 in 1D case)
