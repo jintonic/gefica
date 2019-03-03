@@ -1,27 +1,29 @@
-#ifndef GeFiCa_HALFPOINTCONTACTRhoZ_H
-#define GeFiCa_HALFPOINTCONTACTRhoZ_H
+#ifndef GEFICA_POINTCONTACTRHOZ_H
+#define GEFICA_POINTCONTACTRHOZ_H
 
-#include "RhoZ.h"
+#include "PointContactDZ.h"
 
 namespace GeFiCa { class PointContactRhoZ; }
 
 /**
  * Grid setup for 2D point contact detectors.
- * The grid is setup in [0, Radius] and [0, Z0].
+ * The grid is setup in [0, Radius] and [0, Height].
  */
-class GeFiCa::PointContactRhoZ : public GeFiCa::RhoZ
+class GeFiCa::PointContactRhoZ : public GeFiCa::PointContactDZ
 {
    public:
-      double Radius,Z,Z0,PointContactR,PointContactZ;//bounds for X and Y and point start and end
-
-      PointContactRhoZ(int ix=0,int iy=0) : RhoZ(ix,iy),
-      Radius(1),Z(1),Z0(0), PointContactR(0.4),PointContactZ(0.2){};
+      /**
+       * Default constructor.
+       */
+      PointContactRhoZ(int nr=101, int nz=101,
+            const char *name="pcrz",
+            const char *title="2D point contact detector")
+         : PointContactDZ(nr, nz, name, title) {};
 
       ClassDef(PointContactRhoZ,1);
+
    protected:
       void Initialize();
-      void BoundaryOnPointcontact();
-
 };
 
 #endif
