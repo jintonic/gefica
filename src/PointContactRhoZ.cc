@@ -11,7 +11,7 @@ void PointContactRhoZ::Initialize()
    for(int i=n;i-->0;) {
       fC1[i]=fC1[i]+RLowerBound;
       fV[i]=(V1+V0)/2;
-      if(fC1[i]>0&&fC1[i]<PointContactR&&fC2[i]<PointContactZ) {
+      if(fC1[i]>0&&fC1[i]<PointContactR&&fC2[i]<PointContactH) {
 	    fV[i]=V0;
 	    fIsFixed[i]=true;
       }
@@ -33,9 +33,9 @@ void PointContactRhoZ::Initialize()
    for(int i=0;i<n;i++) {
       //only change fdc1m when it is right close to bound
       if(fC1[i]-PointContactR<fdC1m[i]&&fC1[i]>PointContactR
-            &&fC2[i]<PointContactZ) fdC1m[i]=fC1[i]-PointContactR;
+            &&fC2[i]<PointContactH) fdC1m[i]=fC1[i]-PointContactR;
       //only change fdc2m when it is right close to bound
-      if(fC2[i]-PointContactZ<fdC2m[i]&&fC2[i]>PointContactZ
-            &&fC1[i]<PointContactR) fdC2m[i]=fC2[i]-PointContactZ;
+      if(fC2[i]-PointContactH<fdC2m[i]&&fC2[i]>PointContactH
+            &&fC1[i]<PointContactR) fdC2m[i]=fC2[i]-PointContactH;
    }
 }
