@@ -1,5 +1,6 @@
 #include <TF3.h>
 #include <TTree.h>
+#include <TStyle.h>
 #include <TStopwatch.h>
 
 #include "X.h"
@@ -7,26 +8,18 @@
 using namespace GeFiCa;
 
 X::X(int nx, const char *name, const char *title) : TNamed(name,title), V0(0),
-   V1(2e3*volt), n1(nx), n(nx), MaxIterations(9999), Nsor(0), Csor(1.95),
-   Precision(1e-7*volt), fE2(0), fE3(0), fC2(0), fC3(0),
-   fdC2p(0), fdC2m(0), fdC3p(0), fdC3m(0)
+   V1(2e3*volt), n1(nx), n(nx), MaxIterations(5000), Nsor(0), Csor(1.95),
+   Precision(1e-7*volt)
 {
    if (n<10) { Warning("X","n<10, set it to 11"); n=11; n1=11; }
 
    fV=new double[n];
-   fE1=new double[n];
-   fE2=new double[n];
-   fE3=new double[n];
-   fC1=new double[n];
-   fC2=new double[n];
-   fC3=new double[n];
+   fE1=new double[n]; fE2=new double[n]; fE3=new double[n];
+   fC1=new double[n]; fC2=new double[n]; fC3=new double[n];
 
-   fdC1p=new double[n];
-   fdC1m=new double[n];
-   fdC2m=new double[n];
-   fdC2p=new double[n];
-   fdC3p=new double[n];
-   fdC3m=new double[n];
+   fdC1p=new double[n]; fdC1m=new double[n];
+   fdC2p=new double[n]; fdC2m=new double[n];
+   fdC3p=new double[n]; fdC3m=new double[n];
 
    fIsFixed=new bool[n];
    fIsDepleted=new bool[n];
@@ -36,15 +29,27 @@ X::X(int nx, const char *name, const char *title) : TNamed(name,title), V0(0),
       fV[i]=0;
       fE1[i]=0; fE2[i]=0; fE3[i]=0;
       fC1[i]=0; fC2[i]=0; fC3[i]=0;
+
       fdC1m[i]=0; fdC1p[i]=0;
       fdC2m[i]=0; fdC2p[i]=0;
       fdC3m[i]=0; fdC3p[i]=0;
+
       fIsFixed[i]=false;
       fIsDepleted[i]=true;
       fImpurity[i]=0;
    }
 
    fTree=NULL; fImpDist=NULL;
+
+   gROOT->SetStyle("Plain"); // pick up a good default style to modify
+   gStyle->SetLegendBorderSize(0);
+   gStyle->SetLegendFont(132);
+   gStyle->SetLabelFont(132,"XYZ");
+   gStyle->SetTitleFont(132,"XYZ");
+   gStyle->SetLabelSize(0.05,"XYZ");
+   gStyle->SetTitleSize(0.05,"XYZ");
+   gStyle->SetTitleOffset(-0.4,"Z");
+   gStyle->SetPadTopMargin(0.02);
 }
 //_____________________________________________________________________________
 //
