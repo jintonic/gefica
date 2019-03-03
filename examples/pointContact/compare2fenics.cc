@@ -26,8 +26,8 @@ void compare2fenics()
    GeFiCa::TrueCoaxial1D *tc1d = new GeFiCa::TrueCoaxial1D(499);
    tc1d->V0=2500*GeFiCa::volt;
    tc1d->V1=0*GeFiCa::volt;
-   tc1d->InnerRadius=0.13;
-   tc1d->OuterRadius=3.45;
+   tc1d->InnerR=0.13;
+   tc1d->OuterR=3.45;
 
    tc1d->SetImpurity=(-0.318e10);
    tc1d->CalculatePotential(GeFiCa::kAnalytic);

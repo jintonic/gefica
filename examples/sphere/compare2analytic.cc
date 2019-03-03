@@ -1,15 +1,11 @@
-/**
- * \file compare2analytic.cc
- * \example sphere/compare2analytic.cc
- * Compare numerical result to analytic calculation for 1D spherical detector
- */
 using namespace GeFiCa;
+//Compare numerical result to analytic calculation for 1D spherical detector
 void compare2analytic()
 {
    // configure detector
    Sphere1D *num=new Sphere1D;
-   num->InnerRadius=0.3*cm;
-   num->OuterRadius=1*cm;
+   num->InnerR=0.3*cm;
+   num->OuterR=1*cm;
    num->SetAverageImpurity(3e9/cm3);
    num->V0=900*volt;
    num->V1=0*volt;

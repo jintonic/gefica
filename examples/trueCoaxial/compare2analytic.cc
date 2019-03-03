@@ -6,8 +6,8 @@ void compare2analytic()
    TrueCoaxial1D *num = new TrueCoaxial1D;
    num->V0=3000*volt; // core
    num->V1=0*volt; // outer surface electrode
-   num->InnerRadius=0.5*cm;
-   num->OuterRadius=3.0*cm;
+   num->InnerR=0.5*cm;
+   num->OuterR=3.0*cm;
    num->SetAverageImpurity(-3e9/cm3); // n-type
 
    // make a copy of the detector configuration

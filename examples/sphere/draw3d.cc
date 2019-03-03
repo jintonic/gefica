@@ -1,15 +1,11 @@
-/**
- * \file draw3d.cc
- * \exmaple draw3d.cc
- * Draw fields of a 3D spherical detector
- */
+// Draw fields of a 3D spherical detector
 using namespace GeFiCa;
 void draw3d()
 {
    // configure detector
    Sphere3D *num = new Sphere3D;
-   num->InnerRadius=0.5*cm;
-   num->OuterRadius=2.5*cm;
+   num->InnerR=0.5*cm;
+   num->OuterR=2.5*cm;
    num->SetAverageImpurity(3e9/cm3);
    num->V0=900*volt;
    num->V1=0*volt;
@@ -19,8 +15,8 @@ void draw3d()
 
    //use analytic method from 1D sphere
    Sphere1D *ana = new Sphere1D;
-   ana->InnerRadius=0.5*cm;
-   ana->OuterRadius=2.5*cm;
+   ana->InnerR=0.5*cm;
+   ana->OuterR=2.5*cm;
    ana->SetAverageImpurity(3e9/cm3);
    ana->V0=900*volt;
    ana->V1=0*volt;
