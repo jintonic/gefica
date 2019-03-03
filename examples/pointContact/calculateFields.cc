@@ -2,32 +2,33 @@ using namespace GeFiCa;
 // calculate and save fields of a PPC
 void calculateFields(const char *output="ppc.root")
 {
-   PointContactDZ *fields = new PointContactDZ(692,506);
+   PointContactDZ *ppc = new PointContactDZ(400,501);
+   ppc->V0=1.4*kV; ppc->V1=0;
 
-   fields->Radius=3.45*cm;
-   fields->Height=5.05*cm;
+   ppc->Radius=4.00*cm;
+   ppc->Height=5.00*cm;
 
-   fields->PointContactR=0.14*cm;
-   fields->PointContactH=0.21*cm;
+   ppc->PointContactR=0.30*cm;
+   ppc->PointContactH=0.10*cm;
 
-   fields->WrapArroundR=2.45*cm;
-   fields->TaperW=0.5*cm;
-   fields->TaperH=0.5*cm;
-   fields->CornerW=0.5*cm;
-   fields->CornerH=0.5*cm;
+   ppc->WrapArroundR=1.20*cm;
+   ppc->TaperW=0.1*cm;
+   ppc->TaperH=0.1*cm;
+   ppc->CornerW=0.1*cm;
+   ppc->CornerH=0.1*cm;
 
-   fields->HoleH=4.0*cm;
-   fields->HoleInnerR=0.3*cm;
-   fields->HoleOuterR=0.5*cm;
+   ppc->HoleH=2.5*cm;
+   ppc->HoleInnerR=0.5*cm;
+   ppc->HoleOuterR=0.5*cm;
 
    // x in TF3 -> r, y in TF3 -> z
-   TF3 *fid = new TF3("fImpDistr","-0.318e10+0.025e10*y");
-   fields->SetImpurity(fid);
+   TF3 *fid = new TF3("fImpDistr","0.7e10");
+   ppc->SetImpurity(fid);
 
-   fields->Csor=1.995;
-   fields->CalculatePotential(kSOR2);
+   ppc->Csor=1.995;
+   ppc->CalculatePotential(kSOR2);
    
    TFile *file = new TFile(output,"recreate");
-   fields->Write();
+   ppc->Write();
    file->Close();
 }
