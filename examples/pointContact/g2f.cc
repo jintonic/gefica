@@ -1,9 +1,5 @@
 using namespace GeFiCa;
-/**
- * \file g2f.cc
- * \example g2f.cc
- * \brief Convert GeFiCa output to fieldgen format
- */
+// convert GeFiCa output to fieldgen format
 void g2f(const char *input="pcdz.root", const char *output="pcdz.dat")
 {
    // open input ROOT file
@@ -26,15 +22,15 @@ void g2f(const char *input="pcdz.root", const char *output="pcdz.dat")
    // dump object to output
    ofstream fout(output);
    /*
-    * fout<<"# height "<< pcdz->Z-pcdz->Z0;        
+    * fout<<"# height "<< pcdz->Height;        
    fout<<"\n# xtal_radius "<<pcdz->Radius;
-   fout<<"\n# pc_length   "<<pcdz->PointContactZ;        
+   fout<<"\n# pc_length   "<<pcdz->PointContactH;        
    fout<<"\n# pc_radius   "<<pcdz->PointContactR;         
    fout<<"\n# wrap_around_radius "<<pcdz->WrapArroundR; 
    fout<<"\n# grid size on r "<<pcdz->fdC1p[0];
    fout<<"\n# grid size on z "<<pcdz->fdC2p[0];
    fout<<"\n# impurity_z0  "<<pcdz->fImpurity[0];
-   fout<<"\n# xtal_HV      "<<pcdz->V1;
+   fout<<"\n# xtal_HV      "<<pcdz->V0;
    fout<<"\n# max_iterations "<<pcdz->MaxIterations;
    fout<<"\n# ";
    fout<<"\n## r (mm), z (mm), V (V),  E (V/cm), E_r (V/cm), E_z (V/cm)";
