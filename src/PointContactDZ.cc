@@ -58,12 +58,12 @@ void PointContactDZ::SetBoundary()
       if(fC2[i]<=fC1[i]*k+b)
       {
          fIsFixed[i]=true;
-         fV[i]=V0;
+         fV[i]=V1;
       }
       if(fC2[i]<=-fC1[i]*k+b)
       {
          fIsFixed[i]=true;
-         fV[i]=V0;
+         fV[i]=V1;
       }
       if(fC2[i]-(fC1[i]*k+b)<fdC2p[i])
       {
@@ -132,29 +132,29 @@ void PointContactDZ::Initialize()
 
    // set initial potential values
    for(int i=n;i-->0;) {
-      fV[i]=(V0+V1)/2;
+      fV[i]=(V1+V0)/2;
       // set potential for inner electrodes
       if(fC1[i]>=-PointContactR && fC1[i]<=PointContactR
             && fC2[i]<=PointContactH) {
-         fV[i]=V1;
+         fV[i]=V0;
          fIsFixed[i]=true;
       }
    }
    // set potential for outer electrodes
    for(int i=n-1;i>=n-n1;i--) {
       fIsFixed[i]=true;
-      fV[i]=V0;
+      fV[i]=V1;
    }
    for(int i=0;i<n-n1;i=i+n1) {
       fIsFixed[i]=true;
       fIsFixed[i+n1-1]=true;
-      fV[i]=V0;
-      fV[i+n1-1]=V0;
+      fV[i]=V1;
+      fV[i+n1-1]=V1;
    }
    for (int i=0;i<n1;i++) {
       if(fC1[i]>=WrapArroundR||fC1[i]<=-WrapArroundR) {
          fIsFixed[i]=true;
-         fV[i]=V0;
+         fV[i]=V1;
       }
    }
 
@@ -175,12 +175,12 @@ void PointContactDZ::Initialize()
       if(((fC2[i]>-k1*(fC1[i])+b1 
                   && fC2[i]>y2)||(fC2[i]>-k2*(fC1[i])+b2))&&fC1[i]<0) {
          fIsFixed[i]=true;
-         fV[i]=V0;
+         fV[i]=V1;
       }
       if(((fC2[i]>k1*(fC1[i])+b1
                   && fC2[i]>y2)||(fC2[i]>k2*(fC1[i])+b2))&&fC1[i]>0) {
          fIsFixed[i]=true;
-         fV[i]=V0;
+         fV[i]=V1;
       }
 
    }
@@ -219,7 +219,7 @@ bool PointContactDZ::SaveFieldAsFieldgen(const char * fout)
    outfile<<"\n# grid size on r "<<fdC1p[0];
    outfile<<"\n# grid size on z "<<fdC2p[0];
    outfile<<"\n# impurity_z0  "<<fImpurity[0];
-   outfile<<"\n# xtal_HV      "<<V1;
+   outfile<<"\n# xtal_HV      "<<V0;
    outfile<<"\n# max_iterations "<<MaxIterations;
    outfile<<"\n# ";
    outfile<<"\n## r (mm), z (mm), V (V),  E (V/cm), E_r (V/cm), E_z (V/cm)";
