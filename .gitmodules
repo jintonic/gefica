@@ -1,0 +1,3 @@
+[submodule "examples/pointContact/fieldgen"]
+	path = examples/pointContact/fieldgen
+	url = git@github.com:jintonic/siggen.git
