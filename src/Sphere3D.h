@@ -11,8 +11,8 @@ namespace GeFiCa { class Sphere3D;}
 class GeFiCa::Sphere3D: public GeFiCa::RThetaPhi
 {
    public :
-      double OuterRadius; ///< outer radius
-      double InnerRadius; ///< inner radius
+      double OuterR; ///< outer radius
+      double InnerR; ///< inner radius
 
       Sphere3D(int nr=101, ///< number of grid points along radius
             int nt=181, ///< number of grid points along theta

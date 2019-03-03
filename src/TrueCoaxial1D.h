@@ -11,8 +11,8 @@ namespace GeFiCa { class TrueCoaxial1D; }
 class GeFiCa::TrueCoaxial1D : public GeFiCa::Rho
 {
    public :
-      double OuterRadius; ///< Outer radius of the detector
-      double InnerRadius; ///< Inner radius of the detector
+      double OuterR; ///< Outer radius of the detector
+      double InnerR; ///< Inner radius of the detector
 
       /**
        * Default constructor.
@@ -32,13 +32,13 @@ class GeFiCa::TrueCoaxial1D : public GeFiCa::Rho
        * https://www.wolframalpha.com/input/?i=1%2Fx*+%28x*f%28x%29%27%29%27%3Da
        * potential(r)=a + b log(r) - rho/4/epsilon*r^2 with boundary conditions:
        *
-       * - potential(rinner) = V0,
-       * - potential(router) = V1,
+       * - potential(Ri) = V0,
+       * - potential(Ro) = V1,
        *
        * So, 
        *
        * - a = - rho/2/epsilon
-       * - b = [rho/4/epsilon*(router^2-rinner^2)+(V1-V0)]/log(router/rinner)
+       * - b = [rho/4/epsilon*(Ro^2-Ri^2)+(V1-V0)]/log(Ro/Ri)
        */
       bool Analytic();
 };

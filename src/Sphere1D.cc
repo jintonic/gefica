@@ -3,17 +3,17 @@
 using namespace GeFiCa;
 
 Sphere1D::Sphere1D(int n, const char *name, const char *title)
-   : R(n, name, title), InnerRadius(0.3*cm), OuterRadius(3*cm) {};
+   : R(n, name, title), InnerR(0.3*cm), OuterR(3*cm) {};
 //_____________________________________________________________________________
 //
 void Sphere1D::Initialize()
 {
-   if (OuterRadius<=InnerRadius) Fatal("Initialize",
-         "Inner R (%.1f) >= outer R (%.1f)! Abort!", InnerRadius, OuterRadius);
+   if (OuterR<=InnerR) Fatal("Initialize",
+         "Inner R (%.1f) >= outer R (%.1f)! Abort!", InnerR, OuterR);
 
-   double stepLength=(OuterRadius-InnerRadius)/(n-1);
+   double stepLength=(OuterR-InnerR)/(n-1);
    SetStepLength(stepLength);
-   for (int i=n;i-->0;) fC1[i]=fC1[i]+InnerRadius;
+   for (int i=n;i-->0;) fC1[i]=fC1[i]+InnerR;
    fIsFixed[0]=true; fIsFixed[n-1]=true;
    double slope = (V1-V0)/(n-1);
    for (int i=0; i<n; i++) fV[i]=V0+slope*i;

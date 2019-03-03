@@ -3,17 +3,17 @@
 using namespace GeFiCa;
 
 TrueCoaxial1D::TrueCoaxial1D(int n, const char *name, const char *title)
-   : Rho(n, name, title), OuterRadius(3*cm), InnerRadius(0.5*cm) {};
+   : Rho(n, name, title), OuterR(3*cm), InnerR(0.5*cm) {};
 //_____________________________________________________________________________
 //
 void TrueCoaxial1D::Initialize()
 {
-   if (InnerRadius>=OuterRadius) Fatal("Initialize",
-         "Inner R (%.1f) >= Outer R (%.1f)! Abort!", InnerRadius, OuterRadius);
+   if (InnerR>=OuterR) Fatal("Initialize",
+         "Inner R (%.1f) >= Outer R (%.1f)! Abort!", InnerR, OuterR);
  
-   double stepLength=(OuterRadius-InnerRadius)/(n-1);
+   double stepLength=(OuterR-InnerR)/(n-1);
    SetStepLength(stepLength);
-   for (int i=n;i-->0;) fC1[i]=fC1[i]+InnerRadius;
+   for (int i=n;i-->0;) fC1[i]=fC1[i]+InnerR;
    fIsFixed[0]=true; fIsFixed[n-1]=true;
    double slope = (V1-V0)/(n-1);
    for (int i=0; i<n; i++) fV[i]=V0+slope*i;
