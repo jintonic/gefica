@@ -91,15 +91,29 @@ void PointContactDZ::SetBoundary()
    double b2=y3-k2*x3;
 
    for (int i=0;i<n;i++) {
-      //right side of hole
-      if(fC1[i]-fC2[i]/k1+b1/k1<fdC1m[i] && fC2[i]>y2 &&
-            fC1[i]-fC2[i]/k1+b1/k1>0) fdC1m[i]=fC1[i]-fC2[i]/k1+b1/k1;
+      if (x1!=x2)
+      {
+         //right side of hole
+         if(fC1[i]-fC2[i]/k1+b1/k1<fdC1m[i] && fC2[i]>y2 &&
+               fC1[i]-fC2[i]/k1+b1/k1>0)
+            fdC1m[i]=fC1[i]-fC2[i]/k1+b1/k1;
+         //left side of hole
+         if(-fC1[i]-fC2[i]/k1+b1/k1>0&&-fC1[i]-fC2[i]/k1+b1/k1<fdC1p[i]&&fC2[i]>y2)
+            fdC1p[i]=-fC1[i]-fC2[i]/k1+b1/k1;
+      }
+      else//x1==x2
+      {
+         //right side of hole
+         if(fC1[i]-x1<fdC1m[i] && fC2[i]>y2 &&
+               fC1[i]-x1>0)
+            fdC1m[i]=fC1[i]-x1;
+         //left side of hole
+         if(-fC1[i]-x1>0&&-fC1[i]-x1<fdC1p[i]&&fC2[i]>y2)
+            fdC1p[i]=-fC1[i]-x1;
+      }
       //left corner
       if(fC1[i]+fC2[i]/k2-b2/k2>0 && fC1[i]+fC2[i]/k2-b2/k2<fdC1m[i] &&
             fC2[i]>y4) fdC1m[i]=fC1[i]+fC2[i]/k2-b2/k2;
-      //left side of hole
-      if(-fC1[i]-fC2[i]/k1+b1/k1>0&&-fC1[i]-fC2[i]/k1+b1/k1<fdC1p[i]&&fC2[i]>y2)
-         fdC1p[i]=-fC1[i]-fC2[i]/k1+b1/k1;
       //right corner
       if(-fC1[i]+fC2[i]/k2-b2/k2>0&&-fC1[i]+fC2[i]/k2-b2/k2<fdC1p[i]&&fC2[i]>y4)
          fdC1p[i]=-fC1[i]+fC2[i]/k2-b2/k2;
@@ -170,17 +184,30 @@ void PointContactDZ::Initialize()
    double b1=y1-k1*x1;
    double k2=(y3-y4)/(x3-x4);
    double b2=(y3-k2*x3);
-
-   for (int i=0;i<n;i++) {
-      if(((fC2[i]>-k1*(fC1[i])+b1 
-                  && fC2[i]>y2)||(fC2[i]>-k2*(fC1[i])+b2))&&fC1[i]<0) {
-         fIsFixed[i]=true;
-         fV[i]=V1;
+   if(x1!=x2)
+   {
+      for (int i=0;i<n;i++) {
+         if(((fC2[i]>-k1*(fC1[i])+b1 
+                     && fC2[i]>y2)||(fC2[i]>-k2*(fC1[i])+b2))&&fC1[i]<0) {
+            fIsFixed[i]=true;
+            fV[i]=V1;
+         }
+         if(((fC2[i]>k1*(fC1[i])+b1
+                     && fC2[i]>y2)||(fC2[i]>k2*(fC1[i])+b2))&&fC1[i]>0) {
+            fIsFixed[i]=true;
+            fV[i]=V1;
+         }
       }
-      if(((fC2[i]>k1*(fC1[i])+b1
-                  && fC2[i]>y2)||(fC2[i]>k2*(fC1[i])+b2))&&fC1[i]>0) {
-         fIsFixed[i]=true;
-         fV[i]=V1;
+   }
+   else//x1==x2
+   {
+      for (int i=0;i<n;i++) 
+      {
+         if(fC1[i]<=x1&&fC1[i]>=-x1&&fC2[i]>=y2)
+         {
+            fIsFixed[i]=true;
+            fV[i]=V1;
+         }
       }
 
    }
