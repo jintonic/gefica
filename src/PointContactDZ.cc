@@ -16,13 +16,16 @@ PointContactDZ::PointContactDZ(int nd, int nz, const char *name,
    PointContactH(0.01*cm),
    PointContactR(0.1*cm),
    HoleH(0),
-   HoleInnerR(0),
-   HoleOuterR(0),
+   HoleR(0), 
+   HoleTaperR(0),
+   HoleTaperH(0),
    TaperW(0.3*cm),
    TaperH(0.3*cm),
    CornerW(0.3*cm),
    CornerH(0.3*cm),
-   WrapArroundR(2.5*cm) {};
+   WrapArroundR(2.5*cm),
+   GrooveW(0), 
+   GrooveH(0){};
 //_____________________________________________________________________________
 //
 void PointContactDZ::SetBoundary()
@@ -76,10 +79,10 @@ void PointContactDZ::SetBoundary()
          fdC1m[i]=-fC1[i]/k-b/k-fC2[i];
       }
    }
-   double x1=HoleOuterR,
+   double x1=HoleTaperR,
           y1=Height,
-          x2=HoleInnerR,
-          y2=Height-HoleH,
+          x2=HoleR,
+          y2=Height-HoleTaperH,
           x3=Radius-CornerW,
           y3=Height,
           x4=Radius,
@@ -93,24 +96,31 @@ void PointContactDZ::SetBoundary()
    for (int i=0;i<n;i++) {
       if (x1!=x2)
       {
-         //right side of hole
+         //right side of hole taper
          if(fC1[i]-fC2[i]/k1+b1/k1<fdC1m[i] && fC2[i]>y2 &&
                fC1[i]-fC2[i]/k1+b1/k1>0)
             fdC1m[i]=fC1[i]-fC2[i]/k1+b1/k1;
-         //left side of hole
+         //left side of hole taper
          if(-fC1[i]-fC2[i]/k1+b1/k1>0&&-fC1[i]-fC2[i]/k1+b1/k1<fdC1p[i]&&fC2[i]>y2)
             fdC1p[i]=-fC1[i]-fC2[i]/k1+b1/k1;
       }
       else//x1==x2
       {
-         //right side of hole
+         //right side of hole taper
          if(fC1[i]-x1<fdC1m[i] && fC2[i]>y2 &&
                fC1[i]-x1>0)
             fdC1m[i]=fC1[i]-x1;
-         //left side of hole
+         //left side of hole taper
          if(-fC1[i]-x1>0&&-fC1[i]-x1<fdC1p[i]&&fC2[i]>y2)
             fdC1p[i]=-fC1[i]-x1;
       }
+      //right side of hole taper
+      if(fC1[i]-HoleR<fdC1m[i] && fC2[i]>HoleH &&
+            fC1[i]-HoleR>0)
+          fdC1m[i]=fC1[i]-HoleR;
+      //left side of hole
+      if(-fC1[i]-HoleR>0&&-fC1[i]-HoleR<fdC1p[i]&&fC2[i]>HoleH)
+         fdC1p[i]=-fC1[i]-HoleR;
       //left corner
       if(fC1[i]+fC2[i]/k2-b2/k2>0 && fC1[i]+fC2[i]/k2-b2/k2<fdC1m[i] &&
             fC2[i]>y4) fdC1m[i]=fC1[i]+fC2[i]/k2-b2/k2;
@@ -130,7 +140,7 @@ void PointContactDZ::SetBoundary()
       if(-fC2[i]+fC1[i]*k2+b2>0&&-fC2[i]+fC1[i]*k2+b2<fdC2p[i]&&fC2[i]>y4)
          fdC2p[i]=-fC2[i]+fC1[i]*k2+b2;
       //down center of hole
-      if(y2-fC2[i]<fdC2p[i]&&fC1[i]>-HoleInnerR&&fC1[i]<HoleInnerR)
+      if(y2-fC2[i]<fdC2p[i]&&fC1[i]>-HoleR&&fC1[i]<HoleR)
          fdC2p[i]=y2-fC2[i];
    }
 }
@@ -172,10 +182,21 @@ void PointContactDZ::Initialize()
       }
    }
 
-   double x1=HoleOuterR,
+   if(TaperW+WrapArroundR<Radius)
+   {
+      for(int i=0;i<n;i++)
+      {
+         if((fC1[i]>WrapArroundR-GrooveW && fC1[i]<WrapArroundR && fC2[i]<GrooveH)||
+            (fC1[i]<-(WrapArroundR-GrooveW) && fC1[i]>-(WrapArroundR) && fC2[i]<GrooveH))
+         {
+            fImpurity[i]=0;
+         }
+      }
+   }
+   double x1=HoleTaperR,
           y1=Height,
-          x2=HoleInnerR,
-          y2=Height-HoleH,
+          x2=HoleR,
+          y2=Height-HoleTaperH,
           x3=Radius-CornerW,
           y3=Height,
           x4=Radius,

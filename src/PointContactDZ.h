@@ -19,8 +19,9 @@ class GeFiCa::PointContactDZ : public GeFiCa::RhoZ
       double PointContactR; ///< Radius of point contact
 
       double HoleH; ///< Depth of bore
-      double HoleInnerR; ///< Inner radius of bore
-      double HoleOuterR; ///< Outer radius of bore
+      double HoleR; ///< radius of bore
+      double HoleTaperR; ///< radius of bore taper
+      double HoleTaperH; ///< height of bore taper
 
       double TaperW; ///< Width of taper (point contact side)
       double TaperH; ///<Height of taper (point contact side)
@@ -29,6 +30,8 @@ class GeFiCa::PointContactDZ : public GeFiCa::RhoZ
       double CornerH; ///<Height of taper (bore side)
 
       double WrapArroundR; ///< Inner radius of outer contact 
+      double GrooveW; ///< Width of Groove 
+      double GrooveH; ///< Height of Groove 
 
       /**
        * Default constructor.
