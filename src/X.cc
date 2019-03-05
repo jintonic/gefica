@@ -8,10 +8,10 @@
 using namespace GeFiCa;
 
 X::X(int nx, const char *name, const char *title) : TNamed(name,title), V0(0),
-   V1(2e3*volt), n1(nx), n(nx), MaxIterations(5000), Nsor(0), Csor(1.95),
+   V1(2e3*volt), fN1(nx), n(nx), MaxIterations(5000), Nsor(0), Csor(1.95),
    Precision(1e-7*volt)
 {
-   if (n<10) { Warning("X","n<10, set it to 11"); n=11; n1=11; }
+   if (n<10) { Warning("X","n<10, set it to 11"); n=11; fN1=11; }
 
    fV=new double[n];
    fE1=new double[n]; fE2=new double[n]; fE3=new double[n];
@@ -269,9 +269,9 @@ bool X::CalculateField(int idx)
 {
    if (fdC1p[idx]==0 || fdC1m[idx]==0) return false;
 
-   if (idx%n1==0) // C1 lower boundary
+   if (idx%fN1==0) // C1 lower boundary
       fE1[idx]=(fV[idx]-fV[idx+1])/fdC1p[idx];
-   else if (idx%n1==n1-1) // C1 upper boundary
+   else if (idx%fN1==fN1-1) // C1 upper boundary
       fE1[idx]=(fV[idx]-fV[idx-1])/fdC1m[idx];
    else // bulk
       fE1[idx]=(fV[idx-1]-fV[idx+1])/(fdC1m[idx]+fdC1p[idx]);

@@ -12,15 +12,15 @@ void Sphere3D::Initialize()
    if (InnerR>=OuterR) Fatal("Initialize",
          "Inner R (%.1f) >= outer R (%.1f)! Abort!", InnerR, OuterR);
 
-   double stepLength=(OuterR-InnerR)/(n1-1);
-   SetStepLength(stepLength,3.14159265/n2,3.14159265*2/n3);
+   double stepLength=(OuterR-InnerR)/(fN1-1);
+   SetStepLength(stepLength,3.14159265/fN2,3.14159265*2/fN3);
    for(int i=n;i-->0;) fC1[i]=fC1[i]+InnerR;
-   for(int i=n;i-->0;) fC2[i]=fC2[i]+3.14159265/2/n2;
+   for(int i=n;i-->0;) fC2[i]=fC2[i]+3.14159265/2/fN2;
 
-   for (int i=0; i<n; i+=n1) {
+   for (int i=0; i<n; i+=fN1) {
       fV[i]=V0;
-      fV[i+n1-1]=V1;
+      fV[i+fN1-1]=V1;
       fIsFixed[i]=true;
-      fIsFixed[i+n1-1]=true;
+      fIsFixed[i+fN1-1]=true;
    }
 }

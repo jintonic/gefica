@@ -12,13 +12,13 @@ void RhoZ::DoSOR2(int idx)
    double dzm=fdC2m[idx];
    double dzp=fdC2p[idx];
    double pzm,pzp,prm,prp; // pzm: potential_z_plus
-   if(idx>=n1)pzm=fV[idx-n1];
-   else pzm=fV[idx+n1];
-   if(idx>=n-n1)pzp=fV[idx];
-   else pzp=fV[idx+n1];
-   if(idx%n1==0)prm=fV[idx];
+   if(idx>=fN1)pzm=fV[idx-fN1];
+   else pzm=fV[idx+fN1];
+   if(idx>=n-fN1)pzp=fV[idx];
+   else pzp=fV[idx+fN1];
+   if(idx%fN1==0)prm=fV[idx];
    else prm=fV[idx-1];
-   if(idx%n1==n1-1)prp=fV[idx];
+   if(idx%fN1==fN1-1)prp=fV[idx];
    else prp=fV[idx+1];
    double tmp=(density/epsilon
          + 1/fC1[idx]*(prp-prm)/(drm+drp) +(prp/drp+prm/drm)*2/(drm+drp)

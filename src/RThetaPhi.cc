@@ -25,23 +25,23 @@ void RThetaPhi::DoSOR2(int idx)
 
    // get potentials of points around point idx
    double pthetam,pthetap,prm,prp,pphip,pphim;
-   if (idx<n1*n2) pphim=fV[idx+n-n1*n2];
-   else pphim=fV[idx-n1*n2];
-   if (idx>=n-n1*n2) pphip=fV[idx-(n-n1*n2)];
-   else pphip=fV[idx+n1*n2];
-   if (idx%(n1*n2)>(n1*n2)-n1-1) {
+   if (idx<fN1*fN2) pphim=fV[idx+n-fN1*fN2];
+   else pphim=fV[idx-fN1*fN2];
+   if (idx>=n-fN1*fN2) pphip=fV[idx-(n-fN1*fN2)];
+   else pphip=fV[idx+fN1*fN2];
+   if (idx%(fN1*fN2)>(fN1*fN2)-fN1-1) {
       if(idx<n/2) pthetap=fV[idx+n/2];
       else pthetap=fV[idx-n/2];
    } else
-      pthetap=fV[idx+n1];
-   if (idx%(n1*n2)<n1) {
+      pthetap=fV[idx+fN1];
+   if (idx%(fN1*fN2)<fN1) {
       if(idx<n/2)pthetam=fV[idx+n/2];
       else pthetam=fV[idx-n/2];
    } else
-      pthetam=fV[idx-n1];
-   if ((idx%(n1*n2))%n1==n1-1) prp=fV[idx];
+      pthetam=fV[idx-fN1];
+   if ((idx%(fN1*fN2))%fN1==fN1-1) prp=fV[idx];
    else prp=fV[idx+1];
-   if ((idx%(n1*n2))%n1==0) prm=fV[idx];
+   if ((idx%(fN1*fN2))%fN1==0) prm=fV[idx];
    else prm=fV[idx-1];
 
    double r=fC1[idx];
@@ -105,28 +105,28 @@ double RThetaPhi::GetData(double tarx, double tary, double tarz, EOutput output)
       case 3:tar= fE2;break;
       case 4:tar= fE3;break;
    }
-   if(tary==0)return (tar[n1*n2-1]+tar[n1*n2-1+n/2])/2;
+   if(tary==0)return (tar[fN1*fN2-1]+tar[fN1*fN2-1+n/2])/2;
    tar3=-1;
    tar5=-1;
    tar6=-1;
    tar7=-1;
    tar0=tar[idx];
-   if(idx>=(n-n1*n2)) {
-      tar4=tar[idx-n+n1*n2];
-      tar5=tar[idx-n+n1*n2+1];
-      tar6=tar[idx-n+n1*n2+n1];
-      tar7=tar[idx-n+n1*n2+n1+1];
+   if(idx>=(n-fN1*fN2)) {
+      tar4=tar[idx-n+fN1*fN2];
+      tar5=tar[idx-n+fN1*fN2+1];
+      tar6=tar[idx-n+fN1*fN2+fN1];
+      tar7=tar[idx-n+fN1*fN2+fN1+1];
    } else
-      tar4=tar[idx+n1*n2];
+      tar4=tar[idx+fN1*fN2];
 
-   if(idx%(n1*n2)%n1==n1-1) {tar2=0;tar3=0;tar6=0;tar7=0;}
-   else {tar2=tar[idx+n1];}
-   if(idx%(n1*n2)/n1==n2-1) {tar1=0;tar3=0;tar5=0;tar7=0;}
+   if(idx%(fN1*fN2)%fN1==fN1-1) {tar2=0;tar3=0;tar6=0;tar7=0;}
+   else {tar2=tar[idx+fN1];}
+   if(idx%(fN1*fN2)/fN1==fN2-1) {tar1=0;tar3=0;tar5=0;tar7=0;}
    else {tar1=tar[idx+1];}
-   if(tar3==-1)tar3=tar[idx+n1+1];
-   if(tar5==-1)tar5=tar[idx+n1*n2+1];
-   if(tar6==-1)tar6=tar[idx+n1*n2+n1];
-   if(tar7==-1)tar7=tar[idx+n1*n2+n1+1];
+   if(tar3==-1)tar3=tar[idx+fN1+1];
+   if(tar5==-1)tar5=tar[idx+fN1*fN2+1];
+   if(tar6==-1)tar6=tar[idx+fN1*fN2+fN1];
+   if(tar7==-1)tar7=tar[idx+fN1*fN2+fN1+1];
 
    return ((tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb)*ac
       +((tar4*aa+tar5*ab)*ba+(tar6*aa+tar7*ab)*bb)*ca;

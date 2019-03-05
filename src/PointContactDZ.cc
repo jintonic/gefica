@@ -44,11 +44,11 @@ void PointContactDZ::SetBoundary()
       {
          fdC1p[i]=-fC1[i]-PointContactR;
       }
-      if(WrapArroundR-fC1[i]<fdC1p[i]&&fC1[i]<WrapArroundR&&i<n1)
+      if(WrapArroundR-fC1[i]<fdC1p[i]&&fC1[i]<WrapArroundR&&i<fN1)
       {
          fdC1p[i]=WrapArroundR-fC1[i];
       }
-      if(WrapArroundR+fC1[i]<fdC1p[i]&&fC1[i]>-WrapArroundR&&i<n1)
+      if(WrapArroundR+fC1[i]<fdC1p[i]&&fC1[i]>-WrapArroundR&&i<fN1)
       {
          fdC1m[i]=WrapArroundR+fC1[i];
       }
@@ -149,9 +149,9 @@ void PointContactDZ::SetBoundary()
 void PointContactDZ::InitializeGrid()
 {
    // we want no grid point right on z-axis
-   if (n1%2==1) Fatal("InitializeGrid", "Number of points in D can't be odd!");
+   if (fN1%2==1) Fatal("InitializeGrid", "Number of points in D can't be odd!");
 
-   SetStepLength(2*Radius/(n1-1),Height/(n2-1));
+   SetStepLength(2*Radius/(fN1-1),Height/(fN2-1));
    for(int i=n;i-->0;) fC1[i]=fC1[i]-Radius;
 
    // set initial potential values
@@ -165,17 +165,17 @@ void PointContactDZ::InitializeGrid()
       }
    }
    // set potential for outer electrodes
-   for(int i=n-1;i>=n-n1;i--) {
+   for(int i=n-1;i>=n-fN1;i--) {
       fIsFixed[i]=true;
       fV[i]=V1;
    }
-   for(int i=0;i<n-n1;i=i+n1) {
+   for(int i=0;i<n-fN1;i=i+fN1) {
       fIsFixed[i]=true;
-      fIsFixed[i+n1-1]=true;
+      fIsFixed[i+fN1-1]=true;
       fV[i]=V1;
-      fV[i+n1-1]=V1;
+      fV[i+fN1-1]=V1;
    }
-   for (int i=0;i<n1;i++) {
+   for (int i=0;i<fN1;i++) {
       if(fC1[i]>=WrapArroundR||fC1[i]<=-WrapArroundR) {
          fIsFixed[i]=true;
          fV[i]=V1;
@@ -259,7 +259,7 @@ bool PointContactDZ::CalculateField(int idx)
 
    if (fC2[idx]>PointContactH-fdC2m[idx]
          && fC2[idx]<PointContactH+fdC2p[idx]) // PC top boundary
-      fE2[idx]=(fV[idx]-fV[idx+n1])/fdC2p[idx];
+      fE2[idx]=(fV[idx]-fV[idx+fN1])/fdC2p[idx];
    if (fC1[idx]>-PointContactR-fdC1m[idx]
          && fC1[idx]<-PointContactR+fdC1p[idx]) // PC left boundary
       fE1[idx]=(fV[idx]-fV[idx-1])/fdC1m[idx];

@@ -8,9 +8,9 @@
 using namespace GeFiCa;
 
 XYZ::XYZ(int nx, int ny, int nz, const char *name, const char *title)
-   : XY(nx, ny*nz, name, title), n3(nz)
+   : XY(nx, ny*nz, name, title), fN3(nz)
 { 
-   n2=ny; // n2 is set to ny*nz through XY constructor, it is fixed here
+   fN2=ny; // fN2 is set to ny*nz through XY constructor, it is fixed here
 }
 //_____________________________________________________________________________
 //
@@ -27,11 +27,11 @@ void XYZ::SetStepLength(double steplength1,double steplength2,double steplength3
 {
    XY::SetStepLength(steplength1,steplength2); 
    for (int i=0;i<n;i++) {
-      if(i/(n1*n2)==0) fC3[i]=0;
-      else fC3[i]=fC3[i-n1*n2]+steplength3;
-      if((i%(n1*n2))/n1!=0)fC2[i]=fC2[i-n1]+steplength2;
+      if(i/(fN1*fN2)==0) fC3[i]=0;
+      else fC3[i]=fC3[i-fN1*fN2]+steplength3;
+      if((i%(fN1*fN2))/fN1!=0)fC2[i]=fC2[i-fN1]+steplength2;
       else fC2[i]=0;
-      if(i%n1==0)fC1[i]=0;
+      if(i%fN1==0)fC1[i]=0;
       else fC1[i]=fC1[i-1]+steplength1;
 
       fE3[i]=0;
@@ -52,17 +52,17 @@ void XYZ::DoSOR2(int idx)
    double h0=fdC3m[idx];
    double h5=fdC3p[idx];
    double pym,pyp,pxm,pxp,pzp,pzm;
-   if(idx<n1*n2)pzm=fV[idx];
-   else pzm=fV[idx-n1*n2];
-   if(idx>=n-n1*n2)pzp=fV[idx];
-   else pzp=fV[idx+n1*n2];
-   if(idx%(n1*n2)>(n1*n2)-n1-1) pyp=fV[idx];
-   else pyp=fV[idx+n1];
-   if(idx%(n1*n2)<n1)pym=fV[idx];
-   else pym=fV[idx-n1];
-   if((idx%(n1*n2))%n1==n1-1)pxp=fV[idx];
+   if(idx<fN1*fN2)pzm=fV[idx];
+   else pzm=fV[idx-fN1*fN2];
+   if(idx>=n-fN1*fN2)pzp=fV[idx];
+   else pzp=fV[idx+fN1*fN2];
+   if(idx%(fN1*fN2)>(fN1*fN2)-fN1-1) pyp=fV[idx];
+   else pyp=fV[idx+fN1];
+   if(idx%(fN1*fN2)<fN1)pym=fV[idx];
+   else pym=fV[idx-fN1];
+   if((idx%(fN1*fN2))%fN1==fN1-1)pxp=fV[idx];
    else pxp=fV[idx+1];
-   if((idx%(n1*n2))%n1==0)pxm=fV[idx];
+   if((idx%(fN1*fN2))%fN1==0)pxm=fV[idx];
    else pxm=fV[idx-1];
 
    double tmp= (
@@ -108,8 +108,8 @@ void XYZ::DoSOR2(int idx)
 int XYZ::FindIdx(double tarx, double tary ,double tarz,int begin,int end)
 {
    //search using binary search
-   if(begin>=end)return XY::FindIdx(tarx,tary,begin,begin+n1*n2-1);
-   int mid=((begin/(n1*n2)+end/(n1*n2))/2)*n1*n2;
+   if(begin>=end)return XY::FindIdx(tarx,tary,begin,begin+fN1*fN2-1);
+   int mid=((begin/(fN1*fN2)+end/(fN1*fN2))/2)*fN1*fN2;
    if(fC3[mid]>=tarz)return FindIdx(tarx,tary,tarz,begin,mid);
    else return FindIdx(tarx,tary,tarz,mid+1,end);
 }
@@ -140,16 +140,16 @@ double XYZ::GetData(double tarx, double tary, double tarz, EOutput output )
    tar6=-1;
    tar7=-1;
    tar0=tar[idx];
-   if(idx>=(n-n1*n2)){tar4=0;tar5=0;tar6=0;tar7=0;}
-   else{tar4=tar[idx-n1*n2];}
-   if(idx%(n1*n2)%n1==n1-1){tar2=0;tar3=0;tar6=0;tar7=0;}
-   else{tar2=tar[idx-n1];}
-   if(idx%(n1*n2)/n1==n2-1){tar1=0;tar3=0;tar5=0;tar7=0;}
+   if(idx>=(n-fN1*fN2)){tar4=0;tar5=0;tar6=0;tar7=0;}
+   else{tar4=tar[idx-fN1*fN2];}
+   if(idx%(fN1*fN2)%fN1==fN1-1){tar2=0;tar3=0;tar6=0;tar7=0;}
+   else{tar2=tar[idx-fN1];}
+   if(idx%(fN1*fN2)/fN1==fN2-1){tar1=0;tar3=0;tar5=0;tar7=0;}
    else{tar1=tar[idx+1];}
-   if(tar3==-1)tar3=tar[idx-n1-1];
-   if(tar5==-1)tar5=tar[idx-n1*n2-1];
-   if(tar6==-1)tar6=tar[idx-n1*n2-n1];
-   if(tar7==-1)tar7=tar[idx-n1*n2-n1-1];
+   if(tar3==-1)tar3=tar[idx-fN1-1];
+   if(tar5==-1)tar5=tar[idx-fN1*fN2-1];
+   if(tar6==-1)tar6=tar[idx-fN1*fN2-fN1];
+   if(tar7==-1)tar7=tar[idx-fN1*fN2-fN1-1];
    return ((tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb)*ac
       +((tar4*aa+tar5*ab)*ba+(tar6*aa+tar7*ab)*bb)*ca;
 }
@@ -160,12 +160,12 @@ bool XYZ::CalculateField(int idx)
    if (!XY::CalculateField(idx)) return false;
    if (fdC3p[idx]==0 || fdC3m[idx]==0) return false;
 
-   if (idx<n1*n2) // C3 lower border
-      fE3[idx]=(fV[idx]-fV[idx+n1])/fdC3p[idx];
-   else if (idx>=n-n1*n2) // C3 upper border
-      fE3[idx]=(fV[idx]-fV[idx-n1])/fdC3m[idx];
+   if (idx<fN1*fN2) // C3 lower border
+      fE3[idx]=(fV[idx]-fV[idx+fN1])/fdC3p[idx];
+   else if (idx>=n-fN1*fN2) // C3 upper border
+      fE3[idx]=(fV[idx]-fV[idx-fN1])/fdC3m[idx];
    else { // bulk
-      fE3[idx]=(fV[idx-n1]-fV[idx+n1])/(fdC3m[idx]+fdC3p[idx]);
+      fE3[idx]=(fV[idx-fN1]-fV[idx+fN1])/(fdC3m[idx]+fdC3p[idx]);
    }
    return true;
 }

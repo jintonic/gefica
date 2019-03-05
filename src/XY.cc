@@ -5,9 +5,9 @@
 using namespace GeFiCa;
 
 XY::XY(int nx, int ny, const char *name, const char *title)
-   : X(nx*ny, name, title), n2(ny)
+   : X(nx*ny, name, title), fN2(ny)
 {
-   n1=nx; // n1 is set to nx*ny through X constructor, it is fixed here
+   fN1=nx; // fN1 is set to nx*ny through X constructor, it is fixed here
 }
 //_____________________________________________________________________________
 //
@@ -25,9 +25,9 @@ void XY::SetStepLength(double steplength1,double steplength2)
    //set field step length
    X::SetStepLength(steplength1);
    for (int i=0;i<n;i++) {
-      if(i>n1-1)fC2[i]=fC2[i-n1]+steplength2;
+      if(i>fN1-1)fC2[i]=fC2[i-fN1]+steplength2;
       else fC2[i]=0;
-      if(i%n1==0)fC1[i]=0;
+      if(i%fN1==0)fC1[i]=0;
       else fC1[i]=fC1[i-1]+steplength1;
 
       fE2[i]=0;
@@ -49,13 +49,13 @@ void XY::DoSOR2(int idx)
    double h4=fdC2m[idx];
    double h1=fdC2p[idx];
    double pym,pyp,pxm,pxp;
-   if(idx>=n1)pym=fV[idx-n1];
+   if(idx>=fN1)pym=fV[idx-fN1];
    else pym=fV[idx];
-   if(idx>=n-n1)pyp=fV[idx];
-   else pyp=fV[idx+n1];
-   if(idx%n1==0)pxm=fV[idx];
+   if(idx>=n-fN1)pyp=fV[idx];
+   else pyp=fV[idx+fN1];
+   if(idx%fN1==0)pxm=fV[idx];
    else pxm=fV[idx-1];
-   if(idx%n1==n1-1)pxp=fV[idx];
+   if(idx%fN1==fN1-1)pxp=fV[idx];
    else pxp=fV[idx+1];
    double tmp=(density/epsilon+(pxp/h2+pxm/h3)*2/(h2+h3)+(pyp/h1+pym/h4)*2/(h1+h4))/
       ((1/h2+1/h3)*2/(h2+h3)+(1/h1+1/h4)*2/(h1+h4));
@@ -94,9 +94,9 @@ int XY::FindIdx(double tarx,double tary ,int ybegin,int yend)
 {
    //search using binary search
    // if(ybegin>=yend)cout<<"to x"<<ybegin<<" "<<yend<<endl;;
-   if(ybegin>=yend)return X::FindIdx(tarx,yend*n1,(yend+1)*n1-1);
+   if(ybegin>=yend)return X::FindIdx(tarx,yend*fN1,(yend+1)*fN1-1);
    int mid=((ybegin+yend)/2);
-   if(fC2[mid*n1]>=tary){//cout<<"firsthalf"<<ybegin<<" "<<yend<<endl; 
+   if(fC2[mid*fN1]>=tary){//cout<<"firsthalf"<<ybegin<<" "<<yend<<endl; 
       return FindIdx(tarx,tary,ybegin,mid);
    }
    else{//cout<<"senondhalf"<<ybegin<<" "<<yend<<endl; 
@@ -106,14 +106,14 @@ int XY::FindIdx(double tarx,double tary ,int ybegin,int yend)
 //
 double XY::GetData(double tarx, double tary, EOutput output)
 {
-   int idx=FindIdx(tarx,tary,0,n2-1);
+   int idx=FindIdx(tarx,tary,0,fN2-1);
 
    //test
    //cout<<"index:"<<idx<<endl;
    //cout<<"(0,0)c1: "<<fC1[idx]<<" c2: "<<fC2[idx]<<" p: "<<fV[idx]<<endl;
    //cout<<"(0,1)c1: "<<fC1[idx-1]<<" c2: "<<fC2[idx-1]<<" p: "<<fV[idx-1]<<endl;
-   //cout<<"(1,0)c1: "<<fC1[idx-n1]<<" c2: "<<fC2[idx-n1]<<" p: "<<fV[idx-n1]<<endl;
-   //cout<<"(1,1)c1: "<<fC1[idx-n1-1]<<" c2: "<<fC2[idx-n1-1]<<" p: "<<fV[idx-n1-1]<<endl;
+   //cout<<"(1,0)c1: "<<fC1[idx-fN1]<<" c2: "<<fC2[idx-fN1]<<" p: "<<fV[idx-fN1]<<endl;
+   //cout<<"(1,1)c1: "<<fC1[idx-fN1-1]<<" c2: "<<fC2[idx-fN1-1]<<" p: "<<fV[idx-fN1-1]<<endl;
    //
    //cout<<idx<<" "<<n<<endl;
    double ab=(-tarx+fC1[idx])/fdC1m[idx];
@@ -133,11 +133,11 @@ double XY::GetData(double tarx, double tary, EOutput output)
    }
    tar3=-1;
    tar0=tar[idx];
-   if (idx%n1==0){tar1=0;tar3=0;}
+   if (idx%fN1==0){tar1=0;tar3=0;}
    else {tar1=tar[idx-1];}
-   if(idx<n1) {tar2=0;tar3=0;}
-   else {tar2=tar[idx-n1];}
-   if (tar3==-1)tar3=tar[idx-n1-1];
+   if(idx<fN1) {tar2=0;tar3=0;}
+   else {tar2=tar[idx-fN1];}
+   if (tar3==-1)tar3=tar[idx-fN1-1];
    //cout<<tar0<<" "<<tar1<<" "<<tar2<<" "<<tar3<<endl;
    //cout<<tarx<<", "<<tary<<endl;
    //cout<<aa<<" "<<ab<<" "<<ba<<" "<<bb<<endl;
@@ -155,12 +155,12 @@ bool XY::CalculateField(int idx)
    if (!X::CalculateField(idx)) return false;
    if (fdC2p[idx]==0 || fdC2m[idx]==0) return false;
 
-   if (idx%(n1*n2)<n1) // C2 lower boundary
-      fE2[idx]=(fV[idx]-fV[idx+n1])/fdC2p[idx];
-   else if (idx%(n1*n2)>=n-n1) // C2 upper boundary
-      fE2[idx]=(fV[idx]-fV[idx-n1])/fdC2m[idx];
+   if (idx%(fN1*fN2)<fN1) // C2 lower boundary
+      fE2[idx]=(fV[idx]-fV[idx+fN1])/fdC2p[idx];
+   else if (idx%(fN1*fN2)>=n-fN1) // C2 upper boundary
+      fE2[idx]=(fV[idx]-fV[idx-fN1])/fdC2m[idx];
    else { // bulk
-      fE2[idx]=(fV[idx-n1]-fV[idx+n1])/(fdC2m[idx]+fdC2p[idx]);
+      fE2[idx]=(fV[idx-fN1]-fV[idx+fN1])/(fdC2m[idx]+fdC2p[idx]);
    }
    return true;
 }

@@ -11,7 +11,7 @@ namespace GeFiCa { class RhoPhiZ; }
 class GeFiCa::RhoPhiZ : public GeFiCa::XYZ
 {
    public:
-      RhoPhiZ(int n1, int n2, int n3): XYZ(n1,n2,n3) {};
+      RhoPhiZ(int fN1, int fN2, int fN3): XYZ(fN1,fN2,fN3) {};
 
       ClassDef(RhoPhiZ,1);
 

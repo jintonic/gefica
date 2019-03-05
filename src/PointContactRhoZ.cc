@@ -4,9 +4,9 @@ using namespace GeFiCa;
 
 void PointContactRhoZ::InitializeGrid()
 {
-   double stepLengthR=Radius/(n1-1);
-   double stepLengthZ=Height/(n2-1);
-   double RLowerBound=stepLengthR/2; // (2.0*Radius/(2*n1-1))/2;
+   double stepLengthR=Radius/(fN1-1);
+   double stepLengthZ=Height/(fN2-1);
+   double RLowerBound=stepLengthR/2; // (2.0*Radius/(2*fN1-1))/2;
    SetStepLength(stepLengthR,stepLengthZ);
    for(int i=n;i-->0;) {
       fC1[i]=fC1[i]+RLowerBound;
@@ -17,7 +17,7 @@ void PointContactRhoZ::InitializeGrid()
       }
    }
    // set potential for electrodes
-   for(int i=n-1;i>=n-n1;i--) {
+   for(int i=n-1;i>=n-fN1;i--) {
       fIsFixed[i]=true;
       fV[i]=V1;
       if(fC1[n-1-i]>=0-0.001&&fC1[n-1-i]<=PointContactR+0.001) {
@@ -25,9 +25,9 @@ void PointContactRhoZ::InitializeGrid()
          fIsFixed[n-1-i]=true;
       }
    }
-   for(int i=0;i<n-n1;i=i+n1) {
-      fIsFixed[i+n1-1]=true;
-      fV[i+n1-1]=V1;
+   for(int i=0;i<n-fN1;i=i+fN1) {
+      fIsFixed[i+fN1-1]=true;
+      fV[i+fN1-1]=V1;
    }
 
    for(int i=0;i<n;i++) {

@@ -13,13 +13,13 @@ void RhoPhi::DoSOR2(int idx)
    double h4=fdC2m[idx];
    double h1=fdC2p[idx];
    double pphim,pphip,prhom,prhop;
-   if(idx>=n1)pphim=fV[idx-n1];
-   else pphim=fV[idx+n-n1];
-   if(idx>=n-n1)pphip=fV[idx-n+n1];
-   else pphip=fV[idx+n1];
-   if(idx%n1==0)prhom=fV[idx];
+   if(idx>=fN1)pphim=fV[idx-fN1];
+   else pphim=fV[idx+n-fN1];
+   if(idx>=n-fN1)pphip=fV[idx-n+fN1];
+   else pphip=fV[idx+fN1];
+   if(idx%fN1==0)prhom=fV[idx];
    else prhom=fV[idx-1];
-   if(idx%n1==n1-1)prhop=fV[idx];
+   if(idx%fN1==fN1-1)prhop=fV[idx];
    else prhop=fV[idx+1];
    double tmp = (prhop/(h3*(h2+h3))+prhom/(h2*(h2+h3))
          +pphip/r/r/h4/(h1+h4)+pphim/r/r/h1/(h1+h4)
@@ -72,14 +72,14 @@ double RhoPhi::GetData(double tarx, double tary, EOutput output)
    }
    tar3=-1;
    tar0=tar[idx];
-   if((idx%n1)==n1-1) {
-      tar1=tar[idx+1-n1];
+   if((idx%fN1)==fN1-1) {
+      tar1=tar[idx+1-fN1];
       tar3=tar[idx+1];
    } else {
       tar1=tar[idx+1];
    }
-   if(idx>n-n1){tar2=0;tar3=0;}
-   else {tar2=tar[idx+n1];}
-   if (tar3==-1)tar3=tar[idx+n1+1];
+   if(idx>n-fN1){tar2=0;tar3=0;}
+   else {tar2=tar[idx+fN1];}
+   if (tar3==-1)tar3=tar[idx+fN1+1];
    return (tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb;
 }

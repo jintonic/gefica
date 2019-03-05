@@ -11,13 +11,13 @@ namespace GeFiCa { class XYZ; }
 class GeFiCa::XYZ : public GeFiCa::XY
 {
    public:
-      int n3; ///< number of grid points along the 3nd coordinate
+      int fN3; ///< number of grid points along the 3nd coordinate
 
    public:
       /**
        * Default constructor.
        */
-      XYZ(int n1=101, int n2=101, int n3=11, const char *name="xyz",
+      XYZ(int fN1=101, int fN2=101, int fN3=11, const char *name="xyz",
             const char *title="3D coordinates");
       virtual ~XYZ();
 

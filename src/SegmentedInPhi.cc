@@ -18,18 +18,18 @@ void SegmentedInPhi::InitializeGrid()
    if (SegmentId<0)SegmentId=-SegmentId;
    if(SegmentId>Nseg)SegmentId=SegmentId%Nseg;
 
-   double steplength1=(OuterR-InnerR)/(n1-1);
-   double steplength2=2*TMath::Pi()/(n2);
+   double steplength1=(OuterR-InnerR)/(fN1-1);
+   double steplength2=2*TMath::Pi()/(fN2);
    double SegmentUpperBound=2*TMath::Pi()*SegmentId/Nseg;
    double SegmentLowerBound=2*TMath::Pi()*(SegmentId-1)/Nseg;
    SetStepLength(steplength1,steplength2);
    for(int i=0;i<n;i++) {
       fC1[i]+=InnerR;
-      if(i%n1==0) {
+      if(i%fN1==0) {
          fIsFixed[i]=true;
          if(SegmentId==0)fV[i]=V1;
          else fV[i]=V0;
-      } else if(i%n1==n1-1) { //need shift boundary as pointcontact
+      } else if(i%fN1==fN1-1) { //need shift boundary as pointcontact
          fIsFixed[i]=true;
          if(SegmentId==0)fV[i]=V0;
          else if(fC2[i]<=SegmentUpperBound&&fC2[i]>=SegmentLowerBound) {

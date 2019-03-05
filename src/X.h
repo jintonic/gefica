@@ -41,8 +41,8 @@ class GeFiCa::X : public TNamed
       double V0;///< voltage of inner/lower electrode
       double V1;///< voltage of outer/higher electrode
 
-      int n1; ///< number of grid points along the 1st coordinate
-      int n; ///< total number of grid points (n = n1 in 1D case)
+      int fN1; ///< number of grid points along the 1st coordinate
+      int n; ///< total number of grid points (n = fN1 in 1D case)
       int MaxIterations; ///< maximal iteration to be performed
       int Nsor; ///< current number of iterations in SOR process
       double Csor; ///< 1<=Csor<2, used to boost iteration speed

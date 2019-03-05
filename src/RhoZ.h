@@ -14,9 +14,9 @@ class GeFiCa::RhoZ : public GeFiCa::XY
       /**
        * Default Constructor.
        */
-      RhoZ(int n1=101, int n2=101, const char *name="rhoz",
+      RhoZ(int fN1=101, int fN2=101, const char *name="rhoz",
             const char *title="2D cylindrical coordinates")
-         : XY(n1, n2, name, title) {};
+         : XY(fN1, fN2, name, title) {};
 
       double GetCapacitance();
 
