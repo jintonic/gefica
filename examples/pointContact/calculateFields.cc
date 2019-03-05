@@ -18,8 +18,12 @@ void calculateFields(const char *output="ppc.root")
    ppc->CornerH=0.1*cm;
 
    ppc->HoleH=2.5*cm;
-   ppc->HoleInnerR=0.5*cm;
-   ppc->HoleOuterR=0.5*cm;
+   ppc->HoleR=0.5*cm;
+   ppc->HoleTaperH=0.2*cm;
+   ppc->HoleTaperW=0.2*cm;
+
+   ppc->GrooveH=0.1*cm;
+   ppc->GrooveW=0.1*cm;
 
    // x in TF3 -> r, y in TF3 -> z
    TF3 *fid = new TF3("fImpDistr","0.7e10");

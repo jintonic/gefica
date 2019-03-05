@@ -17,7 +17,7 @@ PointContactDZ::PointContactDZ(int nd, int nz, const char *name,
    PointContactR(0.1*cm),
    HoleH(0),
    HoleR(0), 
-   HoleTaperR(0),
+   HoleTaperW(0),
    HoleTaperH(0),
    TaperW(0.3*cm),
    TaperH(0.3*cm),
@@ -79,7 +79,7 @@ void PointContactDZ::SetBoundary()
          fdC1m[i]=-fC1[i]/k-b/k-fC2[i];
       }
    }
-   double x1=HoleTaperR,
+   double x1=HoleTaperW,
           y1=Height,
           x2=HoleR,
           y2=Height-HoleTaperH,
@@ -193,7 +193,7 @@ void PointContactDZ::Initialize()
          }
       }
    }
-   double x1=HoleTaperR,
+   double x1=HoleTaperW,
           y1=Height,
           x2=HoleR,
           y2=Height-HoleTaperH,

@@ -20,7 +20,7 @@ class GeFiCa::PointContactDZ : public GeFiCa::RhoZ
 
       double HoleH; ///< Depth of bore
       double HoleR; ///< radius of bore
-      double HoleTaperR; ///< radius of bore taper
+      double HoleTaperW; ///< radius of bore taper
       double HoleTaperH; ///< height of bore taper
 
       double TaperW; ///< Width of taper (point contact side)
