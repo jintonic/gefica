@@ -182,17 +182,6 @@ void PointContactDZ::InitializeGrid()
       }
    }
 
-   if(TaperW+WrapArroundR<Radius)
-   {
-      for(int i=0;i<fN;i++)
-      {
-         if((fC1[i]>WrapArroundR-GrooveW && fC1[i]<WrapArroundR && fC2[i]<GrooveH)||
-            (fC1[i]<-(WrapArroundR-GrooveW) && fC1[i]>-(WrapArroundR) && fC2[i]<GrooveH))
-         {
-            fImpurity[i]=0;
-         }
-      }
-   }
    double x1=HoleR+HoleTaperW,
           y1=Height,
           x2=HoleR,
@@ -294,4 +283,21 @@ bool PointContactDZ::SaveFieldAsFieldgen(const char * fout)
    }
    outfile.close();
    return true;
+}
+void PointContactDZ::SetGridImpurity()
+{
+
+   X::SetGridImpurity();
+   
+   if(TaperW+WrapArroundR<Radius)
+   {
+      for(int i=0;i<fN;i++)
+      {
+         if((fC1[i]>WrapArroundR-GrooveW && fC1[i]<WrapArroundR && fC2[i]<GrooveH)||
+            (fC1[i]<-(WrapArroundR-GrooveW) && fC1[i]>-(WrapArroundR) && fC2[i]<GrooveH))
+         {
+            fImpurity[i]=0;
+         }
+      }
+   }
 }

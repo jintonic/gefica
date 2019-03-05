@@ -45,6 +45,7 @@ class GeFiCa::PointContactDZ : public GeFiCa::RhoZ
 
    protected:
       virtual void InitializeGrid();
+      virtual void SetGridImpurity();
       /**
        * Move grids close to point contact boundary to the boundary.
        */
