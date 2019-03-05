@@ -42,7 +42,8 @@ void compare2analytic()
    gn->SetMarkerColor(kBlue);
    gn->SetMarkerStyle(kCircle);
    gn->SetMarkerSize(0.8);
-   gn->SetTitle(";Thickness [cm];Potential [V]");
+   gn->SetTitle(";Position in a one-dimensional planar detector [cm]"
+         ";Potential [V]");
    gn->GetXaxis()->SetRangeUser(0,1);
    gn->GetYaxis()->SetRangeUser(0,800);
    //gn->GetYaxis()->SetTitleOffset(1.2);
