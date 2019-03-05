@@ -81,7 +81,7 @@ class GeFiCa::X : public TNamed
       double GetE2(double x){return 0;};
       double GetE3(double x){return 0;};
       double GetImpurity(double x){return GetData(x,kImpurity);};
-      double GetPotential(double x){return GetData(x,kPotential);};
+      double GetV(double x){return GetData(x,kPotential);};
       /**
        * Get detector capacitance.
        * calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2

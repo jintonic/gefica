@@ -20,7 +20,7 @@ class GeFiCa::XY : public GeFiCa::X
       /**
        * Returns the potential in two dimensions
        */
-      double GetPotential(double x,double y){return GetData(x,y,kPotential);};
+      double GetV(double x,double y){return GetData(x,y,kPotential);};
       /**
        * Returns the value for the electric field under the first direction
        */

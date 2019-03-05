@@ -18,7 +18,7 @@ class GeFiCa::XYZ : public GeFiCa::XY
             const char *title="3D coordinates");
       virtual ~XYZ();
 
-      double GetPotential(double x,double y,double z)
+      double GetV(double x,double y,double z)
       {return GetData(x,y,z,kPotential);};
       virtual double GetE1(double x,double y,double z)
       {return GetData(x,y,z,kE1);};

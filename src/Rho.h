@@ -18,7 +18,7 @@ class GeFiCa::Rho : public X
             const char *title="1D cylindrical coordinates")
          : X(n, name, title) {};
 
-      virtual double GetPotential(double rho)
+      virtual double GetV(double rho)
       {return GetData(rho,kPotential);};
       virtual double GetE1(double rho,double phi,double z)
       {return GetData(rho,kE1);};
