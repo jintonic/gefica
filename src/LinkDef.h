@@ -22,3 +22,5 @@
 #pragma link C++ class GeFiCa::RThetaPhi+;
 #pragma link C++ class GeFiCa::Sphere3D+;
 #endif
+// for Emacs and gitHub:
+// -*- c++ -*-
