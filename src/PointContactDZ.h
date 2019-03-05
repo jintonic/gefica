@@ -36,8 +36,8 @@ class GeFiCa::PointContactDZ : public GeFiCa::RhoZ
       /**
        * Default constructor.
        */
-      PointContactDZ(int nd=100, ///< [in] number of points across diameter
-            int nz=101, ///< [in] number of points along height
+      PointContactDZ(int nd=300, ///< [in] number of points across diameter
+            int nz=301, ///< [in] number of points along height
             const char *name="pcdz", ///< [in] name of the class object created
             const char *title="2D point contact detector");
 

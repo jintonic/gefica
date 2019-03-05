@@ -22,7 +22,7 @@ PointContactDZ::PointContactDZ(int nd, int nz, const char *name,
    TaperW(0.3*cm),
    TaperH(0.3*cm),
    CornerW(0.3*cm),
-   CornerH(0.3*cm),
+   CornerH(0.5*cm),
    WrapArroundR(2.5*cm),
    GrooveW(0), 
    GrooveH(0){};
@@ -205,16 +205,25 @@ void PointContactDZ::Initialize()
    double b1=y1-k1*x1;
    double k2=(y3-y4)/(x3-x4);
    double b2=(y3-k2*x3);
+   if(x3!=x4)
+      for(int i=0;i<n;i++)
+      {
+         if(fC2[i]>-k2*(fC1[i])+b2||(fC2[i]>k2*(fC1[i])+b2))
+         {
+            fIsFixed[i]=true;
+            fV[i]=V1;
+         }
+      }
    if(x1!=x2)
    {
       for (int i=0;i<n;i++) {
          if(((fC2[i]>-k1*(fC1[i])+b1 
-                     && fC2[i]>y2)||(fC2[i]>-k2*(fC1[i])+b2))&&fC1[i]<0) {
+                     && fC2[i]>y2))&&fC1[i]<0) {
             fIsFixed[i]=true;
             fV[i]=V1;
          }
          if(((fC2[i]>k1*(fC1[i])+b1
-                     && fC2[i]>y2)||(fC2[i]>k2*(fC1[i])+b2))&&fC1[i]>0) {
+                     && fC2[i]>y2))&&fC1[i]>0) {
             fIsFixed[i]=true;
             fV[i]=V1;
          }
