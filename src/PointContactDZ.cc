@@ -193,7 +193,7 @@ void PointContactDZ::Initialize()
          }
       }
    }
-   double x1=HoleTaperW,
+   double x1=HoleR+HoleTaperW,
           y1=Height,
           x2=HoleR,
           y2=Height-HoleTaperH,
@@ -231,6 +231,14 @@ void PointContactDZ::Initialize()
          }
       }
 
+   }
+   for (int i=0;i<n;i++) 
+   {
+      if(fC1[i]<=HoleR&&fC1[i]>=-HoleR&&fC2[i]>=Height-HoleH)
+      {
+         fIsFixed[i]=true;
+         fV[i]=V1;
+      }
    }
    SetBoundary();
 }
