@@ -319,39 +319,45 @@ double X::GetCapacitance()
 //
 TTree* X::GetTree(bool createNew)
 {
-   if (fTree!=NULL) {
-      if (createNew) delete fTree;
-      else return fTree;
-   }
+   if (fTree) { if (createNew) delete fTree; else return fTree; }
 
-   bool b,d; double e1,c1,v,dc1p,dc1m,i;
    // define tree
-   fTree=new TTree("t","field data");
-   fTree->Branch("v",&v,"v/D");
-   fTree->Branch("e1",&e1,"e1/D");
-   fTree->Branch("c1",&c1,"c1/D");
-   fTree->Branch("dc1p",&dc1p,"dc1p/D"); // step length to next point
-   fTree->Branch("dc1m",&dc1m,"dc1m/D"); // step length to previous point
-   fTree->Branch("b",&b,"b/O"); // boundary flag
-   fTree->Branch("d",&d,"d/O"); // depletion flag
-   fTree->Branch("i",&i,"i/D"); // impurity
-   // fill tree
+   bool b,d; double v,te,e1,e2,e3,c1,c2,c3;
+   fTree = new TTree("t","field data");
+   fTree->Branch("potential",&v,"v/D");
+   fTree->Branch("total E  ",&te,"e/D");
+   // 1D data
+   fTree->Branch("E1            ",&e1,"e1/D");
+   fTree->Branch("1st coordinate",&c1,"c1/D");
+   // initialize values
    if (fdC1p[0]==0) Initialize(); // setup & initialize grid
-   if (fImpDist && fImpurity[0]==0) // set impurity values if it's not done yet
-      for (int i=n;i-->0;) fImpurity[i]=fImpDist->Eval(fC1[i], fC2[i], fC3[i]);
-   for (int j=0; j<n; j++) {
-      v = fV[j];
-      e1= fE1[j];
-      c1= fC1[j];
-      i = fImpurity[j];
-      b = fIsFixed[j];
-      d = fIsDepleted[j];
-      dc1p=fdC1p[j];
-      dc1m=fdC1m[j];
+   if (fImpDist && fImpurity[0]==0) for (int i=n;i-->0;)
+      fImpurity[i]=fImpDist->Eval(fC1[i]/cm, fC2[i]/cm, fC3[i]/cm);
 
+   if (fdC2p[0]!=0) { // if it is a 2D grid
+      fTree->Branch("E2            ",&e2,"e2/D");
+      fTree->Branch("2nd coordinate",&c2,"c2/D");
+   }
+   if (fdC3p[0]!=0) { // if it is a 3D grid
+      fTree->Branch("E3            ",&e3,"e3/D");
+      fTree->Branch("3rd coordinate",&c3,"c3/D");
+   }
+   fTree->Branch("boundary flag",&b,"b/O"); // boundary flag
+   fTree->Branch("depletion flag",&d,"d/O"); // depletion flag
+
+   // fill tree
+   Info("GetTree","%d entries",n);
+   for (int i=0; i<n; i++) {
+      e1= fE1[i]; c1= fC1[i]; // 1D data
+      if (fdC2p[i]!=0) { e2=fE2[i]; c2=fC2[i]; } // 2D data
+      if (fdC3p[i]!=0) { e3=fE3[i]; c3=fC3[i]; } // 3D data
+      v = fV[i]; b = fIsFixed[i]; d = fIsDepleted[i]; // common data
+      if (fdC3p[i]!=0) te=TMath::Sqrt(e1*e1 + e2*e2 + e3*e3);
+      else { if (fdC2p[i]!=0) te=TMath::Sqrt(e1*e1+e2*e2); else te=e1; }
       fTree->Fill();
    }
-   // return tree
+
+   fTree->GetListOfBranches()->ls();
    fTree->ResetBranchAddresses(); // disconnect from local variables
    return fTree;
 }

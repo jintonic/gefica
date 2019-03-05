@@ -169,30 +169,3 @@ bool XYZ::CalculateField(int idx)
    }
    return true;
 }
-//_____________________________________________________________________________
-//
-TTree* XYZ::GetTree(bool createNew)
-{
-   XY::GetTree(createNew); // create tree
-
-   double e3,c3,dc3p,dc3m;
-   TBranch *be3 = fTree->Branch("e3",&e3,"e3/D");
-   TBranch *bc3 = fTree->Branch("c3",&c3,"c3/D");
-   TBranch *bp3 = fTree->Branch("dc3p",&dc3p,"dc3p/D");
-   TBranch *bm3 = fTree->Branch("dc3m",&dc3m,"dc3m/D");
-
-   for(int j=0;j<n;j++) {
-      e3= fE3[j];
-      c3= fC3[j];
-      dc3p=fdC3p[j];
-      dc3m=fdC3m[j];
-
-      be3->Fill();
-      bc3->Fill();
-      bp3->Fill();
-      bm3->Fill();
-   }
-
-   fTree->ResetBranchAddresses(); // disconnect from local variables
-   return fTree;
-}

@@ -36,8 +36,6 @@ class GeFiCa::XY : public GeFiCa::X
        */
       double GetImpurity(double x,double y){return GetData(x,y,kImpurity);};
 
-      virtual TTree* GetTree(bool createNew=false);
-
       ClassDef(XY,1);
 
    protected:
