@@ -358,6 +358,7 @@ TTree* X::GetTree(bool createNew)
    }
 
    fTree->GetListOfBranches()->ls();
+   gDirectory->ls();
    fTree->ResetBranchAddresses(); // disconnect from local variables
    return fTree;
 }
