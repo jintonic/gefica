@@ -21,33 +21,21 @@ void compare2analytic()
    // fill grid with analytic result
    ana->CalculatePotential(kAnalytic);
 
-   // prepare drawing style
-   gROOT->SetStyle("Plain"); // pick up a good drawing style to modify
-   gStyle->SetLegendBorderSize(0);
-   gStyle->SetLegendFont(132);
-   gStyle->SetLabelFont(132,"XY");
-   gStyle->SetTitleFont(132,"XY");
-   gStyle->SetLabelSize(0.05,"XY");
-   gStyle->SetTitleSize(0.05,"XY");
-   gStyle->SetPadRightMargin(0.01);
-   gStyle->SetPadLeftMargin(0.12);
-   gStyle->SetPadTopMargin(0.02);
-
    // generate graphics
+   gStyle->SetPadRightMargin(0.01);
    TTree *tn = num->GetTree();
-   tn->Draw("v:c1");
+   tn->Draw("v:c1","","goff");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
-
    TTree *ta = ana->GetTree();
-   ta->Draw("v:c1");
+   ta->Draw("v:c1","","goff");
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
 
    // compare numerical result to analytic calculation
    gn->SetMarkerColor(kBlue);
    gn->SetMarkerStyle(kCircle);
    gn->SetMarkerSize(0.8);
-   gn->SetTitle(";Radius [cm];Potential [V]");
-   gn->GetXaxis()->SetRangeUser(0,3);
+   gn->SetTitle(";Radial position [cm];Potential [V]");
+   gn->GetXaxis()->SetRangeUser(0,1);
    gn->GetYaxis()->SetRangeUser(0,900);
    gn->Draw("ap");
 
@@ -56,7 +44,7 @@ void compare2analytic()
 
    TLegend *l = new TLegend(0.6,0.6,0.8,0.8);
    l->AddEntry(ga,"Analytic","l");
-   l->AddEntry(gn,"SOR2","p");
+   l->AddEntry(gn,"SOR","p");
    l->Draw();
 
    gPad->Print("s1d.png");
