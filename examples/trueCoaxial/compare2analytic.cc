@@ -20,7 +20,7 @@ void compare2analytic()
    ana->CalculatePotential(kAnalytic);
 
    // generate graphics
-   gStyle->SetPadLeftMargin(0.12);
+   gStyle->SetPadRightMargin(0.02);
 
    TTree *tn = num->GetTree();
    tn->Draw("v:c1","","goff");
