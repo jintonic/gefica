@@ -41,8 +41,6 @@ class GeFiCa::X : public TNamed
       double V0;///< voltage of inner/lower electrode
       double V1;///< voltage of outer/higher electrode
 
-      int fN1; ///< number of grid points along the 1st coordinate
-      int n; ///< total number of grid points (n = fN1 in 1D case)
       int MaxIterations; ///< maximal iteration to be performed
       int Nsor; ///< current number of iterations in SOR process
       double Csor; ///< 1<=Csor<2, used to boost iteration speed
@@ -72,7 +70,7 @@ class GeFiCa::X : public TNamed
        * Set average impurity of the crystal as a single number.
        */
       void SetAverageImpurity(double density)
-      { for (int i=0; i<n; i++) fImpurity[i]=density; }
+      { for (int i=0; i<fN; i++) fImpurity[i]=density; }
       /**
        * Set impurity distribution.
        * \param [in] fi is a 3D function, but works for lower dimensions as well.
@@ -102,24 +100,29 @@ class GeFiCa::X : public TNamed
       ClassDef(X,1);
 
    protected:
-      double *fV; ///< [n] electric potential
-      double *fE1; ///< [n] electric field along the 1st coordinate
-      double *fE2; ///< [n] electric field along the 2nd coordinate
-      double *fE3; ///< [n] electric field along the 3rd coordinate
-      double *fC1; ///< [n] the 1st coordinate
-      double *fC2; ///< [n] the 2nd coordinate
-      double *fC3; ///< [n] the 3rd coordinate
+      int fN; ///< total number of grid points (fN = fN1 in 1D case)
+      int fN1; ///< number of grid points along the 1st coordinate
+      int fN2; ///< number of grid points along the 2nd coordinate
+      int fN3; ///< number of grid points along the 3nd coordinate
 
-      double *fdC1p; ///< [n] step length to next grid point alone C1
-      double *fdC1m; ///< [n] step length to previous grid point alone C1
-      double *fdC2p; ///< [n] step length to next grid point along C2
-      double *fdC2m; ///< [n] step length to previous grid point along C2
-      double *fdC3p; ///< [n] step length to next grid point alone C3
-      double *fdC3m; ///< [n] step length to previous grid point alone C3
+      double *fV; ///< [fN] electric potential
+      double *fE1; ///< [fN] electric field along the 1st coordinate
+      double *fE2; ///< [fN] electric field along the 2nd coordinate
+      double *fE3; ///< [fN] electric field along the 3rd coordinate
+      double *fC1; ///< [fN] the 1st coordinate
+      double *fC2; ///< [fN] the 2nd coordinate
+      double *fC3; ///< [fN] the 3rd coordinate
 
-      double *fImpurity; ///< [n] net impurity concentration (Nacceptor-Ndonor)
-      bool *fIsFixed; ///< [n] true if field values are fixed
-      bool *fIsDepleted; ///< [n] true if a grid point is depleted
+      double *fdC1p; ///< [fN] step length to next grid point alone C1
+      double *fdC1m; ///< [fN] step length to previous grid point alone C1
+      double *fdC2p; ///< [fN] step length to next grid point along C2
+      double *fdC2m; ///< [fN] step length to previous grid point along C2
+      double *fdC3p; ///< [fN] step length to next grid point alone C3
+      double *fdC3m; ///< [fN] step length to previous grid point alone C3
+
+      double *fImpurity; ///< [fN] net impurity concentration (Nacceptor-Ndonor)
+      bool *fIsFixed; ///< [fN] true if field values are fixed
+      bool *fIsDepleted; ///< [fN] true if a grid point is depleted
       TTree *fTree; ///<! ROOT tree to assist field visualization
       TF3 *fImpDist; ///<! Impurity distribution
  

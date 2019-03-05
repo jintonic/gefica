@@ -14,8 +14,8 @@ void RhoPhi::DoSOR2(int idx)
    double h1=fdC2p[idx];
    double pphim,pphip,prhom,prhop;
    if(idx>=fN1)pphim=fV[idx-fN1];
-   else pphim=fV[idx+n-fN1];
-   if(idx>=n-fN1)pphip=fV[idx-n+fN1];
+   else pphim=fV[idx+fN-fN1];
+   if(idx>=fN-fN1)pphip=fV[idx-fN+fN1];
    else pphip=fV[idx+fN1];
    if(idx%fN1==0)prhom=fV[idx];
    else prhom=fV[idx-1];
@@ -57,7 +57,7 @@ void RhoPhi::DoSOR2(int idx)
 double RhoPhi::GetData(double tarx, double tary, EOutput output)
 {
    //0:Impurity 1:Potential 2:E1 3:E2
-   int idx=FindIdx(tarx,tary,0,n);
+   int idx=FindIdx(tarx,tary,0,fN);
    double ab=(tarx-fC1[idx])/fdC1p[idx];
    double aa=1-ab;
    double ba=(tary-fC2[idx])/fdC2p[idx];
@@ -78,7 +78,7 @@ double RhoPhi::GetData(double tarx, double tary, EOutput output)
    } else {
       tar1=tar[idx+1];
    }
-   if(idx>n-fN1){tar2=0;tar3=0;}
+   if(idx>fN-fN1){tar2=0;tar3=0;}
    else {tar2=tar[idx+fN1];}
    if (tar3==-1)tar3=tar[idx+fN1+1];
    return (tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb;

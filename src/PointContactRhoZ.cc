@@ -8,7 +8,7 @@ void PointContactRhoZ::InitializeGrid()
    double stepLengthZ=Height/(fN2-1);
    double RLowerBound=stepLengthR/2; // (2.0*Radius/(2*fN1-1))/2;
    SetStepLength(stepLengthR,stepLengthZ);
-   for(int i=n;i-->0;) {
+   for(int i=fN;i-->0;) {
       fC1[i]=fC1[i]+RLowerBound;
       fV[i]=(V1+V0)/2;
       if(fC1[i]>0&&fC1[i]<PointContactR&&fC2[i]<PointContactH) {
@@ -17,20 +17,20 @@ void PointContactRhoZ::InitializeGrid()
       }
    }
    // set potential for electrodes
-   for(int i=n-1;i>=n-fN1;i--) {
+   for(int i=fN-1;i>=fN-fN1;i--) {
       fIsFixed[i]=true;
       fV[i]=V1;
-      if(fC1[n-1-i]>=0-0.001&&fC1[n-1-i]<=PointContactR+0.001) {
-         fV[n-1-i]=V0;
-         fIsFixed[n-1-i]=true;
+      if(fC1[fN-1-i]>=0-0.001&&fC1[fN-1-i]<=PointContactR+0.001) {
+         fV[fN-1-i]=V0;
+         fIsFixed[fN-1-i]=true;
       }
    }
-   for(int i=0;i<n-fN1;i=i+fN1) {
+   for(int i=0;i<fN-fN1;i=i+fN1) {
       fIsFixed[i+fN1-1]=true;
       fV[i+fN1-1]=V1;
    }
 
-   for(int i=0;i<n;i++) {
+   for(int i=0;i<fN;i++) {
       //only change fdc1m when it is right close to bound
       if(fC1[i]-PointContactR<fdC1m[i]&&fC1[i]>PointContactR
             &&fC2[i]<PointContactH) fdC1m[i]=fC1[i]-PointContactR;

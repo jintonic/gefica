@@ -30,7 +30,7 @@ PointContactDZ::PointContactDZ(int nd, int nz, const char *name,
 //
 void PointContactDZ::SetBoundary()
 {
-   for(int i=0;i<n;i++)
+   for(int i=0;i<fN;i++)
    {
       if(fC2[i]-PointContactH<fdC2m[i]&&fC2[i]>PointContactH&&fC1[i]<PointContactR&&fC1[i]>-PointContactR)
       {
@@ -56,7 +56,7 @@ void PointContactDZ::SetBoundary()
    double k=TaperH/(TaperW);
    double b=-(Radius-TaperW)*k;
 
-   for(int i=0;i<n;i++)
+   for(int i=0;i<fN;i++)
    {
       if(fC2[i]<=fC1[i]*k+b)
       {
@@ -93,7 +93,7 @@ void PointContactDZ::SetBoundary()
    double k2=(y3-y4)/(x3-x4);
    double b2=y3-k2*x3;
 
-   for (int i=0;i<n;i++) {
+   for (int i=0;i<fN;i++) {
       if (x1!=x2)
       {
          //right side of hole taper
@@ -152,10 +152,10 @@ void PointContactDZ::InitializeGrid()
    if (fN1%2==1) Fatal("InitializeGrid", "Number of points in D can't be odd!");
 
    SetStepLength(2*Radius/(fN1-1),Height/(fN2-1));
-   for(int i=n;i-->0;) fC1[i]=fC1[i]-Radius;
+   for(int i=fN;i-->0;) fC1[i]=fC1[i]-Radius;
 
    // set initial potential values
-   for(int i=n;i-->0;) {
+   for(int i=fN;i-->0;) {
       fV[i]=(V1+V0)/2;
       // set potential for inner electrodes
       if(fC1[i]>=-PointContactR && fC1[i]<=PointContactR
@@ -165,11 +165,11 @@ void PointContactDZ::InitializeGrid()
       }
    }
    // set potential for outer electrodes
-   for(int i=n-1;i>=n-fN1;i--) {
+   for(int i=fN-1;i>=fN-fN1;i--) {
       fIsFixed[i]=true;
       fV[i]=V1;
    }
-   for(int i=0;i<n-fN1;i=i+fN1) {
+   for(int i=0;i<fN-fN1;i=i+fN1) {
       fIsFixed[i]=true;
       fIsFixed[i+fN1-1]=true;
       fV[i]=V1;
@@ -184,7 +184,7 @@ void PointContactDZ::InitializeGrid()
 
    if(TaperW+WrapArroundR<Radius)
    {
-      for(int i=0;i<n;i++)
+      for(int i=0;i<fN;i++)
       {
          if((fC1[i]>WrapArroundR-GrooveW && fC1[i]<WrapArroundR && fC2[i]<GrooveH)||
             (fC1[i]<-(WrapArroundR-GrooveW) && fC1[i]>-(WrapArroundR) && fC2[i]<GrooveH))
@@ -206,7 +206,7 @@ void PointContactDZ::InitializeGrid()
    double k2=(y3-y4)/(x3-x4);
    double b2=(y3-k2*x3);
    if(x3!=x4)
-      for(int i=0;i<n;i++)
+      for(int i=0;i<fN;i++)
       {
          if(fC2[i]>-k2*(fC1[i])+b2||(fC2[i]>k2*(fC1[i])+b2))
          {
@@ -216,7 +216,7 @@ void PointContactDZ::InitializeGrid()
       }
    if(x1!=x2)
    {
-      for (int i=0;i<n;i++) {
+      for (int i=0;i<fN;i++) {
          if(((fC2[i]>-k1*(fC1[i])+b1 
                      && fC2[i]>y2))&&fC1[i]<0) {
             fIsFixed[i]=true;
@@ -231,7 +231,7 @@ void PointContactDZ::InitializeGrid()
    }
    else//x1==x2
    {
-      for (int i=0;i<n;i++) 
+      for (int i=0;i<fN;i++) 
       {
          if(fC1[i]<=x1&&fC1[i]>=-x1&&fC2[i]>=y2)
          {
@@ -241,7 +241,7 @@ void PointContactDZ::InitializeGrid()
       }
 
    }
-   for (int i=0;i<n;i++) 
+   for (int i=0;i<fN;i++) 
    {
       if(fC1[i]<=HoleR&&fC1[i]>=-HoleR&&fC2[i]>=Height-HoleH)
       {
@@ -288,7 +288,7 @@ bool PointContactDZ::SaveFieldAsFieldgen(const char * fout)
    outfile<<"\n# max_iterations "<<MaxIterations;
    outfile<<"\n# ";
    outfile<<"\n## r (mm), z (mm), V (V),  E (V/cm), E_r (V/cm), E_z (V/cm)";
-   for (int i=0;i<n;i++) {
+   for (int i=0;i<fN;i++) {
       double E=sqrt(fE1[i]*fE1[i]+fE2[i]*fE2[i]);
       outfile<<"\n"<<fC1[i]<<"  "<<fC2[i]<<"  "<<fV[i]<<"  "<<E<<"  "<<fE1[i]<<"  "<<fE2[i];
    }

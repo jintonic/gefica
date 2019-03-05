@@ -11,9 +11,6 @@ namespace GeFiCa { class XYZ; }
 class GeFiCa::XYZ : public GeFiCa::XY
 {
    public:
-      int fN3; ///< number of grid points along the 3nd coordinate
-
-   public:
       /**
        * Default constructor.
        */

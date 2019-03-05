@@ -14,10 +14,10 @@ void Sphere3D::Initialize()
 
    double stepLength=(OuterR-InnerR)/(fN1-1);
    SetStepLength(stepLength,3.14159265/fN2,3.14159265*2/fN3);
-   for(int i=n;i-->0;) fC1[i]=fC1[i]+InnerR;
-   for(int i=n;i-->0;) fC2[i]=fC2[i]+3.14159265/2/fN2;
+   for(int i=fN;i-->0;) fC1[i]=fC1[i]+InnerR;
+   for(int i=fN;i-->0;) fC2[i]=fC2[i]+3.14159265/2/fN2;
 
-   for (int i=0; i<n; i+=fN1) {
+   for (int i=0; i<fN; i+=fN1) {
       fV[i]=V0;
       fV[i+fN1-1]=V1;
       fIsFixed[i]=true;

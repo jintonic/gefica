@@ -20,7 +20,7 @@ void RhoPhiZ::DoSOR2(int idx)
    double pphim,pphip,prhom,prhop,pzp,pzm;
    if(idx<fN1*fN2)pzm=fV[idx];
    else pzm=fV[idx-fN1*fN2];
-   if(idx>=n-fN1*fN2)pzp=fV[idx];
+   if(idx>=fN-fN1*fN2)pzp=fV[idx];
    else pzp=fV[idx+fN1*fN2];
    if(idx%(fN1*fN2)>(fN1*fN2)-fN1-1) pphip=fV[idx-fN1*fN2+fN1];
    else pphip=fV[idx+fN1];
@@ -72,7 +72,7 @@ void RhoPhiZ::DoSOR2(int idx)
 double RhoPhiZ::GetData(double tarx, double tary, double tarz, EOutput output)
 {
    //0:Impurity 1:Potential 2:E1 3:E2 3:E3
-   int idx=FindIdx(tarx,tary,tarz,0,n);
+   int idx=FindIdx(tarx,tary,tarz,0,fN);
    double ab=(tarx-fC1[idx])/fdC1p[idx];
    double aa=1-ab;
    double ba=(tary-fC2[idx])/fdC2p[idx];
@@ -93,7 +93,7 @@ double RhoPhiZ::GetData(double tarx, double tary, double tarz, EOutput output)
    tar6=-1;
    tar7=-1;
    tar0=tar[idx];
-   if(idx>=(n-fN1*fN2)){tar4=0;tar5=0;tar6=0;tar7=0;}
+   if(idx>=(fN-fN1*fN2)){tar4=0;tar5=0;tar6=0;tar7=0;}
    else{tar4=tar[idx+fN1*fN2];}
    if(idx%(fN1*fN2)%fN1==fN1-1){tar2=0;tar3=0;tar6=0;tar7=0;}
    else{tar2=tar[idx+fN1];}

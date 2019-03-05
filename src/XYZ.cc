@@ -8,9 +8,10 @@
 using namespace GeFiCa;
 
 XYZ::XYZ(int nx, int ny, int nz, const char *name, const char *title)
-   : XY(nx, ny*nz, name, title), fN3(nz)
+   : XY(nx, ny*nz, name, title)
 { 
    fN2=ny; // fN2 is set to ny*nz through XY constructor, it is fixed here
+   fN3=nz;
 }
 //_____________________________________________________________________________
 //
@@ -26,7 +27,7 @@ XYZ::~XYZ()
 void XYZ::SetStepLength(double steplength1,double steplength2,double steplength3)
 {
    XY::SetStepLength(steplength1,steplength2); 
-   for (int i=0;i<n;i++) {
+   for (int i=0;i<fN;i++) {
       if(i/(fN1*fN2)==0) fC3[i]=0;
       else fC3[i]=fC3[i-fN1*fN2]+steplength3;
       if((i%(fN1*fN2))/fN1!=0)fC2[i]=fC2[i-fN1]+steplength2;
@@ -54,7 +55,7 @@ void XYZ::DoSOR2(int idx)
    double pym,pyp,pxm,pxp,pzp,pzm;
    if(idx<fN1*fN2)pzm=fV[idx];
    else pzm=fV[idx-fN1*fN2];
-   if(idx>=n-fN1*fN2)pzp=fV[idx];
+   if(idx>=fN-fN1*fN2)pzp=fV[idx];
    else pzp=fV[idx+fN1*fN2];
    if(idx%(fN1*fN2)>(fN1*fN2)-fN1-1) pyp=fV[idx];
    else pyp=fV[idx+fN1];
@@ -119,7 +120,7 @@ double XYZ::GetData(double tarx, double tary, double tarz, EOutput output )
 {
    //get item with number: 0:Impurity 1:Potential 2: Ex 3:Ey 4:Ez
 
-   int idx=FindIdx(tarx,tary,tarz,0,n);
+   int idx=FindIdx(tarx,tary,tarz,0,fN);
    double ab=(-tarx+fC1[idx])/fdC1p[idx];
    double aa=1-ab;
    double ba=(-tary+fC2[idx])/fdC2p[idx];
@@ -140,7 +141,7 @@ double XYZ::GetData(double tarx, double tary, double tarz, EOutput output )
    tar6=-1;
    tar7=-1;
    tar0=tar[idx];
-   if(idx>=(n-fN1*fN2)){tar4=0;tar5=0;tar6=0;tar7=0;}
+   if(idx>=(fN-fN1*fN2)){tar4=0;tar5=0;tar6=0;tar7=0;}
    else{tar4=tar[idx-fN1*fN2];}
    if(idx%(fN1*fN2)%fN1==fN1-1){tar2=0;tar3=0;tar6=0;tar7=0;}
    else{tar2=tar[idx-fN1];}
@@ -162,7 +163,7 @@ bool XYZ::CalculateField(int idx)
 
    if (idx<fN1*fN2) // C3 lower border
       fE3[idx]=(fV[idx]-fV[idx+fN1])/fdC3p[idx];
-   else if (idx>=n-fN1*fN2) // C3 upper border
+   else if (idx>=fN-fN1*fN2) // C3 upper border
       fE3[idx]=(fV[idx]-fV[idx-fN1])/fdC3m[idx];
    else { // bulk
       fE3[idx]=(fV[idx-fN1]-fV[idx+fN1])/(fdC3m[idx]+fdC3p[idx]);

@@ -8,24 +8,24 @@
 using namespace GeFiCa;
 
 X::X(int nx, const char *name, const char *title) : TNamed(name,title), V0(0),
-   V1(2e3*volt), fN1(nx), n(nx), MaxIterations(5000), Nsor(0), Csor(1.95),
-   Precision(1e-7*volt)
+   V1(2e3*volt), MaxIterations(5000), Nsor(0), Csor(1.95),
+   Precision(1e-7*volt), fN(nx), fN1(nx), fN2(0), fN3(0)
 {
-   if (n<10) { Warning("X","n<10, set it to 11"); n=11; fN1=11; }
+   if (fN<10) { Warning("X","fN<10, set it to 11"); fN=11; fN1=11; }
 
-   fV=new double[n];
-   fE1=new double[n]; fE2=new double[n]; fE3=new double[n];
-   fC1=new double[n]; fC2=new double[n]; fC3=new double[n];
+   fV=new double[fN];
+   fE1=new double[fN]; fE2=new double[fN]; fE3=new double[fN];
+   fC1=new double[fN]; fC2=new double[fN]; fC3=new double[fN];
 
-   fdC1p=new double[n]; fdC1m=new double[n];
-   fdC2p=new double[n]; fdC2m=new double[n];
-   fdC3p=new double[n]; fdC3m=new double[n];
+   fdC1p=new double[fN]; fdC1m=new double[fN];
+   fdC2p=new double[fN]; fdC2m=new double[fN];
+   fdC3p=new double[fN]; fdC3m=new double[fN];
 
-   fIsFixed=new bool[n];
-   fIsDepleted=new bool[n];
-   fImpurity=new double[n];
+   fIsFixed=new bool[fN];
+   fIsDepleted=new bool[fN];
+   fImpurity=new double[fN];
 
-   for (int i=0;i<n;i++) {
+   for (int i=0;i<fN;i++) {
       fV[i]=0;
       fE1[i]=0; fE2[i]=0; fE3[i]=0;
       fC1[i]=0; fC2[i]=0; fC3[i]=0;
@@ -75,12 +75,12 @@ bool X::Analytic()
 //
 X& X::operator+=(GeFiCa::X *other)
 {
-   if (n!=other->n) {
+   if (fN!=other->fN) {
       Warning("+=", 
             "Only same type of detector can be added together! Do nothing.");
       return *this; 
    }
-   for (int i=0; i<n; i++) {
+   for (int i=0; i<fN; i++) {
       fV[i]=fV[i]+other->fV[i];
       fImpurity[i]+=other->fImpurity[i];
    }
@@ -91,7 +91,7 @@ X& X::operator+=(GeFiCa::X *other)
 //
 X& X::operator*=(double p)
 {
-   for (int i=0; i<n; i++) fV[i]=fV[i]*p;
+   for (int i=0; i<fN; i++) fV[i]=fV[i]*p;
    V0*=p; V1*=p;
    return *this;
 }
@@ -101,7 +101,7 @@ int X::GetIdxOfMaxV()
 {
    double max=fV[0];
    int maxn=0;
-   for(int i=1;i<n;i++) {
+   for(int i=1;i<fN;i++) {
       if(fV[i]>max) {
          maxn=i;
          max=fV[i];
@@ -115,7 +115,7 @@ int X::GetIdxOfMinV()
 {
    double min=fV[0];
    int minn=0;
-   for(int i=1;i<n;i++) {
+   for(int i=1;i<fN;i++) {
       if(fV[i]<min) {
          minn=i;
          min=fV[i];
@@ -127,7 +127,7 @@ int X::GetIdxOfMinV()
 //
 bool X::IsDepleted()
 {
-   for(int i=0;i<n;i++) {
+   for(int i=0;i<fN;i++) {
       DoSOR2(i); // calculate one more time in case of 
       //adding two fields together, one is depleted, the other is not
       if (!fIsDepleted[i]) return false;
@@ -138,7 +138,7 @@ bool X::IsDepleted()
 //
 void X::SetStepLength(double stepLength)
 {
-   for (int i=n;i-->0;) {
+   for (int i=fN;i-->0;) {
       fIsFixed[i]=false;
       fC1[i]=i*stepLength;
       fdC1p[i]=stepLength;
@@ -153,7 +153,7 @@ int* X::FindSurroundingMatrix(int idx)
    tmp[0]=idx;
    if(idx-1<0)tmp[1]=1;
    else tmp[1]=idx-1;
-   if(idx+1>=n)tmp[2]=n-2;
+   if(idx+1>=fN)tmp[2]=fN-2;
    else tmp[2]=idx+1;
    return tmp;
 }
@@ -172,7 +172,7 @@ bool X::CalculatePotential(EMethod method)
                Nsor, cp, Precision);
       double XUpSum=0;
       double XDownSum=0;
-      for (int i=n-1;i>=0;i--) {
+      for (int i=fN-1;i>=0;i--) {
          double old=fV[i];
          DoSOR2(i);
          if(old>0)XDownSum+=old;
@@ -185,7 +185,7 @@ bool X::CalculatePotential(EMethod method)
       Nsor++;
       if (cp<Precision) break;
    }
-   for (int i=0; i<n; i++) if (!CalculateField(i)) return false;
+   for (int i=0; i<fN; i++) if (!CalculateField(i)) return false;
    Printf("%4d steps, precision: %.1e (target: %.0e)", Nsor, cp, Precision);
    Info("CalculatePotential", "CPU time: %.1f s", watch.CpuTime());
    return true;
@@ -244,8 +244,8 @@ int X::FindIdx(double tarx,int begin,int end)
 //
 double X::GetData(double tarx, EOutput output)
 {
-   int idx=FindIdx(tarx,0,n-1);
-   if (idx==n) {
+   int idx=FindIdx(tarx,0,fN-1);
+   if (idx==fN) {
       switch (output) {
          case 0:return fImpurity[idx];
          case 2:return fE1[idx];
@@ -285,12 +285,12 @@ double X::GetCapacitance()
    Info("GetCapacitance","Start...");
    // set impurity to zero
    double *tmpImpurity=fImpurity;
-   for (int i=0;i<n;i++) {
+   for (int i=0;i<fN;i++) {
       if (fImpurity[i]!=0) {
          //impurity not clear,return
          //return -1;
-         fImpurity=new double[n];
-         for (int j=0;j<n;j++) {
+         fImpurity=new double[fN];
+         for (int j=0;j<fN;j++) {
             fImpurity[j]=0;
             if (!fIsFixed[j] && !fIsDepleted[j]) fIsFixed[j]=true;
          }
@@ -306,7 +306,7 @@ double X::GetCapacitance()
    // calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
    double dV=V0-V1; if(dV<0)dV=-dV;
    double SumofElectricField=0;
-   for(int i=0;i<n;i++) {
+   for(int i=0;i<fN;i++) {
       SumofElectricField+=fE1[i]*fE1[i]*fdC1p[i]*cm*cm;
       if (!fIsDepleted[i]) fIsFixed[i]=false;
    }
@@ -342,8 +342,8 @@ TTree* X::GetTree(bool createNew)
    fTree->Branch("depletion flag",&d,"d/O"); // depletion flag
 
    // fill tree
-   Info("GetTree","%d entries",n);
-   for (int i=0; i<n; i++) {
+   Info("GetTree","%d entries",fN);
+   for (int i=0; i<fN; i++) {
       e1= fE1[i]; c1= fC1[i]; // 1D data
       if (fdC2p[i]!=0) { e2=fE2[i]; c2=fC2[i]; } // 2D data
       if (fdC3p[i]!=0) { e3=fE3[i]; c3=fC3[i]; } // 3D data
@@ -363,5 +363,5 @@ TTree* X::GetTree(bool createNew)
 void X::SetGridImpurity()
 {
    if (fImpDist && fImpurity[0]==0) // set impurity values if it's not done yet
-      for (int i=n;i-->0;) fImpurity[i]=fImpDist->Eval(fC1[i], fC2[i], fC3[i]);
+      for (int i=fN;i-->0;) fImpurity[i]=fImpDist->Eval(fC1[i], fC2[i], fC3[i]);
 }

@@ -23,7 +23,7 @@ void SegmentedInPhi::InitializeGrid()
    double SegmentUpperBound=2*TMath::Pi()*SegmentId/Nseg;
    double SegmentLowerBound=2*TMath::Pi()*(SegmentId-1)/Nseg;
    SetStepLength(steplength1,steplength2);
-   for(int i=0;i<n;i++) {
+   for(int i=0;i<fN;i++) {
       fC1[i]+=InnerR;
       if(i%fN1==0) {
          fIsFixed[i]=true;

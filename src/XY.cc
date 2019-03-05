@@ -5,9 +5,10 @@
 using namespace GeFiCa;
 
 XY::XY(int nx, int ny, const char *name, const char *title)
-   : X(nx*ny, name, title), fN2(ny)
+   : X(nx*ny, name, title)
 {
    fN1=nx; // fN1 is set to nx*ny through X constructor, it is fixed here
+   fN2=ny;
 }
 //_____________________________________________________________________________
 //
@@ -24,7 +25,7 @@ void XY::SetStepLength(double steplength1,double steplength2)
 {
    //set field step length
    X::SetStepLength(steplength1);
-   for (int i=0;i<n;i++) {
+   for (int i=0;i<fN;i++) {
       if(i>fN1-1)fC2[i]=fC2[i-fN1]+steplength2;
       else fC2[i]=0;
       if(i%fN1==0)fC1[i]=0;
@@ -51,7 +52,7 @@ void XY::DoSOR2(int idx)
    double pym,pyp,pxm,pxp;
    if(idx>=fN1)pym=fV[idx-fN1];
    else pym=fV[idx];
-   if(idx>=n-fN1)pyp=fV[idx];
+   if(idx>=fN-fN1)pyp=fV[idx];
    else pyp=fV[idx+fN1];
    if(idx%fN1==0)pxm=fV[idx];
    else pxm=fV[idx-1];
@@ -115,7 +116,7 @@ double XY::GetData(double tarx, double tary, EOutput output)
    //cout<<"(1,0)c1: "<<fC1[idx-fN1]<<" c2: "<<fC2[idx-fN1]<<" p: "<<fV[idx-fN1]<<endl;
    //cout<<"(1,1)c1: "<<fC1[idx-fN1-1]<<" c2: "<<fC2[idx-fN1-1]<<" p: "<<fV[idx-fN1-1]<<endl;
    //
-   //cout<<idx<<" "<<n<<endl;
+   //cout<<idx<<" "<<fN<<endl;
    double ab=(-tarx+fC1[idx])/fdC1m[idx];
    double aa=1-ab;
    double ba=(-tary+fC2[idx])/fdC2m[idx];
@@ -157,7 +158,7 @@ bool XY::CalculateField(int idx)
 
    if (idx%(fN1*fN2)<fN1) // C2 lower boundary
       fE2[idx]=(fV[idx]-fV[idx+fN1])/fdC2p[idx];
-   else if (idx%(fN1*fN2)>=n-fN1) // C2 upper boundary
+   else if (idx%(fN1*fN2)>=fN-fN1) // C2 upper boundary
       fE2[idx]=(fV[idx]-fV[idx-fN1])/fdC2m[idx];
    else { // bulk
       fE2[idx]=(fV[idx-fN1]-fV[idx+fN1])/(fdC2m[idx]+fdC2p[idx]);

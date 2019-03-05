@@ -51,7 +51,7 @@ void R::DoSOR4(int idx)
    xp1=fV[idx+1];
    if(idx>1)xm2=fV[idx-2];
    else {DoSOR2(idx);return; } 
-   if(idx<n-2)xp2=fV[idx+2];
+   if(idx<fN-2)xp2=fV[idx+2];
    else {DoSOR2(idx);return;}
    double tmp=(-1/12*xp2+4/3*xp1+4/3*xm1-1/12*xm2-density/epsilon*h1*h1)*2/5;
    fV[idx]=Csor*(tmp-fV[idx])+fV[idx];

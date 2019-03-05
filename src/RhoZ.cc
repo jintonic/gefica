@@ -14,7 +14,7 @@ void RhoZ::DoSOR2(int idx)
    double pzm,pzp,prm,prp; // pzm: potential_z_plus
    if(idx>=fN1)pzm=fV[idx-fN1];
    else pzm=fV[idx+fN1];
-   if(idx>=n-fN1)pzp=fV[idx];
+   if(idx>=fN-fN1)pzp=fV[idx];
    else pzp=fV[idx+fN1];
    if(idx%fN1==0)prm=fV[idx];
    else prm=fV[idx-1];
@@ -61,12 +61,12 @@ double RhoZ::GetCapacitance()
    Info("GetCapacitance", "Start...");
    // set impurity to zero
    double *tmpImpurity=fImpurity;
-   for (int i=0;i<n;i++) {
+   for (int i=0;i<fN;i++) {
       if (fImpurity[i]!=0) {
          //impurity not clear,return
          //return -1;
-         fImpurity=new double[n];
-         for (int j=0;j<n;j++) {
+         fImpurity=new double[fN];
+         for (int j=0;j<fN;j++) {
             fImpurity[j]=0;
             if (!fIsFixed[j] && !fIsDepleted[j]) fIsFixed[j]=true;
          }
@@ -82,7 +82,7 @@ double RhoZ::GetCapacitance()
    // calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
    double dV=V0-V1; if(dV<0)dV=-dV;
    double SumofElectricField=0;
-   for(int i=0;i<n;i++) {
+   for(int i=0;i<fN;i++) {
       double e1=fE1[i];
       double e2=fE2[i];
       double dr=fdC1p[i];
