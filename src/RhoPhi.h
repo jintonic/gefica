@@ -23,7 +23,7 @@ class GeFiCa::RhoPhi : public GeFiCa::XY
 
    protected:
       void DoSOR2(int idx);
-      virtual double GetData(double tarx,double tary,EOutput output);
+      virtual double GetData(double x, double y, double z, double *data);
 };
 #endif
 

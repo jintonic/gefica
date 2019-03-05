@@ -54,32 +54,25 @@ void RhoPhi::DoSOR2(int idx)
 }
 //_____________________________________________________________________________
 //
-double RhoPhi::GetData(double tarx, double tary, EOutput output)
+double RhoPhi::GetData(double x, double y, double z, double *data)
 {
    //0:Impurity 1:Potential 2:E1 3:E2
-   int idx=FindIdx(tarx,tary,0,fN);
-   double ab=(tarx-fC1[idx])/fdC1p[idx];
+   int idx=FindIdx(x,y,0,fN);
+   double ab=(x-fC1[idx])/fdC1p[idx];
    double aa=1-ab;
-   double ba=(tary-fC2[idx])/fdC2p[idx];
+   double ba=(y-fC2[idx])/fdC2p[idx];
    double bb=1-ba;
-   double tar0,tar1,tar2,tar3,*tar=NULL;
-   switch(output) {
-      case 0:tar= fImpurity;break;
-      case 1:tar= fV;break;
-      case 2:tar= fE1;break;
-      case 3:tar= fE2;break;
-      default:break;
-   }
+   double tar0,tar1,tar2,tar3;
    tar3=-1;
-   tar0=tar[idx];
+   tar0=data[idx];
    if((idx%fN1)==fN1-1) {
-      tar1=tar[idx+1-fN1];
-      tar3=tar[idx+1];
+      tar1=data[idx+1-fN1];
+      tar3=data[idx+1];
    } else {
-      tar1=tar[idx+1];
+      tar1=data[idx+1];
    }
    if(idx>fN-fN1){tar2=0;tar3=0;}
-   else {tar2=tar[idx+fN1];}
-   if (tar3==-1)tar3=tar[idx+fN1+1];
+   else {tar2=data[idx+fN1];}
+   if (tar3==-1)tar3=data[idx+fN1+1];
    return (tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb;
 }

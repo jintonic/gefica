@@ -105,48 +105,22 @@ int XY::FindIdx(double tarx,double tary ,int ybegin,int yend)
 }
 //_____________________________________________________________________________
 //
-double XY::GetData(double tarx, double tary, EOutput output)
+double XY::GetData(double x, double y, double z, double *data)
 {
-   int idx=FindIdx(tarx,tary,0,fN2-1);
+   int idx=FindIdx(x,y,0,fN2-1);
 
-   //test
-   //cout<<"index:"<<idx<<endl;
-   //cout<<"(0,0)c1: "<<fC1[idx]<<" c2: "<<fC2[idx]<<" p: "<<fV[idx]<<endl;
-   //cout<<"(0,1)c1: "<<fC1[idx-1]<<" c2: "<<fC2[idx-1]<<" p: "<<fV[idx-1]<<endl;
-   //cout<<"(1,0)c1: "<<fC1[idx-fN1]<<" c2: "<<fC2[idx-fN1]<<" p: "<<fV[idx-fN1]<<endl;
-   //cout<<"(1,1)c1: "<<fC1[idx-fN1-1]<<" c2: "<<fC2[idx-fN1-1]<<" p: "<<fV[idx-fN1-1]<<endl;
-   //
-   //cout<<idx<<" "<<fN<<endl;
-   double ab=(-tarx+fC1[idx])/fdC1m[idx];
+   double ab=(-x+fC1[idx])/fdC1m[idx];
    double aa=1-ab;
-   double ba=(-tary+fC2[idx])/fdC2m[idx];
-   //cout<<"left"<<fdC2m[idx]<<endl;
-   //cout<<"right "<<fdC2p[idx]<<endl;
-   //cout<<"next"<<fdC1p[idx]<<endl;
+   double ba=(-y+fC2[idx])/fdC2m[idx];
    double bb=1-ba;
-   double tar0,tar1,tar2,tar3,*tar=NULL;
-   switch(output) {
-      case 0:tar= fImpurity;break;
-      case 1:tar= fV;break;
-      case 2:tar= fE1;break;
-      case 3:tar= fE2;break;
-      default:break;
-   }
+   double tar0,tar1,tar2,tar3;
    tar3=-1;
-   tar0=tar[idx];
+   tar0=data[idx];
    if (idx%fN1==0){tar1=0;tar3=0;}
-   else {tar1=tar[idx-1];}
+   else {tar1=data[idx-1];}
    if(idx<fN1) {tar2=0;tar3=0;}
-   else {tar2=tar[idx-fN1];}
-   if (tar3==-1)tar3=tar[idx-fN1-1];
-   //cout<<tar0<<" "<<tar1<<" "<<tar2<<" "<<tar3<<endl;
-   //cout<<tarx<<", "<<tary<<endl;
-   //cout<<aa<<" "<<ab<<" "<<ba<<" "<<bb<<endl;
-   //
-   //if (fC1[idx]>0. && fC2[idx]>3.445){
-   //   cout<<tary-0.21<<endl;
-   //   abort();
-   //}
+   else {tar2=data[idx-fN1];}
+   if (tar3==-1)tar3=data[idx-fN1-1];
    return (tar1*ab+tar0*aa)*bb+(tar3*ab+tar2*aa)*ba;
 }
 //_____________________________________________________________________________

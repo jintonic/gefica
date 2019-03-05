@@ -11,14 +11,14 @@ namespace GeFiCa { class RhoPhiZ; }
 class GeFiCa::RhoPhiZ : public GeFiCa::XYZ
 {
    public:
-      RhoPhiZ(int fN1, int fN2, int fN3): XYZ(fN1,fN2,fN3) {};
+      RhoPhiZ(int n_rho, int n_phi, int n_z): XYZ(n_rho,n_phi,n_z) {};
 
       ClassDef(RhoPhiZ,1);
 
    protected:
       virtual void DoSOR2(int idx); 
 
-      virtual double GetData(double tarx,double tary,double tarz, EOutput output);
+      virtual double GetData(double x, double y, double z, double *data);
 };
 
 #endif
