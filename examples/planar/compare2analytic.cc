@@ -53,7 +53,7 @@ void compare2analytic()
 
    TLegend *l = new TLegend(0.2,0.6,0.4,0.8);
    l->AddEntry(ga,"Analytic","l");
-   l->AddEntry(gn,"SOR2","p");
+   l->AddEntry(gn,"SOR","p");
    l->Draw();
 
    gPad->Print("planar1d.png");
