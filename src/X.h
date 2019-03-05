@@ -126,7 +126,9 @@ class GeFiCa::X : public TNamed
       /**
        * Setup and initialize grid.
        */
-      virtual void Initialize() {};
+      virtual void Initialize() { InitializeGrid(); SetGridImpurity(); }
+      virtual void InitializeGrid() {};
+      virtual void SetGridImpurity();
       /**
        * find surrounding index and return in int array
        */

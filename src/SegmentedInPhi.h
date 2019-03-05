@@ -26,8 +26,9 @@ class GeFiCa::SegmentedInPhi : public GeFiCa::RhoPhi
             const char *title="2D true coaxial detector segmented in phi");
 
       ClassDef(SegmentedInPhi,1);
+
    protected:
-      virtual void Initialize();
+      virtual void InitializeGrid();
 };
 
 #endif

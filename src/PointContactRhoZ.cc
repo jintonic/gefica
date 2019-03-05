@@ -2,7 +2,7 @@
 #include "PointContactRhoZ.h"
 using namespace GeFiCa;
 
-void PointContactRhoZ::Initialize()
+void PointContactRhoZ::InitializeGrid()
 {
    double stepLengthR=Radius/(n1-1);
    double stepLengthZ=Height/(n2-1);

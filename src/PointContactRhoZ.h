@@ -23,7 +23,7 @@ class GeFiCa::PointContactRhoZ : public GeFiCa::PointContactDZ
       ClassDef(PointContactRhoZ,1);
 
    protected:
-      void Initialize();
+      virtual void InitializeGrid();
 };
 
 #endif

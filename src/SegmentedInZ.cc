@@ -7,9 +7,9 @@ SegmentedInZ::SegmentedInZ(int nr, int nt, const char *name, const char *title)
    SegmentId(1) {};
 //______________________________________________________________________________
 //
-void SegmentedInZ::Initialize()
+void SegmentedInZ::InitializeGrid()
 {
-   if (InnerR>=OuterR) Fatal("Initialize",
+   if (InnerR>=OuterR) Fatal("InitializeGrid",
             "Inner R (%.1f) >= outer R (%.1f)! Abort!", InnerR, OuterR);
 
    double stepLength=(OuterR-InnerR)/(n1-1);

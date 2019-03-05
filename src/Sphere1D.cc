@@ -6,9 +6,9 @@ Sphere1D::Sphere1D(int n, const char *name, const char *title)
    : R(n, name, title), InnerR(0.3*cm), OuterR(3*cm) {};
 //_____________________________________________________________________________
 //
-void Sphere1D::Initialize()
+void Sphere1D::InitializeGrid()
 {
-   if (OuterR<=InnerR) Fatal("Initialize",
+   if (OuterR<=InnerR) Fatal("InitializeGrid",
          "Inner R (%.1f) >= outer R (%.1f)! Abort!", InnerR, OuterR);
 
    double stepLength=(OuterR-InnerR)/(n-1);

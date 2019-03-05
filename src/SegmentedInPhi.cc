@@ -7,11 +7,11 @@ SegmentedInPhi::SegmentedInPhi(int nr, int np,
    OuterR(2.5),InnerR(0.5),Nseg(6), SegmentId(1) {};
 //______________________________________________________________________________
 //
-void SegmentedInPhi::Initialize()
+void SegmentedInPhi::InitializeGrid()
 {
-   if (InnerR>=OuterR) Fatal("Initialize",
+   if (InnerR>=OuterR) Fatal("InitializeGrid",
             "Inner R (%.1f) >= Outer R (%.1f)! Abort!", InnerR, OuterR);
-   if (Nseg==0) Fatal("Initialize",
+   if (Nseg==0) Fatal("InitializeGrid",
             "Total number of segments cannot be zero! Abort!");
    
    if (Nseg<0)Nseg=-Nseg;

@@ -6,9 +6,9 @@ TrueCoaxial1D::TrueCoaxial1D(int n, const char *name, const char *title)
    : Rho(n, name, title), OuterR(3*cm), InnerR(0.5*cm) {};
 //_____________________________________________________________________________
 //
-void TrueCoaxial1D::Initialize()
+void TrueCoaxial1D::InitializeGrid()
 {
-   if (InnerR>=OuterR) Fatal("Initialize",
+   if (InnerR>=OuterR) Fatal("InitializeGrid",
          "Inner R (%.1f) >= Outer R (%.1f)! Abort!", InnerR, OuterR);
  
    double stepLength=(OuterR-InnerR)/(n-1);

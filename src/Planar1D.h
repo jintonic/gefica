@@ -21,7 +21,7 @@ class GeFiCa::Planar1D : public GeFiCa::X
       ClassDef(Planar1D, 1);
 
    protected:
-      virtual void Initialize();
+      virtual void InitializeGrid();
       /**
        * Analytic calculation of 1D field with fixed impurity concentration.
        *

@@ -23,7 +23,7 @@ class GeFiCa::TrueCoaxial1D : public GeFiCa::Rho
       ClassDef(TrueCoaxial1D, 1);
 
    protected:
-      virtual void Initialize();
+      virtual void InitializeGrid();
       /**
        * Analytic calculation of 1D field in cylindrical coordinates with fixed
        * impurity concentration.

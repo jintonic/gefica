@@ -23,7 +23,7 @@ class GeFiCa::Sphere1D : public GeFiCa::R
       ClassDef(Sphere1D, 1);
 
    protected:
-      virtual void Initialize();      
+      virtual void InitializeGrid();      
       /**
        * Analytic calculation of 1D field in spheric coordinates.
        *

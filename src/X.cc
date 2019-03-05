@@ -162,8 +162,6 @@ int* X::FindSurroundingMatrix(int idx)
 bool X::CalculatePotential(EMethod method)
 {
    if (fdC1p[0]==0) Initialize(); // setup and initialize grid if it's not done
-   if (fImpDist && fImpurity[0]==0) // set impurity values if it's not done yet
-      for (int i=n;i-->0;) fImpurity[i]=fImpDist->Eval(fC1[i], fC2[i], fC3[i]);
    if (method==kAnalytic) return Analytic();
 
    Info("CalculatePotential","Start SOR...");
@@ -331,8 +329,6 @@ TTree* X::GetTree(bool createNew)
    fTree->Branch("1st coordinate",&c1,"c1/D");
    // initialize values
    if (fdC1p[0]==0) Initialize(); // setup & initialize grid
-   if (fImpDist && fImpurity[0]==0) for (int i=n;i-->0;)
-      fImpurity[i]=fImpDist->Eval(fC1[i]/cm, fC2[i]/cm, fC3[i]/cm);
 
    if (fdC2p[0]!=0) { // if it is a 2D grid
       fTree->Branch("E2            ",&e2,"e2/D");
@@ -361,4 +357,11 @@ TTree* X::GetTree(bool createNew)
    gDirectory->ls();
    fTree->ResetBranchAddresses(); // disconnect from local variables
    return fTree;
+}
+//_____________________________________________________________________________
+//
+void X::SetGridImpurity()
+{
+   if (fImpDist && fImpurity[0]==0) // set impurity values if it's not done yet
+      for (int i=n;i-->0;) fImpurity[i]=fImpDist->Eval(fC1[i], fC2[i], fC3[i]);
 }

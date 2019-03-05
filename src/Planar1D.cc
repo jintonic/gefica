@@ -6,10 +6,10 @@ Planar1D::Planar1D(int n, const char *name, const char *title)
    : X(n, name, title), Thickness(1*cm) {};
 //_____________________________________________________________________________
 //
-void Planar1D::Initialize()
+void Planar1D::InitializeGrid()
 {
    if (Thickness<=0) {
-      Warning("Initialize", "Thickness(%.1f)<=0, set it to 1*cm", Thickness);
+      Warning("InitializeGrid", "Thickness(%.1f)<=0, set it to 1*cm", Thickness);
       Thickness=1*cm;
    }
    // initialize fC1, fdC1p, fdC1m, fIsFixed

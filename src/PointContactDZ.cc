@@ -146,10 +146,10 @@ void PointContactDZ::SetBoundary()
 }
 //_____________________________________________________________________________
 //
-void PointContactDZ::Initialize()
+void PointContactDZ::InitializeGrid()
 {
    // we want no grid point right on z-axis
-   if (n1%2==1) Fatal("Initialize", "Number of points in D cannot be odd!");
+   if (n1%2==1) Fatal("InitializeGrid", "Number of points in D can't be odd!");
 
    SetStepLength(2*Radius/(n1-1),Height/(n2-1));
    for(int i=n;i-->0;) fC1[i]=fC1[i]-Radius;

@@ -28,7 +28,7 @@ class GeFiCa::SegmentedInZ : public GeFiCa::RhoZ
       ClassDef(SegmentedInZ,1);
 
    protected:
-      virtual void Initialize(); 
+      virtual void InitializeGrid(); 
 };
 #endif
 
