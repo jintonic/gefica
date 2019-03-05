@@ -97,7 +97,7 @@ class GeFiCa::X : public TNamed
        * - if true, the function always create a new tree and delete the old
        *   one if there is one.
        */
-      virtual TTree* GetTree(bool createNew=false);
+      TTree* GetTree(bool createNew=false);
 
       ClassDef(X,1);
 

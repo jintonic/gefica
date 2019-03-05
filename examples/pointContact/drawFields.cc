@@ -5,7 +5,7 @@ void drawFields(const char *input="ppc.root")
    // Get data from input file
    TFile *file = new TFile(input, "update"); // "update" allows creation of TH3
    PointContactDZ *detector = (PointContactDZ*) file->Get("pcdz");
-   TTree *t = detector->GetTree();
+   TTree *t = detector->GetTree(true);
    const int n = t->GetEntries();
 
    // fine tune margins, etc.
@@ -26,7 +26,7 @@ void drawFields(const char *input="ppc.root")
 
    TCanvas *ce = new TCanvas;
    ce->SetLogz();
-   t->Draw("c1:c2:sqrt(e1*e1+e2*e2)","","goff");
+   t->Draw("c1:c2:e","","goff");
    TGraph2D *ge = new TGraph2D(n, t->GetV1(), t->GetV2(), t->GetV3());
    ge->SetName("ge"); ge->SetNpx(500); ge->SetNpy(500); // fine bin histogram
    TH2D *he = ge->GetHistogram();
