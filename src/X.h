@@ -17,18 +17,8 @@ namespace GeFiCa {
       kAnalytic, ///< Analytic calculation
       kSOR2, ///< Successove over-relaxation method to the 2nd order
       kSOR4, ///< Successove over-relaxation method to the 4th order
+      kFEniCS ///< Not implemented yet
    };
-   /**
-    * Switches to different output.
-    */
-   enum EOutput {
-      kImpurity, ///< crystal impurity concentration
-      kPotential, ///< electric potential
-      kE1, ///< Electric field conponent in the 1st coordinate
-      kE2, ///< Electric field conponent in the 2nd coordinate
-      kE3, ///< Electric field conponent in the 3rd coordinate
-   };
-
    class X;
 }
 
@@ -77,11 +67,16 @@ class GeFiCa::X : public TNamed
        */
       void SetImpurity(TF3 *fi) { if (fi) fImpDist = fi; }
  
-      double GetE1(double x){return GetData(x,kE1);};
-      double GetE2(double x){return 0;};
-      double GetE3(double x){return 0;};
-      double GetImpurity(double x){return GetData(x,kImpurity);};
-      double GetPotential(double x){return GetData(x,kPotential);};
+      double GetV(double x=0, double y=0, double z=0)
+      { return GetData(x,y,z,fV); }
+      virtual double GetE1(double x=0, double y=0, double z=0)
+      { return GetData(x,y,z,fE1); }
+      virtual double GetE2(double x=0, double y=0, double z=0)
+      { return GetData(x,y,z,fE2); }
+      virtual double GetE3(double x=0, double y=0, double z=0)
+      { return GetData(x,y,z,fE3); }
+      virtual double GetImpurity(double x=0, double y=0, double z=0)
+      { return GetData(x,y,z,fImpurity); }
       /**
        * Get detector capacitance.
        * calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
@@ -149,9 +144,9 @@ class GeFiCa::X : public TNamed
        */
       virtual bool Analytic();
       /**
-       * Returns data of certain EOutput.
+       * Interpolate grid data at a given location.
        */
-      double GetData(double tarx, EOutput output); 
+      double GetData(double x, double y, double z, double *data); 
       /**
        * Calculate fields at @param idx using SOR2.
        */

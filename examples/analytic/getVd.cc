@@ -41,7 +41,7 @@ double GetVdep(double impurity, double thickness)
 }
 //______________________________________________________________________________
 // draw results
-void voltage(double thickness=1*cm)
+void getVd(double thickness=1*cm)
 {
    const int n=10; // number of points
    double impurity[n]={-1e9/cm3, -2e9/cm3, -4e9/cm3, -8e9/cm3, -1e10/cm3,

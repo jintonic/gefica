@@ -18,13 +18,6 @@ class GeFiCa::Rho : public X
             const char *title="1D cylindrical coordinates")
          : X(n, name, title) {};
 
-      virtual double GetPotential(double rho)
-      {return GetData(rho,kPotential);};
-      virtual double GetE1(double rho,double phi,double z)
-      {return GetData(rho,kE1);};
-      virtual double GetImpurity(double rho)
-      {return GetData(rho,kImpurity);};
-
       ClassDef(Rho,1);
 
    protected:

@@ -116,41 +116,31 @@ int XYZ::FindIdx(double tarx, double tary ,double tarz,int begin,int end)
 }
 //_____________________________________________________________________________
 //
-double XYZ::GetData(double tarx, double tary, double tarz, EOutput output )
+double XYZ::GetData(double x, double y, double z, double *data)
 {
-   //get item with number: 0:Impurity 1:Potential 2: Ex 3:Ey 4:Ez
-
-   int idx=FindIdx(tarx,tary,tarz,0,fN);
-   double ab=(-tarx+fC1[idx])/fdC1p[idx];
+   int idx=FindIdx(x,y,z,0,fN);
+   double ab=(-x+fC1[idx])/fdC1p[idx];
    double aa=1-ab;
-   double ba=(-tary+fC2[idx])/fdC2p[idx];
+   double ba=(-y+fC2[idx])/fdC2p[idx];
    double bb=1-ba;
-   double ac=(-tarz+fC3[idx])/fdC3p[idx];
+   double ac=(-z+fC3[idx])/fdC3p[idx];
    double ca=1-ac;
-   double tar0,tar1,tar2,tar3,tar4,tar5,tar6,tar7,*tar=NULL;
-   switch(output)
-   {
-      case 0:tar= fImpurity;break;
-      case 1:tar= fV;break;
-      case 2:tar= fE1;break;
-      case 3:tar= fE2;break;
-      case 4:tar= fE3;break;
-   }
+   double tar0,tar1,tar2,tar3,tar4,tar5,tar6,tar7;
    tar3=-1;
    tar5=-1;
    tar6=-1;
    tar7=-1;
-   tar0=tar[idx];
+   tar0=data[idx];
    if(idx>=(fN-fN1*fN2)){tar4=0;tar5=0;tar6=0;tar7=0;}
-   else{tar4=tar[idx-fN1*fN2];}
+   else{tar4=data[idx-fN1*fN2];}
    if(idx%(fN1*fN2)%fN1==fN1-1){tar2=0;tar3=0;tar6=0;tar7=0;}
-   else{tar2=tar[idx-fN1];}
+   else{tar2=data[idx-fN1];}
    if(idx%(fN1*fN2)/fN1==fN2-1){tar1=0;tar3=0;tar5=0;tar7=0;}
-   else{tar1=tar[idx+1];}
-   if(tar3==-1)tar3=tar[idx-fN1-1];
-   if(tar5==-1)tar5=tar[idx-fN1*fN2-1];
-   if(tar6==-1)tar6=tar[idx-fN1*fN2-fN1];
-   if(tar7==-1)tar7=tar[idx-fN1*fN2-fN1-1];
+   else{tar1=data[idx+1];}
+   if(tar3==-1)tar3=data[idx-fN1-1];
+   if(tar5==-1)tar5=data[idx-fN1*fN2-1];
+   if(tar6==-1)tar6=data[idx-fN1*fN2-fN1];
+   if(tar7==-1)tar7=data[idx-fN1*fN2-fN1-1];
    return ((tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb)*ac
       +((tar4*aa+tar5*ab)*ba+(tar6*aa+tar7*ab)*bb)*ca;
 }

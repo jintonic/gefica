@@ -18,26 +18,13 @@ class GeFiCa::XYZ : public GeFiCa::XY
             const char *title="3D coordinates");
       virtual ~XYZ();
 
-      double GetPotential(double x,double y,double z)
-      {return GetData(x,y,z,kPotential);};
-      virtual double GetE1(double x,double y,double z)
-      {return GetData(x,y,z,kE1);};
-      virtual double GetE2(double x,double y,double z)
-      {return GetData(x,y,z,kE2);};
-      virtual double GetE3(double x,double y,double z)
-      {return GetData(x,y,z,kE3);};
-      virtual double GetImpurity(double x,double y,double z)
-      {return GetData(x,y,z,kImpurity);};
-
       ClassDef(XYZ,1);
 
    protected:
-      virtual double GetData
-         (double tarx,double tary,double tarz, EOutput output);
+      virtual double GetData(double x, double y, double z, double *data);
       virtual void SetStepLength
          (double steplength1,double steplength2,double steplength3);
-      virtual int FindIdx(double tarx,double tary,
-            double tarz,int begin,int end);
+      int FindIdx(double tarx,double tary, double tarz,int begin,int end);
       virtual void DoSOR2(int idx); 
       virtual bool CalculateField(int idx);
 };

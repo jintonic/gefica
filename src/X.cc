@@ -242,26 +242,13 @@ int X::FindIdx(double tarx,int begin,int end)
 
 //_____________________________________________________________________________
 //
-double X::GetData(double tarx, EOutput output)
+double X::GetData(double x, double y, double z, double *data)
 {
-   int idx=FindIdx(tarx,0,fN-1);
-   if (idx==fN) {
-      switch (output) {
-         case 0:return fImpurity[idx];
-         case 2:return fE1[idx];
-         case 1:return fV[idx];
-         default: return -1;
-      }
-   }
-   double ab=(-tarx+fC1[idx])/fdC1p[idx];
+   int idx=FindIdx(x,0,fN-1);
+   if (idx==fN) return data[idx];
+   double ab=(-x+fC1[idx])/fdC1p[idx];
    double aa=1-ab;
-   switch(output) {
-      case 2:return fE1[idx]*ab+fE1[idx-1]*aa;
-      case 1:return fV[idx]*ab+fC1[idx-1]*aa;
-      case 0:return fImpurity[idx]*ab+fImpurity[idx-1]*aa;
-      default: return -1;
-   }
-   return -1;
+   return data[idx]*ab+data[idx-1]*aa;
 }
 //_____________________________________________________________________________
 //

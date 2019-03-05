@@ -60,7 +60,7 @@ void compare2fieldgen(const char *gefica="ppc2dSOR2.root",
    while (infile>>x>>y>>v>>e>>er>>ez) {
       sizeofr=x;
       sizeofz=y;
-      anotherV=detector2->GetPotential(x/10,y/10);
+      anotherV=detector2->GetV(x/10,y/10);
       E1=detector2->GetE1(x/10,y/10);
       E2=detector2->GetE2(x/10,y/10);
       E=sqrt(E1*E1+E2*E2);
