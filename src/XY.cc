@@ -1,4 +1,5 @@
 #include <TTree.h>
+#include <TMultiGraph.h>
 
 #include "XY.h"
 #include "Units.h"
@@ -9,6 +10,7 @@ XY::XY(int nx, int ny, const char *name, const char *title)
 {
    fN1=nx; // fN1 is set to nx*ny through X constructor, it is fixed here
    fN2=ny;
+   fEgraphs = new TMultiGraph("gEs","electric field lines");
 }
 //_____________________________________________________________________________
 //
@@ -141,12 +143,18 @@ bool XY::CalculateField(int idx)
 }
 //_____________________________________________________________________________
 //
-TGraph * XY::GetFieldLineFrom(double x, double y)
+TGraph* XY::GetFieldLineFrom(double x, double y)
 {
+   const char *name = Form("g%d%d",x/mm,y/mm);
+   TGraph *gl = (TGraph*) (fEgraphs->GetListOfGraphs()->FindObject(name));
+   if (gl) return gl;
 
+   gl = new TGraph;
+   gl->SetName(name);
+
+   //fill gl here
+   //when dex/Ex  =PresentDiffferentOnE?
+   //dex=gete1(x+dx)-gete1(x)
+
+   return gl;
 }
-
-//_____________________________________________________________________________
-//
-//when dex/Ex  =PresentDiffferentOnE?
-//dex=gete1(x+dx)-gete1(x)
