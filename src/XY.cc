@@ -1,4 +1,5 @@
 #include <TTree.h>
+#include <TGraph.h>
 #include <TMultiGraph.h>
 
 #include "XY.h"
@@ -145,7 +146,7 @@ bool XY::CalculateField(int idx)
 //
 TGraph* XY::GetFieldLineFrom(double x, double y)
 {
-   const char *name = Form("g%d%d",x/mm,y/mm);
+   const char *name = Form("g%.0f%.0f",x/mm,y/mm);
    TGraph *gl = (TGraph*) (fEgraphs->GetListOfGraphs()->FindObject(name));
    if (gl) return gl;
 
