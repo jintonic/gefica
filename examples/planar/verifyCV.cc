@@ -90,7 +90,7 @@ void verifyCV()
    TGraph *gn = new TGraph(n,V,Cn);
    TGraph *gnb = new TGraph(n,V,Cnb);
    TGraph *ga = new TGraph(n,V,Ca);
-   gnb->SetTitle(";Bias [V];Capacitance [Arbitrary Unit]");
+   gn->SetTitle(";Bias [V];Capacitance [Arbitrary Unit]");
    gnb->SetMarkerStyle(kCircle);
    ga->SetMarkerStyle(7);
    //gnb->SetMarkerStyle(kCircle);
