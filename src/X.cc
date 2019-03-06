@@ -281,12 +281,8 @@ double X::GetCapacitance()
    Info("GetCapacitance","Start...");
    // set impurity to zero
    double *tmpImpurity=fImpurity;
-   TH3 *tmpim=fImpDist;
-   fImpDist=New TF3("a","0");
    for (int i=0;i<fN;i++) {
       if (fImpurity[i]!=0) {
-         //impurity not clear,return
-         //return -1;
          fImpurity=new double[fN];
          for (int j=0;j<fN;j++) {
             fImpurity[j]=0;
@@ -300,7 +296,6 @@ double X::GetCapacitance()
    // set impurity back
    if(fImpurity!=tmpImpurity) delete []fImpurity;
    fImpurity=tmpImpurity;
-   fImpDist=tmpim;
 
    // calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
    double dV=V0-V1; if(dV<0)dV=-dV;
