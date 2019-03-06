@@ -38,10 +38,10 @@ X::X(int nx, const char *name, const char *title) : TNamed(name,title), V0(0),
       fIsDepleted[i]=true;
       fImpurity[i]=0;
    }
-
    fTree=NULL; fImpDist=NULL;
 
-   gROOT->SetStyle("Plain"); // pick up a good default style to modify
+   // pick up a good style to modify
+   gROOT->SetStyle("Plain");
    gStyle->SetLegendBorderSize(0);
    gStyle->SetLegendFont(132);
    gStyle->SetLabelFont(132,"XYZ");
@@ -50,6 +50,15 @@ X::X(int nx, const char *name, const char *title) : TNamed(name,title), V0(0),
    gStyle->SetTitleSize(0.05,"XYZ");
    gStyle->SetTitleOffset(-0.4,"Z");
    gStyle->SetPadTopMargin(0.02);
+   // create a smoother palette than the default one
+   const int nRGBs = 5;
+   const int nCont = 255;
+   double stops[nRGBs] = { 0.00, 0.34, 0.61, 0.84, 1.00 };
+   double red[nRGBs]   = { 0.00, 0.00, 0.87, 1.00, 0.51 };
+   double green[nRGBs] = { 0.00, 0.81, 1.00, 0.20, 0.00 };
+   double blue[nRGBs]  = { 0.51, 1.00, 0.12, 0.00, 0.00 };
+   TColor::CreateGradientColorTable(nRGBs, stops, red, green, blue, nCont);
+   gStyle->SetNumberContours(nCont);
 }
 //_____________________________________________________________________________
 //
