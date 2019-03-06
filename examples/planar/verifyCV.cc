@@ -87,6 +87,17 @@ void verifyCV()
    {
       Cnb[i]=Cnb[i]/Cnb[n-1];
    }
+   // prepare drawing style
+   gROOT->SetStyle("Plain"); // pick up a good drawing style to modify
+   gStyle->SetLegendBorderSize(0);
+   gStyle->SetLegendFont(132);
+   gStyle->SetLabelFont(132,"XY");
+   gStyle->SetTitleFont(132,"XY");
+   gStyle->SetLabelSize(0.05,"XY");
+   gStyle->SetTitleSize(0.05,"XY");
+   gStyle->SetPadRightMargin(0.01);
+   gStyle->SetPadLeftMargin(0.12);
+   gStyle->SetPadTopMargin(0.02);
    TGraph *gn = new TGraph(n,V,Cn);
    TGraph *gnb = new TGraph(n,V,Cnb);
    TGraph *ga = new TGraph(n,V,Ca);
@@ -97,4 +108,9 @@ void verifyCV()
    gnb->Draw("ap");
    gn->Draw("*");
    ga->Draw("l");
+   TLegend *l = new TLegend(0.5,0.6,0.8,0.8);
+   l->AddEntry(ga,"Analytic","l");
+   l->AddEntry(gn,"numerical","*");
+   l->AddEntry(gnb,"buildin numerical","p");
+   l->Draw();
 }
