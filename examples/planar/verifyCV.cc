@@ -15,11 +15,11 @@ double NumericalFieldGenerate(double V, double totalD)
    GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(n);
    detector->MaxIterations=1e5;
    detector->Csor=1.95;
-   detector->UpperBound=totalD*GeFiCa::cm;
+   detector->Thickness=totalD*GeFiCa::cm;
    detector->V1=0*GeFiCa::volt;
    detector->V0=V*GeFiCa::volt;
 
-   TF1 *im=new TF1("f","-1e10");
+   TF3 *im=new TF3("f","-1e10");
    detector->SetImpurity(im);
    bool *connect=new bool[n];
    for(int i=0;i<n;i++)
@@ -32,7 +32,7 @@ double NumericalFieldGenerate(double V, double totalD)
    double d=0;
    for(int i=0;i<n-1;i++)
    {
-      if(detector->fIsDepleted[i]&&totalD*i/(n-1)>d&&(connect[i-1]))
+      if(detector->IsDepleted()&&totalD*i/(n-1)>d&&(connect[i-1]))
       {
          connect[i]=true;
          d=totalD*i/(n-1);
