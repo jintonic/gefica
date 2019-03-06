@@ -1,70 +1,66 @@
-#include<math.h>
-// definition of necessary units
-static const double cm=1;
-static const double cm3=cm*cm*cm;
-static const double volt=1;
-static const double C=1; // Coulomb
-static const double e=1.6e-19*C; // elementary charge
-static const double epsilon0=8.854187817e-14*C/volt/cm; // vacuum permittivity
-// https://link.springer.com/chapter/10.1007/10832182_519
-static const double epsilonGe=15.8; // Ge dielectric constant
-double NumericalFieldGenerate(double V, double totalD)
+using namespace GeFiCa;
+// Compare numerically calculated C-V curve with analytic calculation
+// Since C=epsilon*A/d, C-V curve is basically 1/d-V curve
+double GetDepthOfDepletionNumerically(double voltage, double thickness)
 {
-   int n=2001;
+   const int n=2001;
    // calculate fields
-   GeFiCa::Planar1D *detector = new GeFiCa::Planar1D(n);
-   detector->MaxIterations=1e5;
-   detector->Csor=1.95;
-   detector->Thickness=totalD*GeFiCa::cm;
-   detector->V1=0*GeFiCa::volt;
-   detector->V0=V*GeFiCa::volt;
+   Planar1D *detector = new Planar1D(n);
+   detector->Thickness=thickness*cm;
+   detector->V1=0*volt;
+   detector->V0=voltage*volt;
 
    TF3 *im=new TF3("f","-1e10");
    detector->SetImpurity(im);
    bool *connect=new bool[n];
-   for(int i=0;i<n;i++)
-   {
+   for(int i=0;i<n;i++) {
       connect[i]=false;
    }
    connect[0]=true;
 
-   detector->CalculatePotential(GeFiCa::kSOR2);
+   detector->CalculatePotential(kSOR2);
    double d=0;
-   for(int i=0;i<n-1;i++)
-   {
-      if(detector->IsDepleted()&&totalD*i/(n-1)>d&&(connect[i-1]))
-      {
+   for(int i=0;i<n-1;i++) {
+      // please think about the depletion check, we cannot use fIsDepleted[i]
+      if(detector->IsDepleted()&&thickness*i/(n-1)>d&&(connect[i-1])) {
          connect[i]=true;
-         d=totalD*i/(n-1);
+         d=thickness*i/(n-1);
       }
    }
-         std::cout<<d<<"\n";
+   std::cout<<d<<"\n";
    return d;
 }
-double Vtod(double V,double totalD)
+//______________________________________________________________________________
+//
+double GetDepthOfDepletionAnalytically(double voltage, double thickness)
 {
-   double impurity=-1e10*e/cm3;
-   double d=sqrt(-2*epsilonGe*epsilon0*V/impurity);
-   if (d>totalD)return totalD;
-   //V=ax^2+c2x+c1
-   //c1=0, when V=0 at x=0
+   double impurity=-1e10*Qe/cm3;
+   double d=TMath::Sqrt(-2*epsilon*voltage/impurity);
+   if (d>thickness)return thickness;
+   //voltage=ax^2+c2x+c1
+   //c1=0, when voltage=0 at x=0
    //c2=-ad, when E=dV/dx=0 at x=0, where just depleted
    //a is impurity/epsilon
-   //V=-ax^2/2, solve V when x=d
+   //voltage=-ax^2/2, solve voltage when x=d
    return d;
-
 }
-void UndepletedPlanarCompartoAnalytic()
+//______________________________________________________________________________
+//
+void verifyCV()
 {
-   TCanvas *c1 = new TCanvas("c1","A Simple Graph Example",200,10,500,300);
-   int n=20;
-   double thickess=1*cm;
-   Double_t V[n], diff[n];
+   // please don't draw diff, instead, overlay two curves on top of each other
+   double thickness=1*cm;
+   const int n=15;
+   Double_t V[n], Cn[n], Ca[n];
    for (Int_t i=1;i<n;i++) {
       V[i] = i*50;
-      diff[i] = NumericalFieldGenerate(V[i],thickess)-Vtod(V[i],thickess); 
+      Cn[i] = 1/GetDepthOfDepletionNumerically(V[i],thickness);
+      Ca[i] = 1/GetDepthOfDepletionAnalytically(V[i],thickness); 
    }
-   TGraph* gr = new TGraph(n,V,diff);
-   gr->Draw("AC*");
-
+   TGraph *gn = new TGraph(n,V,Cn);
+   TGraph *ga = new TGraph(n,V,Ca);
+   gn->SetTitle(";Capacitance [Arbitrary Unit];Bias [V]");
+   gn->Draw("pal");
+   ga->SetMarkerStyle(kCircle);
+   ga->Draw("p");
 }
