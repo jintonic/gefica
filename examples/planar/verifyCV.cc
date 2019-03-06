@@ -19,16 +19,41 @@ double GetDepthOfDepletionNumerically(double voltage, double thickness)
    connect[0]=true;
 
    detector->CalculatePotential(kSOR2);
-   double d=0;
-   for(int i=0;i<n-1;i++) {
-      // please think about the depletion check, we cannot use fIsDepleted[i]
-      if(detector->IsDepleted()&&thickness*i/(n-1)>d&&(connect[i-1])) {
-         connect[i]=true;
-         d=thickness*i/(n-1);
+   
+   //search for first V0
+   double begin=0;
+   double end=thickness;
+   double mid=(begin+end)/2;
+   while(begin<end)
+   {
+      mid=(begin+end)/2;
+      if(detector->GetV(mid)>0)
+      {
+         begin=mid+1e-5;
+      }
+      if(detector->GetV(mid)<=0)
+      {
+         end=mid-1e-5;
       }
    }
-   std::cout<<d<<"\n";
-   return d;
+
+   std::cout<<mid<<"\n";
+   return mid;
+}
+double GetDepthOfDepletionbuildinNumerically(double voltage, double thickness)
+{
+   const int n=2001;
+   // calculate fields
+   Planar1D *detector = new Planar1D(n);
+   detector->Thickness=thickness*cm;
+   detector->V1=0*volt;
+   detector->V0=voltage*volt;
+
+   TF3 *im=new TF3("f","-1e10");
+   detector->SetImpurity(im);
+   detector->CalculatePotential(kSOR2);
+   
+   return detector->GetCapacitance();
 }
 //______________________________________________________________________________
 //
@@ -51,16 +76,25 @@ void verifyCV()
    // please don't draw diff, instead, overlay two curves on top of each other
    double thickness=1*cm;
    const int n=15;
-   Double_t V[n], Cn[n], Ca[n];
-   for (Int_t i=1;i<n;i++) {
-      V[i] = i*50;
+   Double_t V[n], Cn[n], Ca[n],Cnb[n];
+   for (Int_t i=0;i<n;i++) {
+      V[i] = (i+1)*50;
       Cn[i] = 1/GetDepthOfDepletionNumerically(V[i],thickness);
+      Cnb[i] = GetDepthOfDepletionbuildinNumerically(V[i],thickness)/pF;
       Ca[i] = 1/GetDepthOfDepletionAnalytically(V[i],thickness); 
    }
+   for(int i=0;i<n;i++)
+   {
+      Cnb[i]=Cnb[i]/Cnb[n-1];
+   }
    TGraph *gn = new TGraph(n,V,Cn);
+   TGraph *gnb = new TGraph(n,V,Cnb);
    TGraph *ga = new TGraph(n,V,Ca);
-   gn->SetTitle(";Capacitance [Arbitrary Unit];Bias [V]");
-   gn->Draw("pal");
-   ga->SetMarkerStyle(kCircle);
-   ga->Draw("p");
+   gnb->SetTitle(";Bias [V];Capacitance [Arbitrary Unit]");
+   gnb->SetMarkerStyle(kCircle);
+   ga->SetMarkerStyle(7);
+   //gnb->SetMarkerStyle(kCircle);
+   gnb->Draw("ap");
+   gn->Draw("*");
+   ga->Draw("l");
 }
