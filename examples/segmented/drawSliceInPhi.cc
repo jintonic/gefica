@@ -1,75 +1,67 @@
+using namespace GeFiCa;
 // Draw weighting potential of a segment of Siegfried (6 segments in phi)
 void CalculateWeightingPotential()
 {
-   GeFiCa::SegmentedInPhi *siegfried = new GeFiCa::SegmentedInPhi;
-   siegfried->V0=0*GeFiCa::volt;
-   siegfried->V1=1*GeFiCa::volt;
-   siegfried->SegmentNum=6;
-   siegfried->SegmentID=1;
-   siegfried->CalculatePotential(GeFiCa::kSOR2);
-   siegfried->SaveField("siegfried.root");
+   if (gSystem->Which(".","siegfried.root")) return;
+   SegmentedInPhi *siegfried = new SegmentedInPhi;
+   siegfried->V0=0*volt;
+   siegfried->V1=1*volt;
+   siegfried->Nseg=6;
+   siegfried->SegmentId=2;
+   siegfried->CalculatePotential(kSOR2);
+   TFile *output = new TFile("siegfried.root", "recreate");
+   siegfried->Write();
+   output->Close();
 }
 //______________________________________________________________________________
 //
 void DrawWeightingPotential()
 { 
-   // pick up a good default drawing style to modify
-   gROOT->SetStyle("Plain");
-   gStyle->SetTitleFont(132,"XYZ"); gStyle->SetTitleSize(0.05,"XYZ");
-   gStyle->SetLabelFont(132,"XYZ"); gStyle->SetLabelSize(0.05,"XYZ");
-   gStyle->SetPadRightMargin(0.12);
-   gStyle->SetPadLeftMargin(0.08);
-   gStyle->SetPadTopMargin(0.02);
-   // create a smoother palette than the default one
-   const int nRGBs = 5;
-   const int nCont = 255;
-   double stops[nRGBs] = { 0.00, 0.34, 0.61, 0.84, 1.00 };
-   double red[nRGBs]   = { 0.00, 0.00, 0.87, 1.00, 0.51 };
-   double green[nRGBs] = { 0.00, 0.81, 1.00, 0.20, 0.00 };
-   double blue[nRGBs]  = { 0.51, 1.00, 0.12, 0.00, 0.00 };
-   TColor::CreateGradientColorTable(nRGBs, stops, red, green, blue, nCont);
-   gStyle->SetNumberContours(nCont);
-   // make a square canvas
-   TCanvas *c = new TCanvas("c", "c", 450, 450);
+   // load data
+   TFile *input = new TFile("siegfried.root","update");
+   SegmentedInPhi *siegfried = (SegmentedInPhi*) input->Get("sip");
+   TTree *t = siegfried->GetTree();
+   const int n = t->GetEntries();
+   t->Draw("c1*cos(c2):c1*sin(c2):v","","goff");
+   TGraph2D *gv = new TGraph2D(n, t->GetV1(), t->GetV2(), t->GetV3());
+   gv->SetName("gv"); gv->SetNpx(500); gv->SetNpy(500); // fine bin histogram
+
+   // draw plot
+   gStyle->SetPadRightMargin(0.16); gStyle->SetTitleOffset(-0.6,"z");
+   TCanvas *c = new TCanvas("c", "c", 600, 520);
    c->SetLogz();
-   // load data and draw
-   TChain *t = new TChain("t");
-   t->Add("siegfried.root");
-   t->Draw("c1*sin(c2):c1*cos(c2):v","","colz");
-   // fine tune plot
-   TH2F *h = (TH2F*) gPad->GetPrimitive("htemp");
+   TH2D *h = gv->GetHistogram();
    h->SetTitle(";x [cm];y [cm];weighting potential [V]");
-   h->GetYaxis()->SetTitleOffset(0.7);
-   h->GetZaxis()->SetTitleOffset(-0.4);
    h->GetXaxis()->CenterTitle();
    h->GetYaxis()->CenterTitle();
    h->GetZaxis()->CenterTitle();
+   h->Draw("colz");
    // widen the color palette
-   gPad->Update(); // create the palette by forcedly drawing the plot
+   c->Update(); // https://root.cern.ch/doc/master/classTPaletteAxis.html
    TPaletteAxis *palette = 
       (TPaletteAxis*) h->GetListOfFunctions()->FindObject("palette");
-   palette->SetX2NDC(0.94);
-   h->Draw("colz"); // let the new setup take effect
+   palette->SetX2NDC(0.92);
+
    // draw segmentation scheme
-   GeFiCa::SegmentedInPhi *siegfried = new GeFiCa::SegmentedInPhi();
-   double r=siegfried->RUpperBound, x=r*cos(3.14/3), y=r*sin(3.14/3);
+   double r=siegfried->OuterR, ri=siegfried->InnerR;
+   double x=r*cos(3.14/3), y=r*sin(3.14/3);
+
    TLine *l1 = new TLine(-r,0,r,0);
-   l1->SetLineColor(kWhite);
-   l1->SetLineStyle(kDashed);
-   l1->Draw();
+   l1->SetLineColor(kBlack); l1->SetLineStyle(kDashed); l1->Draw();
    TLine *l2 = new TLine(-x,-y,x,y);
-   l2->SetLineColor(kWhite);
-   l2->SetLineStyle(kDashed);
-   l2->Draw();
+   l2->SetLineColor(kBlack); l2->SetLineStyle(kDashed); l2->Draw();
    TLine *l3 = new TLine(-x,y,x,-y);
-   l3->SetLineColor(kWhite);
-   l3->SetLineStyle(kDashed);
-   l3->Draw();
+   l3->SetLineColor(kBlack); l3->SetLineStyle(kDashed); l3->Draw();
+
+   TEllipse *e1 = new TEllipse(0,0,ri,ri); e1->Draw();
+   TEllipse *e2 = new TEllipse(0,0,r,r); e2->SetFillStyle(0); e2->Draw();
+
+   gPad->Print("sip.png");
 }
 //______________________________________________________________________________
 //
 void drawSliceInPhi()
 {
-   if (1||gSystem->Which(".","siegfried.root")==0) CalculateWeightingPotential();
+   CalculateWeightingPotential();
    DrawWeightingPotential();
 }
