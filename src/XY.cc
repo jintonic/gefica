@@ -139,3 +139,14 @@ bool XY::CalculateField(int idx)
    }
    return true;
 }
+//_____________________________________________________________________________
+//
+TGraph * XY::GetFieldLineFrom(double x, double y)
+{
+
+}
+
+//_____________________________________________________________________________
+//
+//when dex/Ex  =PresentDiffferentOnE?
+//dex=gete1(x+dx)-gete1(x)
