@@ -24,8 +24,8 @@ PointContactDZ::PointContactDZ(int nd, int nz, const char *name,
    CornerW(0.3*cm),
    CornerH(0.5*cm),
    WrapArroundR(2.5*cm),
-   GrooveW(0), 
-   GrooveH(0){};
+   GrooveW(00.1), 
+   GrooveH(0.1){};
 //_____________________________________________________________________________
 //
 void PointContactDZ::SetBoundary()
@@ -297,6 +297,7 @@ void PointContactDZ::SetGridImpurity()
             (fC1[i]<-(WrapArroundR-GrooveW) && fC1[i]>-(WrapArroundR) && fC2[i]<GrooveH))
          {
             fImpurity[i]=0;
+            fV[i]=0;
          }
       }
    }
