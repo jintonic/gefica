@@ -18,7 +18,7 @@ class GeFiCa::RhoZ : public GeFiCa::XY
             const char *title="2D cylindrical coordinates")
          : XY(fN1, fN2, name, title) {};
 
-      double GetCapacitance();
+      double GetC();
 
       ClassDef(RhoZ,1);
 

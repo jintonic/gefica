@@ -53,7 +53,7 @@ double GetDepthOfDepletionbuildinNumerically(double voltage, double thickness)
    detector->SetImpurity(im);
    detector->CalculatePotential(kSOR2);
    
-   return detector->GetCapacitance();
+   return detector->GetC();
 }
 //______________________________________________________________________________
 //

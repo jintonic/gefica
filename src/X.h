@@ -81,7 +81,7 @@ class GeFiCa::X : public TNamed
        * Get detector capacitance.
        * calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
        */
-      double GetCapacitance();
+      double GetC();
       /**
        * Create &/or return a TTree with field data.
        * \param [in] createNew is a flag

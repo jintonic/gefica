@@ -9,6 +9,6 @@ void calculateC()
    detector->V1=800*volt;
 
    // calculate capacitance
-   double c = detector->GetCapacitance()/pF;
+   double c = detector->GetC()/pF;
    cout<<"capacitance is "<<c<<" pF/cm2"<<endl;
 }

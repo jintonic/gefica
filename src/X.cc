@@ -276,9 +276,9 @@ bool X::CalculateField(int idx)
 }
 //_____________________________________________________________________________
 //
-double X::GetCapacitance()
+double X::GetC()
 {
-   Info("GetCapacitance","Start...");
+   Info("GetC","Start...");
    // set impurity to zero
    double *tmpImpurity=fImpurity;
    for (int i=0;i<fN;i++) {
@@ -304,7 +304,7 @@ double X::GetCapacitance()
       SumofElectricField+=fE1[i]*fE1[i]*fdC1p[i]*cm*cm;
       if (!fIsDepleted[i]) fIsFixed[i]=false;
    }
-   Info("GetCapacitance","Done.");
+   Info("GetC","Done.");
    return SumofElectricField*epsilon/dV/dV;
 }
 //_____________________________________________________________________________

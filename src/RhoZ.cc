@@ -56,9 +56,9 @@ void RhoZ::DoSOR2(int idx)
 }
 //_____________________________________________________________________________
 //
-double RhoZ::GetCapacitance()
+double RhoZ::GetC()
 {
-   Info("GetCapacitance", "Start...");
+   Info("GetC", "Start...");
    // set impurity to zero
    double *tmpImpurity=fImpurity;
    for (int i=0;i<fN;i++) {
@@ -89,7 +89,7 @@ double RhoZ::GetCapacitance()
       double dz=fdC2p[i];
       SumofElectricField+=(e1*e1+e2*e2)*fC1[i]*dr*dz;
    }
-   Info("GetCapacitance", "Done.");
+   Info("GetC", "Done.");
    return SumofElectricField*2*3.14159*epsilon/dV/dV;
 }
 
