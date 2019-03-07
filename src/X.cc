@@ -302,11 +302,11 @@ double X::GetC()
    double dV=V0-V1; if(dV<0)dV=-dV;
    double SumofElectricField=0;
    for(int i=0;i<fN-1;i++) {
-      SumofElectricField+=fE1[i]*fE1[i]*fdC1p[i]*cm*cm;
+      SumofElectricField+=fE1[i]*fE1[i]*fdC1p[i];
       if (!fIsDepleted[i]) fIsFixed[i]=false;
    }
    double c=SumofElectricField*epsilon/dV/dV;
-   Info("GetC","%.1f pF",c/pF);
+   Info("GetC","%.2f pF",c/pF);
    return c;
 }
 //_____________________________________________________________________________
