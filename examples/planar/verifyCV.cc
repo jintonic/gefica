@@ -12,8 +12,8 @@ double GetCfromDepletionDepth(double voltage, double thickness)
 
    TF3 *fi = new TF3("f","-1e10"); // 1/cm3
    detector.SetImpurity(fi);
-   detector.Csor=1.994;
-   detector.MaxIterations=10000;
+   detector.Csor=1.999;
+   detector.MaxIterations=20000;
    detector.CalculatePotential(kSOR2);
    delete fi;
    
@@ -40,8 +40,8 @@ double GetCfromGeFiCa(double voltage, double thickness)
 
    TF3 *fi = new TF3("f","-1e10"); // 1/cm3
    detector.SetImpurity(fi);
-   detector.Csor=1.994;
-   detector.MaxIterations=10000;
+   detector.Csor=1.999;
+   detector.MaxIterations=20000;
    double c=detector.GetC();
    delete fi;
    
@@ -81,13 +81,13 @@ void verifyCV()
    TGraph *gg = new TGraph(np,V,Cg); gg->SetMarkerStyle(24);
    TGraph *ga = new TGraph(np,V,Ca); ga->SetMarkerStyle(25);
 
-   gStyle->SetPadLeftMargin(0.07);
+   gStyle->SetPadLeftMargin(0.08);
    gStyle->SetPadRightMargin(0.01);
-   gStyle->SetTitleOffset(0.6,"y");
+   gStyle->SetTitleOffset(0.75,"y");
    TMultiGraph *gs = new TMultiGraph; gs->Add(gn); gs->Add(gg); gs->Add(ga);
-   gs->SetTitle(";Bias [V];Capacitance [pF]"); gs->Draw("pal");
+   gs->SetTitle(";Bias [V];Capacitance per cm^{2} [pF]"); gs->Draw("pal");
 
-   TLegend *l = new TLegend(0.5,0.6,0.99,0.97);
+   TLegend *l = new TLegend(0.5,0.6,0.97,0.97);
    l->AddEntry(ga,"#varepsilon A/d, analytically","pl");
    l->AddEntry(gn,"#varepsilon A/d, numerically","pl");
    l->AddEntry(gg,"GeFiCa::X::GetC()","pl");
