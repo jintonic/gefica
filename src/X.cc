@@ -279,6 +279,7 @@ bool X::CalculateField(int idx)
 double X::GetC()
 {
    Info("GetC","Start...");
+   CalculatePotential(GeFiCa::kSOR2);
    // set impurity to zero
    double *tmpImpurity=fImpurity;
    for (int i=0;i<fN;i++) {
@@ -300,7 +301,7 @@ double X::GetC()
    // calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
    double dV=V0-V1; if(dV<0)dV=-dV;
    double SumofElectricField=0;
-   for(int i=0;i<fN;i++) {
+   for(int i=0;i<fN-1;i++) {
       SumofElectricField+=fE1[i]*fE1[i]*fdC1p[i]*cm*cm;
       if (!fIsDepleted[i]) fIsFixed[i]=false;
    }
