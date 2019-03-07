@@ -41,7 +41,7 @@ double GetCfromGeFiCa(double voltage, double thickness)
    TF3 *fi = new TF3("f","-1e10"); // 1/cm3
    detector.SetImpurity(fi);
    detector.Csor=1.994;
-   detector.MaxIterations=10000;
+   detector.MaxIterations=100000;
    double c=detector.GetC();
    delete fi;
    

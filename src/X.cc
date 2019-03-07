@@ -301,7 +301,7 @@ double X::GetC()
    // calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
    double dV=V0-V1; if(dV<0)dV=-dV;
    double SumofElectricField=0;
-   for(int i=0;i<fN-1;i++) {
+   for(int i=0;i<fN;i++) {
       SumofElectricField+=fE1[i]*fE1[i]*fdC1p[i]*cm*cm;
       if (!fIsDepleted[i]) fIsFixed[i]=false;
    }
@@ -316,7 +316,7 @@ TTree* X::GetTree(bool createNew)
    if (fTree) { if (createNew) delete fTree; else return fTree; }
 
    // define tree
-   bool b,d; double v,te,e1,e2,e3,c1,c2,c3;
+   bool b,d; double v,im,te,e1,e2,e3,c1,c2,c3;
    fTree = new TTree("t","field data");
    fTree->Branch("potential",&v,"v/D");
    fTree->Branch("total E  ",&te,"e/D");
@@ -336,6 +336,7 @@ TTree* X::GetTree(bool createNew)
    }
    fTree->Branch("boundary flag",&b,"b/O"); // boundary flag
    fTree->Branch("depletion flag",&d,"d/O"); // depletion flag
+   fTree->Branch("impurity",&im,"im/D"); // depletion flag
 
    // fill tree
    Info("GetTree","%d entries",fN);
@@ -343,7 +344,7 @@ TTree* X::GetTree(bool createNew)
       e1= fE1[i]; c1= fC1[i]; // 1D data
       if (fdC2p[i]!=0) { e2=fE2[i]; c2=fC2[i]; } // 2D data
       if (fdC3p[i]!=0) { e3=fE3[i]; c3=fC3[i]; } // 3D data
-      v = fV[i]; b = fIsFixed[i]; d = fIsDepleted[i]; // common data
+      v = fV[i]; b = fIsFixed[i]; d = fIsDepleted[i]; im=fImpurity[i]; // common data
       if (fdC3p[i]!=0) te=TMath::Sqrt(e1*e1 + e2*e2 + e3*e3);
       else { if (fdC2p[i]!=0) te=TMath::Sqrt(e1*e1+e2*e2); else te=e1; }
       fTree->Fill();
