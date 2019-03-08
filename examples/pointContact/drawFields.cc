@@ -33,4 +33,8 @@ void drawFields(const char *input="ppc.root")
    he->SetTitle(";Radius [cm];Height [cm];E [V/cm]");
    he->GetZaxis()->CenterTitle();
    he->Draw("colz");
+
+   gDebug=1;
+   TGraph *g1 = detector->GetFieldLineFrom(3*cm, 1*cm);
+   g1->Draw("pl");
 }
