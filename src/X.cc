@@ -306,7 +306,7 @@ double X::GetC()
       if (!fIsDepleted[i]) fIsFixed[i]=false;
    }
    double c=SumofElectricField*epsilon/dV/dV;
-   Info("GetC","%.1f pF",c/pF);
+   Info("GetC","%.2f pF",c/pF);
    return c;
 }
 //_____________________________________________________________________________
