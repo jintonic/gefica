@@ -7,7 +7,7 @@
 using namespace GeFiCa;
 
 XY::XY(int nx, int ny, const char *name, const char *title)
-   : X(nx*ny, name, title)
+   : X(nx*ny, name, title),PresentDifferenceOnE(0.1)
 {
    fN1=nx; // fN1 is set to nx*ny through X constructor, it is fixed here
    fN2=ny;
@@ -142,6 +142,7 @@ bool XY::CalculateField(int idx)
    }
    return true;
 }
+#include <vector>
 //_____________________________________________________________________________
 //
 TGraph* XY::GetFieldLineFrom(double x, double y)
@@ -153,9 +154,52 @@ TGraph* XY::GetFieldLineFrom(double x, double y)
    gl = new TGraph;
    gl->SetName(name);
 
-   //fill gl here
-   //when dex/Ex  =PresentDiffferentOnE?
-   //dex=gete1(x+dx)-gete1(x)
+   //call findnext twice
+   std::vector<double> *x1=new std::vector<double>;
+   std::vector<double> *y1=new std::vector<double>;
+   std::vector<double> *x2=new std::vector<double>;
+   std::vector<double> *y2=new std::vector<double>;
+   double e1=GetE1(x,y);
+   double e2=GetE2(x,y);
+   FindNextFieldNode(x,y,1,e1,e2,x1,y1);
+   FindNextFieldNode(x,y,-1,e1,e2,x2,y2);
+   //merge vectors and turn it into array
 
+   //fill gl here
+   
    return gl;
+}
+//_____________________________________________________________________________
+//
+void XY::FindNextFieldNode(double x,double y, int direction,double,d1, double d2,vector<double> *resultx,vector<double> *resulty)
+{
+   double locale1=GetE1(x,y);
+   double locale2=GetE2(x,y);
+   if(locale1==0&&locale2==0)
+   {
+      resultx->push_back(x);
+      resulty->push_back(y);
+      return;
+   }
+
+   //need rethink about how to find is step too large
+   double nexte1=GetE1(x+direction*d1,y+direction*d2);
+   double nexte2=GetE2(x+direction*d1,y+direction*d2);
+   //get abs value of everything
+   double abslocale1=locale1;if(abslocale1<0)abslocale1*=-1;
+   double abslocale2=locale2;if(abslocale2<0)abslocale2*=-1;
+   double absnexte1=nexte1;if(absnexte1<0)absnexte1*=-1;
+   double absnexte2=nexte2;if(absnexte2<0)absnexte2*=-1;
+   //check if nexte and locale are both 0
+
+   if(((nexte1-locale1)/locale1<PresentDifferenceOnE)&&((nexte1-locale1)/locale1<PresentDifferenceOnE))
+   {
+      resultx->push_back(x);
+      resulty->push_back(y);
+      FindNextFieldNode(x+direction*d1,y+direction*d2,direction,nexte1,nexte2,resultx,resulty);
+   }
+   else
+   {
+      FindNextFieldNode(x,y,direction,d1/2,d2/2,resultx,resulty);
+   }
 }
