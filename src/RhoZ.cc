@@ -59,6 +59,7 @@ void RhoZ::DoSOR2(int idx)
 double RhoZ::GetC()
 {
    Info("GetC", "Start...");
+   CalculatePotential(GeFiCa::kSOR2); // identify undepleted region
    // set impurity to zero
    double *tmpImpurity=fImpurity;
    for (int i=0;i<fN;i++) {
@@ -74,6 +75,7 @@ double RhoZ::GetC()
       }
    }
    // calculate potential without impurity
+   MaxIterations=0;
    CalculatePotential(GeFiCa::kSOR2);
    // set impurity back
    if(fImpurity!=tmpImpurity) delete []fImpurity;
@@ -89,7 +91,8 @@ double RhoZ::GetC()
       double dz=fdC2p[i];
       SumofElectricField+=(e1*e1+e2*e2)*fC1[i]*dr*dz;
    }
-   Info("GetC", "Done.");
-   return SumofElectricField*2*3.14159*epsilon/dV/dV;
+   double c=SumofElectricField*2*3.14159*epsilon/dV/dV;
+   Info("GetC","%.2f pF",c/pF);
+   return c;
 }
 
