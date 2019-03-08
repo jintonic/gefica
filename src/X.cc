@@ -279,7 +279,7 @@ bool X::CalculateField(int idx)
 double X::GetC()
 {
    Info("GetC","Start...");
-   CalculatePotential(GeFiCa::kSOR2);
+   CalculatePotential(GeFiCa::kSOR2); // identify undepleted region
    // set impurity to zero
    double *tmpImpurity=fImpurity;
    for (int i=0;i<fN;i++) {
@@ -293,6 +293,7 @@ double X::GetC()
       }
    }
    // calculate potential without impurity
+   MaxIterations=0;
    CalculatePotential(GeFiCa::kSOR2);
    // set impurity back
    if(fImpurity!=tmpImpurity) delete []fImpurity;
