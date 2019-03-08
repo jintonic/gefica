@@ -293,8 +293,7 @@ double X::GetC()
       }
    }
    // calculate potential without impurity
-   MaxIterations=0;
-   CalculatePotential(GeFiCa::kSOR2);
+   Nsor=0; CalculatePotential(GeFiCa::kSOR2);
    // set impurity back
    if(fImpurity!=tmpImpurity) delete []fImpurity;
    fImpurity=tmpImpurity;
