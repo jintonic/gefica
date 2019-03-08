@@ -30,8 +30,6 @@ class GeFiCa::XY : public GeFiCa::X
 
    protected:
       TMultiGraph *fEgraphs; ///< graphs of electric field lines
-      void FindNextFieldNode(double x, double y,double d1, double d2,vector<double> *resultx,vector<double> *resulty);
-
       void SetStepLength(double steplength1,double steplength2); 
       int FindIdx(double tarx,double tary,int ybegin,int yend);
       virtual double GetData(double x,double y, double z, double *data); 
