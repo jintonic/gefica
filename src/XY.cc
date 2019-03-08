@@ -153,18 +153,21 @@ TGraph* XY::GetFieldLineFrom(double x, double y)
 
    gl = new TGraph; gl->SetName(name); // create a new graph with a unique name
 
-   int i=0; bool isInCrystal=true;
-   while (isInCrystal) { // if (x,y) is in crystal
+   int i=0;
+   while (true) { // if (x,y) is in crystal
       gl->SetPoint(i,x/cm,y/cm); // add a point to the graph
-      //if (x,y is out of crystal) // work on this please
-        if (i==0) { // initial point is not in crystal
+      if (x>fC1[fN-1])x=fC1[fN-1]; // work on this please
+      else if (x<fC1[0])x=fC1[0]; // work on this please
+      if (y>fC1[fN-1]) y=fC2[fN-1];// work on this please
+      else if (y<fC2[0])y=fC2[0]; // work on this please
+         if (i==0&&(x>fC1[fN-1]||x<fC1[0]||y>fC2[fN-1]||y<fC2[0])) { // initial point is not in crystal
            Warning("GetFieldLineFrom",
                  "(x=%.1fcm,y=%.1fcm) is not in crystal! Stop propagating.",
                  x/cm, y/cm);
            break;
-        } else { // final point is not in crystal
-           isInCrystal=false;
-        }
+        } // final point is not in crystal 
+         //field line should not jump to outside of crystal. if it is happening , we should set a smaller d.yet I only shift one of the x and y
+
       double ex = GetE1(x,y), ey = GetE2(x,y);
       double et = TMath::Sqrt(ex*ex+ey*ey); // total E
       if (et==0) {
