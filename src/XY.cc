@@ -148,30 +148,32 @@ bool XY::CalculateField(int idx)
 TGraph* XY::GetFieldLineFrom(double x, double y)
 {
    const char *name = Form("g%.0f%.0f",x/mm,y/mm);
-   TGraph *gl = (TGraph*) (fEgraphs->GetListOfGraphs()->FindObject(name));
-   if (gl) return gl; // return old graph if it exists
+   TGraph *gl=0;
+   if (fEgraphs->GetListOfGraphs()) {
+      gl = (TGraph*) (fEgraphs->GetListOfGraphs()->FindObject(name));
+      if (gl) return gl; // return old graph if it exists
+   }
 
    gl = new TGraph; gl->SetName(name); // create a new graph with a unique name
 
    int i=0;
    while (true) { // if (x,y) is in crystal
       gl->SetPoint(i,x/cm,y/cm); // add a point to the graph
-      if (x>fC1[fN-1])x=fC1[fN-1]; // work on this please
-      else if (x<fC1[0])x=fC1[0]; // work on this please
-      if (y>fC1[fN-1]) y=fC2[fN-1];// work on this please
-      else if (y<fC2[0])y=fC2[0]; // work on this please
-         if (i==0&&(x>fC1[fN-1]||x<fC1[0]||y>fC2[fN-1]||y<fC2[0])) { // initial point is not in crystal
-           Warning("GetFieldLineFrom",
-                 "(x=%.1fcm,y=%.1fcm) is not in crystal! Stop propagating.",
-                 x/cm, y/cm);
-           break;
-        } // final point is not in crystal 
-         //field line should not jump to outside of crystal. if it is happening , we should set a smaller d.yet I only shift one of the x and y
+      if (x>fC1[fN-1]||x<fC1[0]||y>fC2[fN-1]||y<fC2[0]) { // out of crystal
+         if (i==0) // initial point is not in crystal
+            Warning("GetFieldLineFrom", "Start point (%.1fcm,%.1fcm)"
+                  " is not in crystal! Stop propagating.", x/cm, y/cm);
+         break;
+      }
 
       double ex = GetE1(x,y), ey = GetE2(x,y);
+      if (gDebug>0) Info("GetFieldLineFrom",
+            "x=%.1f [cm], y=%.1f [cm], Ex=%.2f V/cm, Ey=%.2f V/cm, i=%d",
+            x/cm, y/cm, ex/volt*cm, ey/volt*cm, i);
       double et = TMath::Sqrt(ex*ex+ey*ey); // total E
       if (et==0) {
-         Warning("GetFieldLineFrom", "E@(x=%.1fmm,y=%.1fmm)=0!", x/mm, y/mm);
+         Warning("GetFieldLineFrom", "E@(x=%.1fmm,y=%.1fmm)=%.1fV/cm!",
+               x/mm, y/mm, et/volt*cm);
          break;
       }
       double weight=1/(et/volt*mm); // propagate more in weaker field
