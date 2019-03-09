@@ -75,7 +75,7 @@ double RhoZ::GetC()
       }
    }
    // calculate potential without impurity
-   Nsor=0; CalculatePotential(GeFiCa::kSOR2);
+   CalculatePotential(GeFiCa::kSOR2);
    // set impurity back
    if(fImpurity!=tmpImpurity) delete []fImpurity;
    fImpurity=tmpImpurity;
