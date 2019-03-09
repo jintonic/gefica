@@ -3,8 +3,7 @@
 
 #include <TNamed.h>
 
-class TF3;
-class TTree;
+class TF3; class TTree; class TGraph;
 
 /**
  * The only namespace in GeFiCa.
@@ -32,9 +31,9 @@ class GeFiCa::X : public TNamed
       double V1;///< voltage of outer/higher electrode
 
       int MaxIterations; ///< maximal iteration to be performed
-      int Nsor; ///< current number of iterations in SOR process
       double Csor; ///< 1<=Csor<2, used to boost iteration speed
       double Precision; ///< difference between two consecutive iterations
+      TGraph *Gsor; ///< graph of current precision VS # of iterations
 
       /**
        * Default constructor for GeFiCa::X.
@@ -91,6 +90,10 @@ class GeFiCa::X : public TNamed
        *   one if there is one.
        */
       TTree* GetTree(bool createNew=false);
+      /**
+       * Get number of iterations for SOR to converge.
+       */
+      int GetNsor();
 
       ClassDef(X,1);
 
