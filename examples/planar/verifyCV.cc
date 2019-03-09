@@ -10,6 +10,7 @@ double GetCfromDepletionDepth(double voltage, double thickness)
    detector.V0=voltage; // for bottom electrode
    detector.V1=0*volt; // for top electrode
    detector.SetAverageImpurity(-1e10/cm3);
+   detector.Csor=1.986;
    detector.CalculatePotential();
    
    //search for depletion depth
@@ -33,6 +34,7 @@ double GetCfromGeFiCa(double voltage, double thickness)
    detector.V0=voltage; // for bottom electrode
    detector.V1=0*volt; // for top electrode
    detector.SetAverageImpurity(-1e10/cm3);
+   detector.Csor=1.986;
    return detector.GetC();
 }
 //______________________________________________________________________________
