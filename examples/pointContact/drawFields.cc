@@ -36,5 +36,6 @@ void drawFields(const char *input="ppc.root")
 
    gDebug=1;
    TGraph *g1 = detector->GetFieldLineFrom(3*cm, 1*cm);
+   std::cout<<detector->GetE1(3,1);
    g1->Draw("pl");
 }

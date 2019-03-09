@@ -112,6 +112,8 @@ double XY::GetData(double x, double y, double z, double *data)
 {
    int idx=FindIdx(x,y,0,fN2-1);
 
+   std::cout<<"here/n";
+
    double ab=(-x+fC1[idx])/fdC1m[idx];
    double aa=1-ab;
    double ba=(-y+fC2[idx])/fdC2m[idx];

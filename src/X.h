@@ -146,7 +146,7 @@ class GeFiCa::X : public TNamed
       /**
        * Interpolate grid data at a given location.
        */
-      double GetData(double x, double y, double z, double *data); 
+      virtual double GetData(double x, double y, double z, double *data); 
       /**
        * Calculate fields at @param idx using SOR2.
        */
