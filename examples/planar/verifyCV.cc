@@ -1,6 +1,6 @@
 // Compare numerically calculated C-V curves with analytic solution
 using namespace GeFiCa;
-const int n=2001;
+const int n=401;
 // get capacitance based on C=epsilon*A/d
 double GetCfromDepletionDepth(double voltage, double thickness)
 {
@@ -9,13 +9,9 @@ double GetCfromDepletionDepth(double voltage, double thickness)
    detector.Thickness=thickness;
    detector.V0=voltage; // for bottom electrode
    detector.V1=0*volt; // for top electrode
-
-   TF3 *fi = new TF3("f","-1e10"); // 1/cm3
-   detector.SetImpurity(fi);
-   detector.Csor=1.999;
-   detector.MaxIterations=20000;
-   detector.CalculatePotential(kSOR2);
-   delete fi;
+   detector.SetAverageImpurity(-1e10/cm3);
+   detector.Csor=1.986;
+   detector.CalculatePotential();
    
    //search for depletion depth
    double up=thickness, down=0, depth=thickness;
@@ -37,15 +33,9 @@ double GetCfromGeFiCa(double voltage, double thickness)
    detector.Thickness=thickness;
    detector.V0=voltage; // for bottom electrode
    detector.V1=0*volt; // for top electrode
-
-   TF3 *fi = new TF3("f","-1e10"); // 1/cm3
-   detector.SetImpurity(fi);
-   detector.Csor=1.999;
-   detector.MaxIterations=20000;
-   double c=detector.GetC();
-   delete fi;
-   
-   return c;
+   detector.SetAverageImpurity(-1e10/cm3);
+   detector.Csor=1.986;
+   return detector.GetC();
 }
 //______________________________________________________________________________
 //
@@ -71,7 +61,7 @@ void verifyCV()
    const int np=16;
    Double_t V[np], Cn[np], Ca[np],Cg[np];
    for (Int_t i=0;i<np;i++) {
-      V[i] = (i+1)*50*volt; Printf("voltage: %.0f V", V[i]);
+      V[i] = (i+2)*50*volt; Printf("voltage: %.0f V", V[i]);
       Cn[i] = GetCfromDepletionDepth(V[i],thickness)/pF;
       Cg[i] = GetCfromGeFiCa(V[i],thickness)/pF;
       Ca[i] = GetCanalytically(V[i],thickness)/pF; 
@@ -81,9 +71,9 @@ void verifyCV()
    TGraph *gg = new TGraph(np,V,Cg); gg->SetMarkerStyle(24);
    TGraph *ga = new TGraph(np,V,Ca); ga->SetMarkerStyle(25);
 
-   gStyle->SetPadLeftMargin(0.08);
+   gStyle->SetPadLeftMargin(0.09);
    gStyle->SetPadRightMargin(0.01);
-   gStyle->SetTitleOffset(0.75,"y");
+   gStyle->SetTitleOffset(0.85,"y");
    TMultiGraph *gs = new TMultiGraph; gs->Add(gn); gs->Add(gg); gs->Add(ga);
    gs->SetTitle(";Bias [V];Capacitance per cm^{2} [pF]"); gs->Draw("pal");
 

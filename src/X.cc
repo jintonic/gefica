@@ -1,6 +1,7 @@
 #include <TF3.h>
 #include <TTree.h>
 #include <TStyle.h>
+#include <TGraph.h>
 #include <TStopwatch.h>
 
 #include "X.h"
@@ -8,8 +9,8 @@
 using namespace GeFiCa;
 
 X::X(int nx, const char *name, const char *title) : TNamed(name,title), V0(0),
-   V1(2e3*volt), MaxIterations(5000), Nsor(0), Csor(1.95),
-   Precision(1e-7*volt), fN(nx), fN1(nx), fN2(0), fN3(0)
+   V1(2e3*volt), MaxIterations(5000), Csor(1.94), Precision(1e-7*volt),
+   Gsor(0), fN(nx), fN1(nx), fN2(0), fN3(0), fTree(0), fImpDist(0)
 {
    if (fN<10) { Warning("X","fN<10, set it to 11"); fN=11; fN1=11; }
 
@@ -38,7 +39,6 @@ X::X(int nx, const char *name, const char *title) : TNamed(name,title), V0(0),
       fIsDepleted[i]=true;
       fImpurity[i]=0;
    }
-   fTree=NULL; fImpDist=NULL;
 
    // pick up a good style to modify
    gROOT->SetStyle("Plain");
@@ -174,11 +174,20 @@ bool X::CalculatePotential(EMethod method)
    if (method==kAnalytic) return Analytic();
 
    Info("CalculatePotential","Start SOR...");
-   TStopwatch watch; watch.Start();
+   if (Gsor==0) {
+      Gsor = new TGraph; Gsor->SetName("Gsor");
+      Gsor->SetTitle(";Number of iterations;log10(precision)");
+   }
+   else Gsor->Set(0); // reset the graph
    double cp=1; // current presision
-   while (Nsor<MaxIterations) {
-      if (Nsor%100==0) Printf("%4d steps, precision: %.1e (target: %.0e)", 
-               Nsor, cp, Precision);
+   int it=0; // # of iterations
+   TStopwatch watch; watch.Start();
+   while (it<MaxIterations) {
+      if (it%100==0) {
+         Printf("%4d steps, precision: %.1e (target: %.0e)", 
+               it, cp, Precision);
+         if (it!=0) Gsor->SetPoint(Gsor->GetN(),it,TMath::Log10(cp));
+      }
       double XUpSum=0;
       double XDownSum=0;
       for (int i=fN-1;i>=0;i--) {
@@ -191,11 +200,12 @@ bool X::CalculatePotential(EMethod method)
          else XUpSum-=(diff);
       }
       cp = XUpSum/XDownSum;
-      Nsor++;
+      it++;
       if (cp<Precision) break;
    }
    for (int i=0; i<fN; i++) if (!CalculateField(i)) return false;
-   Printf("%4d steps, precision: %.1e (target: %.0e)", Nsor, cp, Precision);
+   Printf("%4d steps, precision: %.1e (target: %.0e)", it, cp, Precision);
+   Gsor->SetPoint(Gsor->GetN(),it,TMath::Log10(cp));
    Info("CalculatePotential", "CPU time: %.1f s", watch.CpuTime());
    return true;
 }
@@ -293,7 +303,7 @@ double X::GetC()
       }
    }
    // calculate potential without impurity
-   Nsor=0; CalculatePotential(GeFiCa::kSOR2);
+   CalculatePotential(GeFiCa::kSOR2);
    // set impurity back
    if(fImpurity!=tmpImpurity) delete []fImpurity;
    fImpurity=tmpImpurity;
@@ -361,4 +371,11 @@ void X::SetGridImpurity()
 {
    if (fImpDist && fImpurity[0]==0) // set impurity values if it's not done yet
       for (int i=fN;i-->0;) fImpurity[i]=fImpDist->Eval(fC1[i], fC2[i], fC3[i]);
+}
+//_____________________________________________________________________________
+//
+int X::GetNsor()
+{
+   if (Gsor) return Gsor->GetX()[Gsor->GetN()-1];
+   else return 0;
 }
