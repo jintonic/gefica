@@ -21,6 +21,7 @@ XY::~XY()
    if (fC2) delete[] fC2;
    if (fdC2m) delete[] fdC2m;
    if (fdC2p) delete[] fdC2p;
+   if (fEgraphs) delete fEgraphs;
 }
 //_____________________________________________________________________________
 //
@@ -112,8 +113,6 @@ double XY::GetData(double x, double y, double z, double *data)
 {
    int idx=FindIdx(x,y,0,fN2-1);
 
-   std::cout<<"here/n";
-
    double ab=(-x+fC1[idx])/fdC1m[idx];
    double aa=1-ab;
    double ba=(-y+fC2[idx])/fdC2m[idx];
@@ -147,9 +146,9 @@ bool XY::CalculateField(int idx)
 #include <vector>
 //_____________________________________________________________________________
 //
-TGraph* XY::GetFieldLineFrom(double x, double y)
+TGraph* XY::GetFieldLineFrom(double x, double y, bool positive)
 {
-   const char *name = Form("g%.0f%.0f",x/mm,y/mm);
+   const char *name = Form("g%.0f%.0f%d",100+x/mm,100+y/mm,positive);
    TGraph *gl=0;
    if (fEgraphs->GetListOfGraphs()) {
       gl = (TGraph*) (fEgraphs->GetListOfGraphs()->FindObject(name));
@@ -161,7 +160,7 @@ TGraph* XY::GetFieldLineFrom(double x, double y)
    int i=0;
    while (true) { // if (x,y) is in crystal
       gl->SetPoint(i,x/cm,y/cm); // add a point to the graph
-      if (x>fC1[fN-1]||x<fC1[0]||y>fC2[fN-1]||y<fC2[0]) { // out of crystal
+      if (x>=fC1[fN-1]||x<=fC1[0]||y>=fC2[fN-1]||y<=fC2[0]) {//out of crystal
          if (i==0) // initial point is not in crystal
             Warning("GetFieldLineFrom", "Start point (%.1fcm,%.1fcm)"
                   " is not in crystal! Stop propagating.", x/cm, y/cm);
@@ -169,18 +168,24 @@ TGraph* XY::GetFieldLineFrom(double x, double y)
       }
 
       double ex = GetE1(x,y), ey = GetE2(x,y);
-      if (gDebug>0) Info("GetFieldLineFrom",
-            "x=%.1f [cm], y=%.1f [cm], Ex=%.2f V/cm, Ey=%.2f V/cm, i=%d",
-            x/cm, y/cm, ex/volt*cm, ey/volt*cm, i);
       double et = TMath::Sqrt(ex*ex+ey*ey); // total E
       if (et==0) {
          Warning("GetFieldLineFrom", "E@(x=%.1fmm,y=%.1fmm)=%.1fV/cm!",
                x/mm, y/mm, et/volt*cm);
          break;
       }
-      double weight=1/(et/volt*mm); // propagate more in weaker field
+      double weight=5/(et/volt*mm); // propagate more in weaker field
       double dt=10*ns, mu=50000*cm2/volt/sec; // mu is mobility
-      x+=mu*ex*dt*weight; y+=mu*ey*dt*weight;
+      double dx=mu*ex*dt*weight, dy=mu*ey*dt*weight;
+      if (gDebug>0)
+         Printf("%04d x=%.3fmm, y=%.3fmm, Ex=%.2fV/cm, Ey=%.2fV/cm, "
+               "weight=%.3f, dx=%.3fmm, dy=%.3fmm", i, x/mm, y/mm, ex/volt*cm,
+               ey/volt*cm, weight, dx/mm, dy/mm);
+      if (i>2000) {
+         Info("GetFieldLineFrom", "Propagated more than 2000 steps. Stop");
+         break;
+      }
+      if (positive) { x+=dx; y+=dy; } else { x-=dx; y-=dy; }
       i++;
    }
 

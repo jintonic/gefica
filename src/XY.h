@@ -23,13 +23,15 @@ class GeFiCa::XY : public GeFiCa::X
 
       /**
        * Get an electric field line originated from (\param x, \param y).
+       * If \param positive, propagate along E direction;
+       * else propagate against E direction.
        */
-      TGraph* GetFieldLineFrom(double x, double y);
+      TGraph* GetFieldLineFrom(double x, double y, bool positive=true);
 
       ClassDef(XY,1);
 
    protected:
-      TMultiGraph *fEgraphs; ///< graphs of electric field lines
+      TMultiGraph *fEgraphs; ///<! graphs of electric field lines
       void SetStepLength(double steplength1,double steplength2); 
       int FindIdx(double tarx,double tary,int ybegin,int yend);
       virtual double GetData(double x,double y, double z, double *data); 
