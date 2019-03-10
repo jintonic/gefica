@@ -9,13 +9,11 @@ void drawFields(const char *input="ppc.root")
    const int n = t->GetEntries();
 
    // fine tune margins, etc.
-   gStyle->SetTitleOffset(0.6,"Y");
+   gStyle->SetTitleOffset(0.75,"Y");
    gStyle->SetPadRightMargin(0.12);
-   gStyle->SetPadLeftMargin(0.07);
+   gStyle->SetPadLeftMargin(0.08);
 
    // generate plots
-   TCanvas *cv = new TCanvas;
-   //cv->SetLogz();
    t->Draw("c1:c2:v","","goff");
    TGraph2D *gv = new TGraph2D(n, t->GetV1(), t->GetV2(), t->GetV3());
    gv->SetName("gv"); gv->SetNpx(500); gv->SetNpy(500); // fine bin histogram
@@ -23,6 +21,19 @@ void drawFields(const char *input="ppc.root")
    hv->SetTitle(";Radius [cm];Height [cm];Potential [V]");
    hv->GetZaxis()->CenterTitle();
    hv->Draw("colz");
+
+   // draw E field lines
+   const int np=12;
+   TGraph *gl[np];
+   double x[np] = {-25, 0.01, 25, -4, -3, -2, -1, 0.01, 1, 2, 3, 4};
+   double y[np] = {49.9, 24.9, 49.9, 2, 2, 2, 2, 2, 2, 2, 2, 2};
+   bool positive[np] = {0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+   for (int i=0; i<np; i++) {
+      gDebug=1;
+      gl[i] = detector->GetFieldLineFrom(x[i]*mm, y[i]*mm, positive[i]);
+      gDebug=0;
+      gl[i]->Draw("l");
+   }
 
    TCanvas *ce = new TCanvas;
    ce->SetLogz();
@@ -33,9 +44,5 @@ void drawFields(const char *input="ppc.root")
    he->SetTitle(";Radius [cm];Height [cm];E [V/cm]");
    he->GetZaxis()->CenterTitle();
    he->Draw("colz");
-
-   gDebug=1;
-   TGraph *g1 = detector->GetFieldLineFrom(3*cm, 1*cm);
-   std::cout<<detector->GetE1(3,1);
-   g1->Draw("pl");
+   for (int i=0; i<np; i++) gl[i]->Draw("p");
 }
