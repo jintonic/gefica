@@ -137,7 +137,7 @@ bool XY::CalculateField(int idx)
    if (idx%(fN1*fN2)<fN1) // C2 lower boundary
       fE2[idx]=(fV[idx]-fV[idx+fN1])/fdC2p[idx];
    else if (idx%(fN1*fN2)>=fN-fN1) // C2 upper boundary
-      fE2[idx]=(fV[idx]-fV[idx-fN1])/fdC2m[idx];
+      fE2[idx]=(fV[idx-fN1]-fV[idx])/fdC2m[idx];
    else { // bulk
       fE2[idx]=(fV[idx-fN1]-fV[idx+fN1])/(fdC2m[idx]+fdC2p[idx]);
    }

@@ -278,7 +278,7 @@ bool X::CalculateField(int idx)
    if (idx%fN1==0) // C1 lower boundary
       fE1[idx]=(fV[idx]-fV[idx+1])/fdC1p[idx];
    else if (idx%fN1==fN1-1) // C1 upper boundary
-      fE1[idx]=(fV[idx]-fV[idx-1])/fdC1m[idx];
+      fE1[idx]=(fV[idx-1]-fV[idx])/fdC1m[idx];
    else // bulk
       fE1[idx]=(fV[idx-1]-fV[idx+1])/(fdC1m[idx]+fdC1p[idx]);
 
