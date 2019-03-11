@@ -1,15 +1,11 @@
 using namespace GeFiCa;
-/**
- * \file compare2fieldgen.cc
- * \example pointContact/compare2fieldgen.cc
- * \brief Compare PointContactDZ to fieldgen
- */
-void drawresult()
+// Compare PointContactDZ to fieldgen
+void drawresult(const char *fieldgen)
 {
    // draw MJD result
    TCanvas *c1 = new TCanvas;
    TTree *tm1 = new TTree("tm1","tm1");
-   tm1->ReadFile("ev.dat", "r:z:v:e:er:ez");
+   tm1->ReadFile(fieldgen, "r:z:v:e:er:ez");
    tm1->Draw("z:r:v","","colz");
    //t->AddFriend("t2=t","ppcSOR2.root");
    //t->Draw("z:(t2.p-v)","z!=1&r!=1&z<1&r>34.&r<34.5","");
@@ -46,15 +42,17 @@ void drawresult()
 
 //______________________________________________________________________________
 //
-void compare2fieldgen(const char *gefica="ppc2dSOR2.root",
-      const char *fieldgen="ev.dat")
+void compare2fieldgen(const char *gefica="ppc.root",
+      const char *fieldgen="fieldgen/fields/p1/ev.dat")
 {
-   TFile *inrootfile=new TFile("rcpc.root","READ");
+   TFile *inrootfile=new TFile(gefica,"update");
    GeFiCa::PointContactDZ *detector2;
-   inrootfile ->GetObject("rcpc",detector2);
+   inrootfile ->GetObject("pcdz",detector2);
 
-   ifstream infile("ev.dat"); if (!infile.is_open()) exit(-1);
+   ifstream infile(fieldgen); if (!infile.is_open()) exit(-1);
    ofstream outfile("gVSf.txt");
+   string str;
+   for (int i=0; i<36; i++) getline(infile,str);
 
    double x,y,v,er,ez,e,anotherV,E1,E2,E,sizeofr,sizeofz;
    while (infile>>x>>y>>v>>e>>er>>ez) {
@@ -69,5 +67,5 @@ void compare2fieldgen(const char *gefica="ppc2dSOR2.root",
    infile.close();
    outfile.close();
 
-   drawresult();
+   drawresult(fieldgen);
 }
