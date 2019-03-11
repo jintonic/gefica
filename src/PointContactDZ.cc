@@ -24,7 +24,7 @@ PointContactDZ::PointContactDZ(int nd, int nz, const char *name,
    CornerW(0.3*cm),
    CornerH(0.5*cm),
    WrapArroundR(2.5*cm),
-   GrooveW(00.1), 
+   GrooveW(0.1*cm), 
    GrooveH(0.1){};
 //_____________________________________________________________________________
 //
@@ -239,24 +239,6 @@ void PointContactDZ::InitializeGrid()
       }
    }
    SetBoundary();
-}
-//_____________________________________________________________________________
-//
-bool PointContactDZ::CalculateField(int idx)
-{
-   if (!XY::CalculateField(idx)) return false;
-
-   if (fC2[idx]>PointContactH-fdC2m[idx]
-         && fC2[idx]<PointContactH+fdC2p[idx]) // PC top boundary
-      fE2[idx]=(fV[idx]-fV[idx+fN1])/fdC2p[idx];
-   if (fC1[idx]>-PointContactR-fdC1m[idx]
-         && fC1[idx]<-PointContactR+fdC1p[idx]) // PC left boundary
-      fE1[idx]=(fV[idx]-fV[idx-1])/fdC1m[idx];
-   if (fC1[idx]>PointContactR-fdC1m[idx]
-         && fC1[idx]<PointContactR+fdC1p[idx]) // PC right boundary
-      fE1[idx]=(fV[idx]-fV[idx+1])/fdC1p[idx];
-
-   return true;
 }
 //_____________________________________________________________________________
 //

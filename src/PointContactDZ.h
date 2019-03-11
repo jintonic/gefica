@@ -52,8 +52,6 @@ class GeFiCa::PointContactDZ : public GeFiCa::RhoZ
       void SetBoundary();
 
       bool SaveFieldAsFieldgen(const char * fout);
-
-      bool CalculateField(int idx);
 };
 
 #endif
