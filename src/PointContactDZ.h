@@ -29,7 +29,7 @@ class GeFiCa::PointContactDZ : public GeFiCa::RhoZ
       double CornerW; ///< Width of taper (bore side)
       double CornerH; ///<Height of taper (bore side)
 
-      double WrapArroundR; ///< Inner radius of outer contact 
+      double WrapAroundR; ///< Inner radius of outer contact 
       double GrooveW; ///< Width of Groove 
       double GrooveH; ///< Height of Groove 
 
