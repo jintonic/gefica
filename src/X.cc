@@ -328,6 +328,7 @@ TTree* X::GetTree(bool createNew)
    // define tree
    bool b,d; double v,te,e1,e2,e3,c1,c2,c3;
    fTree = new TTree("t","field data");
+   fTree->SetDirectory(0);
    fTree->Branch("potential",&v,"v/D");
    fTree->Branch("total E  ",&te,"e/D");
    // 1D data
@@ -360,7 +361,6 @@ TTree* X::GetTree(bool createNew)
    }
 
    fTree->GetListOfBranches()->ls();
-   gDirectory->ls();
    fTree->ResetBranchAddresses(); // disconnect from local variables
    return fTree;
 }
