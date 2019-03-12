@@ -14,14 +14,12 @@ void compare2analytic()
    TrueCoaxial1D *ana = (TrueCoaxial1D*) num->Clone("ana");
 
    // calculate potential using SOR method
-   num->CalculatePotential(kSOR2);
+   num->CalculatePotential();
 
    // fill grid with analytic result
-   ana->CalculatePotential(kAnalytic);
+   ana->FillGridWithAnalyticResult();
 
    // generate graphics
-   gStyle->SetPadRightMargin(0.02);
-
    TTree *tn = num->GetTree();
    tn->Draw("v:c1","","goff");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
@@ -30,6 +28,7 @@ void compare2analytic()
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
 
    // compare numerical result to analytic calculation
+   gStyle->SetPadLeftMargin(0.11); gStyle->SetPadRightMargin(0.01);
    gn->SetMarkerColor(kBlue);
    gn->SetMarkerStyle(kCircle);
    gn->SetMarkerSize(0.8);
