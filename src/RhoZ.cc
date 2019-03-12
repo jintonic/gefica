@@ -59,7 +59,7 @@ void RhoZ::DoSOR2(int idx)
 double RhoZ::GetC()
 {
    Info("GetC", "Start...");
-   CalculatePotential(GeFiCa::kSOR2); // identify undepleted region
+   CalculatePotential(); // identify undepleted region
    // set impurity to zero
    double *tmpImpurity=fImpurity;
    for (int i=0;i<fN;i++) {
@@ -75,7 +75,7 @@ double RhoZ::GetC()
       }
    }
    // calculate potential without impurity
-   CalculatePotential(GeFiCa::kSOR2);
+   CalculatePotential();
    // set impurity back
    if(fImpurity!=tmpImpurity) delete []fImpurity;
    fImpurity=tmpImpurity;
