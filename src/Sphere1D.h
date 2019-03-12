@@ -19,11 +19,6 @@ class GeFiCa::Sphere1D : public GeFiCa::R
        */
       Sphere1D(int n=101, const char *name="s1d",
             const char *title="1D spherical detector");
-
-      ClassDef(Sphere1D, 1);
-
-   protected:
-      virtual void InitializeGrid();      
       /**
        * Analytic calculation of 1D field in spheric coordinates.
        * According to 
@@ -35,6 +30,11 @@ class GeFiCa::Sphere1D : public GeFiCa::R
        * - potential(OuterR) = V1,
        */
       void FillGridWithAnalyticResult();
+
+      ClassDef(Sphere1D, 1);
+
+   protected:
+      virtual void InitializeGrid();      
 };
 
 #endif

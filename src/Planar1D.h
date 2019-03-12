@@ -17,11 +17,6 @@ class GeFiCa::Planar1D : public GeFiCa::X
        */
       Planar1D(int n=101, const char *name="p1d",
             const char *title="1D planar detector");
-
-      ClassDef(Planar1D, 1);
-
-   protected:
-      virtual void InitializeGrid();
       /**
        * Analytic calculation of 1D field with fixed impurity concentration.
        *
@@ -45,6 +40,11 @@ class GeFiCa::Planar1D : public GeFiCa::X
        * - c = V0
        */
       void FillGridWithAnalyticResult();
+
+      ClassDef(Planar1D, 1);
+
+   protected:
+      virtual void InitializeGrid();
 };
 #endif
 

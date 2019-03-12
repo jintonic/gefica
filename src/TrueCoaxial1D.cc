@@ -24,6 +24,8 @@ void TrueCoaxial1D::InitializeGrid()
 using namespace std;
 void TrueCoaxial1D::FillGridWithAnalyticResult()
 {
+   if (fdC1p[0]==0) Initialize(); // setup and initialize grid if it's not done
+
    bool isConstantImpurity=true;
    for (int i=0;i+1<fN;i++)
       if (fImpurity[i]!=fImpurity[i+1]) isConstantImpurity=false;
