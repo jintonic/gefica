@@ -41,6 +41,8 @@ class GeFiCa::PointContactDZ : public GeFiCa::RhoZ
             const char *name="pcdz", ///< [in] name of the class object created
             const char *title="2D point contact detector");
 
+      void Export2fieldgen(const char *output="ppc.dat");
+
       ClassDef(PointContactDZ,1);
 
    protected:
@@ -50,8 +52,6 @@ class GeFiCa::PointContactDZ : public GeFiCa::RhoZ
        * Move grids close to point contact boundary to the boundary.
        */
       void SetBoundary();
-
-      bool SaveFieldAsFieldgen(const char * fout);
 };
 
 #endif
