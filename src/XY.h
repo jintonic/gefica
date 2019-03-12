@@ -19,7 +19,6 @@ class GeFiCa::XY : public GeFiCa::X
       XY(int nx=101, int ny=101, const char *name="xy",
             const char *title="2D coordinates");
       virtual ~XY();
-      double PresentDifferenceOnE;
 
       /**
        * Get an electric field line originated from (\param x, \param y).

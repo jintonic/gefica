@@ -7,7 +7,7 @@
 using namespace GeFiCa;
 
 XY::XY(int nx, int ny, const char *name, const char *title)
-   : X(nx*ny, name, title),PresentDifferenceOnE(0.1)
+   : X(nx*ny, name, title)
 {
    fN1=nx; // fN1 is set to nx*ny through X constructor, it is fixed here
    fN2=ny;
