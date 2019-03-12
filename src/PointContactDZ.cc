@@ -13,19 +13,18 @@ PointContactDZ::PointContactDZ(int nd, int nz, const char *name,
       const char *title) : RhoZ(nd, nz, name, title),
    Height(5*cm),
    Radius(3*cm),
-   PointContactH(0.01*cm),
-   PointContactR(0.1*cm),
+   PointContactH(0),
+   PointContactR(1*mm),
    HoleH(0),
    HoleR(0), 
    HoleTaperW(0),
    HoleTaperH(0),
-   TaperW(0.3*cm),
-   TaperH(0.3*cm),
-   CornerW(0.3*cm),
-   CornerH(0.5*cm),
-   WrapArroundR(2.5*cm),
-   GrooveW(00.1), 
-   GrooveH(0.1){};
+   TaperW(1*mm),
+   TaperH(1*mm),
+   CornerW(1*mm),
+   CornerH(1*mm),
+   GrooveW(0), 
+   GrooveH(0) { WrapArroundR=Radius; }
 //_____________________________________________________________________________
 //
 void PointContactDZ::SetBoundary()
@@ -242,24 +241,6 @@ void PointContactDZ::InitializeGrid()
 }
 //_____________________________________________________________________________
 //
-bool PointContactDZ::CalculateField(int idx)
-{
-   if (!XY::CalculateField(idx)) return false;
-
-   if (fC2[idx]>PointContactH-fdC2m[idx]
-         && fC2[idx]<PointContactH+fdC2p[idx]) // PC top boundary
-      fE2[idx]=(fV[idx]-fV[idx+fN1])/fdC2p[idx];
-   if (fC1[idx]>-PointContactR-fdC1m[idx]
-         && fC1[idx]<-PointContactR+fdC1p[idx]) // PC left boundary
-      fE1[idx]=(fV[idx]-fV[idx-1])/fdC1m[idx];
-   if (fC1[idx]>PointContactR-fdC1m[idx]
-         && fC1[idx]<PointContactR+fdC1p[idx]) // PC right boundary
-      fE1[idx]=(fV[idx]-fV[idx+1])/fdC1p[idx];
-
-   return true;
-}
-//_____________________________________________________________________________
-//
 #include <fstream>
 bool PointContactDZ::SaveFieldAsFieldgen(const char * fout)
 {
@@ -284,21 +265,25 @@ bool PointContactDZ::SaveFieldAsFieldgen(const char * fout)
    outfile.close();
    return true;
 }
+//_____________________________________________________________________________
+//
 void PointContactDZ::SetGridImpurity()
 {
-
    X::SetGridImpurity();
    
-   if(TaperW+WrapArroundR<Radius)
-   {
-      for(int i=0;i<fN;i++)
-      {
-         if((fC1[i]>WrapArroundR-GrooveW && fC1[i]<WrapArroundR && fC2[i]<GrooveH)||
-            (fC1[i]<-(WrapArroundR-GrooveW) && fC1[i]>-(WrapArroundR) && fC2[i]<GrooveH))
-         {
+   if (TaperW+WrapArroundR<Radius || WrapArroundR-GrooveW>PointContactR) {
+      for (int i=0;i<fN;i++) {
+         if((fC1[i]>WrapArroundR-GrooveW
+                  && fC1[i]<WrapArroundR && fC2[i]<GrooveH)
+               || (fC1[i]<-(WrapArroundR-GrooveW)
+                  && fC1[i]>-(WrapArroundR) && fC2[i]<GrooveH)) {
             fImpurity[i]=0;
             fV[i]=0;
          }
       }
+   } else {
+      Error("SetGridImpurity",
+            "Groove and/or Wrap around setup are/is wrong. Abort!");
+      abort();
    }
 }

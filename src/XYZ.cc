@@ -154,7 +154,7 @@ bool XYZ::CalculateField(int idx)
    if (idx<fN1*fN2) // C3 lower border
       fE3[idx]=(fV[idx]-fV[idx+fN1])/fdC3p[idx];
    else if (idx>=fN-fN1*fN2) // C3 upper border
-      fE3[idx]=(fV[idx]-fV[idx-fN1])/fdC3m[idx];
+      fE3[idx]=(fV[idx-fN1]-fV[idx])/fdC3m[idx];
    else { // bulk
       fE3[idx]=(fV[idx-fN1]-fV[idx+fN1])/(fdC3m[idx]+fdC3p[idx]);
    }
