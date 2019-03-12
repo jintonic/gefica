@@ -1,3 +1,4 @@
 [submodule "examples/pointContact/fieldgen"]
-	path = examples/pointContact/fieldgen
-	url = https://github.com/jintonic/siggen.git
+  path = examples/pointContact/fieldgen
+  url = https://github.com/jintonic/siggen.git
+  ignore = dirty
