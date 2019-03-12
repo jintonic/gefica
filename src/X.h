@@ -8,18 +8,7 @@ class TF3; class TTree; class TGraph;
 /**
  * The only namespace in GeFiCa.
  */
-namespace GeFiCa {
-   /**
-    * Switches to use different calculation methods.
-    */
-   enum EMethod {
-      kAnalytic, ///< Analytic calculation
-      kSOR2, ///< Successove over-relaxation method to the 2nd order
-      kSOR4, ///< Successove over-relaxation method to the 4th order
-      kFEniCS ///< Not implemented yet
-   };
-   class X;
-}
+namespace GeFiCa { class X; }
 
 /**
  * 1D coordinate.
@@ -44,10 +33,9 @@ class GeFiCa::X : public TNamed
       X(int nx=101, const char *name="x", const char *title="1D coordinate");
       virtual ~X();
       /**
-       * Calculate potential using various methods.
-       * Current available methods are kAnalytic and kSOR2.
+       * Calculate potential.
        */
-      bool CalculatePotential(EMethod method=kSOR2);
+      bool CalculatePotential();
       /**
        * Check if detector is depleted.
        */
@@ -142,10 +130,6 @@ class GeFiCa::X : public TNamed
        * Uses a binary search to return the index .
        */
       int FindIdx(double tarx,int begin,int end);
-      /**
-       * Calculates the field using an analytical method.
-       */
-      virtual bool Analytic();
       /**
        * Interpolate grid data at a given location.
        */

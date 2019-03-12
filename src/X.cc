@@ -75,13 +75,6 @@ X::~X()
 }
 //_____________________________________________________________________________
 //
-bool X::Analytic()
-{
-   Info("Analytic", "There is no analytic solution for this setup");
-   return false; 
-}
-//_____________________________________________________________________________
-//
 X& X::operator+=(GeFiCa::X *other)
 {
    if (fN!=other->fN) {
@@ -168,10 +161,9 @@ int* X::FindSurroundingMatrix(int idx)
 }
 //_____________________________________________________________________________
 //
-bool X::CalculatePotential(EMethod method)
+bool X::CalculatePotential()
 {
    if (fdC1p[0]==0) Initialize(); // setup and initialize grid if it's not done
-   if (method==kAnalytic) return Analytic();
 
    Info("CalculatePotential","Start SOR...");
    if (Gsor==0) {
@@ -289,7 +281,7 @@ bool X::CalculateField(int idx)
 double X::GetC()
 {
    Info("GetC","Start...");
-   CalculatePotential(GeFiCa::kSOR2); // identify undepleted region
+   CalculatePotential(); // identify undepleted region
    // set impurity to zero
    double *tmpImpurity=fImpurity;
    for (int i=0;i<fN;i++) {
@@ -303,7 +295,7 @@ double X::GetC()
       }
    }
    // calculate potential without impurity
-   CalculatePotential(GeFiCa::kSOR2);
+   CalculatePotential();
    // set impurity back
    if(fImpurity!=tmpImpurity) delete []fImpurity;
    fImpurity=tmpImpurity;
