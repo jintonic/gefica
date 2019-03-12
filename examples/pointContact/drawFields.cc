@@ -14,13 +14,14 @@ void drawFields(const char *input="ppc.root")
    gStyle->SetPadLeftMargin(0.08);
 
    // generate plots
-   t->Draw("c1:c2:v","","goff");
-   TGraph2D *gv = new TGraph2D(n, t->GetV1(), t->GetV2(), t->GetV3());
-   gv->SetName("gv"); gv->SetNpx(500); gv->SetNpy(500); // fine bin histogram
-   TH2D *hv = gv->GetHistogram();
-   hv->SetTitle(";Radius [cm];Height [cm];Potential [V]");
-   hv->GetZaxis()->CenterTitle();
-   hv->Draw("colz");
+   t->Draw("c1:(v)","c2>2&&c2<2.01","");
+   //t->Draw("c1:c2:log(v)","","goff");
+   //TGraph2D *gv = new TGraph2D(n, t->GetV1(), t->GetV2(), t->GetV3());
+   //gv->SetName("gv"); gv->SetNpx(500); gv->SetNpy(500); // fine bin histogram
+   //TH2D *hv = gv->GetHistogram();
+   //hv->SetTitle(";Radius [cm];Height [cm];Potential [V]");
+   //hv->GetZaxis()->CenterTitle();
+   //hv->Draw("colz");
 
    // draw E field lines
    const int np=12;

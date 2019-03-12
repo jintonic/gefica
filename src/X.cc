@@ -190,7 +190,7 @@ bool X::CalculatePotential(EMethod method)
       }
       double XUpSum=0;
       double XDownSum=0;
-      for (int i=fN-1;i>=0;i--) {
+      for (int i=0;i<fN;i++) {
          double old=fV[i];
          DoSOR2(i);
          if(old>0)XDownSum+=old;
