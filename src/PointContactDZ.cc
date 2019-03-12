@@ -20,7 +20,7 @@ PointContactDZ::PointContactDZ(int nd, int nz, const char *name,
    CornerW(1*mm),
    CornerH(1*mm),
    GrooveW(0), 
-   GrooveH(0) { WrapArroundR=Radius; }
+   GrooveH(0) { WrapAroundR=Radius; }
 //_____________________________________________________________________________
 //
 void PointContactDZ::SetBoundary()
@@ -33,10 +33,10 @@ void PointContactDZ::SetBoundary()
          fdC1m[i]=fC1[i]-PointContactR;
       if(-fC1[i]-PointContactR<fdC1p[i]&&fC1[i]<0&&fC2[i]<PointContactH)
          fdC1p[i]=-fC1[i]-PointContactR;
-      if(WrapArroundR-fC1[i]<fdC1p[i]&&fC1[i]<WrapArroundR&&i<fN1)
-         fdC1p[i]=WrapArroundR-fC1[i];
-      if(WrapArroundR+fC1[i]<fdC1p[i]&&fC1[i]>-WrapArroundR&&i<fN1)
-         fdC1m[i]=WrapArroundR+fC1[i];
+      if(WrapAroundR-fC1[i]<fdC1p[i]&&fC1[i]<WrapAroundR&&i<fN1)
+         fdC1p[i]=WrapAroundR-fC1[i];
+      if(WrapAroundR+fC1[i]<fdC1p[i]&&fC1[i]>-WrapAroundR&&i<fN1)
+         fdC1m[i]=WrapAroundR+fC1[i];
    }
    double k=TaperH/(TaperW);
    double b=-(Radius-TaperW)*k;
@@ -154,7 +154,7 @@ void PointContactDZ::InitializeGrid()
       fV[i+fN1-1]=V1;
    }
    for (int i=0;i<fN1;i++) {
-      if(fC1[i]>=WrapArroundR||fC1[i]<=-WrapArroundR) {
+      if(fC1[i]>=WrapAroundR||fC1[i]<=-WrapAroundR) {
          fIsFixed[i]=true;
          fV[i]=V1;
       }
@@ -219,7 +219,7 @@ void PointContactDZ::Export2fieldgen(const char *output)
    file<<"# pc_length   "<<PointContactH/mm<<endl;
    file<<"# pc_radius   "<<PointContactR/mm<<endl;
    file<<"# taper_length "<<TaperH/mm<<endl;
-   file<<"# wrap_around_radius "<<WrapArroundR/mm<<endl;
+   file<<"# wrap_around_radius "<<WrapAroundR/mm<<endl;
    file<<"# ditch_depth "<<GrooveH/mm<<endl;
    file<<"# ditch_thickness "<<GrooveW/mm<<endl;
    file<<"# xtal_grid "<<fdC1p[0]/mm<<endl;
@@ -240,19 +240,19 @@ void PointContactDZ::SetGridImpurity()
 {
    X::SetGridImpurity();
 
-   if (TaperW+WrapArroundR>Radius) {
-      Error("SetGridImpurity", "TaperW(%.1fmm) + WrapArroundR(%.1fmm)"
-            " > Radiu(%.1fmm). Abort!", TaperW/mm, WrapArroundR/mm, Radius/mm);
+   if (TaperW+WrapAroundR>Radius) {
+      Error("SetGridImpurity", "TaperW(%.1fmm) + WrapAroundR(%.1fmm)"
+            " > Radiu(%.1fmm). Abort!", TaperW/mm, WrapAroundR/mm, Radius/mm);
       abort();
-   } else if (WrapArroundR-GrooveW<PointContactR) {
-      Error("SetGridImpurity", "WrapArroundR(%.1fmm) - GrooveW(%.1fmm)"
+   } else if (WrapAroundR-GrooveW<PointContactR) {
+      Error("SetGridImpurity", "WrapAroundR(%.1fmm) - GrooveW(%.1fmm)"
             " < PointContactR(%.1fmm). Abort!",
-            WrapArroundR/mm, GrooveW/mm, PointContactR/mm);
+            WrapAroundR/mm, GrooveW/mm, PointContactR/mm);
       abort();
    } else {
       for (int i=0; i<fN; i++) {
-         if (((fC1[i]>WrapArroundR-GrooveW && fC1[i]<WrapArroundR) ||
-                  (fC1[i]>-WrapArroundR && fC1[i]<-WrapArroundR+GrooveW))
+         if (((fC1[i]>WrapAroundR-GrooveW && fC1[i]<WrapAroundR) ||
+                  (fC1[i]>-WrapAroundR && fC1[i]<-WrapAroundR+GrooveW))
                && fC2[i]<GrooveH) fImpurity[i]=0;
       }
    }
