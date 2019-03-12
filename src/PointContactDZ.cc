@@ -271,19 +271,20 @@ void PointContactDZ::SetGridImpurity()
 {
    X::SetGridImpurity();
    
-   if (TaperW+WrapArroundR<Radius || WrapArroundR-GrooveW>PointContactR) {
-      for (int i=0;i<fN;i++) {
-         if((fC1[i]>WrapArroundR-GrooveW
-                  && fC1[i]<WrapArroundR && fC2[i]<GrooveH)
-               || (fC1[i]<-(WrapArroundR-GrooveW)
-                  && fC1[i]>-(WrapArroundR) && fC2[i]<GrooveH)) {
-            fImpurity[i]=0;
-            fV[i]=0;
-         }
-      }
-   } else {
-      Error("SetGridImpurity",
-            "Groove and/or Wrap around setup are/is wrong. Abort!");
+   if (TaperW+WrapArroundR>Radius) {
+      Error("SetGridImpurity", "TaperW(%.1fmm) + WrapArroundR(%.1fmm)"
+           " > Radiu(%.1fmm). Abort!", TaperW/mm, WrapArroundR/mm, Radius/mm);
       abort();
+   } else if (WrapArroundR-GrooveW<PointContactR) {
+      Error("SetGridImpurity", "WrapArroundR(%.1fmm) - GrooveW(%.1fmm)"
+            " < PointContactR(%.1fmm). Abort!",
+            WrapArroundR/mm, GrooveW/mm, PointContactR/mm);
+      abort();
+   } else {
+      for (int i=0; i<fN; i++) {
+         if (((fC1[i]>WrapArroundR-GrooveW && fC1[i]<WrapArroundR) ||
+                  (fC1[i]>-WrapArroundR && fC1[i]<-WrapArroundR+GrooveW))
+               && fC2[i]<GrooveH) fImpurity[i]=0;
+      }
    }
 }
