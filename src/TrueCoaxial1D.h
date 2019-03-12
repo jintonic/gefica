@@ -40,7 +40,7 @@ class GeFiCa::TrueCoaxial1D : public GeFiCa::Rho
        * - a = - rho/2/epsilon
        * - b = [rho/4/epsilon*(Ro^2-Ri^2)+(V1-V0)]/log(Ro/Ri)
        */
-      bool Analytic();
+      void FillGridWithAnalyticResult();
 };
 #endif
 

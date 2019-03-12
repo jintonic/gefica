@@ -20,15 +20,15 @@ void Sphere1D::InitializeGrid()
 }
 //_____________________________________________________________________________
 //
-#include  <cmath>
-bool Sphere1D::Analytic()
+void Sphere1D::FillGridWithAnalyticResult()
 {
    bool isConstantImpurity=true;
-   for(int i=0;i+1<fN;i++)
+   for (int i=0;i+1<fN;i++)
       if (fImpurity[i]!=fImpurity[i+1]) isConstantImpurity=false;
-   if(!isConstantImpurity) {
-      Warning("Analytic","can't handle changing impurity! Return false.");
-      return false;
+   if (!isConstantImpurity) {
+      Warning("FillGridWithAnalyticResult",
+            "can't handle changing impurity! Abort.");
+      abort();
    }
    double density=fImpurity[0]*Qe;
    double c1=(V1-V0 + density/epsilon/6*(fC1[fN-1]*fC1[fN-1]-fC1[0]*fC1[0]))
@@ -39,5 +39,4 @@ bool Sphere1D::Analytic()
       // Fixme:
       if (i!=0||i!=fN-1)fE1[i]=(fV[i+1]-fV[i-1])/(fdC1p[i]+fdC1m[i]);
    }
-   return true;
 }

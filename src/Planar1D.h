@@ -44,7 +44,7 @@ class GeFiCa::Planar1D : public GeFiCa::X
        * - b = (V1-V0 - ad^2)/d
        * - c = V0
        */
-      bool Analytic();
+      void FillGridWithAnalyticResult();
 };
 #endif
 

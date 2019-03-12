@@ -26,20 +26,15 @@ class GeFiCa::Sphere1D : public GeFiCa::R
       virtual void InitializeGrid();      
       /**
        * Analytic calculation of 1D field in spheric coordinates.
-       *
        * According to 
        * https://www.wolframalpha.com/input/?i=f%28x%29%27%27+%2B2%2Fx*f%28x%29%27%2Ba%3D0
-       * In case of fixed impurity, potential(x) = -rho/6/epsilon*r^2 + c1/r +
-       * c2 with boundary conditions:
-       *
+       * In case of fixed impurity,
+       *    potential(x) = -rho/6/epsilon*r^2 + c1/r + c2
+       * with boundary conditions:
        * - potential(InnerR) = V0,
        * - potential(OuterR) = V1,
-       *
-       * So, 
-       * - c1 = 
-       * - c2 =
        */
-      bool Analytic();
+      void FillGridWithAnalyticResult();
 };
 
 #endif
