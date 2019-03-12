@@ -257,3 +257,10 @@ void PointContactDZ::SetGridImpurity()
       }
    }
 }
+//_____________________________________________________________________________
+//
+double PointContactDZ::GetData(double x, double y, double z, double *data)
+{
+   //if (point in boundary) return V1;
+   return XY::GetData(x,y,z,data);
+}
