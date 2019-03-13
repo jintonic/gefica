@@ -82,6 +82,9 @@ class GeFiCa::X : public TNamed
        * Get number of iterations for SOR to converge.
        */
       int GetNsor();
+      int GetN1() { return fN1; }
+      int GetN2() { return fN2; }
+      int GetN3() { return fN3; }
 
       ClassDef(X,1);
 
