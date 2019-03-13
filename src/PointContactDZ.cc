@@ -21,7 +21,7 @@ PointContactDZ::PointContactDZ(int nd, int nz, const char *name,
    CornerH(1*mm),
    WrapAroundR(-1),
    GrooveW(0), 
-   GrooveH(0) {  }
+   GrooveH(0) {}
 //_____________________________________________________________________________
 //
 void PointContactDZ::SetBoundary()
@@ -130,7 +130,7 @@ void PointContactDZ::InitializeGrid()
       abort();
    }
 
-   if (WrapAroundR==-1)WrapAroundR=Radius;
+   if (WrapAroundR<0) WrapAroundR=Radius-TaperW;
    SetStepLength(2*Radius/(fN1-1),Height/(fN2-1));
    for(int i=fN;i-->0;) fC1[i]=fC1[i]-Radius;
 
