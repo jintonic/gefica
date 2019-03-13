@@ -13,32 +13,21 @@ void compare2analytic()
    Planar1D *ana = (Planar1D*) num->Clone("ana");
 
    // calculate potential using SOR method
-   num->CalculatePotential(kSOR2);
+   num->CalculatePotential();
 
    // fill grid with analytic result
-   ana->CalculatePotential(kAnalytic);
-
-   // prepare drawing style
-   gROOT->SetStyle("Plain"); // pick up a good drawing style to modify
-   gStyle->SetLegendBorderSize(0);
-   gStyle->SetLegendFont(132);
-   gStyle->SetLabelFont(132,"XY");
-   gStyle->SetTitleFont(132,"XY");
-   gStyle->SetLabelSize(0.05,"XY");
-   gStyle->SetTitleSize(0.05,"XY");
-   gStyle->SetPadRightMargin(0.01);
-   gStyle->SetPadLeftMargin(0.12);
-   gStyle->SetPadTopMargin(0.02);
+   ana->FillGridWithAnalyticResult();
 
    // generate graphics
    TTree *tn = num->GetTree();
-   tn->Draw("v:c1");
+   tn->Draw("v:c1","","goff");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
    TTree *ta = ana->GetTree();
-   ta->Draw("v:c1");
+   ta->Draw("v:c1","","goff");
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
 
    // compare numerical result to analytic calculation
+   gStyle->SetPadLeftMargin(0.11); gStyle->SetPadRightMargin(0.01);
    gn->SetMarkerColor(kBlue);
    gn->SetMarkerStyle(kCircle);
    gn->SetMarkerSize(0.8);
@@ -46,7 +35,6 @@ void compare2analytic()
          ";Potential [V]");
    gn->GetXaxis()->SetRangeUser(0,1);
    gn->GetYaxis()->SetRangeUser(0,800);
-   //gn->GetYaxis()->SetTitleOffset(1.2);
    gn->Draw("ap");
 
    ga->SetLineColor(kRed);
@@ -57,5 +45,5 @@ void compare2analytic()
    l->AddEntry(gn,"SOR","p");
    l->Draw();
 
-   gPad->Print("planar1d.png");
+   gPad->Print("p1d.png");
 }

@@ -29,7 +29,7 @@ class GeFiCa::PointContactDZ : public GeFiCa::RhoZ
       double CornerW; ///< Width of taper (bore side)
       double CornerH; ///<Height of taper (bore side)
 
-      double WrapArroundR; ///< Inner radius of outer contact 
+      double WrapAroundR; ///< Inner radius of outer contact 
       double GrooveW; ///< Width of Groove 
       double GrooveH; ///< Height of Groove 
 
@@ -41,17 +41,18 @@ class GeFiCa::PointContactDZ : public GeFiCa::RhoZ
             const char *name="pcdz", ///< [in] name of the class object created
             const char *title="2D point contact detector");
 
+      void Export2fieldgen(const char *output="ppc.dat");
+
       ClassDef(PointContactDZ,1);
 
    protected:
       virtual void InitializeGrid();
       virtual void SetGridImpurity();
+      double GetData(double x, double y, double z, double *data);
       /**
        * Move grids close to point contact boundary to the boundary.
        */
       void SetBoundary();
-
-      bool SaveFieldAsFieldgen(const char * fout);
 };
 
 #endif

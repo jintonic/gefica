@@ -11,11 +11,11 @@ void calculateFields(const char *output="ppc.root")
    ppc->PointContactR=1.40*mm;
    ppc->PointContactH=2.10*mm;
 
-   ppc->WrapArroundR=3.45;//1.20*cm;
-   ppc->TaperW=0;//0.1*cm;
-   ppc->TaperH=0;//0.1*cm;
-   ppc->CornerW=0;//0.1*cm;
-   ppc->CornerH=0;//0.1*cm;
+   ppc->WrapAroundR=1.20*cm;
+   ppc->TaperW=0.1*cm;
+   ppc->TaperH=0.1*cm;
+   ppc->CornerW=0.1*cm;
+   ppc->CornerH=0.1*cm;
 
    ppc->HoleH=0;//2.5*cm;
    ppc->HoleR=0;//0.5*cm;
@@ -30,7 +30,7 @@ void calculateFields(const char *output="ppc.root")
    ppc->SetImpurity(fid);
 
    ppc->Csor=1.995;
-   ppc->CalculatePotential(kSOR2);
+   ppc->CalculatePotential();
    
    TFile *file = new TFile(output,"recreate");
    ppc->Write();

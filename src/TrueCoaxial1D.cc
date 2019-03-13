@@ -21,14 +21,18 @@ void TrueCoaxial1D::InitializeGrid()
 //_____________________________________________________________________________
 //
 #include  <cmath>
-bool TrueCoaxial1D::Analytic()
+using namespace std;
+void TrueCoaxial1D::FillGridWithAnalyticResult()
 {
+   if (fdC1p[0]==0) Initialize(); // setup and initialize grid if it's not done
+
    bool isConstantImpurity=true;
-   for(int i=0;i+1<fN;i++)
+   for (int i=0;i+1<fN;i++)
       if (fImpurity[i]!=fImpurity[i+1]) isConstantImpurity=false;
-   if(!isConstantImpurity) {
-      Warning("Analytic","can't handle changing impurity! Return false.");
-      return false;
+   if (!isConstantImpurity) {
+      Warning("FillGridWithAnalyticResult",
+            "can't handle changing impurity! Abort.");
+      abort();
    }
    double density=fImpurity[0]*Qe;
    double b=(fV[fN-1]-fV[0] 
@@ -37,9 +41,6 @@ bool TrueCoaxial1D::Analytic()
    double a=fV[0]+density*fC1[0]*fC1[0]/epsilon/4-b*log(fC1[0]);
    for (int i=0; i<fN; i++) {
       fV[i] = a+b*log(fC1[i])-density/4/epsilon*fC1[i]*fC1[i];
-
-      fE1[i]=(fV[i+1]-fV[i-1])
-         /(fdC1p[i]+fdC1m[i]);
+      fE1[i]=(fV[i+1]-fV[i-1])/(fdC1p[i]+fdC1m[i]);
    }
-   return true;
 }

@@ -19,11 +19,6 @@ class GeFiCa::TrueCoaxial1D : public GeFiCa::Rho
        */
       TrueCoaxial1D(int n=101, const char *name="tc1",
             const char *title="1D true coaxial detector");
-
-      ClassDef(TrueCoaxial1D, 1);
-
-   protected:
-      virtual void InitializeGrid();
       /**
        * Analytic calculation of 1D field in cylindrical coordinates with fixed
        * impurity concentration.
@@ -40,7 +35,12 @@ class GeFiCa::TrueCoaxial1D : public GeFiCa::Rho
        * - a = - rho/2/epsilon
        * - b = [rho/4/epsilon*(Ro^2-Ri^2)+(V1-V0)]/log(Ro/Ri)
        */
-      bool Analytic();
+      void FillGridWithAnalyticResult();
+
+      ClassDef(TrueCoaxial1D, 1);
+
+   protected:
+      virtual void InitializeGrid();
 };
 #endif
 

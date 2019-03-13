@@ -75,13 +75,6 @@ X::~X()
 }
 //_____________________________________________________________________________
 //
-bool X::Analytic()
-{
-   Info("Analytic", "There is no analytic solution for this setup");
-   return false; 
-}
-//_____________________________________________________________________________
-//
 X& X::operator+=(GeFiCa::X *other)
 {
    if (fN!=other->fN) {
@@ -168,10 +161,9 @@ int* X::FindSurroundingMatrix(int idx)
 }
 //_____________________________________________________________________________
 //
-bool X::CalculatePotential(EMethod method)
+bool X::CalculatePotential()
 {
    if (fdC1p[0]==0) Initialize(); // setup and initialize grid if it's not done
-   if (method==kAnalytic) return Analytic();
 
    Info("CalculatePotential","Start SOR...");
    if (Gsor==0) {
@@ -289,7 +281,7 @@ bool X::CalculateField(int idx)
 double X::GetC()
 {
    Info("GetC","Start...");
-   CalculatePotential(GeFiCa::kSOR2); // identify undepleted region
+   CalculatePotential(); // identify undepleted region
    // set impurity to zero
    double *tmpImpurity=fImpurity;
    for (int i=0;i<fN;i++) {
@@ -303,7 +295,7 @@ double X::GetC()
       }
    }
    // calculate potential without impurity
-   CalculatePotential(GeFiCa::kSOR2);
+   CalculatePotential();
    // set impurity back
    if(fImpurity!=tmpImpurity) delete []fImpurity;
    fImpurity=tmpImpurity;
@@ -328,24 +320,25 @@ TTree* X::GetTree(bool createNew)
    // define tree
    bool b,d; double v,te,e1,e2,e3,c1,c2,c3;
    fTree = new TTree("t","field data");
-   fTree->Branch("potential",&v,"v/D");
-   fTree->Branch("total E  ",&te,"e/D");
+   fTree->SetDirectory(0);
+   fTree->Branch("v",&v,"v/D");
+   fTree->Branch("e",&te,"e/D");
    // 1D data
-   fTree->Branch("E1            ",&e1,"e1/D");
-   fTree->Branch("1st coordinate",&c1,"c1/D");
+   fTree->Branch("e1",&e1,"e1/D");
+   fTree->Branch("c1",&c1,"c1/D");
    // initialize values
    if (fdC1p[0]==0) Initialize(); // setup & initialize grid
 
    if (fdC2p[0]!=0) { // if it is a 2D grid
-      fTree->Branch("E2            ",&e2,"e2/D");
-      fTree->Branch("2nd coordinate",&c2,"c2/D");
+      fTree->Branch("e2",&e2,"e2/D");
+      fTree->Branch("c2",&c2,"c2/D");
    }
    if (fdC3p[0]!=0) { // if it is a 3D grid
-      fTree->Branch("E3            ",&e3,"e3/D");
-      fTree->Branch("3rd coordinate",&c3,"c3/D");
+      fTree->Branch("e3",&e3,"e3/D");
+      fTree->Branch("c3",&c3,"c3/D");
    }
-   fTree->Branch("boundary flag",&b,"b/O"); // boundary flag
-   fTree->Branch("depletion flag",&d,"d/O"); // depletion flag
+   fTree->Branch("b",&b,"b/O"); // boundary flag
+   fTree->Branch("d",&d,"d/O"); // depletion flag
 
    // fill tree
    Info("GetTree","%d entries",fN);
@@ -360,7 +353,6 @@ TTree* X::GetTree(bool createNew)
    }
 
    fTree->GetListOfBranches()->ls();
-   gDirectory->ls();
    fTree->ResetBranchAddresses(); // disconnect from local variables
    return fTree;
 }

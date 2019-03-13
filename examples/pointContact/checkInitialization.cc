@@ -4,6 +4,7 @@
    pcdz.Dump(); // call TObject::Dump() to print data members
    pcdz.HoleR=5*GeFiCa::mm; pcdz.HoleH=3*GeFiCa::cm; // add bore hole
    pcdz.HoleTaperW=2*GeFiCa::mm; pcdz.HoleTaperH=2*GeFiCa::mm; // add taper
+   pcdz.WrapAroundR=2*GeFiCa::cm; // add wrap arround
    pcdz.GrooveW=2*GeFiCa::mm; pcdz.GrooveH=2*GeFiCa::mm; // add groove
    TTree *t = pcdz.GetTree(); // create a ROOT tree for quick check
    gStyle->SetPadRightMargin(0.12); // give enough space for color palette

@@ -23,15 +23,17 @@ void Planar1D::InitializeGrid()
 }
 //_____________________________________________________________________________
 //
-#include  <cmath>
-bool Planar1D::Analytic()
+void Planar1D::FillGridWithAnalyticResult()
 {
+   if (fdC1p[0]==0) Initialize(); // setup and initialize grid if it's not done
+
    bool isConstantImpurity=true;
-   for(int i=0;i+1<fN;i++)
+   for (int i=0;i+1<fN;i++)
       if (fImpurity[i]!=fImpurity[i+1]) isConstantImpurity=false;
    if (isConstantImpurity==false) {
-      Warning("Analytic","can't handle changing impurity! Return false.");
-      return false;
+      Warning("FillGridWithAnalyticResult",
+            "can't handle changing impurity! Abort.");
+      abort();
    }
    double d=Thickness; //thickness or depth of the detector
    double a=-fImpurity[fN-1]*Qe/2/epsilon;
@@ -43,6 +45,4 @@ bool Planar1D::Analytic()
       fE1[i]=(fV[i+1]-fV[i-1])/(fdC1p[i]+fdC1m[i]);
    fE1[0]=(fV[1]-fV[0])/fdC1p[0];
    fE1[fN-1]=(fV[fN-1]-fV[fN-2])/fdC1m[fN-1];
-
-   return true;
 }
