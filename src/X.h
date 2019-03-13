@@ -86,6 +86,16 @@ class GeFiCa::X : public TNamed
       int GetN2() { return fN2; }
       int GetN3() { return fN3; }
 
+      double* GetVs() { return fV; }
+
+      double* GetE1s() { return fE1; }
+      double* GetE2s() { return fE2; }
+      double* GetE3s() { return fE3; }
+
+      double* GetC1s() { return fC1; }
+      double* GetC2s() { return fC2; }
+      double* GetC3s() { return fC3; }
+
       ClassDef(X,1);
 
    protected:
