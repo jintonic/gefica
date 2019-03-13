@@ -111,21 +111,36 @@ int XY::FindIdx(double tarx,double tary ,int ybegin,int yend)
 //
 double XY::GetData(double x, double y, double z, double *data)
 {
+   // +-aa--+--ab--+(fC1[idx], fC2[idx])
+   // |     ^      |
+   // |  dyp|      ba
+   // |     |(x,y) |
+   // +<----+----->+
+   // | dxm | dxp  |
+   // |     |      bb
+   // |     v dym  |
+   // +-----+------+
    int idx=FindIdx(x,y,0,fN2-1);
+
+   double trv=data[idx]; // value of top right grid point 
+   double tlv=-1; // value of top left grid point
+   double brv=-1; // value of bottom right grid point
+   double blv=-1; // value of bottom left grid point
+   if (idx%fN1==0) { tlv=0; blv=0; } // left boundary
+   else tlv=data[idx-1];
+   if (idx<fN1) { brv=0; blv=0; } // bottom boundary
+   else brv=data[idx-fN1];
+   if (blv!=0) blv=data[idx-fN1-1]; // neither left nor bottom boundary
 
    double ab=(-x+fC1[idx])/fdC1m[idx];
    double aa=1-ab;
    double ba=(-y+fC2[idx])/fdC2m[idx];
    double bb=1-ba;
-   double tar0,tar1,tar2,tar3;
-   tar3=-1;
-   tar0=data[idx];
-   if (idx%fN1==0){tar1=0;tar3=0;}
-   else {tar1=data[idx-1];}
-   if(idx<fN1) {tar2=0;tar3=0;}
-   else {tar2=data[idx-fN1];}
-   if (tar3==-1)tar3=data[idx-fN1-1];
-   return (tar1*ab+tar0*aa)*bb+(tar3*ab+tar2*aa)*ba;
+
+   if (gDebug>0) {
+      Info("GetData","fC1[%d]=%f, ",idx,fC1[idx]);
+   }
+   return (tlv*ab+trv*aa)*bb+(blv*ab+brv*aa)*ba;
 }
 //_____________________________________________________________________________
 //
