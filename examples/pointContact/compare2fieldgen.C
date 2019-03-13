@@ -43,7 +43,7 @@ void drawresult(const char *fieldgen)
 //______________________________________________________________________________
 //
 void compare2fieldgen(const char *gefica="ppc.root",
-      const char *fieldgen="fieldgen/fields/p1/ev.dat")
+      const char *fieldgen="ev.dat")
 {
    TFile *inrootfile=new TFile(gefica,"update");
    GeFiCa::PointContactDZ *detector2;
