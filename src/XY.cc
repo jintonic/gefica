@@ -95,20 +95,6 @@ void XY::DoSOR2(int idx)
 }
 //_____________________________________________________________________________
 //
-int XY::FindIdx(double tarx,double tary ,int ybegin,int yend)
-{
-   //search using binary search
-   // if(ybegin>=yend)cout<<"to x"<<ybegin<<" "<<yend<<endl;;
-   if(ybegin>=yend)return X::FindIdx(tarx,yend*fN1,(yend+1)*fN1-1);
-   int mid=((ybegin+yend)/2);
-   if(fC2[mid*fN1]>=tary){//cout<<"firsthalf"<<ybegin<<" "<<yend<<endl; 
-      return FindIdx(tarx,tary,ybegin,mid);
-   }
-   else{//cout<<"senondhalf"<<ybegin<<" "<<yend<<endl; 
-      return FindIdx(tarx,tary,mid+1,yend);}
-}
-//_____________________________________________________________________________
-//
 double XY::GetData(double x, double y, double z, double *data)
 {
    // +-aa--+--ab--+(fC1[idx], fC2[idx])
@@ -120,7 +106,7 @@ double XY::GetData(double x, double y, double z, double *data)
    // |     |      bb
    // |     v dym  |
    // +-----+------+
-   int idx=FindIdx(x,y,0,fN2-1);
+   int idx=FindIdx(x,y);
 
    double trv=data[idx]; // value of top right grid point 
    double tlv=-1; // value of top left grid point

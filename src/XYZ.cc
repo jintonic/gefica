@@ -106,19 +106,9 @@ void XYZ::DoSOR2(int idx)
 }
 //_____________________________________________________________________________
 //
-int XYZ::FindIdx(double tarx, double tary ,double tarz,int begin,int end)
-{
-   //search using binary search
-   if(begin>=end)return XY::FindIdx(tarx,tary,begin,begin+fN1*fN2-1);
-   int mid=((begin/(fN1*fN2)+end/(fN1*fN2))/2)*fN1*fN2;
-   if(fC3[mid]>=tarz)return FindIdx(tarx,tary,tarz,begin,mid);
-   else return FindIdx(tarx,tary,tarz,mid+1,end);
-}
-//_____________________________________________________________________________
-//
 double XYZ::GetData(double x, double y, double z, double *data)
 {
-   int idx=FindIdx(x,y,z,0,fN);
+   int idx=FindIdx(x,y,z);
    double ab=(-x+fC1[idx])/fdC1p[idx];
    double aa=1-ab;
    double ba=(-y+fC2[idx])/fdC2p[idx];

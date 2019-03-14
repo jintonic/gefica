@@ -142,7 +142,9 @@ class GeFiCa::X : public TNamed
       /**
        * Uses a binary search to return the index .
        */
-      int FindIdx(double tarx,int begin,int end);
+      int FindIdx(double tarx,int begin=0,int end=-1);
+      int FindIdx(double tarx,double tary,int begin=0,int end=-1);
+      int FindIdx(double tarx,double tary, double tarz,int begin=0,int end=-1);
       /**
        * Interpolate grid data at a given location.
        */
