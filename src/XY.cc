@@ -122,16 +122,35 @@ double XY::GetData(double x, double y, double z, double *data)
    // +-----+------+
    int idx=FindIdx(x,y,0,fN2-1);
 
-   double trv=data[idx]; // value of top right grid point 
-   double tlv=-1; // value of top left grid point
-   double brv=-1; // value of bottom right grid point
-   double blv=-1; // value of bottom left grid point
-   if (idx%fN1==0) { tlv=0; blv=0; } // left boundary
-   else tlv=data[idx-1];
-   if (idx<fN1) { brv=0; blv=0; } // bottom boundary
-   else brv=data[idx-fN1];
-   if (blv!=0) blv=data[idx-fN1-1]; // neither left nor bottom boundary
+   bool tr=true; // value of top right grid point 
+   bool tl=false; // value of top left grid point
+   bool br=false; // value of bottom right grid point
+   bool bl=false; // value of bottom left grid point
+   if (idx%fN1==0) {  } // left boundary
+   else tl=true;
+   if (idx<fN1) {  } // bottom boundary
+   else br=true;
+   if (tlv&&b) bl=true; // neither left nor bottom boundary
 
+   double topmiddle,bottommdle;
+   if(tr&&tl )
+   {
+      double midpoint=fdC1m[idx]<fdC1p[idx-1] ? fC1[idx]-fdC1m[idx] : fC1[idx-1]+fdC1p[idx-1];
+      if(x<midpoint)
+      {
+
+      }
+      else
+      {
+      }
+
+   }
+   else topmiddle=fV[idx];
+   if(br&&bl)
+   {
+   }
+   else 
+        
    double ab=(-x+fC1[idx])/fdC1m[idx];
    double aa=1-ab;
    double ba=(-y+fC2[idx])/fdC2m[idx];
