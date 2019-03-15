@@ -244,18 +244,44 @@ void X::DoSOR2(int idx)
 //
 int X::FindIdx(double tarx,int begin,int end)
 {
+   if (end==-1) end=fN1-1;
    //search using binary search
    if (begin>=end)return end;
    int mid=(begin+end)/2;
    if(fC1[mid]>=tarx)return FindIdx(tarx,begin,mid);
    else return FindIdx(tarx,mid+1,end);
 }
-
+//_____________________________________________________________________________
+//
+int X::FindIdx(double tarx,double tary ,int begin,int end)
+{
+   if (end==-1) end=fN2-1;
+   //search using binary search
+   // if(begin>=end)cout<<"to x"<<begin<<" "<<end<<endl;;
+   if(begin>=end)return FindIdx(tarx,end*fN1,(end+1)*fN1-1);
+   int mid=((begin+end)/2);
+   if(fC2[mid*fN1]>=tary){//cout<<"firsthalf"<<begin<<" "<<end<<endl; 
+      return FindIdx(tarx,tary,begin,mid);
+   }
+   else{//cout<<"senondhalf"<<begin<<" "<<end<<endl; 
+      return FindIdx(tarx,tary,mid+1,end);}
+}
+//_____________________________________________________________________________
+//
+int X::FindIdx(double tarx, double tary,double tarz,int begin,int end)
+{
+   if (end==-1) end=fN3-1;
+   //search using binary search
+   if(begin>=end)return FindIdx(tarx,tary,begin,begin+fN1*fN2-1);
+   int mid=((begin/(fN1*fN2)+end/(fN1*fN2))/2)*fN1*fN2;
+   if(fC3[mid]>=tarz)return FindIdx(tarx,tary,tarz,begin,mid);
+   else return FindIdx(tarx,tary,tarz,mid+1,end);
+}
 //_____________________________________________________________________________
 //
 double X::GetData(double x, double y, double z, double *data)
 {
-   int idx=FindIdx(x,0,fN-1);
+   int idx=FindIdx(x);
    if (idx==fN) return data[idx];
    double ab=(-x+fC1[idx])/fdC1p[idx];
    double aa=1-ab;

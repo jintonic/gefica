@@ -32,7 +32,6 @@ class GeFiCa::XY : public GeFiCa::X
    protected:
       TMultiGraph *fEgraphs; ///<! graphs of electric field lines
       void SetStepLength(double steplength1,double steplength2); 
-      int FindIdx(double tarx,double tary,int ybegin,int yend);
       virtual double GetData(double x,double y, double z, double *data); 
       virtual void DoSOR2(int idx);
       virtual bool CalculateField(int idx);
