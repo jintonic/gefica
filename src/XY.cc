@@ -118,20 +118,40 @@ double XY::GetData(double x, double y, double z, double *data)
    else br=true;
    if (tlv&&b) bl=true; // neither left nor bottom boundary
 
-   double topmiddle,bottommdle;
+   double topmiddlevalue,bottommdlevalue,bottommiddiledistencetoabove,topmiddledistencetobelow;
    if(tr&&tl )
    {
-      double midpoint=fdC1m[idx]<fdC1p[idx-1] ? fC1[idx]-fdC1m[idx] : fC1[idx-1]+fdC1p[idx-1];
-      if(x<midpoint)
+      double trv,tlv,aa,ab;
+      double boundaryoint=fdC1m[idx]<fdC1p[idx-1] ? fC1[idx]-fdC1m[idx] : fC1[idx-1]+fdC1p[idx-1];
+      if(x<boundaryoint)
       {
-
+         tlv=fV[idx-1];
+         if(fIsFixed[idx-1])
+         {
+            trv=fV[idx-1];
+         }
+         else//right fix or none fix
+         {
+            trv=fV[idx];
+         }
+         aa=x-fC1[idx-1];
+         ab=boundaryoint-x;
       }
       else
       {
+         trv=fV[idx];
+         if(fIsFixed[idx])
+         {
+            tlv=fV[idx];
+         }
+         else
+         {
+            tlv=fV[idx-1];
+         }
       }
 
    }
-   else topmiddle=fV[idx];
+   else topmiddlevalue=fV[idx];
    if(br&&bl)
    {
    }
