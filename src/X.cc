@@ -130,7 +130,7 @@ int X::GetIdxOfMinV()
 bool X::IsDepleted()
 {
    for(int i=0;i<fN;i++) {
-      DoSOR2(i); // calculate one more time in case of 
+      OverRelaxAt(i); // calculate one more time in case of 
       //adding two fields together, one is depleted, the other is not
       if (!fIsDepleted[i]) return false;
    }
@@ -184,7 +184,7 @@ bool X::SuccessiveOverRelax()
       double XDownSum=0;
       for (int i=0;i<fN;i++) {
          double old=fV[i];
-         DoSOR2(i);
+         OverRelaxAt(i);
          if(old>0)XDownSum+=old;
          else XDownSum-=old;
          double diff=fV[i]-old;
@@ -203,7 +203,7 @@ bool X::SuccessiveOverRelax()
 }
 //_____________________________________________________________________________
 //
-void X::DoSOR2(int idx)
+void X::OverRelaxAt(int idx)
 {
    // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return ;

@@ -3,7 +3,7 @@
 using namespace GeFiCa;
 #include <iostream>
 using namespace std;
-void RhoPhi::DoSOR2(int idx)
+void RhoPhi::OverRelaxAt(int idx)
 {
    if (fIsFixed[idx])return;
    double density=-fImpurity[idx]*Qe;

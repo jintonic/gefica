@@ -33,7 +33,7 @@ class GeFiCa::XY : public GeFiCa::X
       TMultiGraph *fEgraphs; ///<! graphs of electric field lines
       void SetStepLength(double steplength1,double steplength2); 
       virtual double GetData(double x,double y, double z, double *data); 
-      virtual void DoSOR2(int idx);
+      virtual void OverRelaxAt(int idx);
       virtual bool CalculateField(int idx);
 };
 #endif 

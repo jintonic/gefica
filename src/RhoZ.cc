@@ -2,7 +2,7 @@
 #include "RhoZ.h"
 using namespace GeFiCa;
 
-void RhoZ::DoSOR2(int idx)
+void RhoZ::OverRelaxAt(int idx)
 {
    if (fIsFixed[idx])return; 
    // 2nd-order Successive Over-Relaxation

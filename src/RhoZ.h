@@ -23,6 +23,6 @@ class GeFiCa::RhoZ : public GeFiCa::XY
       ClassDef(RhoZ,1);
 
    protected:
-      virtual void DoSOR2(int idx);
+      virtual void OverRelaxAt(int idx);
 };
 #endif 

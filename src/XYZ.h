@@ -24,7 +24,7 @@ class GeFiCa::XYZ : public GeFiCa::XY
       virtual double GetData(double x, double y, double z, double *data);
       virtual void SetStepLength
          (double steplength1,double steplength2,double steplength3);
-      virtual void DoSOR2(int idx); 
+      virtual void OverRelaxAt(int idx); 
       virtual bool CalculateField(int idx);
 };
 #endif

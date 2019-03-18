@@ -11,7 +11,7 @@ using namespace GeFiCa;
 #include <iostream>
 using namespace std;
 
-void RThetaPhi::DoSOR2(int idx)
+void RThetaPhi::OverRelaxAt(int idx)
 {
    if (fIsFixed[idx])return;
 

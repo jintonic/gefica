@@ -2,7 +2,7 @@
 #include "RhoPhiZ.h"
 using namespace GeFiCa;
 
-void RhoPhiZ::DoSOR2(int idx)
+void RhoPhiZ::OverRelaxAt(int idx)
 {//need update
    if (fIsFixed[idx])return;
    double density=-fImpurity[idx]*Qe;

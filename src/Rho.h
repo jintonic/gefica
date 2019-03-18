@@ -21,7 +21,7 @@ class GeFiCa::Rho : public X
       ClassDef(Rho,1);
 
    protected:
-      virtual void DoSOR2(int idx);
+      virtual void OverRelaxAt(int idx);
       virtual void DoSOR4(int idx);
 };
 #endif

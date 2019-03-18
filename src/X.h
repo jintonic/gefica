@@ -152,7 +152,7 @@ class GeFiCa::X : public TNamed
       /**
        * Calculate fields at @param idx using SOR2.
        */
-      virtual void DoSOR2(int idx); 
+      virtual void OverRelaxAt(int idx); 
       /**
        * Calculate electric field after SuccessiveOverRelax.
        */

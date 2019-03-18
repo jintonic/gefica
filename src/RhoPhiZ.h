@@ -16,7 +16,7 @@ class GeFiCa::RhoPhiZ : public GeFiCa::XYZ
       ClassDef(RhoPhiZ,1);
 
    protected:
-      virtual void DoSOR2(int idx); 
+      virtual void OverRelaxAt(int idx); 
 
       virtual double GetData(double x, double y, double z, double *data);
 };

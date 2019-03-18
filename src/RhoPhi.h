@@ -22,7 +22,7 @@ class GeFiCa::RhoPhi : public GeFiCa::XY
       ClassDef(RhoPhi,1);
 
    protected:
-      void DoSOR2(int idx);
+      void OverRelaxAt(int idx);
       virtual double GetData(double x, double y, double z, double *data);
 };
 #endif

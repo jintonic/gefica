@@ -2,7 +2,7 @@
 #include "R.h"
 using namespace GeFiCa;
 
-void R::DoSOR2(int idx)
+void R::OverRelaxAt(int idx)
 {
    if (fIsFixed[idx])return ;
    double density=fImpurity[idx]*Qe;
@@ -50,9 +50,9 @@ void R::DoSOR4(int idx)
    xm1=fV[idx-1];
    xp1=fV[idx+1];
    if(idx>1)xm2=fV[idx-2];
-   else {DoSOR2(idx);return; } 
+   else {OverRelaxAt(idx);return; } 
    if(idx<fN-2)xp2=fV[idx+2];
-   else {DoSOR2(idx);return;}
+   else {OverRelaxAt(idx);return;}
    double tmp=(-1/12*xp2+4/3*xp1+4/3*xm1-1/12*xm2-density/epsilon*h1*h1)*2/5;
    fV[idx]=RelaxationFactor*(tmp-fV[idx])+fV[idx];
 

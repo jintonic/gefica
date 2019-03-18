@@ -42,7 +42,7 @@ void XYZ::SetStepLength(double steplength1,double steplength2,double steplength3
 }
 //_____________________________________________________________________________
 //
-void XYZ::DoSOR2(int idx)
+void XYZ::OverRelaxAt(int idx)
 {
    if (fIsFixed[idx])return;
    double density=-fImpurity[idx]*Qe;
