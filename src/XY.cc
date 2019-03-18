@@ -97,65 +97,76 @@ void XY::OverRelaxAt(int idx)
 //
 double XY::GetData(double x, double y, double z, double *data)
 {
+   // https://codeplea.com/triangular-interpolation
+   //       tmv
    // +-aa--+--ab--+(fC1[idx], fC2[idx])
    // |     ^      |
    // |  dyp|      ba
    // |     |(x,y) |
    // +<----+----->+
-   // | dxm | dxp  |
-   // |     |      bb
-   // |     v dym  |
+   // |     |      |
+   // |  dym|      bb
+   // |     v      |
    // +-----+------+
-   int idx=FindIdx(x,y);
+   //       bmv
+   int idx=FindIdx(x,y); // always exists
 
-   bool tr=true; // value of top right grid point 
-   bool tl=false; // value of top left grid point
-   bool br=false; // value of bottom right grid point
-   bool bl=false; // value of bottom left grid point
-   if (idx%fN1==0) {  } // left boundary
-   else tl=true;
-   if (idx<fN1) {  } // bottom boundary
-   else br=true;
-   if (tlv&&b) bl=true; // neither left nor bottom boundary
+   bool tl=false; // existence of top left grid point
+   bool br=false; // existence of bottom right grid point
+   bool bl=false; // existence of bottom left grid point
+   if (idx%fN1!=0) tl=true; // not left boundary
+   if (idx>=fN1) br=true; // not bottom boundary
+   if (tl&&bl) bl=true; // neither left nor bottom boundary
 
-   double topmiddlevalue,bottommdlevalue,bottommiddiledistencetoabove,topmiddledistencetobelow;
-   if(tr&&tl )
-   {
+   double tmv; // interpolated value at (x, fC2[idx])
+   double bmv; // interpolated value at (x, fC2[idx-fN1])
+   double dyp; // distance between (x,y) and (x, fC2[idx]) or a boundary point
+   double dym; // distance between (x,y) and (x, fC2[idx-fN1]) or a boundary point
+
+   if (tl) { // interpolate tl & tr points if both tl and tr exist
       double trv,tlv,aa,ab;
-      double boundaryoint=fdC1m[idx]<fdC1p[idx-1] ? fC1[idx]-fdC1m[idx] : fC1[idx-1]+fdC1p[idx-1];
-      if(x<boundaryoint)
-      {
-         tlv=fV[idx-1];
-         if(fIsFixed[idx-1])
-         {
-            trv=fV[idx-1];
-         }
-         else//right fix or none fix
-         {
-            trv=fV[idx];
-         }
+      double xb; // x of boundary crossing point on horizontal lines
+      // in case of normal condistion xb == fC1[idx]
+      xb=fdC1m[idx]<fdC1p[idx-1] ? fC1[idx]-fdC1m[idx] : fC1[idx-1]+fdC1p[idx-1];
+      if (x<xb) { // xb is on the right of x
+         tlv=data[idx-1];
+         if(fIsFixed[idx-1]) trv=data[idx-1]; // left is outside of crystal
+         else trv=data[idx]; // right is outside of crystal or normal condition
          aa=x-fC1[idx-1];
-         ab=boundaryoint-x;
+         ab=xb-x;
+      } else { // xb is on the left of x
+         trv=data[idx];
+         if (fIsFixed[idx]) tlv=data[idx]; // right is outside of crystal
+         else tlv=data[idx-1]; // left is outside of crystal or normal 
+         ab=fC1[idx]-x;
+         aa=x-xb;
       }
-      else
-      {
-         trv=fV[idx];
-         if(fIsFixed[idx])
-         {
-            tlv=fV[idx];
-         }
-         else
-         {
-            tlv=fV[idx-1];
-         }
-      }
+      tmv = trv*aa/(aa+ab) + tlv*ab/(aa+ab);
+   } else tmv=data[idx];
 
-   }
-   else topmiddlevalue=fV[idx];
-   if(br&&bl)
-   {
-   }
-   else 
+   if(br&&bl) {
+      double brv,blv,aa,ab;
+      double xb; // x of boundary crossing point on horizontal lines
+      // in case of normal condistion xb == fC1[idx]
+      xb=fdC1m[idx-fN1]<fdC1p[idx-fN1-1] ? fC1[idx-fN1]-fdC1m[idx-fN1] : fC1[idx-fN1-1]+fdC1p[idx-fN1-1];
+      if (x<xb) { // xb is on the right of x
+         blv=data[idx-fN1-1];
+         if(fIsFixed[idx-fN1-1]) brv=data[idx-fN1-1]; // left is outside of crystal
+         else brv=data[idx-fN1]; // right is outside of crystal or normal condition
+         aa=x-fC1[idx-fN1-1];
+         ab=xb-x;
+      } else { // xb is on the left of x
+         brv=data[idx-fN1];
+         if (fIsFixed[idx-fN1]) blv=data[idx-fN1]; // right is outside of crystal
+         else blv=data[idx-fN1-1]; // left is outside of crystal or normal 
+         ab=fC1[idx-fN1]-x;
+         aa=x-xb;
+      }
+      bmv = brv*aa/(aa+ab) + blv*ab/(aa+ab);
+   } else if (br==false && bl==false) {
+      bmv = tmv;
+   } else
+      bmv = data[idx-fN1];
         
    double ab=(-x+fC1[idx])/fdC1m[idx];
    double aa=1-ab;
