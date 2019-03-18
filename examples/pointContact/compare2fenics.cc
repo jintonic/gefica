@@ -15,7 +15,7 @@ void compare2fenics()
 
   // ppc->MaxIterations=1e6;
   // ppc->Precision=1e-8;
-  // ppc->Csor=1.996;
+  // ppc->RelaxationFactor=1.996;
   // ppc->V0=2500*GeFiCa::volt;
   // ppc->V1=0*GeFiCa::volt;
   // ppc->Impurity="-0.318e10+0*y";

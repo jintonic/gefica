@@ -1,6 +1,6 @@
 using namespace GeFiCa;
-// search for the best Csor
-void optimizeCsor()
+// search for the best RelaxationFactor
+void optimizeRelaxationFactor()
 {
    gStyle->SetPadRightMargin(0.01); gStyle->SetTitleOffset(1.2,"y");
    TMultiGraph *gm = new TMultiGraph;
@@ -16,19 +16,19 @@ void optimizeCsor()
          detector[j][i]->V1=800*volt;
          detector[j][i]->SetAverageImpurity(-1e10/cm3);
 
-         detector[j][i]->Csor = 1.93 + i*0.002;
+         detector[j][i]->RelaxationFactor = 1.93 + i*0.002;
          detector[j][i]->MaxIterations = 10500;
          detector[j][i]->CalculatePotential();
          detector[j][i]->Gsor->SetName(Form("gsor%d",i));
-         g[j]->SetPoint(i, detector[j][i]->Csor, detector[j][i]->GetNsor());
+         g[j]->SetPoint(i, detector[j][i]->RelaxationFactor, detector[j][i]->GetNsor());
       }
       g[j]->SetLineColor(j+1); g[j]->SetMarkerColor(j+1);
       gm->Add(g[j]);
       l->AddEntry(g[j],Form("%d",j*100+101),"pl");
    }
-   gm->SetTitle(";Constant of SOR (Csor)"
+   gm->SetTitle(";Constant of SOR (RelaxationFactor)"
         ";Number of iterations for SOR to converge");
    gm->Draw("apl");
    l->Draw();
-   gPad->Print("NvsCsor.png");
+   gPad->Print("NvsRelaxationFactor.png");
 }

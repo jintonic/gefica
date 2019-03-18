@@ -29,7 +29,7 @@ void calculateFields(const char *output="ppc.root")
    TF3 *fid = new TF3("fImpDistr","-0.318e10+0.025e10*y");
    ppc->SetImpurity(fid);
 
-   ppc->Csor=1.995;
+   ppc->RelaxationFactor=1.995;
    ppc->CalculatePotential();
    
    TFile *file = new TFile(output,"recreate");

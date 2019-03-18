@@ -31,7 +31,7 @@ void RhoPhiZ::DoSOR2(int idx)
          +pphim/h1/(h1+h4)/r/r+pzp/h5/(h0+h5)+pzm/h0/(h0+h5))
       /(1/h2/(h2+h3)+1/h3/(h2+h3)+1/h4/(h1+h4)/r/r
             +1/h1/(h1+h4)/r/r+1/h0/(h0+h5)+1/h5/(h0+h5));
-   fV[idx]=Csor*(tmp-fV[idx])+fV[idx];
+   fV[idx]=RelaxationFactor*(tmp-fV[idx])+fV[idx];
    double min=prhom;
    double max=prhom;
    if(min>prhop)min=prhop;
@@ -47,10 +47,10 @@ void RhoPhiZ::DoSOR2(int idx)
    if (max<pzm)max=pzm;
    if (max<pzm)max=pzm;
    //if tmp is greater or smaller than max and min, set tmp to it.
-   //fV[idx]=Csor*(tmp-fV[idx])+fV[idx];
+   //fV[idx]=RelaxationFactor*(tmp-fV[idx])+fV[idx];
    //if need calculate depleted voltage
    double oldP=fV[idx];
-   tmp=Csor*(tmp-oldP)+oldP;
+   tmp=RelaxationFactor*(tmp-oldP)+oldP;
    if(tmp<min) {
       fV[idx]=min;
       fIsDepleted[idx]=false;

@@ -15,7 +15,7 @@ void compare2RhoZ()
 
    ppc->MaxIterations=1e6;
    ppc->Precision=1e-8;
-   ppc->Csor=1.996;
+   ppc->RelaxationFactor=1.996;
    ppc->V0=2500*GeFiCa::volt;
    ppc->V1=0*GeFiCa::volt;
    ppc->SetImpurity(-0.318e10);
@@ -32,7 +32,7 @@ void compare2RhoZ()
 
    hppc->MaxIterations=1e6;
    hppc->Precision=1e-8;
-   hppc->Csor=1.993;
+   hppc->RelaxationFactor=1.993;
    hppc->V0=2500*GeFiCa::volt;
    hppc->V1=0*GeFiCa::volt;
    hppc->SetImpurity(-0.318e10);

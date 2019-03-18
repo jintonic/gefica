@@ -25,7 +25,7 @@ void search4Vd()
       TF3 *fid = new TF3("fImpDistr","-0.318e10+0.025e10*y");
       vi->SetImpurity(fid);
 
-      vi->Csor=1.994; // speed up SOR
+      vi->RelaxationFactor=1.994; // speed up SOR
       vi->CalculatePotential(kSOR2);
 
       vi->Write(); // save itself to fi
@@ -46,7 +46,7 @@ void search4Vd()
       vu->PointContactH=0.21*cm; vu->PointContactR=0.14*cm;
       vu->SetAverageImpurity(0); // no impurity
 
-      vu->Csor=1.994;
+      vu->RelaxationFactor=1.994;
       vu->CalculatePotential(kSOR2);
 
       vu->Write(); // save itself to fu

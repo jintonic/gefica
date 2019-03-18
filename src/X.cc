@@ -9,7 +9,7 @@
 using namespace GeFiCa;
 
 X::X(int nx, const char *name, const char *title) : TNamed(name,title), V0(0),
-   V1(2e3*volt), MaxIterations(5000), Csor(1.94), Precision(1e-7*volt),
+   V1(2e3*volt), MaxIterations(5000), RelaxationFactor(1.94), Precision(1e-7*volt),
    Gsor(0), fN(nx), fN1(nx), fN2(0), fN3(0), fTree(0), fImpDist(0)
 {
    if (fN<10) { Warning("X","fN<10, set it to 11"); fN=11; fN1=11; }
@@ -225,9 +225,9 @@ void X::DoSOR2(int idx)
    if(max<p3)max=p3;
    //if tmp is greater or smaller than max and min, set tmp to it.
 
-   //fV[idx]=Csor*(tmp-fV[idx])+fV[idx];
+   //fV[idx]=RelaxationFactor*(tmp-fV[idx])+fV[idx];
    double oldP=fV[idx];
-   tmp=Csor*(tmp-oldP)+oldP;
+   tmp=RelaxationFactor*(tmp-oldP)+oldP;
 
    if(tmp<min) {
       fV[idx]=min;

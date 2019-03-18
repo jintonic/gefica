@@ -20,7 +20,7 @@ class GeFiCa::X : public TNamed
       double V1;///< voltage of outer/higher electrode
 
       int MaxIterations; ///< maximal iteration to be performed
-      double Csor; ///< 1<=Csor<2, used to boost iteration speed
+      double RelaxationFactor; ///< within (0,2), used to boost converging speed
       double Precision; ///< difference between two consecutive iterations
       TGraph *Gsor; ///< graph of current precision VS # of iterations
 

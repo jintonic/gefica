@@ -39,10 +39,10 @@ void RhoZ::DoSOR2(int idx)
 //if tmp is greater or smaller than max and min, set tmp to it.
    
       //over relax
-   //fV[idx]=Csor*(tmp-fV[idx])+fV[idx];
+   //fV[idx]=RelaxationFactor*(tmp-fV[idx])+fV[idx];
    //if need calculate depleted voltage
    double oldP=fV[idx];
-   tmp=Csor*(tmp-oldP)+oldP;
+   tmp=RelaxationFactor*(tmp-oldP)+oldP;
    if(tmp<min) {
       fV[idx]=min;
       fIsDepleted[idx]=false;
