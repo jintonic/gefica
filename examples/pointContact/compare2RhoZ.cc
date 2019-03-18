@@ -19,7 +19,7 @@ void compare2RhoZ()
    ppc->V0=2500*GeFiCa::volt;
    ppc->V1=0*GeFiCa::volt;
    ppc->SetImpurity(-0.318e10);
-   ppc->CalculatePotential(GeFiCa::kSOR2);
+   ppc->SuccessiveOverRelax();
    //ppc->SaveField("pc2d.root");
    
    
@@ -36,7 +36,7 @@ void compare2RhoZ()
    hppc->V0=2500*GeFiCa::volt;
    hppc->V1=0*GeFiCa::volt;
    hppc->SetImpurity(-0.318e10);
-   hppc->CalculatePotential(GeFiCa::kSOR2);
+   hppc->SuccessiveOverRelax();
    //hppc->SaveField("hpc2d.root");
    
      // compare 

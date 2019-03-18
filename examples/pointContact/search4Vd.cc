@@ -26,7 +26,7 @@ void search4Vd()
       vi->SetImpurity(fid);
 
       vi->RelaxationFactor=1.994; // speed up SOR
-      vi->CalculatePotential(kSOR2);
+      vi->SuccessiveOverRelax();
 
       vi->Write(); // save itself to fi
    }
@@ -47,7 +47,7 @@ void search4Vd()
       vu->SetAverageImpurity(0); // no impurity
 
       vu->RelaxationFactor=1.994;
-      vu->CalculatePotential(kSOR2);
+      vu->SuccessiveOverRelax();
 
       vu->Write(); // save itself to fu
    }

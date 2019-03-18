@@ -13,7 +13,7 @@ void compare2analytic()
    Planar1D *ana = (Planar1D*) num->Clone("ana");
 
    // calculate potential using SOR method
-   num->CalculatePotential();
+   num->SuccessiveOverRelax();
 
    // fill grid with analytic result
    ana->FillGridWithAnalyticResult();

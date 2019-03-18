@@ -18,7 +18,7 @@ void optimizeRelaxationFactor()
 
          detector[j][i]->RelaxationFactor = 1.93 + i*0.002;
          detector[j][i]->MaxIterations = 10500;
-         detector[j][i]->CalculatePotential();
+         detector[j][i]->SuccessiveOverRelax();
          detector[j][i]->Gsor->SetName(Form("gsor%d",i));
          g[j]->SetPoint(i, detector[j][i]->RelaxationFactor, detector[j][i]->GetNsor());
       }

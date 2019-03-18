@@ -30,7 +30,7 @@ void calculateFields(const char *output="ppc.root")
    ppc->SetImpurity(fid);
 
    ppc->RelaxationFactor=1.995;
-   ppc->CalculatePotential();
+   ppc->SuccessiveOverRelax();
    
    TFile *file = new TFile(output,"recreate");
    ppc->Write();

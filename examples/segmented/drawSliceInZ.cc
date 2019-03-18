@@ -15,7 +15,7 @@ void DrawWeightingPotential()
    siegfried->V1=1*GeFiCa::volt;
    siegfried->Nseg=6;
    siegfried->SegmentId=1;
-   siegfried->CalculatePotential(GeFiCa::kSOR2);
+   siegfried->SuccessiveOverRelax();
    // pick up a good default drawing style to modify
    gROOT->SetStyle("Plain");
    gStyle->SetTitleFont(132,"XYZ"); gStyle->SetTitleSize(0.05,"XYZ");

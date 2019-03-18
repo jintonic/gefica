@@ -16,7 +16,7 @@ void compare2analytic()
    Sphere1D *ana = (Sphere1D*) num->Clone("ana");
 
    // calculate potential using SOR method
-   num->CalculatePotential();
+   num->SuccessiveOverRelax();
 
    // fill grid with analytic result
    ana->FillGridWithAnalyticResult();

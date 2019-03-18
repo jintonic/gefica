@@ -161,11 +161,11 @@ int* X::FindSurroundingMatrix(int idx)
 }
 //_____________________________________________________________________________
 //
-bool X::CalculatePotential()
+bool X::SuccessiveOverRelax()
 {
    if (fdC1p[0]==0) Initialize(); // setup and initialize grid if it's not done
 
-   Info("CalculatePotential","Start SOR...");
+   Info("SuccessiveOverRelax","Start...");
    if (Gsor==0) {
       Gsor = new TGraph; Gsor->SetName("Gsor");
       Gsor->SetTitle(";Number of iterations;log10(precision)");
@@ -198,7 +198,7 @@ bool X::CalculatePotential()
    for (int i=0; i<fN; i++) if (!CalculateField(i)) return false;
    Printf("%4d steps, precision: %.1e (target: %.0e)", it, cp, Precision);
    Gsor->SetPoint(Gsor->GetN(),it,TMath::Log10(cp));
-   Info("CalculatePotential", "CPU time: %.1f s", watch.CpuTime());
+   Info("SuccessiveOverRelax", "CPU time: %.1f s", watch.CpuTime());
    return true;
 }
 //_____________________________________________________________________________
@@ -307,7 +307,7 @@ bool X::CalculateField(int idx)
 double X::GetC()
 {
    Info("GetC","Start...");
-   CalculatePotential(); // identify undepleted region
+   SuccessiveOverRelax(); // identify undepleted region
    // set impurity to zero
    double *tmpImpurity=fImpurity;
    for (int i=0;i<fN;i++) {
@@ -321,7 +321,7 @@ double X::GetC()
       }
    }
    // calculate potential without impurity
-   CalculatePotential();
+   SuccessiveOverRelax();
    // set impurity back
    if(fImpurity!=tmpImpurity) delete []fImpurity;
    fImpurity=tmpImpurity;

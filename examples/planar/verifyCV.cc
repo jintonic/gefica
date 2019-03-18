@@ -11,7 +11,7 @@ double GetCfromDepletionDepth(double voltage, double thickness)
    detector.V1=0*volt; // for top electrode
    detector.SetAverageImpurity(-1e10/cm3);
    detector.RelaxationFactor=1.986;
-   detector.CalculatePotential();
+   detector.SuccessiveOverRelax();
    
    //search for depletion depth
    double up=thickness, down=0, depth=thickness;

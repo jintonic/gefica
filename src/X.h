@@ -35,7 +35,7 @@ class GeFiCa::X : public TNamed
       /**
        * Calculate potential.
        */
-      bool CalculatePotential();
+      bool SuccessiveOverRelax();
       /**
        * Check if detector is depleted.
        */
@@ -154,7 +154,7 @@ class GeFiCa::X : public TNamed
        */
       virtual void DoSOR2(int idx); 
       /**
-       * Calculate electric field after CalculatePotential.
+       * Calculate electric field after SuccessiveOverRelax.
        */
       virtual bool CalculateField(int idx);
 

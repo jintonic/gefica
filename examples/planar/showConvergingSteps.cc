@@ -28,7 +28,7 @@ void showConvergingSteps()
    int nIter[n]={0,10,20,50,234};
    for (int i=0;i<n;i++) {
       detector->MaxIterations=nIter[i];
-      detector->CalculatePotential(GeFiCa::kSOR2);
+      detector->SuccessiveOverRelax();
       TTree *t = detector->GetTree(true);
       t->Draw("v:c1","","goff");
       TGraph *tg = new TGraph(t->GetSelectedRows(), t->GetV2(), t->GetV1());

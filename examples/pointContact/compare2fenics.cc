@@ -19,7 +19,7 @@ void compare2fenics()
   // ppc->V0=2500*GeFiCa::volt;
   // ppc->V1=0*GeFiCa::volt;
   // ppc->Impurity="-0.318e10+0*y";
-  // ppc->CalculateField(GeFiCa::kSOR2);
+  // ppc->CalculateField();
   // ppc->SaveField("pc2d.root");
    
    // calculate potential for true coaxial 1D analyitically
@@ -30,7 +30,7 @@ void compare2fenics()
    tc1d->OuterR=3.45;
 
    tc1d->SetImpurity=(-0.318e10);
-   tc1d->CalculatePotential(GeFiCa::kAnalytic);
+   tc1d->SuccessiveOverRelax();
    tc1d->SaveField("tca.root");
 
    // compare 

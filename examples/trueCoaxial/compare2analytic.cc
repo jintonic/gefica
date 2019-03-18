@@ -14,7 +14,7 @@ void compare2analytic()
    TrueCoaxial1D *ana = (TrueCoaxial1D*) num->Clone("ana");
 
    // calculate potential using SOR method
-   num->CalculatePotential();
+   num->SuccessiveOverRelax();
 
    // fill grid with analytic result
    ana->FillGridWithAnalyticResult();

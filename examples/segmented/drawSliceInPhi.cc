@@ -8,7 +8,7 @@ void CalculateWeightingPotential()
    siegfried->V1=1*volt;
    siegfried->Nseg=6;
    siegfried->SegmentId=2;
-   siegfried->CalculatePotential(kSOR2);
+   siegfried->SuccessiveOverRelax();
    TFile *output = new TFile("siegfried.root", "recreate");
    siegfried->Write();
    output->Close();
