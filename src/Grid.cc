@@ -1,18 +1,17 @@
-#include <TF3.h>
 #include <TTree.h>
 #include <TStyle.h>
 #include <TGraph.h>
 #include <TStopwatch.h>
 
-#include "X.h"
+#include "Grid.h"
 #include "Units.h"
 using namespace GeFiCa;
 
 X::X(int nx, const char *name, const char *title) : TNamed(name,title), Bias[0](0),
    Bias[1](2e3*volt), MaxIterations(5000), RelaxationFactor(1.94), Precision(1e-7*volt),
-   Gsor(0), fN(nx), N1(nx), N2(0), N3(0), fTree(0), fImpDist(0)
+   Gsor(0), fN(nx), fN1(nx), fN2(0), fN3(0), fTree(0), fImpDist(0)
 {
-   if (fN<10) { Warning("X","fN<10, set it to 11"); fN=11; N1=11; }
+   if (fN<10) { Warning("X","fN<10, set it to 11"); fN=11; fN1=11; }
 
    V=new double[fN];
    E1=new double[fN]; E2=new double[fN]; E3=new double[fN];
@@ -244,7 +243,7 @@ void X::OverRelaxAt(int idx)
 //
 int X::FindIdx(double tarx,int begin,int end)
 {
-   if (end==-1) end=N1-1;
+   if (end==-1) end=fN1-1;
    //search using binary search
    if (begin>=end)return end;
    int mid=(begin+end)/2;
@@ -255,12 +254,12 @@ int X::FindIdx(double tarx,int begin,int end)
 //
 int X::FindIdx(double tarx,double tary ,int begin,int end)
 {
-   if (end==-1) end=N2-1;
+   if (end==-1) end=fN2-1;
    //search using binary search
    // if(begin>=end)cout<<"to x"<<begin<<" "<<end<<endl;;
-   if(begin>=end)return FindIdx(tarx,end*N1,(end+1)*N1-1);
+   if(begin>=end)return FindIdx(tarx,end*fN1,(end+1)*fN1-1);
    int mid=((begin+end)/2);
-   if(C2[mid*N1]>=tary){//cout<<"firsthalf"<<begin<<" "<<end<<endl; 
+   if(C2[mid*fN1]>=tary){//cout<<"firsthalf"<<begin<<" "<<end<<endl; 
       return FindIdx(tarx,tary,begin,mid);
    }
    else{//cout<<"senondhalf"<<begin<<" "<<end<<endl; 
@@ -270,10 +269,10 @@ int X::FindIdx(double tarx,double tary ,int begin,int end)
 //
 int X::FindIdx(double tarx, double tary,double tarz,int begin,int end)
 {
-   if (end==-1) end=N3-1;
+   if (end==-1) end=fN3-1;
    //search using binary search
-   if(begin>=end)return FindIdx(tarx,tary,begin,begin+N1*N2-1);
-   int mid=((begin/(N1*N2)+end/(N1*N2))/2)*N1*N2;
+   if(begin>=end)return FindIdx(tarx,tary,begin,begin+fN1*fN2-1);
+   int mid=((begin/(fN1*fN2)+end/(fN1*fN2))/2)*fN1*fN2;
    if(C3[mid]>=tarz)return FindIdx(tarx,tary,tarz,begin,mid);
    else return FindIdx(tarx,tary,tarz,mid+1,end);
 }
@@ -293,9 +292,9 @@ bool X::CalculateField(int idx)
 {
    if (dC1p[idx]==0 || dC1m[idx]==0) return false;
 
-   if (idx%N1==0) // C1 lower boundary
+   if (idx%fN1==0) // C1 lower boundary
       E1[idx]=(V[idx]-V[idx+1])/dC1p[idx];
-   else if (idx%N1==N1-1) // C1 upper boundary
+   else if (idx%fN1==fN1-1) // C1 upper boundary
       E1[idx]=(V[idx-1]-V[idx])/dC1m[idx];
    else // bulk
       E1[idx]=(V[idx-1]-V[idx+1])/(dC1m[idx]+dC1p[idx]);
