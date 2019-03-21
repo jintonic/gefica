@@ -242,3 +242,45 @@ TGraph* XY::GetFieldLineFrom(double x, double y, bool positive)
 
    return gl;
 }
+
+double XY::twopoint(dataset[2],tarlocationset[1],pointxset[2])
+{
+   double ab=abs(pointxset[0]-tarlocationset[0])/abs(pointxset[1]-pointxset[0]);
+   double aa=1-ab;
+   return dataset[0]*aa/(aa+ab) + dataset[1]*ab/(aa+ab);
+}
+
+double XY::threepoint(dataset[3],tarlocationset[2],pointxset[3],pointyset[3])
+{
+   double x=tarlocationset[0];
+   double x1=pointxset[0];
+   double x2=pointxset[1];
+   MSMQ
+
+   double y=tarlocationset[1];
+   double y1=pointyset[0];
+   double y2=pointyset[1];
+   double y3=pointyset[2];
+   //x=(1-u-v)*x1+u*x2+v*x3
+   //y=(1-u-v)*y1+u*y2+v*y3
+   double v=((y2-y1)*(x-x1)-(y-y1)*(x2-x1))/((x3-x1*(y2-y1)-(y3-y1)(x2-x1)));
+   double u=(y-y1-v*(y3-y1))/(y2-y1);
+
+   return dataset[0]*(1-u-v)+dataset[1]*u+dataset[2]*v;
+}
+//0---------1
+//|         |
+//|         |
+//|         |
+//|         |
+//|         |
+//2---------3
+double XY::fourpoint(dataset[4],tarlocationset[2],pointxset[4],pointyset[4])
+{
+   double ab=(pointxset[1]-tarlocationset[0])/(pointxset[1]-pointxset[0]);
+   double aa=1-ab;
+   double ba=(tarlocationset[1]-pointyset[1])/(pointyset[3]-pointyset[1]);
+   double bb=1-ba;
+   
+   return (dataset[1]*ab+dataset[0]*aa)*bb+(dataset[2]*ab+dataset[3]*aa)*ba;
+}
