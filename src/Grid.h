@@ -3,8 +3,11 @@
 
 #include <vector>
 
-#include <TTree.h>
+class TTree;
 
+/**
+ * The only namespace in GeFiCa.
+ */
 namespace GeFiCa { class Grid; }
 
 /**
@@ -33,6 +36,20 @@ class GeFiCa::Grid
       std::vector<double> dC3p; ///< step length to next grid point alone C3
       std::vector<double> dC3m; ///< step length to previous grid point alone C3
 
+      double RelaxationFactor; ///< within (0,2), used to boost converging speed
+      int MaxIterations; ///< maximal iteration to be performed
+      double Precision; ///< difference between two consecutive iterations
+
+      Grid(size_t n1=0, size_t n2=0, size_t n3=0) :
+         N1(n1), N2(n2), N3(n3), RelaxationFactor(1.95) {};
+      virtual ~Grid() {};
+
+      void SuccessiveOverRelax()
+      { for (size_t i=0; i<V.size(); i++) OverRelaxAt(i); }
+
+      size_t GetN() { return V.size(); } ///< total number of grid points
+      TTree* GetTree();
+
       double GetV(double c1, double c2=0, double c3=0) const
       { return GetData(c1,c2,c3,V); }
       double GetE(double c1, double c2=0, double c3=0) const
@@ -44,17 +61,15 @@ class GeFiCa::Grid
       double GetE3(double c1, double c2=0, double c3=0) const
       { return GetData(c1,c2,c3,E3); }
 
-      double RelaxationFactor; ///< within (0,2)
-
-      Grid(size_t n1=0, size_t n2=0, size_t n3=0) :
-         N1(n1), N2(n2), N3(n3), RelaxationFactor(1.95) {};
-      virtual ~Grid() {};
-
-      void SuccessiveOverRelax()
-      { for (size_t i=0; i<V.size(); i++) OverRelaxAt(i); }
-
-      size_t GetN() { return V.size(); } ///< total number of grid points
-      TTree* GetTree();
+      /**
+       * Check if every grid point is depleted.
+       */
+      bool IsDepleted()
+      {
+         for (size_t i=0; i<Src.size(); i++)
+            if (Src[i]==0) return false;
+         return true;
+      }
 
    protected:
       TTree* fTree; ///<! ROOT tree to visualize fields
