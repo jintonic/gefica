@@ -26,8 +26,8 @@ class GeFiCa::Planar1D : public GeFiCa::X
        *
        * with boundary conditions:
        *
-       * - potential(0) = V0,
-       * - potential(d) = V1,
+       * - potential(0) = Bias[0],
+       * - potential(d) = Bias[1],
        *
        * where, d = UpperBound - LowerBound, is
        *
@@ -36,8 +36,8 @@ class GeFiCa::Planar1D : public GeFiCa::X
        * where, 
        *
        * - a = - rho/2/epsilon
-       * - b = (V1-V0 - ad^2)/d
-       * - c = V0
+       * - b = (Bias[1]-Bias[0] - ad^2)/d
+       * - c = Bias[0]
        */
       void FillGridWithAnalyticResult();
 

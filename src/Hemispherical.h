@@ -26,8 +26,8 @@ class GeFiCa::Sphere1D : public GeFiCa::R
        * In case of fixed impurity,
        *    potential(x) = -rho/6/epsilon*r^2 + c1/r + c2
        * with boundary conditions:
-       * - potential(InnerR) = V0,
-       * - potential(OuterR) = V1,
+       * - potential(InnerR) = Bias[0],
+       * - potential(OuterR) = Bias[1],
        */
       void FillGridWithAnalyticResult();
 

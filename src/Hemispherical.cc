@@ -13,16 +13,16 @@ void Sphere1D::InitializeGrid()
 
    double stepLength=(OuterR-InnerR)/(fN-1);
    SetStepLength(stepLength);
-   for (int i=fN;i-->0;) fC1[i]=fC1[i]+InnerR;
+   for (int i=fN;i-->0;) C1[i]=C1[i]+InnerR;
    fIsFixed[0]=true; fIsFixed[fN-1]=true;
-   double slope = (V1-V0)/(fN-1);
-   for (int i=0; i<fN; i++) fV[i]=V0+slope*i;
+   double slope = (Bias[1]-Bias[0])/(fN-1);
+   for (int i=0; i<fN; i++) V[i]=Bias[0]+slope*i;
 }
 //_____________________________________________________________________________
 //
 void Sphere1D::FillGridWithAnalyticResult()
 {
-   if (fdC1p[0]==0) Initialize(); // setup and initialize grid if it's not done
+   if (dC1p[0]==0) Initialize(); // setup and initialize grid if it's not done
 
    bool isConstantImpurity=true;
    for (int i=0;i+1<fN;i++)
@@ -33,12 +33,12 @@ void Sphere1D::FillGridWithAnalyticResult()
       abort();
    }
    double density=fImpurity[0]*Qe;
-   double c1=(V1-V0 + density/epsilon/6*(fC1[fN-1]*fC1[fN-1]-fC1[0]*fC1[0]))
-      /(1/fC1[fN-1]-1/fC1[0]);
-   double c2=V0+density/epsilon/6*fC1[0]*fC1[0]-c1/fC1[0];
+   double c1=(Bias[1]-Bias[0] + density/epsilon/6*(C1[fN-1]*C1[fN-1]-C1[0]*C1[0]))
+      /(1/C1[fN-1]-1/C1[0]);
+   double c2=Bias[0]+density/epsilon/6*C1[0]*C1[0]-c1/C1[0];
    for (int i=0; i<fN; i++) {
-      fV[i] = -density/6/epsilon*fC1[i]*fC1[i]+c1/fC1[i]+c2;
+      V[i] = -density/6/epsilon*C1[i]*C1[i]+c1/C1[i]+c2;
       // Fixme:
-      if (i!=0||i!=fN-1)fE1[i]=(fV[i+1]-fV[i-1])/(fdC1p[i]+fdC1m[i]);
+      if (i!=0||i!=fN-1)E1[i]=(V[i+1]-V[i-1])/(dC1p[i]+dC1m[i]);
    }
 }

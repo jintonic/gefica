@@ -12,20 +12,20 @@ void Planar1D::InitializeGrid()
       Warning("InitializeGrid", "Thickness(%.1f)<=0, set it to 1*cm", Thickness);
       Thickness=1*cm;
    }
-   // initialize fC1, fdC1p, fdC1m, fIsFixed
+   // initialize C1, dC1p, dC1m, fIsFixed
    SetStepLength(Thickness/(fN-1));
    // fix 1st and last points
    fIsFixed[0]=true; fIsFixed[fN-1]=true;
-   // linear interpolation between V0 and V1
-   double slope = (V1-V0)/(fN-1);
-   for (int i=0; i<fN; i++) fV[i]=V0+slope*i;
-   fV[fN-1]=V1;
+   // linear interpolation between Bias[0] and Bias[1]
+   double slope = (Bias[1]-Bias[0])/(fN-1);
+   for (int i=0; i<fN; i++) V[i]=Bias[0]+slope*i;
+   V[fN-1]=Bias[1];
 }
 //_____________________________________________________________________________
 //
 void Planar1D::FillGridWithAnalyticResult()
 {
-   if (fdC1p[0]==0) Initialize(); // setup and initialize grid if it's not done
+   if (dC1p[0]==0) Initialize(); // setup and initialize grid if it's not done
 
    bool isConstantImpurity=true;
    for (int i=0;i+1<fN;i++)
@@ -37,12 +37,12 @@ void Planar1D::FillGridWithAnalyticResult()
    }
    double d=Thickness; //thickness or depth of the detector
    double a=-fImpurity[fN-1]*Qe/2/epsilon;
-   double b=(fV[fN-1]-fV[0]-a*d*d)/d;
-   double c=fV[0];
-   for (int i=0; i<fN; i++) fV[i] = a*fC1[i]*fC1[i]+b*fC1[i]+c;
+   double b=(V[fN-1]-V[0]-a*d*d)/d;
+   double c=V[0];
+   for (int i=0; i<fN; i++) V[i] = a*C1[i]*C1[i]+b*C1[i]+c;
 
    for (int i=1; i<fN-1; i++)
-      fE1[i]=(fV[i+1]-fV[i-1])/(fdC1p[i]+fdC1m[i]);
-   fE1[0]=(fV[1]-fV[0])/fdC1p[0];
-   fE1[fN-1]=(fV[fN-1]-fV[fN-2])/fdC1m[fN-1];
+      E1[i]=(V[i+1]-V[i-1])/(dC1p[i]+dC1m[i]);
+   E1[0]=(V[1]-V[0])/dC1p[0];
+   E1[fN-1]=(V[fN-1]-V[fN-2])/dC1m[fN-1];
 }

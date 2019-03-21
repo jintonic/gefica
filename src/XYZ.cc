@@ -10,17 +10,17 @@ using namespace GeFiCa;
 XYZ::XYZ(int nx, int ny, int nz, const char *name, const char *title)
    : XY(nx, ny*nz, name, title)
 { 
-   fN2=ny; // fN2 is set to ny*nz through XY constructor, it is fixed here
-   fN3=nz;
+   N2=ny; // N2 is set to ny*nz through XY constructor, it is fixed here
+   N3=nz;
 }
 //_____________________________________________________________________________
 //
 XYZ::~XYZ()
 {
-   if (fE3) delete[] fE3;
-   if (fC3) delete[] fC3;
-   if (fdC3p) delete[] fdC3p;
-   if (fdC3m) delete[] fdC3m; 
+   if (E3) delete[] E3;
+   if (C3) delete[] C3;
+   if (dC3p) delete[] dC3p;
+   if (dC3m) delete[] dC3m; 
 }
 //_____________________________________________________________________________
 //
@@ -28,16 +28,16 @@ void XYZ::SetStepLength(double steplength1,double steplength2,double steplength3
 {
    XY::SetStepLength(steplength1,steplength2); 
    for (int i=0;i<fN;i++) {
-      if(i/(fN1*fN2)==0) fC3[i]=0;
-      else fC3[i]=fC3[i-fN1*fN2]+steplength3;
-      if((i%(fN1*fN2))/fN1!=0)fC2[i]=fC2[i-fN1]+steplength2;
-      else fC2[i]=0;
-      if(i%fN1==0)fC1[i]=0;
-      else fC1[i]=fC1[i-1]+steplength1;
+      if(i/(N1*N2)==0) C3[i]=0;
+      else C3[i]=C3[i-N1*N2]+steplength3;
+      if((i%(N1*N2))/N1!=0)C2[i]=C2[i-N1]+steplength2;
+      else C2[i]=0;
+      if(i%N1==0)C1[i]=0;
+      else C1[i]=C1[i-1]+steplength1;
 
-      fE3[i]=0;
-      fdC3p[i]=steplength3;
-      fdC3m[i]=steplength3;
+      E3[i]=0;
+      dC3p[i]=steplength3;
+      dC3m[i]=steplength3;
    }
 }
 //_____________________________________________________________________________
@@ -46,25 +46,25 @@ void XYZ::OverRelaxAt(int idx)
 {
    if (fIsFixed[idx])return;
    double density=-fImpurity[idx]*Qe;
-   double h2=fdC1m[idx];
-   double h3=fdC1p[idx];
-   double h4=fdC2m[idx];
-   double h1=fdC2p[idx];
-   double h0=fdC3m[idx];
-   double h5=fdC3p[idx];
+   double h2=dC1m[idx];
+   double h3=dC1p[idx];
+   double h4=dC2m[idx];
+   double h1=dC2p[idx];
+   double h0=dC3m[idx];
+   double h5=dC3p[idx];
    double pym,pyp,pxm,pxp,pzp,pzm;
-   if(idx<fN1*fN2)pzm=fV[idx];
-   else pzm=fV[idx-fN1*fN2];
-   if(idx>=fN-fN1*fN2)pzp=fV[idx];
-   else pzp=fV[idx+fN1*fN2];
-   if(idx%(fN1*fN2)>(fN1*fN2)-fN1-1) pyp=fV[idx];
-   else pyp=fV[idx+fN1];
-   if(idx%(fN1*fN2)<fN1)pym=fV[idx];
-   else pym=fV[idx-fN1];
-   if((idx%(fN1*fN2))%fN1==fN1-1)pxp=fV[idx];
-   else pxp=fV[idx+1];
-   if((idx%(fN1*fN2))%fN1==0)pxm=fV[idx];
-   else pxm=fV[idx-1];
+   if(idx<N1*N2)pzm=V[idx];
+   else pzm=V[idx-N1*N2];
+   if(idx>=fN-N1*N2)pzp=V[idx];
+   else pzp=V[idx+N1*N2];
+   if(idx%(N1*N2)>(N1*N2)-N1-1) pyp=V[idx];
+   else pyp=V[idx+N1];
+   if(idx%(N1*N2)<N1)pym=V[idx];
+   else pym=V[idx-N1];
+   if((idx%(N1*N2))%N1==N1-1)pxp=V[idx];
+   else pxp=V[idx+1];
+   if((idx%(N1*N2))%N1==0)pxm=V[idx];
+   else pxm=V[idx-1];
 
    double tmp= (
          -density/epsilon*h0*h1*h2*h3*h4*h5*(h1+h4)*(h2+h3)*(h0+h5)/2
@@ -89,31 +89,31 @@ void XYZ::OverRelaxAt(int idx)
    if (max<pzm)max=pzm;
    if (max<pzm)max=pzm;
    //if tmp is greater or smaller than max and min, set tmp to it.
-   //fV[idx]=RelaxationFactor*(tmp-fV[idx])+fV[idx];
+   //V[idx]=RelaxationFactor*(tmp-V[idx])+V[idx];
    //if need calculate depleted voltage
-   double oldP=fV[idx];
+   double oldP=V[idx];
    tmp=RelaxationFactor*(tmp-oldP)+oldP;
    if(tmp<min) {
-      fV[idx]=min;
+      V[idx]=min;
       fIsDepleted[idx]=false;
    } else if(tmp>max) {
-      fV[idx]=max;
+      V[idx]=max;
       fIsDepleted[idx]=false;
    } else
       fIsDepleted[idx]=true;
 
-   if(fIsDepleted[idx]||V0==V1) fV[idx]=tmp;
+   if(fIsDepleted[idx]||Bias[0]==Bias[1]) V[idx]=tmp;
 }
 //_____________________________________________________________________________
 //
 double XYZ::GetData(double x, double y, double z, double *data)
 {
    int idx=FindIdx(x,y,z);
-   double ab=(-x+fC1[idx])/fdC1p[idx];
+   double ab=(-x+C1[idx])/dC1p[idx];
    double aa=1-ab;
-   double ba=(-y+fC2[idx])/fdC2p[idx];
+   double ba=(-y+C2[idx])/dC2p[idx];
    double bb=1-ba;
-   double ac=(-z+fC3[idx])/fdC3p[idx];
+   double ac=(-z+C3[idx])/dC3p[idx];
    double ca=1-ac;
    double tar0,tar1,tar2,tar3,tar4,tar5,tar6,tar7;
    tar3=-1;
@@ -121,16 +121,16 @@ double XYZ::GetData(double x, double y, double z, double *data)
    tar6=-1;
    tar7=-1;
    tar0=data[idx];
-   if(idx>=(fN-fN1*fN2)){tar4=0;tar5=0;tar6=0;tar7=0;}
-   else{tar4=data[idx-fN1*fN2];}
-   if(idx%(fN1*fN2)%fN1==fN1-1){tar2=0;tar3=0;tar6=0;tar7=0;}
-   else{tar2=data[idx-fN1];}
-   if(idx%(fN1*fN2)/fN1==fN2-1){tar1=0;tar3=0;tar5=0;tar7=0;}
+   if(idx>=(fN-N1*N2)){tar4=0;tar5=0;tar6=0;tar7=0;}
+   else{tar4=data[idx-N1*N2];}
+   if(idx%(N1*N2)%N1==N1-1){tar2=0;tar3=0;tar6=0;tar7=0;}
+   else{tar2=data[idx-N1];}
+   if(idx%(N1*N2)/N1==N2-1){tar1=0;tar3=0;tar5=0;tar7=0;}
    else{tar1=data[idx+1];}
-   if(tar3==-1)tar3=data[idx-fN1-1];
-   if(tar5==-1)tar5=data[idx-fN1*fN2-1];
-   if(tar6==-1)tar6=data[idx-fN1*fN2-fN1];
-   if(tar7==-1)tar7=data[idx-fN1*fN2-fN1-1];
+   if(tar3==-1)tar3=data[idx-N1-1];
+   if(tar5==-1)tar5=data[idx-N1*N2-1];
+   if(tar6==-1)tar6=data[idx-N1*N2-N1];
+   if(tar7==-1)tar7=data[idx-N1*N2-N1-1];
    return ((tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb)*ac
       +((tar4*aa+tar5*ab)*ba+(tar6*aa+tar7*ab)*bb)*ca;
 }
@@ -139,14 +139,14 @@ double XYZ::GetData(double x, double y, double z, double *data)
 bool XYZ::CalculateField(int idx)
 {
    if (!XY::CalculateField(idx)) return false;
-   if (fdC3p[idx]==0 || fdC3m[idx]==0) return false;
+   if (dC3p[idx]==0 || dC3m[idx]==0) return false;
 
-   if (idx<fN1*fN2) // C3 lower border
-      fE3[idx]=(fV[idx]-fV[idx+fN1])/fdC3p[idx];
-   else if (idx>=fN-fN1*fN2) // C3 upper border
-      fE3[idx]=(fV[idx-fN1]-fV[idx])/fdC3m[idx];
+   if (idx<N1*N2) // C3 lower border
+      E3[idx]=(V[idx]-V[idx+N1])/dC3p[idx];
+   else if (idx>=fN-N1*N2) // C3 upper border
+      E3[idx]=(V[idx-N1]-V[idx])/dC3m[idx];
    else { // bulk
-      fE3[idx]=(fV[idx-fN1]-fV[idx+fN1])/(fdC3m[idx]+fdC3p[idx]);
+      E3[idx]=(V[idx-N1]-V[idx+N1])/(dC3m[idx]+dC3p[idx]);
    }
    return true;
 }

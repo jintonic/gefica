@@ -14,9 +14,9 @@ class GeFiCa::RhoZ : public GeFiCa::XY
       /**
        * Default Constructor.
        */
-      RhoZ(int fN1=101, int fN2=101, const char *name="rhoz",
+      RhoZ(int N1=101, int N2=101, const char *name="rhoz",
             const char *title="2D cylindrical coordinates")
-         : XY(fN1, fN2, name, title) {};
+         : XY(N1, N2, name, title) {};
 
       double GetC();
 

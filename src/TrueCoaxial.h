@@ -27,13 +27,13 @@ class GeFiCa::TrueCoaxial1D : public GeFiCa::Rho
        * https://www.wolframalpha.com/input/?i=1%2Fx*+%28x*f%28x%29%27%29%27%3Da
        * potential(r)=a + b log(r) - rho/4/epsilon*r^2 with boundary conditions:
        *
-       * - potential(Ri) = V0,
-       * - potential(Ro) = V1,
+       * - potential(Ri) = Bias[0],
+       * - potential(Ro) = Bias[1],
        *
        * So, 
        *
        * - a = - rho/2/epsilon
-       * - b = [rho/4/epsilon*(Ro^2-Ri^2)+(V1-V0)]/log(Ro/Ri)
+       * - b = [rho/4/epsilon*(Ro^2-Ri^2)+(Bias[1]-Bias[0])]/log(Ro/Ri)
        */
       void FillGridWithAnalyticResult();
 

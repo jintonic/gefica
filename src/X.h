@@ -8,39 +8,19 @@ class TF3; class TTree; class TGraph;
 /**
  * The only namespace in GeFiCa.
  */
-namespace GeFiCa { class X; }
+namespace GeFiCa { class Grid; class X; }
 
 /**
- * 1D coordinate.
+ * 1D Cartesian coordinate.
  */
-class GeFiCa::X : public TNamed 
+class GeFiCa::X : public GeFiCa::Grid, public TNamed 
 {
    public:
-      double V0;///< voltage of inner/lower electrode
-      double V1;///< voltage of outer/higher electrode
-
-      int MaxIterations; ///< maximal iteration to be performed
-      double RelaxationFactor; ///< within (0,2), used to boost converging speed
-      double Precision; ///< difference between two consecutive iterations
-      TGraph *Gsor; ///< graph of current precision VS # of iterations
-
       /**
-       * Default constructor for GeFiCa::X.
-       * \param [in] nx number of grid points
-       * \param [in] name name of an object of this class saved in a ROOT file
-       * \param [in] title description of this class
+       * Default constructor.
        */
-      X(int nx=101, const char *name="x", const char *title="1D coordinate");
+      X(size_t nx=101) : Grid(nx), TName("x", "1D coordinate") {};
       virtual ~X();
-      /**
-       * Calculate potential.
-       */
-      bool SuccessiveOverRelax();
-      /**
-       * Check if detector is depleted.
-       */
-      bool IsDepleted();
-
       X& operator*=(double);
       X& operator+=(X*);
       /**
@@ -55,13 +35,13 @@ class GeFiCa::X : public TNamed
       void SetImpurity(TF3 *fi) { if (fi) fImpDist = fi; }
  
       double GetV(double x=0, double y=0, double z=0)
-      { return GetData(x,y,z,fV); }
+      { return GetData(x,y,z,V); }
       virtual double GetE1(double x=0, double y=0, double z=0)
-      { return GetData(x,y,z,fE1); }
+      { return GetData(x,y,z,E1); }
       virtual double GetE2(double x=0, double y=0, double z=0)
-      { return GetData(x,y,z,fE2); }
+      { return GetData(x,y,z,E2); }
       virtual double GetE3(double x=0, double y=0, double z=0)
-      { return GetData(x,y,z,fE3); }
+      { return GetData(x,y,z,E3); }
       virtual double GetImpurity(double x=0, double y=0, double z=0)
       { return GetData(x,y,z,fImpurity); }
       /**
@@ -82,42 +62,42 @@ class GeFiCa::X : public TNamed
        * Get number of iterations for SOR to converge.
        */
       int GetNsor();
-      int GetN1() { return fN1; }
-      int GetN2() { return fN2; }
-      int GetN3() { return fN3; }
+      int GetN1() { return N1; }
+      int GetN2() { return N2; }
+      int GetN3() { return N3; }
 
-      double* GetVs() { return fV; }
+      double* GetVs() { return V; }
 
-      double* GetE1s() { return fE1; }
-      double* GetE2s() { return fE2; }
-      double* GetE3s() { return fE3; }
+      double* GetE1s() { return E1; }
+      double* GetE2s() { return E2; }
+      double* GetE3s() { return E3; }
 
-      double* GetC1s() { return fC1; }
-      double* GetC2s() { return fC2; }
-      double* GetC3s() { return fC3; }
+      double* GetC1s() { return C1; }
+      double* GetC2s() { return C2; }
+      double* GetC3s() { return C3; }
 
       ClassDef(X,1);
 
    protected:
-      int fN; ///< total number of grid points (fN = fN1 in 1D case)
-      int fN1; ///< number of grid points along the 1st coordinate
-      int fN2; ///< number of grid points along the 2nd coordinate
-      int fN3; ///< number of grid points along the 3nd coordinate
+      int fN; ///< total number of grid points (fN = N1 in 1D case)
+      int N1; ///< number of grid points along the 1st coordinate
+      int N2; ///< number of grid points along the 2nd coordinate
+      int N3; ///< number of grid points along the 3nd coordinate
 
-      double *fV; ///< [fN] electric potential
-      double *fE1; ///< [fN] electric field along the 1st coordinate
-      double *fE2; ///< [fN] electric field along the 2nd coordinate
-      double *fE3; ///< [fN] electric field along the 3rd coordinate
-      double *fC1; ///< [fN] the 1st coordinate
-      double *fC2; ///< [fN] the 2nd coordinate
-      double *fC3; ///< [fN] the 3rd coordinate
+      double *V; ///< [fN] electric potential
+      double *E1; ///< [fN] electric field along the 1st coordinate
+      double *E2; ///< [fN] electric field along the 2nd coordinate
+      double *E3; ///< [fN] electric field along the 3rd coordinate
+      double *C1; ///< [fN] the 1st coordinate
+      double *C2; ///< [fN] the 2nd coordinate
+      double *C3; ///< [fN] the 3rd coordinate
 
-      double *fdC1p; ///< [fN] step length to next grid point alone C1
-      double *fdC1m; ///< [fN] step length to previous grid point alone C1
-      double *fdC2p; ///< [fN] step length to next grid point along C2
-      double *fdC2m; ///< [fN] step length to previous grid point along C2
-      double *fdC3p; ///< [fN] step length to next grid point alone C3
-      double *fdC3m; ///< [fN] step length to previous grid point alone C3
+      double *dC1p; ///< [fN] step length to next grid point alone C1
+      double *dC1m; ///< [fN] step length to previous grid point alone C1
+      double *dC2p; ///< [fN] step length to next grid point along C2
+      double *dC2m; ///< [fN] step length to previous grid point along C2
+      double *dC3p; ///< [fN] step length to next grid point alone C3
+      double *dC3m; ///< [fN] step length to previous grid point alone C3
 
       double *fImpurity; ///< [fN] net impurity concentration (Nacceptor-Ndonor)
       bool *fIsFixed; ///< [fN] true if field values are fixed
@@ -136,7 +116,7 @@ class GeFiCa::X : public TNamed
        */
       virtual int* FindSurroundingMatrix(int idx);
       /**
-       * Initialize fC1, fdC1p, fdC1m, fIsFixed
+       * Initialize C1, dC1p, dC1m, fIsFixed
        */
       void SetStepLength(double stepLength);
       /**

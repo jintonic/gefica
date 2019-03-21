@@ -14,10 +14,10 @@ class GeFiCa::RhoPhi : public GeFiCa::XY
       /**
        * Default constructor
        */
-      RhoPhi(int fN1=101, int fN2=101,
+      RhoPhi(int N1=101, int N2=101,
             const char *name="rp",
             const char *title="2D cylindrical coordinates")
-         : XY(fN1, fN2, name, title) {}; 
+         : XY(N1, N2, name, title) {}; 
 
       ClassDef(RhoPhi,1);
 

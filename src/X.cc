@@ -8,32 +8,32 @@
 #include "Units.h"
 using namespace GeFiCa;
 
-X::X(int nx, const char *name, const char *title) : TNamed(name,title), V0(0),
-   V1(2e3*volt), MaxIterations(5000), RelaxationFactor(1.94), Precision(1e-7*volt),
-   Gsor(0), fN(nx), fN1(nx), fN2(0), fN3(0), fTree(0), fImpDist(0)
+X::X(int nx, const char *name, const char *title) : TNamed(name,title), Bias[0](0),
+   Bias[1](2e3*volt), MaxIterations(5000), RelaxationFactor(1.94), Precision(1e-7*volt),
+   Gsor(0), fN(nx), N1(nx), N2(0), N3(0), fTree(0), fImpDist(0)
 {
-   if (fN<10) { Warning("X","fN<10, set it to 11"); fN=11; fN1=11; }
+   if (fN<10) { Warning("X","fN<10, set it to 11"); fN=11; N1=11; }
 
-   fV=new double[fN];
-   fE1=new double[fN]; fE2=new double[fN]; fE3=new double[fN];
-   fC1=new double[fN]; fC2=new double[fN]; fC3=new double[fN];
+   V=new double[fN];
+   E1=new double[fN]; E2=new double[fN]; E3=new double[fN];
+   C1=new double[fN]; C2=new double[fN]; C3=new double[fN];
 
-   fdC1p=new double[fN]; fdC1m=new double[fN];
-   fdC2p=new double[fN]; fdC2m=new double[fN];
-   fdC3p=new double[fN]; fdC3m=new double[fN];
+   dC1p=new double[fN]; dC1m=new double[fN];
+   dC2p=new double[fN]; dC2m=new double[fN];
+   dC3p=new double[fN]; dC3m=new double[fN];
 
    fIsFixed=new bool[fN];
    fIsDepleted=new bool[fN];
    fImpurity=new double[fN];
 
    for (int i=0;i<fN;i++) {
-      fV[i]=0;
-      fE1[i]=0; fE2[i]=0; fE3[i]=0;
-      fC1[i]=0; fC2[i]=0; fC3[i]=0;
+      V[i]=0;
+      E1[i]=0; E2[i]=0; E3[i]=0;
+      C1[i]=0; C2[i]=0; C3[i]=0;
 
-      fdC1m[i]=0; fdC1p[i]=0;
-      fdC2m[i]=0; fdC2p[i]=0;
-      fdC3m[i]=0; fdC3p[i]=0;
+      dC1m[i]=0; dC1p[i]=0;
+      dC2m[i]=0; dC2p[i]=0;
+      dC3m[i]=0; dC3p[i]=0;
 
       fIsFixed[i]=false;
       fIsDepleted[i]=true;
@@ -64,11 +64,11 @@ X::X(int nx, const char *name, const char *title) : TNamed(name,title), V0(0),
 //
 X::~X()
 {
-   if (fV) delete[] fV;
-   if (fE1) delete[] fE1;
-   if (fC1) delete[] fC1;
-   if (fdC1p) delete[] fdC1p;
-   if (fdC1m) delete[] fdC1m;
+   if (V) delete[] V;
+   if (E1) delete[] E1;
+   if (C1) delete[] C1;
+   if (dC1p) delete[] dC1p;
+   if (dC1m) delete[] dC1m;
    if (fIsFixed) delete[] fIsFixed;
    if (fImpurity) delete[] fImpurity;
    if (fIsDepleted) delete[] fIsDepleted;
@@ -83,30 +83,30 @@ X& X::operator+=(GeFiCa::X *other)
       return *this; 
    }
    for (int i=0; i<fN; i++) {
-      fV[i]=fV[i]+other->fV[i];
+      V[i]=V[i]+other->V[i];
       fImpurity[i]+=other->fImpurity[i];
    }
-   V0+=other->V0; V1+=other->V1; 
+   Bias[0]+=other->Bias[0]; Bias[1]+=other->Bias[1]; 
    return *this;
 }
 //_____________________________________________________________________________
 //
 X& X::operator*=(double p)
 {
-   for (int i=0; i<fN; i++) fV[i]=fV[i]*p;
-   V0*=p; V1*=p;
+   for (int i=0; i<fN; i++) V[i]=V[i]*p;
+   Bias[0]*=p; Bias[1]*=p;
    return *this;
 }
 //_____________________________________________________________________________
 //
 int X::GetIdxOfMaxV()
 {
-   double max=fV[0];
+   double max=V[0];
    int maxn=0;
    for(int i=1;i<fN;i++) {
-      if(fV[i]>max) {
+      if(V[i]>max) {
          maxn=i;
-         max=fV[i];
+         max=V[i];
       }
    }
    return maxn;
@@ -115,12 +115,12 @@ int X::GetIdxOfMaxV()
 //
 int X::GetIdxOfMinV()
 {
-   double min=fV[0];
+   double min=V[0];
    int minn=0;
    for(int i=1;i<fN;i++) {
-      if(fV[i]<min) {
+      if(V[i]<min) {
          minn=i;
-         min=fV[i];
+         min=V[i];
       }
    }
    return minn;
@@ -142,9 +142,9 @@ void X::SetStepLength(double stepLength)
 {
    for (int i=fN;i-->0;) {
       fIsFixed[i]=false;
-      fC1[i]=i*stepLength;
-      fdC1p[i]=stepLength;
-      fdC1m[i]=stepLength;
+      C1[i]=i*stepLength;
+      dC1p[i]=stepLength;
+      dC1m[i]=stepLength;
    }
 }
 //_____________________________________________________________________________
@@ -163,7 +163,7 @@ int* X::FindSurroundingMatrix(int idx)
 //
 bool X::SuccessiveOverRelax()
 {
-   if (fdC1p[0]==0) Initialize(); // setup and initialize grid if it's not done
+   if (dC1p[0]==0) Initialize(); // setup and initialize grid if it's not done
 
    Info("SuccessiveOverRelax","Start...");
    if (Gsor==0) {
@@ -183,11 +183,11 @@ bool X::SuccessiveOverRelax()
       double XUpSum=0;
       double XDownSum=0;
       for (int i=0;i<fN;i++) {
-         double old=fV[i];
+         double old=V[i];
          OverRelaxAt(i);
          if(old>0)XDownSum+=old;
          else XDownSum-=old;
-         double diff=fV[i]-old;
+         double diff=V[i]-old;
          if(diff>0)XUpSum+=(diff);
          else XUpSum-=(diff);
       }
@@ -208,13 +208,13 @@ void X::OverRelaxAt(int idx)
    // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return ;
    double rho=-fImpurity[idx]*Qe;
-   double h2=fdC1m[idx];
-   double h3=fdC1p[idx];
-   double p2=fV[idx-1];
-   double p3=fV[idx+1];
+   double h2=dC1m[idx];
+   double h3=dC1p[idx];
+   double p2=V[idx-1];
+   double p3=V[idx+1];
 
    double tmp=-rho/epsilon*h2*h3/2
-      + (h3*fV[idx-1]+h2*fV[idx+1])/(h2+h3);
+      + (h3*V[idx-1]+h2*V[idx+1])/(h2+h3);
 
    //find minmium and maxnium of all five grid, the new one should not go overthem.
    //find min
@@ -225,42 +225,42 @@ void X::OverRelaxAt(int idx)
    if(max<p3)max=p3;
    //if tmp is greater or smaller than max and min, set tmp to it.
 
-   //fV[idx]=RelaxationFactor*(tmp-fV[idx])+fV[idx];
-   double oldP=fV[idx];
+   //V[idx]=RelaxationFactor*(tmp-V[idx])+V[idx];
+   double oldP=V[idx];
    tmp=RelaxationFactor*(tmp-oldP)+oldP;
 
    if(tmp<min) {
-      fV[idx]=min;
+      V[idx]=min;
       fIsDepleted[idx]=false;
    } else if(tmp>max) {
-      fV[idx]=max;
+      V[idx]=max;
       fIsDepleted[idx]=false;
    } else
       fIsDepleted[idx]=true;
 
-   if(fIsDepleted[idx]||V0==V1) fV[idx]=tmp;
+   if(fIsDepleted[idx]||Bias[0]==Bias[1]) V[idx]=tmp;
 }
 //_____________________________________________________________________________
 //
 int X::FindIdx(double tarx,int begin,int end)
 {
-   if (end==-1) end=fN1-1;
+   if (end==-1) end=N1-1;
    //search using binary search
    if (begin>=end)return end;
    int mid=(begin+end)/2;
-   if(fC1[mid]>=tarx)return FindIdx(tarx,begin,mid);
+   if(C1[mid]>=tarx)return FindIdx(tarx,begin,mid);
    else return FindIdx(tarx,mid+1,end);
 }
 //_____________________________________________________________________________
 //
 int X::FindIdx(double tarx,double tary ,int begin,int end)
 {
-   if (end==-1) end=fN2-1;
+   if (end==-1) end=N2-1;
    //search using binary search
    // if(begin>=end)cout<<"to x"<<begin<<" "<<end<<endl;;
-   if(begin>=end)return FindIdx(tarx,end*fN1,(end+1)*fN1-1);
+   if(begin>=end)return FindIdx(tarx,end*N1,(end+1)*N1-1);
    int mid=((begin+end)/2);
-   if(fC2[mid*fN1]>=tary){//cout<<"firsthalf"<<begin<<" "<<end<<endl; 
+   if(C2[mid*N1]>=tary){//cout<<"firsthalf"<<begin<<" "<<end<<endl; 
       return FindIdx(tarx,tary,begin,mid);
    }
    else{//cout<<"senondhalf"<<begin<<" "<<end<<endl; 
@@ -270,11 +270,11 @@ int X::FindIdx(double tarx,double tary ,int begin,int end)
 //
 int X::FindIdx(double tarx, double tary,double tarz,int begin,int end)
 {
-   if (end==-1) end=fN3-1;
+   if (end==-1) end=N3-1;
    //search using binary search
-   if(begin>=end)return FindIdx(tarx,tary,begin,begin+fN1*fN2-1);
-   int mid=((begin/(fN1*fN2)+end/(fN1*fN2))/2)*fN1*fN2;
-   if(fC3[mid]>=tarz)return FindIdx(tarx,tary,tarz,begin,mid);
+   if(begin>=end)return FindIdx(tarx,tary,begin,begin+N1*N2-1);
+   int mid=((begin/(N1*N2)+end/(N1*N2))/2)*N1*N2;
+   if(C3[mid]>=tarz)return FindIdx(tarx,tary,tarz,begin,mid);
    else return FindIdx(tarx,tary,tarz,mid+1,end);
 }
 //_____________________________________________________________________________
@@ -283,7 +283,7 @@ double X::GetData(double x, double y, double z, double *data)
 {
    int idx=FindIdx(x);
    if (idx==fN) return data[idx];
-   double ab=(-x+fC1[idx])/fdC1p[idx];
+   double ab=(-x+C1[idx])/dC1p[idx];
    double aa=1-ab;
    return data[idx]*ab+data[idx-1]*aa;
 }
@@ -291,14 +291,14 @@ double X::GetData(double x, double y, double z, double *data)
 //
 bool X::CalculateField(int idx)
 {
-   if (fdC1p[idx]==0 || fdC1m[idx]==0) return false;
+   if (dC1p[idx]==0 || dC1m[idx]==0) return false;
 
-   if (idx%fN1==0) // C1 lower boundary
-      fE1[idx]=(fV[idx]-fV[idx+1])/fdC1p[idx];
-   else if (idx%fN1==fN1-1) // C1 upper boundary
-      fE1[idx]=(fV[idx-1]-fV[idx])/fdC1m[idx];
+   if (idx%N1==0) // C1 lower boundary
+      E1[idx]=(V[idx]-V[idx+1])/dC1p[idx];
+   else if (idx%N1==N1-1) // C1 upper boundary
+      E1[idx]=(V[idx-1]-V[idx])/dC1m[idx];
    else // bulk
-      fE1[idx]=(fV[idx-1]-fV[idx+1])/(fdC1m[idx]+fdC1p[idx]);
+      E1[idx]=(V[idx-1]-V[idx+1])/(dC1m[idx]+dC1p[idx]);
 
    return true;
 }
@@ -327,10 +327,10 @@ double X::GetC()
    fImpurity=tmpImpurity;
 
    // calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
-   double dV=V0-V1; if(dV<0)dV=-dV;
+   double dV=Bias[0]-Bias[1]; if(dV<0)dV=-dV;
    double SumofElectricField=0;
    for(int i=0;i<fN;i++) {
-      SumofElectricField+=fE1[i]*fE1[i]*fdC1p[i]*cm*cm;
+      SumofElectricField+=E1[i]*E1[i]*dC1p[i]*cm*cm;
       if (!fIsDepleted[i]) fIsFixed[i]=false;
    }
    double c=SumofElectricField*epsilon/dV/dV;
@@ -353,13 +353,13 @@ TTree* X::GetTree(bool createNew)
    fTree->Branch("e1",&e1,"e1/D");
    fTree->Branch("c1",&c1,"c1/D");
    // initialize values
-   if (fdC1p[0]==0) Initialize(); // setup & initialize grid
+   if (dC1p[0]==0) Initialize(); // setup & initialize grid
 
-   if (fdC2p[0]!=0) { // if it is a 2D grid
+   if (dC2p[0]!=0) { // if it is a 2D grid
       fTree->Branch("e2",&e2,"e2/D");
       fTree->Branch("c2",&c2,"c2/D");
    }
-   if (fdC3p[0]!=0) { // if it is a 3D grid
+   if (dC3p[0]!=0) { // if it is a 3D grid
       fTree->Branch("e3",&e3,"e3/D");
       fTree->Branch("c3",&c3,"c3/D");
    }
@@ -369,12 +369,12 @@ TTree* X::GetTree(bool createNew)
    // fill tree
    Info("GetTree","%d entries",fN);
    for (int i=0; i<fN; i++) {
-      e1= fE1[i]; c1= fC1[i]; // 1D data
-      if (fdC2p[i]!=0) { e2=fE2[i]; c2=fC2[i]; } // 2D data
-      if (fdC3p[i]!=0) { e3=fE3[i]; c3=fC3[i]; } // 3D data
-      v = fV[i]; b = fIsFixed[i]; d = fIsDepleted[i]; // common data
-      if (fdC3p[i]!=0) te=TMath::Sqrt(e1*e1 + e2*e2 + e3*e3);
-      else { if (fdC2p[i]!=0) te=TMath::Sqrt(e1*e1+e2*e2); else te=e1; }
+      e1= E1[i]; c1= C1[i]; // 1D data
+      if (dC2p[i]!=0) { e2=E2[i]; c2=C2[i]; } // 2D data
+      if (dC3p[i]!=0) { e3=E3[i]; c3=C3[i]; } // 3D data
+      v = V[i]; b = fIsFixed[i]; d = fIsDepleted[i]; // common data
+      if (dC3p[i]!=0) te=TMath::Sqrt(e1*e1 + e2*e2 + e3*e3);
+      else { if (dC2p[i]!=0) te=TMath::Sqrt(e1*e1+e2*e2); else te=e1; }
       fTree->Fill();
    }
 
@@ -387,7 +387,7 @@ TTree* X::GetTree(bool createNew)
 void X::SetGridImpurity()
 {
    if (fImpDist && fImpurity[0]==0) // set impurity values if it's not done yet
-      for (int i=fN;i-->0;) fImpurity[i]=fImpDist->Eval(fC1[i], fC2[i], fC3[i]);
+      for (int i=fN;i-->0;) fImpurity[i]=fImpDist->Eval(C1[i], C2[i], C3[i]);
 }
 //_____________________________________________________________________________
 //

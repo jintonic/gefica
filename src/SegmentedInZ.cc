@@ -12,31 +12,31 @@ void SegmentedInZ::InitializeGrid()
    if (InnerR>=OuterR) Fatal("InitializeGrid",
             "Inner R (%.1f) >= outer R (%.1f)! Abort!", InnerR, OuterR);
 
-   double stepLength=(OuterR-InnerR)/(fN1-1);
-   SetStepLength(stepLength,2*3.14159265/fN2);
+   double stepLength=(OuterR-InnerR)/(N1-1);
+   SetStepLength(stepLength,2*3.14159265/N2);
 
-   for(int i=fN;i-->0;) fC1[i]=fC1[i]+InnerR;
-   for (int i=0;i<fN;i=i+fN1) {
-      fV[i]=V1;
-      fV[i+fN1-1]=V1;
+   for(int i=fN;i-->0;) C1[i]=C1[i]+InnerR;
+   for (int i=0;i<fN;i=i+N1) {
+      V[i]=Bias[1];
+      V[i+N1-1]=Bias[1];
       fIsFixed[i]=true;
-      fIsFixed[i+fN1-1]=true;
+      fIsFixed[i+N1-1]=true;
    }
    SegmentId=SegmentId%Nseg;
    double segbegin=SegmentId*Z/Nseg;
    double segend=(SegmentId+1)*Z/Nseg;
-   for (int i=fN1-1;i<fN;i=i+fN1) {
-     if(fC2[i]>=segbegin&&fC2[i]<=segend)
+   for (int i=N1-1;i<fN;i=i+N1) {
+     if(C2[i]>=segbegin&&C2[i]<=segend)
      {
-        fV[i]=V0;
+        V[i]=Bias[0];
      }
-     if(fC2[i]-segend<fdC2m[i]&&fC2[i]>segend)
+     if(C2[i]-segend<dC2m[i]&&C2[i]>segend)
      {
-        fdC2m[i]=fC2[i]-segend;
+        dC2m[i]=C2[i]-segend;
      }
-     if(-fC2[i]+segend<fdC2p[i]&&fC2[i]<segend)
+     if(-C2[i]+segend<dC2p[i]&&C2[i]<segend)
      {
-        fdC2p[i]=-fC2[i]+segend;
+        dC2p[i]=-C2[i]+segend;
      }
    }
 }

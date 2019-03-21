@@ -16,36 +16,36 @@ void RThetaPhi::OverRelaxAt(int idx)
    if (fIsFixed[idx])return;
 
    double density=fImpurity[idx]*Qe;
-   double h2=fdC1m[idx];
-   double h3=fdC1p[idx];
-   double h4=fdC2m[idx];
-   double h1=fdC2p[idx];
-   double h0=fdC3m[idx];
-   double h5=fdC3p[idx];
+   double h2=dC1m[idx];
+   double h3=dC1p[idx];
+   double h4=dC2m[idx];
+   double h1=dC2p[idx];
+   double h0=dC3m[idx];
+   double h5=dC3p[idx];
 
    // get potentials of points around point idx
    double pthetam,pthetap,prm,prp,pphip,pphim;
-   if (idx<fN1*fN2) pphim=fV[idx+fN-fN1*fN2];
-   else pphim=fV[idx-fN1*fN2];
-   if (idx>=fN-fN1*fN2) pphip=fV[idx-(fN-fN1*fN2)];
-   else pphip=fV[idx+fN1*fN2];
-   if (idx%(fN1*fN2)>(fN1*fN2)-fN1-1) {
-      if(idx<fN/2) pthetap=fV[idx+fN/2];
-      else pthetap=fV[idx-fN/2];
+   if (idx<N1*N2) pphim=V[idx+fN-N1*N2];
+   else pphim=V[idx-N1*N2];
+   if (idx>=fN-N1*N2) pphip=V[idx-(fN-N1*N2)];
+   else pphip=V[idx+N1*N2];
+   if (idx%(N1*N2)>(N1*N2)-N1-1) {
+      if(idx<fN/2) pthetap=V[idx+fN/2];
+      else pthetap=V[idx-fN/2];
    } else
-      pthetap=fV[idx+fN1];
-   if (idx%(fN1*fN2)<fN1) {
-      if(idx<fN/2)pthetam=fV[idx+fN/2];
-      else pthetam=fV[idx-fN/2];
+      pthetap=V[idx+N1];
+   if (idx%(N1*N2)<N1) {
+      if(idx<fN/2)pthetam=V[idx+fN/2];
+      else pthetam=V[idx-fN/2];
    } else
-      pthetam=fV[idx-fN1];
-   if ((idx%(fN1*fN2))%fN1==fN1-1) prp=fV[idx];
-   else prp=fV[idx+1];
-   if ((idx%(fN1*fN2))%fN1==0) prm=fV[idx];
-   else prm=fV[idx-1];
+      pthetam=V[idx-N1];
+   if ((idx%(N1*N2))%N1==N1-1) prp=V[idx];
+   else prp=V[idx+1];
+   if ((idx%(N1*N2))%N1==0) prm=V[idx];
+   else prm=V[idx-1];
 
-   double r=fC1[idx];
-   double O=fC2[idx];
+   double r=C1[idx];
+   double O=C2[idx];
    double tmp = (density/epsilon/2
          +(prp-prm)/r/(h2+h3)
          +(pthetap-pthetam)/r/r/(h1+h4)/sin(O)*cos(O)/2
@@ -70,55 +70,55 @@ void RThetaPhi::OverRelaxAt(int idx)
    if (max<pthetam)max=pthetam;
    if (max<pthetam)max=pthetam;
    //if tmp is greater or smaller than max and min, set tmp to it.
-   //fV[idx]=RelaxationFactor*(tmp-fV[idx])+fV[idx];
+   //V[idx]=RelaxationFactor*(tmp-V[idx])+V[idx];
    //if need calculate depleted voltage
-   double oldP=fV[idx];
+   double oldP=V[idx];
    tmp=RelaxationFactor*(tmp-oldP)+oldP;
    if(tmp<min) {
-      fV[idx]=min;
+      V[idx]=min;
       fIsDepleted[idx]=false;
    } else if(tmp>max) {
-      fV[idx]=max;
+      V[idx]=max;
       fIsDepleted[idx]=false;
    } else
       fIsDepleted[idx]=true;
 
-   if(fIsDepleted[idx]||V0==V1) fV[idx]=tmp;
+   if(fIsDepleted[idx]||Bias[0]==Bias[1]) V[idx]=tmp;
 }
 //_____________________________________________________________________________
 //
 double RThetaPhi::GetData(double x, double y, double z, double *data)
 {
    int idx=FindIdx(x,y,z,0,fN);
-   double ab=(x-fC1[idx])/fdC1p[idx];
+   double ab=(x-C1[idx])/dC1p[idx];
    double aa=1-ab;
-   double ba=(y-fC2[idx])/fdC2p[idx];
+   double ba=(y-C2[idx])/dC2p[idx];
    double bb=1-ba;
-   double ac=(z-fC3[idx])/fdC3p[idx];
+   double ac=(z-C3[idx])/dC3p[idx];
    double ca=1-ac;
    double tar0,tar1,tar2,tar3,tar4,tar5,tar6,tar7;
-   if(y==0)return (data[fN1*fN2-1]+data[fN1*fN2-1+fN/2])/2;
+   if(y==0)return (data[N1*N2-1]+data[N1*N2-1+fN/2])/2;
    tar3=-1;
    tar5=-1;
    tar6=-1;
    tar7=-1;
    tar0=data[idx];
-   if(idx>=(fN-fN1*fN2)) {
-      tar4=data[idx-fN+fN1*fN2];
-      tar5=data[idx-fN+fN1*fN2+1];
-      tar6=data[idx-fN+fN1*fN2+fN1];
-      tar7=data[idx-fN+fN1*fN2+fN1+1];
+   if(idx>=(fN-N1*N2)) {
+      tar4=data[idx-fN+N1*N2];
+      tar5=data[idx-fN+N1*N2+1];
+      tar6=data[idx-fN+N1*N2+N1];
+      tar7=data[idx-fN+N1*N2+N1+1];
    } else
-      tar4=data[idx+fN1*fN2];
+      tar4=data[idx+N1*N2];
 
-   if(idx%(fN1*fN2)%fN1==fN1-1) {tar2=0;tar3=0;tar6=0;tar7=0;}
-   else {tar2=data[idx+fN1];}
-   if(idx%(fN1*fN2)/fN1==fN2-1) {tar1=0;tar3=0;tar5=0;tar7=0;}
+   if(idx%(N1*N2)%N1==N1-1) {tar2=0;tar3=0;tar6=0;tar7=0;}
+   else {tar2=data[idx+N1];}
+   if(idx%(N1*N2)/N1==N2-1) {tar1=0;tar3=0;tar5=0;tar7=0;}
    else {tar1=data[idx+1];}
-   if(tar3==-1)tar3=data[idx+fN1+1];
-   if(tar5==-1)tar5=data[idx+fN1*fN2+1];
-   if(tar6==-1)tar6=data[idx+fN1*fN2+fN1];
-   if(tar7==-1)tar7=data[idx+fN1*fN2+fN1+1];
+   if(tar3==-1)tar3=data[idx+N1+1];
+   if(tar5==-1)tar5=data[idx+N1*N2+1];
+   if(tar6==-1)tar6=data[idx+N1*N2+N1];
+   if(tar7==-1)tar7=data[idx+N1*N2+N1+1];
 
    return ((tar0*aa+tar1*ab)*ba+(tar2*aa+tar3*ab)*bb)*ac
       +((tar4*aa+tar5*ab)*ba+(tar6*aa+tar7*ab)*bb)*ca;

@@ -14,7 +14,7 @@ class GeFiCa::XYZ : public GeFiCa::XY
       /**
        * Default constructor.
        */
-      XYZ(int fN1=101, int fN2=101, int fN3=11, const char *name="xyz",
+      XYZ(int N1=101, int N2=101, int N3=11, const char *name="xyz",
             const char *title="3D coordinates");
       virtual ~XYZ();
 

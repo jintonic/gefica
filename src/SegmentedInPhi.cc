@@ -18,28 +18,28 @@ void SegmentedInPhi::InitializeGrid()
    if (SegmentId<0)SegmentId=-SegmentId;
    if(SegmentId>Nseg)SegmentId=SegmentId%Nseg;
 
-   double steplength1=(OuterR-InnerR)/(fN1-1);
-   double steplength2=2*TMath::Pi()/(fN2);
+   double steplength1=(OuterR-InnerR)/(N1-1);
+   double steplength2=2*TMath::Pi()/(N2);
    double SegmentUpperBound=2*TMath::Pi()*SegmentId/Nseg;
    double SegmentLowerBound=2*TMath::Pi()*(SegmentId-1)/Nseg;
    SetStepLength(steplength1,steplength2);
    for(int i=0;i<fN;i++) {
-      fC1[i]+=InnerR;
-      if(i%fN1==0) {
+      C1[i]+=InnerR;
+      if(i%N1==0) {
          fIsFixed[i]=true;
-         if(SegmentId==0)fV[i]=V1;
-         else fV[i]=V0;
-      } else if(i%fN1==fN1-1) { //need shift boundary as pointcontact
+         if(SegmentId==0)V[i]=Bias[1];
+         else V[i]=Bias[0];
+      } else if(i%N1==N1-1) { //need shift boundary as pointcontact
          fIsFixed[i]=true;
-         if(SegmentId==0)fV[i]=V0;
-         else if(fC2[i]<=SegmentUpperBound&&fC2[i]>=SegmentLowerBound) {
-            fV[i]=V1;
-         } else if(fC2[i]>=SegmentUpperBound||fC2[i]<=SegmentLowerBound) {
-            fV[i]=V0;
+         if(SegmentId==0)V[i]=Bias[0];
+         else if(C2[i]<=SegmentUpperBound&&C2[i]>=SegmentLowerBound) {
+            V[i]=Bias[1];
+         } else if(C2[i]>=SegmentUpperBound||C2[i]<=SegmentLowerBound) {
+            V[i]=Bias[0];
          }
       } else {
          fIsFixed[i]=false;
-         fV[i]=0;
+         V[i]=0;
       }
    }
 }

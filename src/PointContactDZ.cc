@@ -27,37 +27,37 @@ PointContactDZ::PointContactDZ(int nd, int nz, const char *name,
 void PointContactDZ::SetBoundary()
 {
    for(int i=0;i<fN;i++) {
-      if (fC2[i]-PointContactH<fdC2m[i]&&fC2[i]>PointContactH
-            &&fC1[i]<PointContactR&&fC1[i]>-PointContactR)
-         fdC2m[i]=fC2[i]-PointContactH;
-      if(fC1[i]-PointContactR<fdC1m[i]&&fC1[i]>0&&fC2[i]<PointContactH)
-         fdC1m[i]=fC1[i]-PointContactR;
-      if(-fC1[i]-PointContactR<fdC1p[i]&&fC1[i]<0&&fC2[i]<PointContactH)
-         fdC1p[i]=-fC1[i]-PointContactR;
-      if(WrapAroundR-fC1[i]<fdC1p[i]&&fC1[i]<WrapAroundR&&i<fN1)
-         fdC1p[i]=WrapAroundR-fC1[i];
-      if(WrapAroundR+fC1[i]<fdC1p[i]&&fC1[i]>-WrapAroundR&&i<fN1)
-         fdC1m[i]=WrapAroundR+fC1[i];
+      if (C2[i]-PointContactH<dC2m[i]&&C2[i]>PointContactH
+            &&C1[i]<PointContactR&&C1[i]>-PointContactR)
+         dC2m[i]=C2[i]-PointContactH;
+      if(C1[i]-PointContactR<dC1m[i]&&C1[i]>0&&C2[i]<PointContactH)
+         dC1m[i]=C1[i]-PointContactR;
+      if(-C1[i]-PointContactR<dC1p[i]&&C1[i]<0&&C2[i]<PointContactH)
+         dC1p[i]=-C1[i]-PointContactR;
+      if(WrapAroundR-C1[i]<dC1p[i]&&C1[i]<WrapAroundR&&i<N1)
+         dC1p[i]=WrapAroundR-C1[i];
+      if(WrapAroundR+C1[i]<dC1p[i]&&C1[i]>-WrapAroundR&&i<N1)
+         dC1m[i]=WrapAroundR+C1[i];
    }
    double k=TaperH/(TaperW);
    double b=-(Radius-TaperW)*k;
 
    for(int i=0;i<fN;i++) {
-      if(fC2[i]<=fC1[i]*k+b) {
+      if(C2[i]<=C1[i]*k+b) {
          fIsFixed[i]=true;
-         fV[i]=V1;
+         V[i]=Bias[1];
       }
-      if(fC2[i]<=-fC1[i]*k+b) {
+      if(C2[i]<=-C1[i]*k+b) {
          fIsFixed[i]=true;
-         fV[i]=V1;
+         V[i]=Bias[1];
       }
-      if(fC2[i]-(fC1[i]*k+b)<fdC2p[i]) {
-         fdC2m[i]=fC2[i]-(k*fC1[i]+b);
-         fdC1p[i]=fC1[i]-b/k-fC2[i]/k;
+      if(C2[i]-(C1[i]*k+b)<dC2p[i]) {
+         dC2m[i]=C2[i]-(k*C1[i]+b);
+         dC1p[i]=C1[i]-b/k-C2[i]/k;
       }
-      if(fC2[i]-(-k*fC1[i]+b)<fdC2m[i]) {
-         fdC2m[i]=fC2[i]-(-fC1[i]*k+b);
-         fdC1m[i]=-fC1[i]/k-b/k-fC2[i];
+      if(C2[i]-(-k*C1[i]+b)<dC2m[i]) {
+         dC2m[i]=C2[i]-(-C1[i]*k+b);
+         dC1m[i]=-C1[i]/k-b/k-C2[i];
       }
    }
    double x1=HoleTaperW,
@@ -77,47 +77,47 @@ void PointContactDZ::SetBoundary()
    for (int i=0;i<fN;i++) {
       if (x1!=x2) {
          //right side of hole taper
-         if (fC1[i]-fC2[i]/k1+b1/k1<fdC1m[i] && fC2[i]>y2 &&
-               fC1[i]-fC2[i]/k1+b1/k1>0)
-            fdC1m[i]=fC1[i]-fC2[i]/k1+b1/k1;
+         if (C1[i]-C2[i]/k1+b1/k1<dC1m[i] && C2[i]>y2 &&
+               C1[i]-C2[i]/k1+b1/k1>0)
+            dC1m[i]=C1[i]-C2[i]/k1+b1/k1;
          //left side of hole taper
-         if (-fC1[i]-fC2[i]/k1+b1/k1>0
-               &&-fC1[i]-fC2[i]/k1+b1/k1<fdC1p[i]&&fC2[i]>y2)
-            fdC1p[i]=-fC1[i]-fC2[i]/k1+b1/k1;
+         if (-C1[i]-C2[i]/k1+b1/k1>0
+               &&-C1[i]-C2[i]/k1+b1/k1<dC1p[i]&&C2[i]>y2)
+            dC1p[i]=-C1[i]-C2[i]/k1+b1/k1;
       } else { //x1==x2
          //right side of hole taper
-         if (fC1[i]-x1<fdC1m[i] && fC2[i]>y2 && fC1[i]-x1>0) fdC1m[i]=fC1[i]-x1;
+         if (C1[i]-x1<dC1m[i] && C2[i]>y2 && C1[i]-x1>0) dC1m[i]=C1[i]-x1;
          //left side of hole taper
-         if (-fC1[i]-x1>0&&-fC1[i]-x1<fdC1p[i]&&fC2[i]>y2) fdC1p[i]=-fC1[i]-x1;
+         if (-C1[i]-x1>0&&-C1[i]-x1<dC1p[i]&&C2[i]>y2) dC1p[i]=-C1[i]-x1;
       }
       //right side of hole taper
-      if (fC1[i]-HoleR<fdC1m[i] && fC2[i]>HoleH && fC1[i]-HoleR>0)
-          fdC1m[i]=fC1[i]-HoleR;
+      if (C1[i]-HoleR<dC1m[i] && C2[i]>HoleH && C1[i]-HoleR>0)
+          dC1m[i]=C1[i]-HoleR;
       //left side of hole
-      if (-fC1[i]-HoleR>0&&-fC1[i]-HoleR<fdC1p[i]&&fC2[i]>HoleH)
-         fdC1p[i]=-fC1[i]-HoleR;
+      if (-C1[i]-HoleR>0&&-C1[i]-HoleR<dC1p[i]&&C2[i]>HoleH)
+         dC1p[i]=-C1[i]-HoleR;
       //left corner
-      if (fC1[i]+fC2[i]/k2-b2/k2>0 && fC1[i]+fC2[i]/k2-b2/k2<fdC1m[i] &&
-            fC2[i]>y4) fdC1m[i]=fC1[i]+fC2[i]/k2-b2/k2;
+      if (C1[i]+C2[i]/k2-b2/k2>0 && C1[i]+C2[i]/k2-b2/k2<dC1m[i] &&
+            C2[i]>y4) dC1m[i]=C1[i]+C2[i]/k2-b2/k2;
       //right corner
-      if (-fC1[i]+fC2[i]/k2-b2/k2>0
-            &&-fC1[i]+fC2[i]/k2-b2/k2<fdC1p[i]&&fC2[i]>y4)
-         fdC1p[i]=-fC1[i]+fC2[i]/k2-b2/k2;
+      if (-C1[i]+C2[i]/k2-b2/k2>0
+            &&-C1[i]+C2[i]/k2-b2/k2<dC1p[i]&&C2[i]>y4)
+         dC1p[i]=-C1[i]+C2[i]/k2-b2/k2;
       //down right side of hole
-      if (-fC2[i]+fC1[i]*k1+b1>0&&-fC2[i]+fC1[i]*k1+b1<fdC2p[i]&&fC2[i]>y2)
-         fdC2p[i]=-fC2[i]+fC1[i]*k1+b1;
+      if (-C2[i]+C1[i]*k1+b1>0&&-C2[i]+C1[i]*k1+b1<dC2p[i]&&C2[i]>y2)
+         dC2p[i]=-C2[i]+C1[i]*k1+b1;
       //down right of corner
-      if (-fC2[i]-fC1[i]*k2+b2>0&&-fC2[i]-fC1[i]*k2+b2<fdC2p[i]&&fC2[i]>y4)
-         fdC2p[i]=-fC2[i]-fC1[i]*k2+b2;
+      if (-C2[i]-C1[i]*k2+b2>0&&-C2[i]-C1[i]*k2+b2<dC2p[i]&&C2[i]>y4)
+         dC2p[i]=-C2[i]-C1[i]*k2+b2;
       //down left side of hole
-      if (-fC2[i]-fC1[i]*k1+b1>0&&-fC2[i]-fC1[i]*k1+b1<fdC2p[i]&&fC2[i]>y2)
-         fdC2p[i]=-fC2[i]-fC1[i]*k1+b1;
+      if (-C2[i]-C1[i]*k1+b1>0&&-C2[i]-C1[i]*k1+b1<dC2p[i]&&C2[i]>y2)
+         dC2p[i]=-C2[i]-C1[i]*k1+b1;
       //down left of corner
-      if (-fC2[i]+fC1[i]*k2+b2>0&&-fC2[i]+fC1[i]*k2+b2<fdC2p[i]&&fC2[i]>y4)
-         fdC2p[i]=-fC2[i]+fC1[i]*k2+b2;
+      if (-C2[i]+C1[i]*k2+b2>0&&-C2[i]+C1[i]*k2+b2<dC2p[i]&&C2[i]>y4)
+         dC2p[i]=-C2[i]+C1[i]*k2+b2;
       //down center of hole
-      if (y2-fC2[i]<fdC2p[i]&&fC1[i]>-HoleR&&fC1[i]<HoleR)
-         fdC2p[i]=y2-fC2[i];
+      if (y2-C2[i]<dC2p[i]&&C1[i]>-HoleR&&C1[i]<HoleR)
+         dC2p[i]=y2-C2[i];
    }
 }
 //_____________________________________________________________________________
@@ -125,40 +125,40 @@ void PointContactDZ::SetBoundary()
 void PointContactDZ::InitializeGrid()
 {
    // we want no grid point right on z-axis
-   if (fN1%2==1) {
+   if (N1%2==1) {
       Error("InitializeGrid", "Number of points in D can't be odd! Abort.");
       abort();
    }
 
    if (WrapAroundR<0) WrapAroundR=Radius-TaperW;
-   SetStepLength(2*Radius/(fN1-1),Height/(fN2-1));
-   for(int i=fN;i-->0;) fC1[i]=fC1[i]-Radius;
+   SetStepLength(2*Radius/(N1-1),Height/(N2-1));
+   for(int i=fN;i-->0;) C1[i]=C1[i]-Radius;
 
    // set initial potential values
    for(int i=fN;i-->0;) {
-      fV[i]=(V1+V0)/2;
+      V[i]=(Bias[1]+Bias[0])/2;
       // set potential for inner electrodes
-      if(fC1[i]>=-PointContactR && fC1[i]<=PointContactR
-            && fC2[i]<=PointContactH) {
-         fV[i]=V0;
+      if(C1[i]>=-PointContactR && C1[i]<=PointContactR
+            && C2[i]<=PointContactH) {
+         V[i]=Bias[0];
          fIsFixed[i]=true;
       }
    }
    // set potential for outer electrodes
-   for(int i=fN-1;i>=fN-fN1;i--) {
+   for(int i=fN-1;i>=fN-N1;i--) {
       fIsFixed[i]=true;
-      fV[i]=V1;
+      V[i]=Bias[1];
    }
-   for(int i=0;i<fN-fN1;i=i+fN1) {
+   for(int i=0;i<fN-N1;i=i+N1) {
       fIsFixed[i]=true;
-      fIsFixed[i+fN1-1]=true;
-      fV[i]=V1;
-      fV[i+fN1-1]=V1;
+      fIsFixed[i+N1-1]=true;
+      V[i]=Bias[1];
+      V[i+N1-1]=Bias[1];
    }
-   for (int i=0;i<fN1;i++) {
-      if(fC1[i]>=WrapAroundR||fC1[i]<=-WrapAroundR) {
+   for (int i=0;i<N1;i++) {
+      if(C1[i]>=WrapAroundR||C1[i]<=-WrapAroundR) {
          fIsFixed[i]=true;
-         fV[i]=V1;
+         V[i]=Bias[1];
       }
    }
 
@@ -176,34 +176,34 @@ void PointContactDZ::InitializeGrid()
    double b2=(y3-k2*x3);
    if(x3!=x4)
       for(int i=0;i<fN;i++) {
-         if(fC2[i]>-k2*(fC1[i])+b2||(fC2[i]>k2*(fC1[i])+b2)) {
+         if(C2[i]>-k2*(C1[i])+b2||(C2[i]>k2*(C1[i])+b2)) {
             fIsFixed[i]=true;
-            fV[i]=V1;
+            V[i]=Bias[1];
          }
       }
    if(x1!=x2) {
       for (int i=0;i<fN;i++) {
-         if(((fC2[i]>-k1*(fC1[i])+b1 && fC2[i]>y2))&&fC1[i]<0) {
+         if(((C2[i]>-k1*(C1[i])+b1 && C2[i]>y2))&&C1[i]<0) {
             fIsFixed[i]=true;
-            fV[i]=V1;
+            V[i]=Bias[1];
          }
-         if(((fC2[i]>k1*(fC1[i])+b1 && fC2[i]>y2))&&fC1[i]>0) {
+         if(((C2[i]>k1*(C1[i])+b1 && C2[i]>y2))&&C1[i]>0) {
             fIsFixed[i]=true;
-            fV[i]=V1;
+            V[i]=Bias[1];
          }
       }
    } else { //x1==x2
       for (int i=0;i<fN;i++) {
-         if(fC1[i]<=x1&&fC1[i]>=-x1&&fC2[i]>=y2) {
+         if(C1[i]<=x1&&C1[i]>=-x1&&C2[i]>=y2) {
             fIsFixed[i]=true;
-            fV[i]=V1;
+            V[i]=Bias[1];
          }
       }
    }
    for (int i=0;i<fN;i++) {
-      if(fC1[i]<=HoleR&&fC1[i]>=-HoleR&&fC2[i]>=Height-HoleH) {
+      if(C1[i]<=HoleR&&C1[i]>=-HoleR&&C2[i]>=Height-HoleH) {
          fIsFixed[i]=true;
-         fV[i]=V1;
+         V[i]=Bias[1];
       }
    }
    SetBoundary();
@@ -224,16 +224,16 @@ void PointContactDZ::Export2fieldgen(const char *output)
    file<<"# wrap_around_radius "<<WrapAroundR/mm<<endl;
    file<<"# ditch_depth "<<GrooveH/mm<<endl;
    file<<"# ditch_thickness "<<GrooveW/mm<<endl;
-   file<<"# xtal_grid "<<fdC1p[0]/mm<<endl;
+   file<<"# xtal_grid "<<dC1p[0]/mm<<endl;
    file<<"# impurity_z0 "<<fImpurity[0]*cm3<<endl;
    file<<"# impurity_gradient "
-      <<(fImpurity[fN-1]-fImpurity[0])/fdC2p[0]*cm*cm3<<endl;
-   file<<"# xtal_HV      "<<abs(V0-V1)/volt<<endl;
+      <<(fImpurity[fN-1]-fImpurity[0])/dC2p[0]*cm*cm3<<endl;
+   file<<"# xtal_HV      "<<abs(Bias[0]-Bias[1])/volt<<endl;
    file<<"# max_iterations "<<GetNsor()<<endl;
    file<<"#"<<endl;
    file<<"## r (mm), z (mm), V (V),  E (V/cm), E_r (V/cm), E_z (V/cm)"<<endl;
-   for (int i=0;i<fN;i++) file<<fC1[i]<<" "<<fC2[i]<<" "<<fV[i]<<" "
-      <<sqrt(fE1[i]*fE1[i]+fE2[i]*fE2[i])<<" "<<fE1[i]<<" "<<fE2[i]<<endl;
+   for (int i=0;i<fN;i++) file<<C1[i]<<" "<<C2[i]<<" "<<V[i]<<" "
+      <<sqrt(E1[i]*E1[i]+E2[i]*E2[i])<<" "<<E1[i]<<" "<<E2[i]<<endl;
    file.close();
 }
 //_____________________________________________________________________________
@@ -253,9 +253,9 @@ void PointContactDZ::SetGridImpurity()
       abort();
    } else {
       for (int i=0; i<fN; i++) {
-         if (((fC1[i]>WrapAroundR-GrooveW && fC1[i]<WrapAroundR) ||
-                  (fC1[i]>-WrapAroundR && fC1[i]<-WrapAroundR+GrooveW))
-               && fC2[i]<GrooveH) fImpurity[i]=0;
+         if (((C1[i]>WrapAroundR-GrooveW && C1[i]<WrapAroundR) ||
+                  (C1[i]>-WrapAroundR && C1[i]<-WrapAroundR+GrooveW))
+               && C2[i]<GrooveH) fImpurity[i]=0;
       }
    }
 }
@@ -263,6 +263,6 @@ void PointContactDZ::SetGridImpurity()
 //
 double PointContactDZ::GetData(double x, double y, double z, double *data)
 {
-   //if (point in boundary) return V1;
+   //if (point in boundary) return Bias[1];
    return XY::GetData(x,y,z,data);
 }
