@@ -7,7 +7,7 @@
 #include "Units.h"
 using namespace GeFiCa;
 
-X::X(int nx, const char *name, const char *title) : TNamed(name,title), Bias[0](0),
+Grid::X(int nx, const char *name, const char *title) : TNamed(name,title), Bias[0](0),
    Bias[1](2e3*volt), MaxIterations(5000), RelaxationFactor(1.94), Precision(1e-7*volt),
    Gsor(0), fN(nx), fN1(nx), fN2(0), fN3(0), fTree(0), fImpDist(0)
 {
@@ -61,7 +61,7 @@ X::X(int nx, const char *name, const char *title) : TNamed(name,title), Bias[0](
 }
 //_____________________________________________________________________________
 //
-X::~X()
+Grid::~X()
 {
    if (V) delete[] V;
    if (E1) delete[] E1;
@@ -74,7 +74,7 @@ X::~X()
 }
 //_____________________________________________________________________________
 //
-X& X::operator+=(GeFiCa::X *other)
+X& Grid::operator+=(GeFiCa::X *other)
 {
    if (fN!=other->fN) {
       Warning("+=", 
@@ -90,7 +90,7 @@ X& X::operator+=(GeFiCa::X *other)
 }
 //_____________________________________________________________________________
 //
-X& X::operator*=(double p)
+X& Grid::operator*=(double p)
 {
    for (int i=0; i<fN; i++) V[i]=V[i]*p;
    Bias[0]*=p; Bias[1]*=p;
@@ -98,7 +98,7 @@ X& X::operator*=(double p)
 }
 //_____________________________________________________________________________
 //
-int X::GetIdxOfMaxV()
+int Grid::GetIdxOfMaxV()
 {
    double max=V[0];
    int maxn=0;
@@ -112,7 +112,7 @@ int X::GetIdxOfMaxV()
 }
 //_____________________________________________________________________________
 //
-int X::GetIdxOfMinV()
+int Grid::GetIdxOfMinV()
 {
    double min=V[0];
    int minn=0;
@@ -126,7 +126,7 @@ int X::GetIdxOfMinV()
 }
 //_____________________________________________________________________________
 //
-bool X::IsDepleted()
+bool Grid::IsDepleted()
 {
    for(int i=0;i<fN;i++) {
       OverRelaxAt(i); // calculate one more time in case of 
@@ -137,7 +137,7 @@ bool X::IsDepleted()
 }
 //_____________________________________________________________________________
 //
-void X::SetStepLength(double stepLength)
+void Grid::SetStepLength(double stepLength)
 {
    for (int i=fN;i-->0;) {
       fIsFixed[i]=false;
@@ -148,7 +148,7 @@ void X::SetStepLength(double stepLength)
 }
 //_____________________________________________________________________________
 //
-int* X::FindSurroundingMatrix(int idx)
+int* Grid::FindSurroundingMatrix(int idx)
 {
    int *tmp=new int[3];
    tmp[0]=idx;
@@ -160,7 +160,7 @@ int* X::FindSurroundingMatrix(int idx)
 }
 //_____________________________________________________________________________
 //
-bool X::SuccessiveOverRelax()
+bool Grid::SuccessiveOverRelax()
 {
    if (dC1p[0]==0) Initialize(); // setup and initialize grid if it's not done
 
@@ -202,7 +202,7 @@ bool X::SuccessiveOverRelax()
 }
 //_____________________________________________________________________________
 //
-void X::OverRelaxAt(int idx)
+void Grid::OverRelaxAt(int idx)
 {
    // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return ;
@@ -241,7 +241,7 @@ void X::OverRelaxAt(int idx)
 }
 //_____________________________________________________________________________
 //
-int X::FindIdx(double tarx,int begin,int end)
+int Grid::FindIdx(double tarx,int begin,int end)
 {
    if (end==-1) end=fN1-1;
    //search using binary search
@@ -252,7 +252,7 @@ int X::FindIdx(double tarx,int begin,int end)
 }
 //_____________________________________________________________________________
 //
-int X::FindIdx(double tarx,double tary ,int begin,int end)
+int Grid::FindIdx(double tarx,double tary ,int begin,int end)
 {
    if (end==-1) end=fN2-1;
    //search using binary search
@@ -267,7 +267,7 @@ int X::FindIdx(double tarx,double tary ,int begin,int end)
 }
 //_____________________________________________________________________________
 //
-int X::FindIdx(double tarx, double tary,double tarz,int begin,int end)
+int Grid::FindIdx(double tarx, double tary,double tarz,int begin,int end)
 {
    if (end==-1) end=fN3-1;
    //search using binary search
@@ -278,7 +278,7 @@ int X::FindIdx(double tarx, double tary,double tarz,int begin,int end)
 }
 //_____________________________________________________________________________
 //
-double X::GetData(double x, double y, double z, double *data)
+double Grid::GetData(double x, double y, double z, double *data)
 {
    int idx=FindIdx(x);
    if (idx==fN) return data[idx];
@@ -288,7 +288,7 @@ double X::GetData(double x, double y, double z, double *data)
 }
 //_____________________________________________________________________________
 //
-bool X::CalculateField(int idx)
+bool Grid::CalculateField(int idx)
 {
    if (dC1p[idx]==0 || dC1m[idx]==0) return false;
 
@@ -303,7 +303,7 @@ bool X::CalculateField(int idx)
 }
 //_____________________________________________________________________________
 //
-double X::GetC()
+double Grid::GetC()
 {
    Info("GetC","Start...");
    SuccessiveOverRelax(); // identify undepleted region
@@ -338,7 +338,7 @@ double X::GetC()
 }
 //_____________________________________________________________________________
 //
-TTree* X::GetTree(bool createNew)
+TTree* Grid::GetTree(bool createNew)
 {
    if (fTree) { if (createNew) delete fTree; else return fTree; }
 
@@ -383,14 +383,14 @@ TTree* X::GetTree(bool createNew)
 }
 //_____________________________________________________________________________
 //
-void X::SetGridImpurity()
+void Grid::SetGridImpurity()
 {
    if (fImpDist && fImpurity[0]==0) // set impurity values if it's not done yet
       for (int i=fN;i-->0;) fImpurity[i]=fImpDist->Eval(C1[i], C2[i], C3[i]);
 }
 //_____________________________________________________________________________
 //
-int X::GetNsor()
+int Grid::GetNsor()
 {
    if (Gsor) return Gsor->GetX()[Gsor->GetN()-1];
    else return 0;
