@@ -111,72 +111,82 @@ double XY::GetData(double x, double y, double z, double *data)
    //       bmv
    int idx=FindIdx(x,y); // always exists
 
+   
    bool tl=false; // existence of top left grid point
    bool br=false; // existence of bottom right grid point
    bool bl=false; // existence of bottom left grid point
    if (idx%N1!=0) tl=true; // not left boundary
    if (idx>=N1) br=true; // not bottom boundary
    if (tl&&bl) bl=true; // neither left nor bottom boundary
-
-   double tmv; // interpolated value at (x, C2[idx])
-   double bmv; // interpolated value at (x, C2[idx-N1])
-   double dyp; // distance between (x,y) and (x, C2[idx]) or a boundary point
-   double dym; // distance between (x,y) and (x, C2[idx-N1]) or a boundary point
-
-   if (tl) { // interpolate tl & tr points if both tl and tr exist
-      double trv,tlv,aa,ab;
-      double xb; // x of boundary crossing point on horizontal lines
-      // in case of normal condistion xb == C1[idx]
-      xb=dC1m[idx]<dC1p[idx-1] ? C1[idx]-dC1m[idx] : C1[idx-1]+dC1p[idx-1];
-      if (x<xb) { // xb is on the right of x
-         tlv=data[idx-1];
-         if(fIsFixed[idx-1]) trv=data[idx-1]; // left is outside of crystal
-         else trv=data[idx]; // right is outside of crystal or normal condition
-         aa=x-C1[idx-1];
-         ab=xb-x;
-      } else { // xb is on the left of x
-         trv=data[idx];
-         if (fIsFixed[idx]) tlv=data[idx]; // right is outside of crystal
-         else tlv=data[idx-1]; // left is outside of crystal or normal 
-         ab=C1[idx]-x;
-         aa=x-xb;
-      }
-      tmv = trv*aa/(aa+ab) + tlv*ab/(aa+ab);
-   } else tmv=data[idx];
-
-   if(br&&bl) {
-      double brv,blv,aa,ab;
-      double xb; // x of boundary crossing point on horizontal lines
-      // in case of normal condistion xb == C1[idx]
-      xb=dC1m[idx-N1]<dC1p[idx-N1-1] ? C1[idx-N1]-dC1m[idx-N1] : C1[idx-N1-1]+dC1p[idx-N1-1];
-      if (x<xb) { // xb is on the right of x
-         blv=data[idx-N1-1];
-         if(fIsFixed[idx-N1-1]) brv=data[idx-N1-1]; // left is outside of crystal
-         else brv=data[idx-N1]; // right is outside of crystal or normal condition
-         aa=x-C1[idx-N1-1];
-         ab=xb-x;
-      } else { // xb is on the left of x
-         brv=data[idx-N1];
-         if (fIsFixed[idx-N1]) blv=data[idx-N1]; // right is outside of crystal
-         else blv=data[idx-N1-1]; // left is outside of crystal or normal 
-         ab=C1[idx-N1]-x;
-         aa=x-xb;
-      }
-      bmv = brv*aa/(aa+ab) + blv*ab/(aa+ab);
-   } else if (br==false && bl==false) {
-      bmv = tmv;
-   } else
-      bmv = data[idx-N1];
-        
-   double ab=(-x+C1[idx])/dC1m[idx];
-   double aa=1-ab;
-   double ba=(-y+C2[idx])/dC2m[idx];
-   double bb=1-ba;
-
-   if (gDebug>0) {
-      Info("GetData","C1[%d]=%f, ",idx,C1[idx]);
+//
+   if(!tl&&!br&&!bl)
+   {
+      return data[idx];
    }
-   return (tlv*ab+trv*aa)*bb+(blv*ab+brv*aa)*ba;
+   else if(tl&&!br&&!bl)
+   {
+      twopoint({data[idx-1],data[idx]},{x,y},{C1[idx-1],C1[idx]});
+      
+   }
+//   double tmv; // interpolated value at (x, C2[idx])
+//   double bmv; // interpolated value at (x, C2[idx-N1])
+//   double dyp; // distance between (x,y) and (x, C2[idx]) or a boundary point
+//   double dym; // distance between (x,y) and (x, C2[idx-N1]) or a boundary point
+//
+//   if (tl) { // interpolate tl & tr points if both tl and tr exist
+//      double trv,tlv,aa,ab;
+//      double xb; // x of boundary crossing point on horizontal lines
+//      // in case of normal condistion xb == C1[idx]
+//      xb=dC1m[idx]<dC1p[idx-1] ? C1[idx]-dC1m[idx] : C1[idx-1]+dC1p[idx-1];
+//      if (x<xb) { // xb is on the right of x
+//         tlv=data[idx-1];
+//         if(fIsFixed[idx-1]) trv=data[idx-1]; // left is outside of crystal
+//         else trv=data[idx]; // right is outside of crystal or normal condition
+//         aa=x-C1[idx-1];
+//         ab=xb-x;
+//      } else { // xb is on the left of x
+//         trv=data[idx];
+//         if (fIsFixed[idx]) tlv=data[idx]; // right is outside of crystal
+//         else tlv=data[idx-1]; // left is outside of crystal or normal 
+//         ab=C1[idx]-x;
+//         aa=x-xb;
+//      }
+//      tmv = trv*aa/(aa+ab) + tlv*ab/(aa+ab);
+//   } else tmv=data[idx];
+//
+//   if(br&&bl) {
+//      double brv,blv,aa,ab;
+//      double xb; // x of boundary crossing point on horizontal lines
+//      // in case of normal condistion xb == C1[idx]
+//      xb=dC1m[idx-N1]<dC1p[idx-N1-1] ? C1[idx-N1]-dC1m[idx-N1] : C1[idx-N1-1]+dC1p[idx-N1-1];
+//      if (x<xb) { // xb is on the right of x
+//         blv=data[idx-N1-1];
+//         if(fIsFixed[idx-N1-1]) brv=data[idx-N1-1]; // left is outside of crystal
+//         else brv=data[idx-N1]; // right is outside of crystal or normal condition
+//         aa=x-C1[idx-N1-1];
+//         ab=xb-x;
+//      } else { // xb is on the left of x
+//         brv=data[idx-N1];
+//         if (fIsFixed[idx-N1]) blv=data[idx-N1]; // right is outside of crystal
+//         else blv=data[idx-N1-1]; // left is outside of crystal or normal 
+//         ab=C1[idx-N1]-x;
+//         aa=x-xb;
+//      }
+//      bmv = brv*aa/(aa+ab) + blv*ab/(aa+ab);
+//   } else if (br==false && bl==false) {
+//      bmv = tmv;
+//   } else
+//      bmv = data[idx-N1];
+//        
+//   double ab=(-x+C1[idx])/dC1m[idx];
+//   double aa=1-ab;
+//   double ba=(-y+C2[idx])/dC2m[idx];
+//   double bb=1-ba;
+//
+//   if (gDebug>0) {
+//      Info("GetData","C1[%d]=%f, ",idx,C1[idx]);
+//   }
+//   return (tlv*ab+trv*aa)*bb+(blv*ab+brv*aa)*ba;
 }
 //_____________________________________________________________________________
 //
