@@ -22,6 +22,8 @@ class GeFiCa::Crystal
        */
       double GetImpurity(double height)
       { return (TopImpurity-BottomImpurity)*height/Height+BottomImpurity; }
+      void SetAverageImpurity(double impurity)
+      { TopImpurity=impurity; BottomImpurity=impurity; }
 };
 
 #include "Grid.h"
