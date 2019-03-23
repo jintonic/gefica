@@ -1,12 +1,12 @@
 #include "Units.h"
-#include "Sphere1D.h"
+#include "Hemispherical.h"
 using namespace GeFiCa;
 
-Sphere1D::Sphere1D(int n, const char *name, const char *title)
+Hemispherical::Hemispherical(int n, const char *name, const char *title)
    : R(n, name, title), InnerR(0.3*cm), OuterR(3*cm) {};
 //_____________________________________________________________________________
 //
-void Sphere1D::InitializeGrid()
+void Hemispherical::InitializeGrid()
 {
    if (OuterR<=InnerR) Fatal("InitializeGrid",
          "Inner R (%.1f) >= outer R (%.1f)! Abort!", InnerR, OuterR);
@@ -20,7 +20,7 @@ void Sphere1D::InitializeGrid()
 }
 //_____________________________________________________________________________
 //
-void Sphere1D::FillGridWithAnalyticResult()
+void Hemispherical::FillGridWithAnalyticResult()
 {
    if (dC1p[0]==0) Initialize(); // setup and initialize grid if it's not done
 

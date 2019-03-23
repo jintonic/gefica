@@ -1,24 +1,23 @@
-#ifndef GeFiCa_SPHERE1D_H
-#define GeFiCa_SPHERE1D_H
+#ifndef GeFiCa_Hemispherical
+#define GeFiCa_Hemispherical
+
+#include <TNamed.h>
 
 #include "R.h"
+#include "RTheta.h"
+#include "Detector.h"
 
-namespace GeFiCa { class Sphere1D; }
-
+namespace GeFiCa { class Hemispherical; }
 /**
- * Grid setup for 1D spherical detectors.
+ * Grid setup for spherical detectors.
  */
-class GeFiCa::Sphere1D : public GeFiCa::R
+class GeFiCa::Hemispherical : public GeFiCa::Detector, public TNamed
 {
   public:
-      double InnerR; ///< inner radius
-      double OuterR; ///< outer radius
+      double PointContactR; ///< radius of point contact
+      double PointContactH; ///< height of point contact
 
-      /**
-       * Default constructor.
-       */
-      Sphere1D(int n=101, const char *name="s1d",
-            const char *title="1D spherical detector");
+      Hemispherical() : Detector(), TNamed("hsd", "hemispherical detector") {};
       /**
        * Analytic calculation of 1D field in spheric coordinates.
        * According to 
@@ -31,10 +30,14 @@ class GeFiCa::Sphere1D : public GeFiCa::R
        */
       void FillGridWithAnalyticResult();
 
-      ClassDef(Sphere1D, 1);
+      void Configure(Grid& grid)
+      { if (N2==0) ConfigureR(RX& grid); else Configure2D(RTheta& grid); }
+
+      ClassDef(Hemispherical, 1);
 
    protected:
-      virtual void InitializeGrid();      
+      void ConfigureR(RX& grid) {};
+      void Configure2D(RTheta& grid) {};
 };
 
 #endif

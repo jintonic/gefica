@@ -18,7 +18,7 @@ class GeFiCa::Crystal
       double TopImpurity; ///< net impurity concentration at top of crystal
       double BottomImpurity; ///< net impurity concentration at bottom of crystal
       /**
-       * \return net impurity concentration at \param height.
+       * Return net impurity concentration at \param height.
        */
       double GetImpurity(double height)
       { return (TopImpurity-BottomImpurity)*height/Height+BottomImpurity; }
@@ -37,6 +37,6 @@ class GeFiCa::Detector : public GeFiCa::Crystal
       std::vector<double> Bias; ///< bias on electrodes
       virtual ~Detector() {};
 
-      virtual void Configure(Grid& grid)=0; //< Configure \param grid.
+      virtual void Configure(Grid& grid)=0; ///< Configure \param grid.
 };
 #endif

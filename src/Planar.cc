@@ -1,12 +1,12 @@
 #include "Units.h"
-#include "Planar1D.h"
+#include "Planar.h"
 using namespace GeFiCa;
 
-Planar1D::Planar1D(int n, const char *name, const char *title)
+Planar::Planar(int n, const char *name, const char *title)
    : X(n, name, title), Thickness(1*cm) {};
 //_____________________________________________________________________________
 //
-void Planar1D::InitializeGrid()
+void Planar::InitializeGrid()
 {
    if (Thickness<=0) {
       Warning("InitializeGrid", "Thickness(%.1f)<=0, set it to 1*cm", Thickness);
@@ -23,7 +23,7 @@ void Planar1D::InitializeGrid()
 }
 //_____________________________________________________________________________
 //
-void Planar1D::FillGridWithAnalyticResult()
+void Planar::FillGridWithAnalyticResult()
 {
    if (dC1p[0]==0) Initialize(); // setup and initialize grid if it's not done
 

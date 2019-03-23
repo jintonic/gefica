@@ -1,24 +1,24 @@
-#ifndef GeFiCa_PLANAR1D_H
-#define GeFiCa_PLANAR1D_H
+#ifndef GeFiCa_Planar
+#define GeFiCa_Planar
+
+#include <TNamed.h>
 
 #include "X.h"
+#include "XY.h"
+#include "Detector.h"
 
-namespace GeFiCa { class Planar1D; }
+namespace GeFiCa { class Planar; }
 /**
- * Grid setup for 1D planar detectors.
+ * Grid setup for planar detectors.
  */
-class GeFiCa::Planar1D : public GeFiCa::X
+class GeFiCa::Planar : public GeFiCa::Detector, public TNamed
 {
    public :
-      double Thickness; ///< thickness of planar detector
+      double Width; ///< width of planar detector
 
+      Planar() : Detector(), TNamed("planar", "planar detector") {};
       /**
-       * Default constructor.
-       */
-      Planar1D(int n=101, const char *name="p1d",
-            const char *title="1D planar detector");
-      /**
-       * Analytic calculation of 1D field with fixed impurity concentration.
+       * Analytic calculation of  field with fixed impurity concentration.
        *
        * In case of fixed impurity, rho, the solution of Poisson's Equation
        *
@@ -41,10 +41,14 @@ class GeFiCa::Planar1D : public GeFiCa::X
        */
       void FillGridWithAnalyticResult();
 
-      ClassDef(Planar1D, 1);
+      void Configure(Grid& grid)
+      { if (N2==0) ConfigureX(X& grid); else ConfigureXY(XY& grid); }
+
+      ClassDef(Planar, 1);
 
    protected:
-      virtual void InitializeGrid();
+      void ConfigureX(X& grid) {};
+      void ConfigureXY(XY& grid) {};
 };
 #endif
 
