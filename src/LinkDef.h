@@ -4,6 +4,7 @@
  */
 #ifdef __CLING__
 #pragma link C++ namespace GeFiCa;
+#pragma link C++ class GeFiCa::FieldLine+;
 #pragma link C++ class GeFiCa::Grid+;
 
 #pragma link C++ class GeFiCa::X+;
