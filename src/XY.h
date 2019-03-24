@@ -1,40 +1,32 @@
-#ifndef GeFiCa_XY_H
-#define GeFiCa_XY_H
+#ifndef GeFiCa_XY
+#define GeFiCa_XY
 
-class TGraph; class TMultiGraph;
-
-#include "X.h"
+#include "Grid.h"
 
 namespace GeFiCa { class XY; }
-
 /**
- * 2D coordinates.
+ * 2D Cartesian coordinates.
  */
-class GeFiCa::XY : public GeFiCa::X
+class GeFiCa::XY : public GeFiCa::Grid
 {
    public:
-      /**
-       * Default constructor.
-       */
-      XY(int nx=101, int ny=101, const char *name="xy",
-            const char *title="2D coordinates");
+      XY(size_t nx=101, size_t ny=101) :
+         Grid(nx,ny) { SetName("xy"); SetTitle("2D Cartesian coordinates"); }
       virtual ~XY();
-
       /**
        * Get an electric field line originated from (\param x, \param y).
        * If \param positive, propagate along E direction;
        * else propagate against E direction.
        */
-      TGraph* GetFieldLineFrom(double x, double y, bool positive=true);
+      FieldLine* GetFieldLineFrom(double x, double y, bool positive=true);
 
       ClassDef(XY,1);
 
    protected:
-      TMultiGraph *fEgraphs; ///<! graphs of electric field lines
-      void SetStepLength(double steplength1,double steplength2); 
-      virtual double GetData(double x,double y, double z, double *data); 
-      virtual void OverRelaxAt(int idx);
-      virtual bool CalculateField(int idx);
+      double GetData(const std::vector<double> &data,
+            double x, double y, double z) const; 
+      virtual void OverRelaxAt(size_t idx);
+      virtual bool CalculateField(size_t idx);
 };
 #endif 
 

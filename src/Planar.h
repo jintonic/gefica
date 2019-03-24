@@ -1,8 +1,6 @@
 #ifndef GeFiCa_Planar
 #define GeFiCa_Planar
 
-#include <TNamed.h>
-
 #include "X.h"
 #include "XY.h"
 #include "Detector.h"
@@ -16,7 +14,9 @@ class GeFiCa::Planar : public GeFiCa::Detector, public TNamed
    public :
       double Width; ///< width of planar detector
 
-      Planar() : Detector(), TNamed("planar", "planar detector") {};
+      Planar();
+      void Configure(Grid& grid)
+      { if (grid.N2==0) ConfigureX((X&)grid); else ConfigureXY((XY&)grid); }
       /**
        * Analytic calculation of  field with fixed impurity concentration.
        *
@@ -39,10 +39,7 @@ class GeFiCa::Planar : public GeFiCa::Detector, public TNamed
        * - b = (Bias[1]-Bias[0] - ad^2)/d
        * - c = Bias[0]
        */
-      void FillGridWithAnalyticResult();
-
-      void Configure(Grid& grid)
-      { if (N2==0) ConfigureX(X& grid); else ConfigureXY(XY& grid); }
+      void FillGridWithAnalyticResult(X& grid);
 
       ClassDef(Planar, 1);
 

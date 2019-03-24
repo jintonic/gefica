@@ -7,40 +7,11 @@
 #include "Units.h"
 using namespace GeFiCa;
 
-Grid::X(int nx, const char *name, const char *title) : TNamed(name,title), Bias[0](0),
-   Bias[1](2e3*volt), MaxIterations(5000), RelaxationFactor(1.94), Precision(1e-7*volt),
-   Gsor(0), fN(nx), fN1(nx), fN2(0), fN3(0), fTree(0), fImpDist(0)
+FieldLine::FieldLine(const char *name, const char *title) : TNamed(name, title)
 {
-   if (fN<10) { Warning("X","fN<10, set it to 11"); fN=11; fN1=11; }
-
-   V=new double[fN];
-   E1=new double[fN]; E2=new double[fN]; E3=new double[fN];
-   C1=new double[fN]; C2=new double[fN]; C3=new double[fN];
-
-   dC1p=new double[fN]; dC1m=new double[fN];
-   dC2p=new double[fN]; dC2m=new double[fN];
-   dC3p=new double[fN]; dC3m=new double[fN];
-
-   fIsFixed=new bool[fN];
-   fIsDepleted=new bool[fN];
-   fImpurity=new double[fN];
-
-   for (int i=0;i<fN;i++) {
-      V[i]=0;
-      E1[i]=0; E2[i]=0; E3[i]=0;
-      C1[i]=0; C2[i]=0; C3[i]=0;
-
-      dC1m[i]=0; dC1p[i]=0;
-      dC2m[i]=0; dC2p[i]=0;
-      dC3m[i]=0; dC3p[i]=0;
-
-      fIsFixed[i]=false;
-      fIsDepleted[i]=true;
-      fImpurity[i]=0;
-   }
-
    // pick up a good style to modify
    gROOT->SetStyle("Plain");
+   gStyle->SetName("GeFiCa");
    gStyle->SetLegendBorderSize(0);
    gStyle->SetLegendFont(132);
    gStyle->SetLabelFont(132,"XYZ");
@@ -58,6 +29,13 @@ Grid::X(int nx, const char *name, const char *title) : TNamed(name,title), Bias[
    double blue[nRGBs]  = { 0.51, 1.00, 0.12, 0.00, 0.00 };
    TColor::CreateGradientColorTable(nRGBs, stops, red, green, blue, nCont);
    gStyle->SetNumberContours(nCont);
+}
+//_____________________________________________________________________________
+//
+Grid::Grid(size_t n1, size_t n2, size_t n3) : FieldLine("grid", "grid data"),
+   N1(n1), N2(n2), N3(n3), RelaxationFactor(1.95), MaxIterations(5000),
+   Precision(1e-7*volt), fTree(0)
+{
 }
 //_____________________________________________________________________________
 //
@@ -81,7 +59,7 @@ X& Grid::operator+=(GeFiCa::X *other)
             "Only same type of detector can be added together! Do nothing.");
       return *this; 
    }
-   for (int i=0; i<fN; i++) {
+   for (size_t i=0; i<fN; i++) {
       V[i]=V[i]+other->V[i];
       fImpurity[i]+=other->fImpurity[i];
    }
@@ -92,17 +70,17 @@ X& Grid::operator+=(GeFiCa::X *other)
 //
 X& Grid::operator*=(double p)
 {
-   for (int i=0; i<fN; i++) V[i]=V[i]*p;
+   for (size_t i=0; i<fN; i++) V[i]=V[i]*p;
    Bias[0]*=p; Bias[1]*=p;
    return *this;
 }
 //_____________________________________________________________________________
 //
-int Grid::GetIdxOfMaxV()
+size_t Grid::GetIdxOfMaxV()
 {
    double max=V[0];
-   int maxn=0;
-   for(int i=1;i<fN;i++) {
+   size_t maxn=0;
+   for(size_t i=1;i<fN;i++) {
       if(V[i]>max) {
          maxn=i;
          max=V[i];
@@ -112,11 +90,11 @@ int Grid::GetIdxOfMaxV()
 }
 //_____________________________________________________________________________
 //
-int Grid::GetIdxOfMinV()
+size_t Grid::GetIdxOfMinV()
 {
    double min=V[0];
-   int minn=0;
-   for(int i=1;i<fN;i++) {
+   size_t minn=0;
+   for(size_t i=1;i<fN;i++) {
       if(V[i]<min) {
          minn=i;
          min=V[i];
@@ -128,7 +106,7 @@ int Grid::GetIdxOfMinV()
 //
 bool Grid::IsDepleted()
 {
-   for(int i=0;i<fN;i++) {
+   for(size_t i=0;i<fN;i++) {
       OverRelaxAt(i); // calculate one more time in case of 
       //adding two fields together, one is depleted, the other is not
       if (!fIsDepleted[i]) return false;
@@ -139,7 +117,7 @@ bool Grid::IsDepleted()
 //
 void Grid::SetStepLength(double stepLength)
 {
-   for (int i=fN;i-->0;) {
+   for (size_t i=fN;i-->0;) {
       fIsFixed[i]=false;
       C1[i]=i*stepLength;
       dC1p[i]=stepLength;
@@ -148,9 +126,9 @@ void Grid::SetStepLength(double stepLength)
 }
 //_____________________________________________________________________________
 //
-int* Grid::FindSurroundingMatrix(int idx)
+size_t* Grid::FindSurroundingMatrix(size_t idx)
 {
-   int *tmp=new int[3];
+   size_t *tmp=new size_t[3];
    tmp[0]=idx;
    if(idx-1<0)tmp[1]=1;
    else tmp[1]=idx-1;
@@ -171,7 +149,7 @@ bool Grid::SuccessiveOverRelax()
    }
    else Gsor->Set(0); // reset the graph
    double cp=1; // current presision
-   int it=0; // # of iterations
+   size_t it=0; // # of iterations
    TStopwatch watch; watch.Start();
    while (it<MaxIterations) {
       if (it%100==0) {
@@ -181,7 +159,7 @@ bool Grid::SuccessiveOverRelax()
       }
       double XUpSum=0;
       double XDownSum=0;
-      for (int i=0;i<fN;i++) {
+      for (size_t i=0;i<fN;i++) {
          double old=V[i];
          OverRelaxAt(i);
          if(old>0)XDownSum+=old;
@@ -194,7 +172,7 @@ bool Grid::SuccessiveOverRelax()
       it++;
       if (cp<Precision) break;
    }
-   for (int i=0; i<fN; i++) if (!CalculateField(i)) return false;
+   for (size_t i=0; i<fN; i++) if (!CalculateField(i)) return false;
    Printf("%4d steps, precision: %.1e (target: %.0e)", it, cp, Precision);
    Gsor->SetPoint(Gsor->GetN(),it,TMath::Log10(cp));
    Info("SuccessiveOverRelax", "CPU time: %.1f s", watch.CpuTime());
@@ -202,7 +180,7 @@ bool Grid::SuccessiveOverRelax()
 }
 //_____________________________________________________________________________
 //
-void Grid::OverRelaxAt(int idx)
+void Grid::OverRelaxAt(size_t idx)
 {
    // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return ;
@@ -241,54 +219,56 @@ void Grid::OverRelaxAt(int idx)
 }
 //_____________________________________________________________________________
 //
-int Grid::FindIdx(double tarx,int begin,int end)
+size_t Grid::GetIdxOfPointNear(double c1,size_t begin,size_t end) const
 {
-   if (end==-1) end=fN1-1;
-   //search using binary search
+   if (end==0) end=fN1-1;
    if (begin>=end)return end;
-   int mid=(begin+end)/2;
-   if(C1[mid]>=tarx)return FindIdx(tarx,begin,mid);
-   else return FindIdx(tarx,mid+1,end);
+   size_t mid=(begin+end)/2;
+   if(C1[mid]>=c1)return GetIdxOfPointNear(c1,begin,mid);
+   else return GetIdxOfPointNear(c1,mid+1,end);
 }
 //_____________________________________________________________________________
 //
-int Grid::FindIdx(double tarx,double tary ,int begin,int end)
+size_t Grid::GetIdxOfPointNear(double c1,double c2,
+      size_t begin,size_t end) const
 {
-   if (end==-1) end=fN2-1;
+   if (end==0) end=fN2-1;
    //search using binary search
    // if(begin>=end)cout<<"to x"<<begin<<" "<<end<<endl;;
-   if(begin>=end)return FindIdx(tarx,end*fN1,(end+1)*fN1-1);
-   int mid=((begin+end)/2);
-   if(C2[mid*fN1]>=tary){//cout<<"firsthalf"<<begin<<" "<<end<<endl; 
-      return FindIdx(tarx,tary,begin,mid);
+   if(begin>=end)return GetIdxOfPointNear(c1,end*fN1,(end+1)*fN1-1);
+   size_t mid=((begin+end)/2);
+   if(C2[mid*fN1]>=c2){//cout<<"firsthalf"<<begin<<" "<<end<<endl; 
+      return GetIdxOfPointNear(c1,c2,begin,mid);
    }
    else{//cout<<"senondhalf"<<begin<<" "<<end<<endl; 
-      return FindIdx(tarx,tary,mid+1,end);}
+      return GetIdxOfPointNear(c1,c2,mid+1,end);}
 }
 //_____________________________________________________________________________
 //
-int Grid::FindIdx(double tarx, double tary,double tarz,int begin,int end)
+size_t Grid::GetIdxOfPointNear(double c1, double c2,double c3,
+      size_t begin,size_t end) const
 {
-   if (end==-1) end=fN3-1;
+   if (end==0) end=fN3-1;
    //search using binary search
-   if(begin>=end)return FindIdx(tarx,tary,begin,begin+fN1*fN2-1);
-   int mid=((begin/(fN1*fN2)+end/(fN1*fN2))/2)*fN1*fN2;
-   if(C3[mid]>=tarz)return FindIdx(tarx,tary,tarz,begin,mid);
-   else return FindIdx(tarx,tary,tarz,mid+1,end);
+   if(begin>=end)return GetIdxOfPointNear(c1,c2,begin,begin+fN1*fN2-1);
+   size_t mid=((begin/(fN1*fN2)+end/(fN1*fN2))/2)*fN1*fN2;
+   if(C3[mid]>=c3)return GetIdxOfPointNear(c1,c2,c3,begin,mid);
+   else return GetIdxOfPointNear(c1,c2,c3,mid+1,end);
 }
 //_____________________________________________________________________________
 //
-double Grid::GetData(double x, double y, double z, double *data)
+double Grid::GetData(const vector<double> &data,
+      double x, double y, double z) const
 {
-   int idx=FindIdx(x);
-   if (idx==fN) return data[idx];
+   size_t idx=GetIdxOfPointNear(x);
+   if (idx==N1) return data[idx];
    double ab=(-x+C1[idx])/dC1p[idx];
    double aa=1-ab;
    return data[idx]*ab+data[idx-1]*aa;
 }
 //_____________________________________________________________________________
 //
-bool Grid::CalculateField(int idx)
+bool Grid::CalculateField(size_t idx)
 {
    if (dC1p[idx]==0 || dC1m[idx]==0) return false;
 
@@ -309,10 +289,10 @@ double Grid::GetC()
    SuccessiveOverRelax(); // identify undepleted region
    // set impurity to zero
    double *tmpImpurity=fImpurity;
-   for (int i=0;i<fN;i++) {
+   for (size_t i=0;i<fN;i++) {
       if (fImpurity[i]!=0) {
          fImpurity=new double[fN];
-         for (int j=0;j<fN;j++) {
+         for (size_t j=0;j<fN;j++) {
             fImpurity[j]=0;
             if (!fIsFixed[j] && !fIsDepleted[j]) fIsFixed[j]=true;
          }
@@ -328,7 +308,7 @@ double Grid::GetC()
    // calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
    double dV=Bias[0]-Bias[1]; if(dV<0)dV=-dV;
    double SumofElectricField=0;
-   for(int i=0;i<fN;i++) {
+   for(size_t i=0;i<fN;i++) {
       SumofElectricField+=E1[i]*E1[i]*dC1p[i]*cm*cm;
       if (!fIsDepleted[i]) fIsFixed[i]=false;
    }
@@ -367,7 +347,7 @@ TTree* Grid::GetTree(bool createNew)
 
    // fill tree
    Info("GetTree","%d entries",fN);
-   for (int i=0; i<fN; i++) {
+   for (size_t i=0; i<fN; i++) {
       e1= E1[i]; c1= C1[i]; // 1D data
       if (dC2p[i]!=0) { e2=E2[i]; c2=C2[i]; } // 2D data
       if (dC3p[i]!=0) { e3=E3[i]; c3=C3[i]; } // 3D data
@@ -386,11 +366,11 @@ TTree* Grid::GetTree(bool createNew)
 void Grid::SetGridImpurity()
 {
    if (fImpDist && fImpurity[0]==0) // set impurity values if it's not done yet
-      for (int i=fN;i-->0;) fImpurity[i]=fImpDist->Eval(C1[i], C2[i], C3[i]);
+      for (size_t i=fN;i-->0;) fImpurity[i]=fImpDist->Eval(C1[i], C2[i], C3[i]);
 }
 //_____________________________________________________________________________
 //
-int Grid::GetNsor()
+size_t Grid::GetNsor()
 {
    if (Gsor) return Gsor->GetX()[Gsor->GetN()-1];
    else return 0;

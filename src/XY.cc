@@ -1,101 +1,57 @@
-#include <TTree.h>
-#include <TGraph.h>
-#include <TMultiGraph.h>
+#include <cmath>
+#include <vector>
+using namespace std;
 
 #include "XY.h"
 #include "Units.h"
 using namespace GeFiCa;
 
-XY::XY(int nx, int ny, const char *name, const char *title)
-   : X(nx*ny, name, title)
+void XY::OverRelaxAt(size_t idx)
 {
-   N1=nx; // N1 is set to nx*ny through X constructor, it is fixed here
-   N2=ny;
-   fEgraphs = new TMultiGraph("gEs","electric field lines");
-}
-//_____________________________________________________________________________
-//
-XY::~XY()
-{
-   if (E2) delete[] E2;
-   if (C2) delete[] C2;
-   if (dC2m) delete[] dC2m;
-   if (dC2p) delete[] dC2p;
-   if (fEgraphs) delete fEgraphs;
-}
-//_____________________________________________________________________________
-//
-void XY::SetStepLength(double steplength1,double steplength2)
-{
-   //set field step length
-   X::SetStepLength(steplength1);
-   for (int i=0;i<fN;i++) {
-      if(i>N1-1)C2[i]=C2[i-N1]+steplength2;
-      else C2[i]=0;
-      if(i%N1==0)C1[i]=0;
-      else C1[i]=C1[i-1]+steplength1;
-
-      E2[i]=0;
-      dC2m[i]=steplength2;
-      dC2p[i]=steplength2;
-   }
-}
-//_____________________________________________________________________________
-//
-#include <iostream>
-using namespace std;
-void XY::OverRelaxAt(int idx)
-{
-   // 2nd-order Runge-Kutta Successive Over-Relaxation
    if (fIsFixed[idx])return;
-   double density=fImpurity[idx]*Qe;
-   double h2=dC1m[idx];
-   double h3=dC1p[idx];
-   double h4=dC2m[idx];
-   double h1=dC2p[idx];
-   double pym,pyp,pxm,pxp;
-   if(idx>=N1)pym=V[idx-N1];
-   else pym=V[idx];
-   if(idx>=fN-N1)pyp=V[idx];
-   else pyp=V[idx+N1];
-   if(idx%N1==0)pxm=V[idx];
-   else pxm=V[idx-1];
-   if(idx%N1==N1-1)pxp=V[idx];
-   else pxp=V[idx+1];
-   double tmp=(density/epsilon+(pxp/h2+pxm/h3)*2/(h2+h3)+(pyp/h1+pym/h4)*2/(h1+h4))/
-      ((1/h2+1/h3)*2/(h2+h3)+(1/h1+1/h4)*2/(h1+h4));
-   //find minmium and maxnium of all five grid, the new one should not go overthem.
-   //find min
-   double min=pxm;
-   double max=pxm;
-   if(min>pxp)min=pxp;
-   if (min>pyp)min=pyp;
-   if (min>pym)min=pym;
+
+   double vym,vyp,vxm,vxp;
+   if (idx>=N1) vym=V[idx-N1];
+   else vym=V[idx];
+   if (idx>=V.size()-N1) vyp=V[idx];
+   else vyp=V[idx+N1];
+   if (idx%N1==0) vxm=V[idx];
+   else vxm=V[idx-1];
+   if (idx%N1==N1-1) vxp=V[idx];
+   else vxp=V[idx+1];
+
+   double tmp = (Src[idx]
+         + (vxp/dC1m[idx]+vxm/dC1p[idx])*2/(dC1m[idx]+dC1p[idx])
+         + (vyp/dC2p[idx]+vym/dC2m[idx])*2/(dC2p[idx]+dC2m[idx]))/
+      ((1/dC1m[idx]+1/dC1p[idx])*2/(dC1m[idx]+dC1p[idx])
+       + (1/dC2p[idx]+1/dC2m[idx])*2/(dC2p[idx]+dC2m[idx]));
    
-   //find max
-   if(max<pxp)max=pxp;
-   if (max<pyp)max=pyp;
-   if (max<pym)max=pym;
-   //if tmp is greater or smaller than max and min, set tmp to it.
+   tmp=RelaxationFactor*(tmp-V[idx])+V[idx];
+
+   double min=vxm, max=vxm;
+   if (min>vxp) min=vxp;
+   if (min>vyp) min=vyp;
+   if (min>vym) min=vym;
    
-   //V[idx]=RelaxationFactor*(tmp-V[idx])+V[idx];
-   //if need calculate depleted voltage
-   double oldP=V[idx];
-   tmp=RelaxationFactor*(tmp-oldP)+oldP;
-   if(tmp<min) {
+   if (max<vxp) max=vxp;
+   if (max<vyp) max=vyp;
+   if (max<vym) max=vym;
+   
+   if (tmp<min) {
       V[idx]=min;
       fIsDepleted[idx]=false;
-   } else if(tmp>max) {
+   } else if (tmp>max) {
       V[idx]=max;
       fIsDepleted[idx]=false;
    } else
       fIsDepleted[idx]=true;
 
-   if(fIsDepleted[idx]||Bias[0]==Bias[1]) V[idx]=tmp;
+   if(fIsDepleted[idx]||V.begin()==V.end()) V[idx]=tmp;
 }
 //_____________________________________________________________________________
 //
-double XY::GetData(double x, double y, double z, double *data)
+double XY::GetData(const vector<double>& data,
+      double x, double y, double z) const
 {
    // https://codeplea.com/triangular-interpolation
    //       tmv
@@ -109,7 +65,7 @@ double XY::GetData(double x, double y, double z, double *data)
    // |     v      |
    // +-----+------+
    //       bmv
-   int idx=FindIdx(x,y); // always exists
+   size_t idx=GetIdxOfPointNear(x,y); // always exists
 
    
    bool tl=false; // existence of top left grid point
@@ -119,14 +75,10 @@ double XY::GetData(double x, double y, double z, double *data)
    if (idx>=N1) br=true; // not bottom boundary
    if (tl&&bl) bl=true; // neither left nor bottom boundary
 //
-   if(!tl&&!br&&!bl)
-   {
+   if(!tl&&!br&&!bl) {
       return data[idx];
-   }
-   else if(tl&&!br&&!bl)
-   {
+   } else if(tl&&!br&&!bl) {
       twopoint({data[idx-1],data[idx]},{x,y},{C1[idx-1],C1[idx]});
-      
    }
 //   double tmv; // interpolated value at (x, C2[idx])
 //   double bmv; // interpolated value at (x, C2[idx-N1])
@@ -190,38 +142,30 @@ double XY::GetData(double x, double y, double z, double *data)
 }
 //_____________________________________________________________________________
 //
-bool XY::CalculateField(int idx)
+bool XY::CalculateField(size_t idx)
 {
-   if (!X::CalculateField(idx)) return false;
+   //if (!X::CalculateField(idx)) return false;
    if (dC2p[idx]==0 || dC2m[idx]==0) return false;
 
    if (idx%(N1*N2)<N1) // C2 lower boundary
       E2[idx]=(V[idx]-V[idx+N1])/dC2p[idx];
-   else if (idx%(N1*N2)>=fN-N1) // C2 upper boundary
+   else if (idx%(N1*N2)>=V.size()-N1) // C2 upper boundary
       E2[idx]=(V[idx-N1]-V[idx])/dC2m[idx];
    else { // bulk
       E2[idx]=(V[idx-N1]-V[idx+N1])/(dC2m[idx]+dC2p[idx]);
    }
    return true;
 }
-#include <vector>
 //_____________________________________________________________________________
 //
-TGraph* XY::GetFieldLineFrom(double x, double y, bool positive)
+FieldLine* XY::GetFieldLineFrom(double x, double y, bool positive)
 {
-   const char *name = Form("g%.0f%.0f%d",100+x/mm,100+y/mm,positive);
-   TGraph *gl=0;
-   if (fEgraphs->GetListOfGraphs()) {
-      gl = (TGraph*) (fEgraphs->GetListOfGraphs()->FindObject(name));
-      if (gl) return gl; // return old graph if it exists
-   }
+   FieldLine *fl = new FieldLine;
 
-   gl = new TGraph; gl->SetName(name); // create a new graph with a unique name
-
-   int i=0;
+   size_t i=0;
    while (true) { // if (x,y) is in crystal
-      gl->SetPoint(i,x/cm,y/cm); // add a point to the graph
-      if (x>=C1[fN-1]||x<=C1[0]||y>=C2[fN-1]||y<=C2[0]) {//out of crystal
+      fl->C1.push_back(x/cm); fl->C2.push_back(y/cm);
+      if (x>=C1[V.size()-1]||x<=C1[0]||y>=C2[V.size()-1]||y<=C2[0]) {//out of crystal
          if (i==0) // initial point is not in crystal
             Warning("GetFieldLineFrom", "Start point (%.1fcm,%.1fcm)"
                   " is not in crystal! Stop propagating.", x/cm, y/cm);
@@ -229,7 +173,7 @@ TGraph* XY::GetFieldLineFrom(double x, double y, bool positive)
       }
 
       double ex = GetE1(x,y), ey = GetE2(x,y);
-      double et = TMath::Sqrt(ex*ex+ey*ey); // total E
+      double et = sqrt(ex*ex+ey*ey); // total E
       if (et==0) {
          Warning("GetFieldLineFrom", "E@(x=%.1fmm,y=%.1fmm)=%.1V/cm!",
                x/mm, y/mm, et/volt*cm);
@@ -250,7 +194,7 @@ TGraph* XY::GetFieldLineFrom(double x, double y, bool positive)
       i++;
    }
 
-   return gl;
+   return fl;
 }
 
 double XY::twopoint(dataset[2],tarlocationset[1],pointxset[2])
@@ -265,7 +209,6 @@ double XY::threepoint(dataset[3],tarlocationset[2],pointxset[3],pointyset[3])
    double x=tarlocationset[0];
    double x1=pointxset[0];
    double x2=pointxset[1];
-   MSMQ
 
    double y=tarlocationset[1];
    double y1=pointyset[0];
