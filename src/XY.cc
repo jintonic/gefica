@@ -78,7 +78,52 @@ double XY::GetData(const vector<double>& data,
    if(!tl&&!br&&!bl) {
       return data[idx];
    } else if(tl&&!br&&!bl) {
-      twopoint({data[idx-1],data[idx]},{x,y},{C1[idx-1],C1[idx]});
+      return twopoint({data[idx-1],data[idx]},{x,y},{C1[idx-1],C1[idx]});
+   }
+   else if(!tl&&!bl&&br)
+   {
+      return twopoint({data[idx-N1],data[idx]},{x,y},{C2[idx-N1],C2[idx]});
+   }
+   else
+   {
+      //no bound case
+      if(dC1p[idx-1]==dC1m[idx]&&dC1p[idx-N1-1]==dC1m[idx-N1]&&
+            dC2p[idx-N1-1]==dC2m[idx-1]&&dC2p[idx-N1]==dC2m[idx])
+      {
+         return fourpoint({data[idx-1],data[idx],data[idx-N1-1],data[idx-N1]},{x,y},{C1[idx-1],C1[idx],C1[idx-N1-1],C1[idx-N1]},{C2[idx-1],C2[idx],C2[idx-N1-1],C2[idx-N1]});
+      }
+      //topleft case o
+      if(dC1p[idx-1]!=dC1m[idx]&&
+            dC1p[idx-N1-1]==dC1m[idx-N1]&&
+            dC2p[idx-N1-1]!=dC2m[idx-1]&&
+            dC2p[idx-N1]==dC2m[idx])
+      {
+         xb=dC1m[idx]<dC1p[idx-1] ? C1[idx]-dC1m[idx] : C1[idx-1]+dC1p[idx-1];
+
+      }
+      //topright case o
+      if(dC1p[idx-1]!=dC1m[idx]&&
+            dC1p[idx-N1-1]==dC1m[idx-N1]&&
+            dC2p[idx-N1-1]==dC2m[idx-1]&&
+            dC2p[idx-N1]!=dC2m[idx])
+      {
+      }
+      if(dC1p[idx-1]==dC1m[idx]&&dC1p[idx-N1-1]==dC1m[idx-N1]&&
+            dC2p[idx-N1-1]==dC2m[idx-1]&&dC2p[idx-N1]==dC2m[idx])
+      {
+      }
+      if(dC1p[idx-1]==dC1m[idx]&&dC1p[idx-N1-1]==dC1m[idx-N1]&&
+            dC2p[idx-N1-1]==dC2m[idx-1]&&dC2p[idx-N1]==dC2m[idx])
+      {
+      }
+      if(dC1p[idx-1]==dC1m[idx]&&dC1p[idx-N1-1]==dC1m[idx-N1]&&
+            dC2p[idx-N1-1]==dC2m[idx-1]&&dC2p[idx-N1]==dC2m[idx])
+      {
+      }
+      if(dC1p[idx-1]==dC1m[idx]&&dC1p[idx-N1-1]==dC1m[idx-N1]&&
+            dC2p[idx-N1-1]==dC2m[idx-1]&&dC2p[idx-N1]==dC2m[idx])
+      {
+      }
    }
 //   double tmv; // interpolated value at (x, C2[idx])
 //   double bmv; // interpolated value at (x, C2[idx-N1])
