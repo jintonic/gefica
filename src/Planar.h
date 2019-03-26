@@ -1,51 +1,18 @@
 #ifndef GeFiCa_Planar
 #define GeFiCa_Planar
 
-#include "X.h"
-#include "XY.h"
+#include <TObject.h>
 #include "Detector.h"
-
 namespace GeFiCa { class Planar; }
 /**
- * Grid setup for planar detectors.
+ * Configuration of a planar detector.
  */
-class GeFiCa::Planar : public GeFiCa::Detector, public TNamed
+class GeFiCa::Planar : public GeFiCa::Detector, public TObject
 {
    public :
-      double Width; ///< width of planar detector
+      double Width; ///< width of a planar detector
 
       Planar();
-      void Configure(Grid& grid)
-      { if (grid.N2==0) ConfigureX((X&)grid); else ConfigureXY((XY&)grid); }
-      /**
-       * Analytic calculation of  field with fixed impurity concentration.
-       *
-       * In case of fixed impurity, rho, the solution of Poisson's Equation
-       *
-       *     d^2 p / dx^2 = -rho/epsilon
-       *
-       * with boundary conditions:
-       *
-       * - potential(0) = Bias[0],
-       * - potential(d) = Bias[1],
-       *
-       * where, d = UpperBound - LowerBound, is
-       *
-       *     potential(x) = a x^2 + b x + c 
-       *
-       * where, 
-       *
-       * - a = - rho/2/epsilon
-       * - b = (Bias[1]-Bias[0] - ad^2)/d
-       * - c = Bias[0]
-       */
-      void FillGridWithAnalyticResult(X& grid);
-
       ClassDef(Planar, 1);
-
-   protected:
-      void ConfigureX(X& grid) {};
-      void ConfigureXY(XY& grid) {};
 };
 #endif
-
