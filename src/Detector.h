@@ -9,14 +9,9 @@ namespace GeFiCa { class Crystal; class Detector; }
 class GeFiCa::Crystal
 {
    public:
-      /**
-       * Height of crystal.
-       * Since the derived classes can be used to configure not only 1D but
-       * also 2D and 3D grids, this property exists in all of them.
-       */
-      double Height;
+      double Height; ///< height of crystal
       double TopImpurity; ///< net impurity concentration at top of crystal
-      double BottomImpurity; ///< net impurity concentration at bottom of crystal
+      double BottomImpurity; ///<net impurity concentration at bottom of crystal
       /**
        * Return net impurity concentration at \param height.
        */
@@ -25,9 +20,7 @@ class GeFiCa::Crystal
       void SetAverageImpurity(double impurity)
       { TopImpurity=impurity; BottomImpurity=impurity; }
 };
-
-#include "Grid.h"
-
+#include <vector>
 /**
  * Detector & crystal properties.
  */
@@ -35,8 +28,5 @@ class GeFiCa::Detector : public GeFiCa::Crystal
 {
    public:
       std::vector<double> Bias; ///< bias on electrodes
-      virtual ~Detector() {};
-
-      virtual void Configure(Grid& grid)=0; ///< Configure \param grid.
 };
 #endif
