@@ -2,9 +2,6 @@
 #define GeFiCa_Grid
 #include <vector>
 #include <TNamed.h>
-/**
- * The only namespace in GeFiCa.
- */
 namespace GeFiCa { class FieldLine; class Grid; }
 /**
  * Electric field line data.
