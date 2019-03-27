@@ -119,7 +119,8 @@ class GeFiCa::Grid : public GeFiCa::Points
       /**
        * Propogate a field line from (c1,c2,c3).
        */
-      virtual FieldLine* GetFieldLineFrom(double c1, double c2, double c3=0)=0;
+      virtual FieldLine* GetFieldLineFrom(double c1, double c2, double c3=0)
+      { return 0; }
    protected:
       std::vector<bool> fIsFixed; ///< true if field values are fixed
       std::vector<bool> fIsDepleted; ///< true if a grid point is depleted
