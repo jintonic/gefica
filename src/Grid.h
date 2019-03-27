@@ -1,6 +1,6 @@
 #ifndef GeFiCa_Grid
 #define GeFiCa_Grid
-namespace GeFiCa { class Points; class FieldLine; class Grid; }
+namespace GeFiCa { class Points; class FieldLine; class Grid; class Detector; }
 #include <vector>
 /**
  * A group of discrete points.
@@ -76,7 +76,7 @@ class GeFiCa::Grid : public GeFiCa::Points
       /**
        * Get number of iterations for SOR to converge.
        */
-      int GetIterations();
+      size_t GetIterations() { return fIterations; }
       /**
        * Get potential at (c1,c2,c3) by interpolation.
        */
@@ -124,6 +124,8 @@ class GeFiCa::Grid : public GeFiCa::Points
       std::vector<bool> fIsFixed; ///< true if field values are fixed
       std::vector<bool> fIsDepleted; ///< true if a grid point is depleted
       TTree* fTree; ///<! ROOT tree to visualize fields
+      size_t fIterations; ///< number of iterations of SOR performed
+      double fBias; ///< bias applied to the detector 
       /**
        * Over relax potential Vp[\param idx].
        */
@@ -132,15 +134,15 @@ class GeFiCa::Grid : public GeFiCa::Points
        * Get index of point near \param c1 in between \param begin & \param end.
        */
       size_t GetIdxOfPointNear(double c1,
-            size_t begin, size_t end=0) const;
+            size_t begin=0, size_t end=0) const;
       size_t GetIdxOfPointNear(double c1, double c2,
-            size_t begin, size_t end=0) const;
+            size_t begin=0, size_t end=0) const;
       size_t GetIdxOfPointNear(double c1, double c2, double c3,
-            size_t begin, size_t end=0) const;
+            size_t begin=0, size_t end=0) const;
       /**
        * Interpolate grid data at (c1,c2,c3).
        */
-      virtual double GetData(std::vector<double> &data,
+      virtual double GetData(const std::vector<double> &data,
             double c1, double c2, double c3) const;
       /**
        * Get index of the grid point with max potential.

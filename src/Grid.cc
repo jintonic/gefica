@@ -1,10 +1,20 @@
+#include <TMath.h>
 #include <TTree.h>
+#include <TROOT.h>
+#include <TStyle.h>
 #include <TGraph.h>
+#include <TStopwatch.h>
 
 #include "Grid.h"
+#include "Units.h"
+using namespace GeFiCa;
+
 TGraph* FieldLine::GetGraph()
 {
-   if (GetN()<1) { Error("GetGraph", "No data for graph. Abort!"); abort(); }
+   if (GetN()<1) {
+      Warning("GetGraph", "No data for graph. Return 0!");
+      return 0;
+   }
    if (fGl) { return fGl; }
    fGl = new TGraph(GetN(),C1.data(),C2.data());
    fGl->SetName(GetName()); fGl->SetTitle(GetTitle());
@@ -12,11 +22,10 @@ TGraph* FieldLine::GetGraph()
 }
 //_____________________________________________________________________________
 //
-#include <TStyle.h>
-#include "Units.h"
-using namespace GeFiCa;
+
 Grid::Grid(size_t n1, size_t n2, size_t n3) : N1(n1), N2(n2), N3(n3),
-   RelaxationFactor(1.95), MaxIterations(5000), Precision(1e-7*volt), fTree(0)
+   MaxIterations(5000), RelaxationFactor(1.95), Precision(1e-7*volt),
+   fTree(0)
 {
    // pick up a good style to modify
    gROOT->SetStyle("Plain");
@@ -43,16 +52,15 @@ Grid::Grid(size_t n1, size_t n2, size_t n3) : N1(n1), N2(n2), N3(n3),
 //
 Grid& Grid::operator+=(Grid& other)
 {
-   if (GetN()!=other->GetN()) {
+   if (GetN()!=other.GetN()) {
       Warning("+=", 
             "Numbers of points in two grids are different, return *this.");
       return *this; 
    }
    for (size_t i=0; i<GetN(); i++) {
       Vp[i]=Vp[i]+other.Vp[i];
-      Src[i]=Src[i]+other->Src[i];
+      Src[i]=Src[i]+other.Src[i];
    }
-   Bias[0]=Bias[0]+other->Bias[0]; Bias[1]=Bias[1]+other->Bias[1]; 
    return *this;
 }
 //_____________________________________________________________________________
@@ -60,7 +68,6 @@ Grid& Grid::operator+=(Grid& other)
 Grid& Grid::operator*=(double scale)
 {
    for (size_t i=0; i<GetN(); i++) Vp[i]=Vp[i]*scale;
-   Bias[0]*=scale; Bias[1]*=scale;
    return *this;
 }
 //_____________________________________________________________________________
@@ -103,16 +110,16 @@ bool Grid::IsDepleted()
 }
 //_____________________________________________________________________________
 //
-#include <TStopwatch.h>
 void Grid::SuccessiveOverRelax()
 {
    Info("SuccessiveOverRelax","Start...");
    double cp=1; // current presision
-   size_t it=0; // # of iterations
+   fIterations=0;
    TStopwatch watch; watch.Start();
-   while (it<MaxIterations) {
-      if (it%100==0)
-         Printf("%4d steps, precision: %.1e (target: %.0e)",it,cp,Precision);
+   while (fIterations<MaxIterations) {
+      if (fIterations%100==0)
+         Printf("%4zu steps, precision: %.1e (target: %.0e)",
+               fIterations, cp, Precision);
       double numerator=0, denominator=0;
       for (size_t i=0; i<GetN(); i++) {
          double old=Vp[i]; // save old value of Vp[i]
@@ -122,55 +129,44 @@ void Grid::SuccessiveOverRelax()
          if(diff>0) numerator+=(diff); else numerator-=(diff);
       }
       cp = numerator/denominator;
-      it++;
+      fIterations++;
       if (cp<Precision) break;
    }
    for (size_t i=0; i<GetN(); i++) CalculateE(i);
-   Printf("%4d steps, precision: %.1e (target: %.0e)", it, cp, Precision);
+   Printf("%4zu steps, precision: %.1e (target: %.0e)",
+         fIterations, cp, Precision);
    Info("SuccessiveOverRelax", "CPU time: %.1f s", watch.CpuTime());
 }
 //_____________________________________________________________________________
 //
 void Grid::OverRelaxAt(size_t idx)
 {
-   if (fIsFixed[idx])return ;
-   double rho=-Src[idx]*Qe;
-   double h2=dC1m[idx];
-   double h3=dC1p[idx];
-   double p2=Vp[idx-1];
-   double p3=Vp[idx+1];
+   if (fIsFixed[idx]) return;
 
-   double tmp=-rho/epsilon*h2*h3/2
-      + (h3*Vp[idx-1]+h2*Vp[idx+1])/(h2+h3);
+   double tmp = -Src[idx]*dC1m[idx]*dC1p[idx]/2
+      + (dC1p[idx]*Vp[idx-1]+dC1m[idx]*Vp[idx+1])/(dC1m[idx]+dC1p[idx]);
 
-   //find min
-   double min=p2;
-   double max=p2;
-   if(min>p3)min=p3;
-   //find max
-   if(max<p3)max=p3;
-   //if tmp is greater or smaller than max and min, set tmp to it.
+   double min=Vp[idx-1], max=Vp[idx-1];
+   if(min>Vp[idx+1]) min=Vp[idx+1];
+   if(max<Vp[idx+1]) max=Vp[idx+1];
+   tmp=RelaxationFactor*(tmp-Vp[idx])+Vp[idx];
 
-   //Vp[idx]=RelaxationFactor*(tmp-Vp[idx])+Vp[idx];
-   double oldP=Vp[idx];
-   tmp=RelaxationFactor*(tmp-oldP)+oldP;
-
-   if(tmp<min) {
+   if (tmp<min) {
       Vp[idx]=min;
       fIsDepleted[idx]=false;
-   } else if(tmp>max) {
+   } else if (tmp>max) {
       Vp[idx]=max;
       fIsDepleted[idx]=false;
    } else
       fIsDepleted[idx]=true;
 
-   if(fIsDepleted[idx]||Bias[0]==Bias[1]) Vp[idx]=tmp;
+   if (fIsDepleted[idx]||fBias==0) Vp[idx]=tmp;
 }
 //_____________________________________________________________________________
 //
 size_t Grid::GetIdxOfPointNear(double c1,size_t begin,size_t end) const
 {
-   if (end==0) end=fN1-1;
+   if (end==0) end=N1-1;
    if (begin>=end)return end;
    size_t mid=(begin+end)/2;
    if(C1[mid]>=c1)return GetIdxOfPointNear(c1,begin,mid);
@@ -181,32 +177,29 @@ size_t Grid::GetIdxOfPointNear(double c1,size_t begin,size_t end) const
 size_t Grid::GetIdxOfPointNear(double c1,double c2,
       size_t begin,size_t end) const
 {
-   if (end==0) end=fN2-1;
+   if (end==0) end=N2-1;
    //search using binary search
    // if(begin>=end)cout<<"to x"<<begin<<" "<<end<<endl;;
-   if(begin>=end)return GetIdxOfPointNear(c1,end*fN1,(end+1)*fN1-1);
+   if(begin>=end)return GetIdxOfPointNear(c1,end*N1,(end+1)*N1-1);
    size_t mid=((begin+end)/2);
-   if(C2[mid*fN1]>=c2){//cout<<"firsthalf"<<begin<<" "<<end<<endl; 
-      return GetIdxOfPointNear(c1,c2,begin,mid);
-   }
-   else{//cout<<"senondhalf"<<begin<<" "<<end<<endl; 
-      return GetIdxOfPointNear(c1,c2,mid+1,end);}
+   if(C2[mid*N1]>=c2) return GetIdxOfPointNear(c1,c2,begin,mid);
+   else return GetIdxOfPointNear(c1,c2,mid+1,end);
 }
 //_____________________________________________________________________________
 //
 size_t Grid::GetIdxOfPointNear(double c1, double c2,double c3,
       size_t begin,size_t end) const
 {
-   if (end==0) end=fN3-1;
+   if (end==0) end=N3-1;
    //search using binary search
-   if(begin>=end)return GetIdxOfPointNear(c1,c2,begin,begin+fN1*fN2-1);
-   size_t mid=((begin/(fN1*fN2)+end/(fN1*fN2))/2)*fN1*fN2;
+   if(begin>=end)return GetIdxOfPointNear(c1,c2,begin,begin+N1*N2-1);
+   size_t mid=((begin/(N1*N2)+end/(N1*N2))/2)*N1*N2;
    if(C3[mid]>=c3)return GetIdxOfPointNear(c1,c2,c3,begin,mid);
    else return GetIdxOfPointNear(c1,c2,c3,mid+1,end);
 }
 //_____________________________________________________________________________
 //
-double Grid::GetData(const vector<double> &data,
+double Grid::GetData(const std::vector<double> &data,
       double x, double y, double z) const
 {
    size_t idx=GetIdxOfPointNear(x);
@@ -219,11 +212,9 @@ double Grid::GetData(const vector<double> &data,
 //
 void Grid::CalculateE(size_t idx)
 {
-   if (dC1p[idx]==0 || dC1m[idx]==0) return false;
-
-   if (idx%fN1==0) // C1 lower boundary
+   if (idx%N1==0) // C1 lower boundary
       E1[idx]=(Vp[idx]-Vp[idx+1])/dC1p[idx];
-   else if (idx%fN1==fN1-1) // C1 upper boundary
+   else if (idx%N1==N1-1) // C1 upper boundary
       E1[idx]=(Vp[idx-1]-Vp[idx])/dC1m[idx];
    else // bulk
       E1[idx]=(Vp[idx-1]-Vp[idx+1])/(dC1m[idx]+dC1p[idx]);
@@ -234,11 +225,9 @@ double Grid::GetC()
 {
    Info("GetC","Start...");
    SuccessiveOverRelax(); // identify undepleted region
-   // set impurity to zero
-   double *tmpImpurity=Src;
-   for (size_t i=0;i<GetN();i++) {
+   std::vector<double>original=Src; // save original rho/epsilon
+   for (size_t i=0; i<GetN(); i++) { // set impurity to zero
       if (Src[i]!=0) {
-         Src=new double[GetN()];
          for (size_t j=0;j<GetN();j++) {
             Src[j]=0;
             if (!fIsFixed[j] && !fIsDepleted[j]) fIsFixed[j]=true;
@@ -246,20 +235,17 @@ double Grid::GetC()
          break;
       }
    }
-   // calculate potential without impurity
-   SuccessiveOverRelax();
-   // set impurity back
-   if(Src!=tmpImpurity) delete []Src;
-   Src=tmpImpurity;
+   SuccessiveOverRelax(); // calculate potential without impurity
+   Src=original; // set impurity back
 
    // calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
-   double dV=Bias[0]-Bias[1]; if(dV<0)dV=-dV;
+   if (fBias<0) fBias=-fBias;
    double SumofElectricField=0;
    for(size_t i=0;i<GetN();i++) {
       SumofElectricField+=E1[i]*E1[i]*dC1p[i]*cm*cm;
       if (!fIsDepleted[i]) fIsFixed[i]=false;
    }
-   double c=SumofElectricField*epsilon/dV/dV;
+   double c=SumofElectricField*epsilon/fBias/fBias;
    Info("GetC","%.2f pF",c/pF);
    return c;
 }
@@ -278,8 +264,6 @@ TTree* Grid::GetTree(bool createNew)
    // 1D data
    fTree->Branch("e1",&e1,"e1/D");
    fTree->Branch("c1",&c1,"c1/D");
-   // initialize values
-   if (dC1p[0]==0) Initialize(); // setup & initialize grid
 
    if (dC2p[0]!=0) { // if it is a 2D grid
       fTree->Branch("e2",&e2,"e2/D");
@@ -293,7 +277,7 @@ TTree* Grid::GetTree(bool createNew)
    fTree->Branch("d",&d,"d/O"); // depletion flag
 
    // fill tree
-   Info("GetTree","%d entries",GetN());
+   Info("GetTree","%zu entries",GetN());
    for (size_t i=0; i<GetN(); i++) {
       e1= E1[i]; c1= C1[i]; // 1D data
       if (dC2p[i]!=0) { e2=E2[i]; c2=C2[i]; } // 2D data
@@ -308,19 +292,3 @@ TTree* Grid::GetTree(bool createNew)
    fTree->ResetBranchAddresses(); // disconnect from local variables
    return fTree;
 }
-//_____________________________________________________________________________
-//
-void Grid::SetGridImpurity()
-{
-   if (fImpDist && Src[0]==0) // set impurity values if it's not done yet
-      for (size_t i=GetN();i-->0;) Src[i]=fImpDist->Eval(C1[i], C2[i], C3[i]);
-}
-//_____________________________________________________________________________
-//
-size_t Grid::GetNsor()
-{
-   if (Gsor) return Gsor->GetX()[Gsor->GetN()-1];
-   else return 0;
-}
-//_____________________________________________________________________________
-//
