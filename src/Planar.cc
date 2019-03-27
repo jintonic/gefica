@@ -2,5 +2,5 @@
 #include "Planar.h"
 using namespace GeFiCa;
 
-Planar::Planar() : Detector(), TNamed("planar","planar detector"),
-   Width(1*cm), Depth(1*cm) {};
+Planar::Planar(const char *name, const char *title)
+   : Detector(name,title), Width(1*cm), Depth(1*cm) {};

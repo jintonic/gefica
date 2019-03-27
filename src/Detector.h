@@ -23,13 +23,17 @@ class GeFiCa::Crystal
       { TopImpurity=impurity; BottomImpurity=impurity; }
 };
 #include <vector>
+#include <TNamed.h>
 /**
  * Detector & crystal properties.
+ * It provides TClass::ClassName() through ClassDef for
+ * Grid::SetBoundaryCondition to know the specific type of detector.
  */
-class GeFiCa::Detector : public GeFiCa::Crystal
+class GeFiCa::Detector : public GeFiCa::Crystal, public TNamed
 {
    public:
       std::vector<double> Bias; ///< bias on electrodes
-      Detector(); ///< Default constructor.
+      Detector(const char *name="detector", const char *title="detector");
+      ClassDef(Detector, 1);
 };
 #endif
