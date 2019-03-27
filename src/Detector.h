@@ -30,6 +30,6 @@ class GeFiCa::Detector : public GeFiCa::Crystal
 {
    public:
       std::vector<double> Bias; ///< bias on electrodes
-      Detector();
+      Detector(); ///< Default constructor.
 };
 #endif
