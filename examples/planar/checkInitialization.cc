@@ -4,7 +4,7 @@
    detector.Dump(); // call TObject::Dump() to print default detector setup
 
    GeFiCa::X grid;
-   detector.Configure(grid);
+   grid.SetBoundaryCondition(&detector);
    
    TTree *t = grid.GetTree(); // create a ROOT tree for quick investigation
    t->Draw("v:c1");
