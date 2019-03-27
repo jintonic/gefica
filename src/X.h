@@ -1,18 +1,16 @@
 #ifndef GeFiCa_X
 #define GeFiCa_X
-
+#include <TNamed.h>
 #include "Grid.h"
-
-namespace GeFiCa { class Grid; class X; }
+namespace GeFiCa { class X; }
 /**
  * 1D Cartesian coordinate.
  */
-class GeFiCa::X : public GeFiCa::Grid
+class GeFiCa::X : public GeFiCa::Grid, public TNamed
 {
    public:
-      X(size_t nx=101) : Grid(nx) { SetName("x"); SetTitle("1D coordinate"); }
-      ~X();
- 
+      X(size_t n1=101) : Grid(n1), TNamed("x","1D coordinate") {};
+      void SetBoundaryCondition(Detector *detector);
       /**
        * Analytic calculation of  field with fixed impurity concentration.
        *
@@ -38,11 +36,7 @@ class GeFiCa::X : public GeFiCa::Grid
       void FillGridWithAnalyticResult();
 
       ClassDef(X,1);
-
    protected:
-      /**
-       * Calculate fields at @param idx.
-       */
       void OverRelaxAt(size_t idx); 
 };
 #endif
