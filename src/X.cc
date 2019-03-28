@@ -12,7 +12,7 @@ void X::GetBoundaryConditionFrom(Detector &detector)
    TString type(detector.ClassName());
    if (type.Contains("Planar")==false) {
       Error("GetBoundaryConditionFrom", "%s is not expected. "
-            "Please pass in a GeFiCa::Planar detector.", type.Data());
+            "Please pass in a Planar detector.", type.Data());
       abort();
    }
 
@@ -34,28 +34,16 @@ void X::GetBoundaryConditionFrom(Detector &detector)
    fIsFixed[0]=true; fIsFixed[N1-1]=true;
    // linear interpolation between Bias[0] and Bias[1]
    double slope = (detector.Bias[1]-detector.Bias[0])/(N1-1);
-   for (size_t i=0; i<N1; i++) {
-      Vp.push_back(detector.Bias[0]+slope*i);
-   }
+   for (size_t i=0; i<N1; i++) Vp.push_back(detector.Bias[0]+slope*i);
    Vp[N1-1]=detector.Bias[1];
-
-   fDetector = &detector; // save it for other uses
 }
 //_____________________________________________________________________________
 //
 void X::SolveAnalytically()
 {
-   if (fDetector==0) {
-      Error("SolveAnalytically", "Grid is not ready. "
-            "Please call GetBoundaryConditionFrom(Detector&) first.");
-      abort();
-   }
-   if (fDetector->TopImpurity!=fDetector->BottomImpurity) {
-      Error("SolveAnalytically", "can't handle changing impurity.");
-      abort();
-   }
-   double h=fDetector->Height;
-   double a=-Src[N1-1]/2;
+   Grid::SolveAnalytically(); // check if impurity is constant
+   double h=C1[N1-1]-C1[0];
+   double a=-Src[0]/2;
    double b=(Vp[N1-1]-Vp[0]-a*h*h)/h;
    double c=Vp[0];
    for (size_t i=0; i<N1; i++) Vp[i] = a*C1[i]*C1[i]+b*C1[i]+c;
@@ -76,7 +64,7 @@ double X::GetC()
    Src=original; // set impurity back
 
    // calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
-   double dV = fDetector->Bias[1]-fDetector->Bias[0]; if (dV<0) dV=-dV;
+   double dV = Vp[N1-1]-Vp[0]; if (dV<0) dV=-dV;
    double integral=0;
    for (size_t i=0; i<GetN(); i++) {
       integral+=E1[i]*E1[i]*dC1p[i];
@@ -110,7 +98,7 @@ void X::OverRelaxAt(size_t idx)
    }
 
    // update Vp for impurity-only case even if the point is undepleted
-   if (fDetector->Bias[0]==fDetector->Bias[1]) Vp[idx]=vnew;
+   if (Vp[0]==Vp[N1-1]) Vp[idx]=vnew;
 }
 //_____________________________________________________________________________
 //
@@ -121,21 +109,4 @@ void X::CalculateE()
    }
    E1[0]=(Vp[1]-Vp[0])/dC1p[0]; Et[0]=E1[0];
    E1[N1-1]=(Vp[N1-1]-Vp[N1-2])/dC1m[N1-1]; Et[N1-1]=E1[N1-1];
-}
-//_____________________________________________________________________________
-//
-double X::GetData(const std::vector<double> &data,
-      double x, double y, double z) const
-{
-   //     |<---dC1m[idx]--->|
-   //     +---r1---+---r2---+
-   // C1[idx-1]    x      C1[idx]
-   size_t idx=GetIdxOfPointToTheRightOf(x);
-   double r2=(C1[idx]-x)/dC1m[idx];
-   double r1=1-r2;
-   double xval=data[idx]*r1+data[idx-1]*r2;
-   if (gDebug>0) Info("GetData","data(x=%.4f)=%.2f, "
-         "C1[%zu]=%.4f, C1[%zu]=%.4f, "
-         "r1=%.2f, r2=%0.2f", x,xval,idx-1,C1[idx-1],idx,C1[idx],r1,r2);
-   return xval;
 }
