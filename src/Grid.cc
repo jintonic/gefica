@@ -7,6 +7,7 @@
 
 #include "Grid.h"
 #include "Units.h"
+#include "Detector.h"
 using namespace GeFiCa;
 
 TGraph* FieldLine::GetGraph()
@@ -25,7 +26,7 @@ TGraph* FieldLine::GetGraph()
 
 Grid::Grid(size_t n1, size_t n2, size_t n3) : N1(n1), N2(n2), N3(n3),
    MaxIterations(5000), RelaxationFactor(1.95), Precision(1e-7*volt),
-   fTree(0)
+   fTree(0), fDetector(0)
 {
    // pick up a good style to modify
    gROOT->SetStyle("Plain");
@@ -112,6 +113,11 @@ bool Grid::IsDepleted()
 //
 void Grid::SuccessiveOverRelax()
 {
+   if (fDetector==0) {
+      Error("SuccessiveOverRelax", "Grid is not ready. "
+            "Please call GetBoundaryConditionFrom(Detector&) first.");
+      abort();
+   }
    Info("SuccessiveOverRelax","Start...");
    double cp=1; // current presision
    fIterations=0;
@@ -132,35 +138,10 @@ void Grid::SuccessiveOverRelax()
       fIterations++;
       if (cp<Precision) break;
    }
-   for (size_t i=0; i<GetN(); i++) CalculateE(i);
+   CalculateE();
    Printf("%4zu steps, precision: %.1e (target: %.0e)",
          fIterations, cp, Precision);
    Info("SuccessiveOverRelax", "CPU time: %.1f s", watch.CpuTime());
-}
-//_____________________________________________________________________________
-//
-void Grid::OverRelaxAt(size_t idx)
-{
-   if (fIsFixed[idx]) return;
-
-   double tmp = -Src[idx]*dC1m[idx]*dC1p[idx]/2
-      + (dC1p[idx]*Vp[idx-1]+dC1m[idx]*Vp[idx+1])/(dC1m[idx]+dC1p[idx]);
-
-   double min=Vp[idx-1], max=Vp[idx-1];
-   if(min>Vp[idx+1]) min=Vp[idx+1];
-   if(max<Vp[idx+1]) max=Vp[idx+1];
-   tmp=RelaxationFactor*(tmp-Vp[idx])+Vp[idx];
-
-   if (tmp<min) {
-      Vp[idx]=min;
-      fIsDepleted[idx]=false;
-   } else if (tmp>max) {
-      Vp[idx]=max;
-      fIsDepleted[idx]=false;
-   } else
-      fIsDepleted[idx]=true;
-
-   if (fIsDepleted[idx]||fBias==0) Vp[idx]=tmp;
 }
 //_____________________________________________________________________________
 //
@@ -210,17 +191,6 @@ double Grid::GetData(const std::vector<double> &data,
 }
 //_____________________________________________________________________________
 //
-void Grid::CalculateE(size_t idx)
-{
-   if (idx%N1==0) // C1 lower boundary
-      E1[idx]=(Vp[idx]-Vp[idx+1])/dC1p[idx];
-   else if (idx%N1==N1-1) // C1 upper boundary
-      E1[idx]=(Vp[idx-1]-Vp[idx])/dC1m[idx];
-   else // bulk
-      E1[idx]=(Vp[idx-1]-Vp[idx+1])/(dC1m[idx]+dC1p[idx]);
-}
-//_____________________________________________________________________________
-//
 double Grid::GetC()
 {
    Info("GetC","Start...");
@@ -239,13 +209,14 @@ double Grid::GetC()
    Src=original; // set impurity back
 
    // calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
-   if (fBias<0) fBias=-fBias;
+   double dV = fDetector->Bias[1]-fDetector->Bias[0];
+   if (dV<0) dV=-dV;
    double SumofElectricField=0;
    for(size_t i=0;i<GetN();i++) {
       SumofElectricField+=E1[i]*E1[i]*dC1p[i]*cm*cm;
       if (!fIsDepleted[i]) fIsFixed[i]=false;
    }
-   double c=SumofElectricField*epsilon/fBias/fBias;
+   double c=SumofElectricField*epsilon/dV/dV;
    Info("GetC","%.2f pF",c/pF);
    return c;
 }
@@ -256,20 +227,19 @@ TTree* Grid::GetTree(bool createNew)
    if (fTree) { if (createNew) delete fTree; else return fTree; }
 
    // define tree
-   bool b,d; double v,te,e1,e2,e3,c1,c2,c3;
+   bool b,d; double vp,et,e1,e2,e3,c1,c2,c3;
    fTree = new TTree("t","field data");
    fTree->SetDirectory(0);
-   fTree->Branch("v",&v,"v/D");
-   fTree->Branch("e",&te,"e/D");
+   fTree->Branch("v",&vp,"v/D");
+   fTree->Branch("e",&et,"e/D");
    // 1D data
    fTree->Branch("e1",&e1,"e1/D");
    fTree->Branch("c1",&c1,"c1/D");
-
-   if (dC2p[0]!=0) { // if it is a 2D grid
+   if (N2!=0) { // 2D data
       fTree->Branch("e2",&e2,"e2/D");
       fTree->Branch("c2",&c2,"c2/D");
    }
-   if (dC3p[0]!=0) { // if it is a 3D grid
+   if (N3!=0) { // 3D data
       fTree->Branch("e3",&e3,"e3/D");
       fTree->Branch("c3",&c3,"c3/D");
    }
@@ -279,12 +249,10 @@ TTree* Grid::GetTree(bool createNew)
    // fill tree
    Info("GetTree","%zu entries",GetN());
    for (size_t i=0; i<GetN(); i++) {
-      e1= E1[i]; c1= C1[i]; // 1D data
-      if (dC2p[i]!=0) { e2=E2[i]; c2=C2[i]; } // 2D data
-      if (dC3p[i]!=0) { e3=E3[i]; c3=C3[i]; } // 3D data
-      v = Vp[i]; b = fIsFixed[i]; d = fIsDepleted[i]; // common data
-      if (dC3p[i]!=0) te=TMath::Sqrt(e1*e1 + e2*e2 + e3*e3);
-      else { if (dC2p[i]!=0) te=TMath::Sqrt(e1*e1+e2*e2); else te=e1; }
+      e1=E1[i]; c1=C1[i]; // 1D data
+      if (N2!=0) { e2=E2[i]; c2=C2[i]; } // 2D data
+      if (N3!=0) { e3=E3[i]; c3=C3[i]; } // 3D data
+      vp=Vp[i]; et=Et[i]; b=fIsFixed[i]; d=fIsDepleted[i]; // common data
       fTree->Fill();
    }
 
