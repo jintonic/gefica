@@ -15,7 +15,6 @@ void X::GetBoundaryConditionFrom(Detector &detector)
             "Please pass in a Planar detector.", type.Data());
       abort();
    }
-
    if (detector.Height<=0) {
       Error("GetBoundaryConditionFrom",
             "Height(%.1fcm)<=0, abort!", detector.Height/cm);
@@ -80,10 +79,10 @@ void X::OverRelaxAt(size_t idx)
 {
    if (fIsFixed[idx]) return; // no need to calculate on boundaries
 
-   // over relax
+   // calculate Vp[idx] from Vp[idx-1] and Vp[idx+1]
    double vnew = Src[idx]*dC1m[idx]*dC1p[idx]/2 +
       (dC1p[idx]*Vp[idx-1]+dC1m[idx]*Vp[idx+1])/(dC1m[idx]+dC1p[idx]);
-   vnew = RelaxationFactor*(vnew-Vp[idx]) + Vp[idx];
+   vnew = RelaxationFactor*(vnew-Vp[idx]) + Vp[idx]; // over relax
 
    // check depletion and update Vp[idx] accordingly
    double min=Vp[idx-1], max=Vp[idx-1];
