@@ -68,7 +68,7 @@ class GeFiCa::Grid : public GeFiCa::Points
        * N2 and/or N3, and raises the flag fIsFixed for points on/outside
        * electrodes. It has to be called before SuccessiveOverRelax().
        */
-      virtual void SetBoundaryCondition(Detector *detector)=0;
+      virtual void GetBoundaryConditionFrom(Detector &detector) {};
       /**
        * Successively over-relax potentials on grid points.
        */
@@ -125,12 +125,12 @@ class GeFiCa::Grid : public GeFiCa::Points
       std::vector<bool> fIsFixed; ///< true if field values are fixed
       std::vector<bool> fIsDepleted; ///< true if a grid point is depleted
       TTree* fTree; ///<! ROOT tree to visualize fields
+      Detector* fDetector; ///<! Pointer to associated detector object
       size_t fIterations; ///< number of iterations of SOR performed
-      double fBias; ///< bias applied to the detector 
       /**
        * Over relax potential Vp[\param idx].
        */
-      virtual void OverRelaxAt(size_t idx)=0;
+      virtual void OverRelaxAt(size_t idx) {};
       /**
        * Get index of point near \param c1 in between \param begin & \param end.
        */
@@ -154,8 +154,8 @@ class GeFiCa::Grid : public GeFiCa::Points
        */
       size_t GetIdxOfMinV();
       /**
-       * Calculate Et, E1, E2, E3 from Vp[\param idx].
+       * Calculate Et, E1, E2, E3 from Vp.
        */
-      void CalculateE(size_t idx);
+      virtual void CalculateE() {};
 };
 #endif
