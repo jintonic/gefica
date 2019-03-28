@@ -131,11 +131,11 @@ double X::GetData(const std::vector<double> &data,
    //     +---r1---+---r2---+
    // C1[idx-1]    x      C1[idx]
    size_t idx=GetIdxOfPointToTheRightOf(x);
-   if (idx==N1) return data[idx];
    double r2=(C1[idx]-x)/dC1m[idx];
    double r1=1-r2;
    double xval=data[idx]*r1+data[idx-1]*r2;
-   if (gDebug>0) Info("GetData","data(x=%.1f)=%.1f C1[%zu]=%.1f, "
-         "r1=%.1f, r2=%0.1f", x,xval,idx,C1[idx],r1,r2);
+   if (gDebug>0) Info("GetData","data(x=%.4f)=%.2f, "
+         "C1[%zu]=%.4f, C1[%zu]=%.4f, "
+         "r1=%.2f, r2=%0.2f", x,xval,idx-1,C1[idx-1],idx,C1[idx],r1,r2);
    return xval;
 }
