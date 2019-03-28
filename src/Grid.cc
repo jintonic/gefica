@@ -145,49 +145,38 @@ void Grid::SuccessiveOverRelax()
 }
 //_____________________________________________________________________________
 //
-size_t Grid::GetIdxOfPointNear(double c1,size_t begin,size_t end) const
+size_t Grid::GetIdxOfPointToTheRightOf(double c1,size_t begin,size_t end) const
 {
    if (end==0) end=N1-1;
    if (begin>=end)return end;
    size_t mid=(begin+end)/2;
-   if(C1[mid]>=c1)return GetIdxOfPointNear(c1,begin,mid);
-   else return GetIdxOfPointNear(c1,mid+1,end);
+   if(C1[mid]>=c1)return GetIdxOfPointToTheRightOf(c1,begin,mid);
+   else return GetIdxOfPointToTheRightOf(c1,mid+1,end);
 }
 //_____________________________________________________________________________
 //
-size_t Grid::GetIdxOfPointNear(double c1,double c2,
+size_t Grid::GetIdxOfPointToTheRightOf(double c1,double c2,
       size_t begin,size_t end) const
 {
    if (end==0) end=N2-1;
    //search using binary search
    // if(begin>=end)cout<<"to x"<<begin<<" "<<end<<endl;;
-   if(begin>=end)return GetIdxOfPointNear(c1,end*N1,(end+1)*N1-1);
+   if(begin>=end)return GetIdxOfPointToTheRightOf(c1,end*N1,(end+1)*N1-1);
    size_t mid=((begin+end)/2);
-   if(C2[mid*N1]>=c2) return GetIdxOfPointNear(c1,c2,begin,mid);
-   else return GetIdxOfPointNear(c1,c2,mid+1,end);
+   if(C2[mid*N1]>=c2) return GetIdxOfPointToTheRightOf(c1,c2,begin,mid);
+   else return GetIdxOfPointToTheRightOf(c1,c2,mid+1,end);
 }
 //_____________________________________________________________________________
 //
-size_t Grid::GetIdxOfPointNear(double c1, double c2,double c3,
+size_t Grid::GetIdxOfPointToTheRightOf(double c1, double c2,double c3,
       size_t begin,size_t end) const
 {
    if (end==0) end=N3-1;
    //search using binary search
-   if(begin>=end)return GetIdxOfPointNear(c1,c2,begin,begin+N1*N2-1);
+   if(begin>=end)return GetIdxOfPointToTheRightOf(c1,c2,begin,begin+N1*N2-1);
    size_t mid=((begin/(N1*N2)+end/(N1*N2))/2)*N1*N2;
-   if(C3[mid]>=c3)return GetIdxOfPointNear(c1,c2,c3,begin,mid);
-   else return GetIdxOfPointNear(c1,c2,c3,mid+1,end);
-}
-//_____________________________________________________________________________
-//
-double Grid::GetData(const std::vector<double> &data,
-      double x, double y, double z) const
-{
-   size_t idx=GetIdxOfPointNear(x);
-   if (idx==N1) return data[idx];
-   double ab=(-x+C1[idx])/dC1p[idx];
-   double aa=1-ab;
-   return data[idx]*ab+data[idx-1]*aa;
+   if(C3[mid]>=c3)return GetIdxOfPointToTheRightOf(c1,c2,c3,begin,mid);
+   else return GetIdxOfPointToTheRightOf(c1,c2,c3,mid+1,end);
 }
 //_____________________________________________________________________________
 //

@@ -26,6 +26,8 @@ class GeFiCa::X : public GeFiCa::Grid, public TNamed
    protected:
       void OverRelaxAt(size_t idx); 
       void CalculateE();
+      double GetData(const std::vector<double> &data,
+            double x, double y=0, double z=0) const;
 };
 #endif
 
