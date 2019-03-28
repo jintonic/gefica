@@ -38,6 +38,7 @@ void Rho::GetBoundaryConditionFrom(Detector &detector)
       fIsFixed.push_back(false); fIsDepleted.push_back(false);
       Src.push_back(-coaxial.GetImpurity(C1[i])*Qe/epsilon);
    }
+   dC1m[0]=0; dC1p[N1-1]=0;
    // fix 1st and last points
    fIsFixed[0]=true; fIsFixed[N1-1]=true;
    // linear interpolation between Bias[0] and Bias[1]
@@ -57,7 +58,7 @@ void Rho::SolveAnalytically()
       Src[0]*(C1[N1-1]*C1[N1-1]*log(C1[0])-C1[0]*C1[0]*log(C1[N1-1]))/4;
    c2/=log(C1[0])-log(C1[N1-1]);
    for (size_t i=0; i<N1; i++)
-      Vp[i] = -Src[0]*C1[N1-1]*C1[N1-1]/4 + c1*log(C1[N1-1]) + c2;
+      Vp[i] = -Src[0]*C1[i]*C1[i]/4 + c1*log(C1[i]) + c2;
    CalculateE();
 }
 //_____________________________________________________________________________
@@ -66,11 +67,12 @@ void Rho::OverRelaxAt(size_t idx)
 {
    if (fIsFixed[idx]) return; // no need to calculate on boundaries
 
-   // over relax
-   double vnew = (-Src[idx]*(dC1m[idx]+dC1p[idx])/2
-         + C1[idx]*(Vp[idx+1]-Vp[idx-1])/2
-         +Vp[idx+1]/dC1m[idx]+Vp[idx-1]/dC1p[idx])/(1/dC1m[idx]+1/dC1p[idx]);
-   vnew=RelaxationFactor*(vnew-Vp[idx])+Vp[idx];
+   // calculate Vp[idx] from Vp[idx-1] and Vp[idx+1]
+   double vnew = Src[idx]*dC1p[idx]*dC1m[idx]/2
+         + ((Vp[idx+1]-Vp[idx-1])/C1[idx]/2
+               + Vp[idx+1]/dC1p[idx]+Vp[idx-1]/dC1m[idx])
+         /(1/dC1m[idx]+1/dC1p[idx]);
+   vnew=RelaxationFactor*(vnew-Vp[idx])+Vp[idx]; // over relax
 
    // check depletion and update Vp[idx] accordingly
    double min=Vp[idx-1], max=Vp[idx-1];
