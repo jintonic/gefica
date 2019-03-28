@@ -191,37 +191,6 @@ double Grid::GetData(const std::vector<double> &data,
 }
 //_____________________________________________________________________________
 //
-double Grid::GetC()
-{
-   Info("GetC","Start...");
-   SuccessiveOverRelax(); // identify undepleted region
-   std::vector<double>original=Src; // save original rho/epsilon
-   for (size_t i=0; i<GetN(); i++) { // set impurity to zero
-      if (Src[i]!=0) {
-         for (size_t j=0;j<GetN();j++) {
-            Src[j]=0;
-            if (!fIsFixed[j] && !fIsDepleted[j]) fIsFixed[j]=true;
-         }
-         break;
-      }
-   }
-   SuccessiveOverRelax(); // calculate potential without impurity
-   Src=original; // set impurity back
-
-   // calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
-   double dV = fDetector->Bias[1]-fDetector->Bias[0];
-   if (dV<0) dV=-dV;
-   double SumofElectricField=0;
-   for(size_t i=0;i<GetN();i++) {
-      SumofElectricField+=E1[i]*E1[i]*dC1p[i]*cm*cm;
-      if (!fIsDepleted[i]) fIsFixed[i]=false;
-   }
-   double c=SumofElectricField*epsilon/dV/dV;
-   Info("GetC","%.2f pF",c/pF);
-   return c;
-}
-//_____________________________________________________________________________
-//
 TTree* Grid::GetTree(bool createNew)
 {
    if (fTree) { if (createNew) delete fTree; else return fTree; }

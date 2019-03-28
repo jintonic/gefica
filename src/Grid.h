@@ -49,7 +49,7 @@ class TTree;
 class GeFiCa::Grid : public GeFiCa::Points
 {
    public:
-      std::vector<double> Src; ///< (net impurity concentration)x|Qe|/epsilon
+      std::vector<double> Src; ///< -(net impurity concentration)x|Qe|/epsilon
       size_t N1; ///< number of points along the 1st coordinate
       size_t N2; ///< number of points along the 2nd coordinate
       size_t N3; ///< number of points along the 3rd coordinate
@@ -94,7 +94,7 @@ class GeFiCa::Grid : public GeFiCa::Points
        * Get detector capacitance.
        * Calculate C based on \f$CV^2/2 = \epsilon \int E^2/2 dx^3\f$.
        */
-      double GetC();
+      double GetC() { return 0; }
       /**
        * Create &/or return a TTree with field data.
        * \param [in] createNew is a flag
