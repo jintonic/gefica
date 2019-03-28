@@ -1,8 +1,9 @@
-// show default configuration & grid setup of 1d true coaxial detectors
+// show default configuration & grid setup of ideal true coaxial detectors
 {
-   GeFiCa::TrueCoaxial1D tc1; // construct a 1D true coaxial detector
-   tc1.Dump(); // call TObject::Dump() to print data members
-   TTree *t = tc1.GetTree(); // create a ROOT tree for quick check
-   cout<<"Use the following cmd to visualize intial v distribution"<<endl;
-   cout<<"t->Draw(\"v:c1\")"<<endl;
+   GeFiCa::TrueCoaxial detector; // construct an ideal true coaxial detector
+   detector.Dump(); // call TObject::Dump() to print data members
+   GeFiCa::Rho grid;
+   grid.GetBoundaryConditionFrom(detector);
+   TTree *t = grid.GetTree(); // create a ROOT tree for quick check
+   t->Draw("v:c1");
 }
