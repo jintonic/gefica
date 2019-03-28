@@ -29,7 +29,7 @@ class GeFiCa::Crystal
  * It provides TClass::ClassName() through ClassDef for
  * Grid::SetBoundaryCondition to know the specific type of detector.
  */
-class GeFiCa::Detector : public GeFiCa::Crystal, public TNamed
+class GeFiCa::Detector : public Crystal, public TNamed
 {
    public:
       std::vector<double> Bias; ///< bias on electrodes

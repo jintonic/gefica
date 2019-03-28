@@ -6,7 +6,7 @@ namespace GeFiCa { class Planar; }
 /**
  * Configuration of a planar detector.
  */
-class GeFiCa::Planar : public GeFiCa::Detector
+class GeFiCa::Planar : public Detector
 {
    public :
       double Width; ///< width of a planar detector
