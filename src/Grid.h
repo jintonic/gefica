@@ -31,7 +31,7 @@ class TGraph;
  * It inherits from \class TNamed the ability to be retreived from a ROOT file
  * by its name. One can get either a TGraph or C1, C2... from it for plotting.
  */
-class GeFiCa::FieldLine : public GeFiCa::Points, public TNamed
+class GeFiCa::FieldLine : public Points, public TNamed
 {
    public:
       FieldLine() : Points(), TNamed("fl", "electric field line"), fGl(0) {};
@@ -46,7 +46,7 @@ class TTree;
  * It inherits the flat data structure from \class Points instead of using the
  * class to save typing.  Compare `C1[i]` with `point.C1[i]`.
  */
-class GeFiCa::Grid : public GeFiCa::Points
+class GeFiCa::Grid : public Points
 {
    public:
       std::vector<double> Src; ///< -(net impurity concentration)x|Qe|/epsilon
@@ -77,6 +77,11 @@ class GeFiCa::Grid : public GeFiCa::Points
        * Get number of iterations for SOR to converge.
        */
       size_t GetIterations() { return fIterations; }
+      /**
+       * Solve Poisson's Equation analytically.
+       * It only accepts a constant impurity throughout the grid.
+       */
+      void SolveAnalytically();
       /**
        * Get potential at (c1,c2,c3) by interpolation.
        */
@@ -144,7 +149,7 @@ class GeFiCa::Grid : public GeFiCa::Points
        * Interpolate grid data at (c1,c2,c3).
        */
       virtual double GetData(const std::vector<double> &data,
-            double c1, double c2, double c3) const { return 0; }
+            double c1, double c2, double c3) const;
       /**
        * Get index of the grid point with max potential.
        */
