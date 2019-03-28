@@ -6,9 +6,9 @@ double GetCfromDepletionDepth(double voltage, double height)
 {
    Planar detector;
    detector.Height=height;
-   detector.Bias[0]=voltage; // for bottom electrode
-   detector.Bias[1]=0*volt; // for top electrode
-   detector.SetAverageImpurity(-1e10/cm3);
+   detector.Bias[0]=0*volt; // for bottom electrode
+   detector.Bias[1]=voltage; // for top electrode
+   detector.SetAverageImpurity(-1e10/cm3); // deplete from bottom
 
    X grid(n);
    grid.GetBoundaryConditionFrom(detector);
@@ -20,7 +20,7 @@ double GetCfromDepletionDepth(double voltage, double height)
    while(up-down>1e-3) {
       depth=(down+up)/2;
       gDebug=1;
-      if(grid.GetV(depth)==0) down=depth; else up=depth;
+      if (grid.GetV(depth)==0) down=depth; else up=depth;
       gDebug=0;
    }
 
