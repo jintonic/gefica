@@ -1,46 +1,19 @@
-#ifndef GeFiCa_TRUECOAXIAL1D_H
-#define GeFiCa_TRUECOAXIAL1D_H
+#ifndef GeFiCa_TrueCoaxial
+#define GeFiCa_TrueCoaxial
 
-#include "Rho.h"
-
-namespace GeFiCa { class TrueCoaxial1D; }
-
+#include "Detector.h"
+namespace GeFiCa { class TrueCoaxial; }
 /**
- * Grid setup for 1D true coaxial detectors.
+ * Configuration of a true coaxial detector.
  */
-class GeFiCa::TrueCoaxial1D : public GeFiCa::Rho
+class GeFiCa::TrueCoaxial : public Detector
 {
    public :
-      double OuterR; ///< Outer radius of the detector
-      double InnerR; ///< Inner radius of the detector
+      double Radius; ///< radius of the detector
+      double BoreR; ///< radius of the bore
 
-      /**
-       * Default constructor.
-       */
-      TrueCoaxial1D(int n=101, const char *name="tc1",
-            const char *title="1D true coaxial detector");
-      /**
-       * Analytic calculation of 1D field in cylindrical coordinates with fixed
-       * impurity concentration.
-       *
-       * In case of fixed impurity, according to
-       * https://www.wolframalpha.com/input/?i=1%2Fx*+%28x*f%28x%29%27%29%27%3Da
-       * potential(r)=a + b log(r) - rho/4/epsilon*r^2 with boundary conditions:
-       *
-       * - potential(Ri) = Bias[0],
-       * - potential(Ro) = Bias[1],
-       *
-       * So, 
-       *
-       * - a = - rho/2/epsilon
-       * - b = [rho/4/epsilon*(Ro^2-Ri^2)+(Bias[1]-Bias[0])]/log(Ro/Ri)
-       */
-      void FillGridWithAnalyticResult();
-
-      ClassDef(TrueCoaxial1D, 1);
-
-   protected:
-      virtual void InitializeGrid();
+      TrueCoaxial(const char *name="tc",
+            const char *title="true coaxial detector");
+      ClassDef(TrueCoaxial, 1);
 };
 #endif
-
