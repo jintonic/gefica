@@ -1,28 +1,26 @@
-#ifndef GeFiCa_R_H
-#define GeFiCa_R_H
+#ifndef GeFiCa_R
+#define GeFiCa_R
 
-#include "X.h"
-
+#include <TNamed.h>
+#include "Grid.h"
 namespace GeFiCa { class R; }
-
 /**
  * 1D spherical coordinate.
  */
-class GeFiCa::R : public X 
+class GeFiCa::R : public Grid, public TNamed
 {
    public:
-      /**
-       * Default constructor
-       */
-      R(int n=101, const char *name="r",
-            const char *title="1D spherical coordinate")
-         : X(n, name, title) {};
+      R(size_t n1=101) : Grid(n1),
+      TNamed("r", "1D spherical coordinate") {};
+
+      void GetBoundaryConditionFrom(Detector &detector);
+      void SolveAnalytically();
+      double GetC();
 
       ClassDef(R,1);
-
    protected:
-      virtual void OverRelaxAt(int idx);
-      virtual void DoSOR4(int idx);
+      virtual void OverRelaxAt(size_t idx);
+      void CalculateE();
 };
 #endif
 
