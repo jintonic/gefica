@@ -2,27 +2,25 @@
 using namespace GeFiCa;
 void compare2analytic()
 {
-   // configure detector
-   Planar1D *num = new Planar1D;
-   num->V0=0*volt;
-   num->V1=800*volt;
-   num->Thickness=1*cm;
-   num->SetAverageImpurity(1e10/cm3);
+   Planar detector;
+   detector.Bias[0]=0*volt;
+   detector.Bias[1]=800*volt;
+   detector.Height=1*cm;
+   detector.SetAverageImpurity(1e10/cm3);
 
-   // make a copy of the detector configuration
-   Planar1D *ana = (Planar1D*) num->Clone("ana");
+   X grid1, grid2;
 
-   // calculate potential using SOR method
-   num->SuccessiveOverRelax();
+   grid1.GetBoundaryConditionFrom(detector);
+   grid1.SuccessiveOverRelax();
 
-   // fill grid with analytic result
-   ana->FillGridWithAnalyticResult();
+   grid2.GetBoundaryConditionFrom(detector);
+   grid2.SolveAnalytically();
 
    // generate graphics
-   TTree *tn = num->GetTree();
+   TTree *tn = grid1.GetTree();
    tn->Draw("v:c1","","goff");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
-   TTree *ta = ana->GetTree();
+   TTree *ta = grid2.GetTree();
    ta->Draw("v:c1","","goff");
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
 
