@@ -1,28 +1,25 @@
-#ifndef GeFiCa_Rho_H
-#define GeFiCa_Rho_H
+#ifndef GeFiCa_Rho
+#define GeFiCa_Rho
 
-#include "X.h"
-
+#include <TNamed.h>
+#include "Grid.h"
 namespace GeFiCa { class Rho; }
-
 /**
  * 1D cylindrical coordinate.
  */
-class GeFiCa::Rho : public X 
+class GeFiCa::Rho : public Grid, public TNamed
 {
    public:
-      /**
-       * Default constructor.
-       */
-      Rho(int n=101, const char *name="rho",
-            const char *title="1D cylindrical coordinates")
-         : X(n, name, title) {};
+      Rho(size_t n1=101) : Grid(n1),
+      TNamed("rho", "1D cylindrical coordinates") {};
+
+      void GetBoundaryConditionFrom(Detector &detector);
+      void SolveAnalytically();
+      double GetC();
 
       ClassDef(Rho,1);
-
    protected:
-      virtual void OverRelaxAt(int idx);
-      virtual void DoSOR4(int idx);
+      void OverRelaxAt(size_t idx); 
+      void CalculateE();
 };
 #endif
-
