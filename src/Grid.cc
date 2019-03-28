@@ -1,6 +1,5 @@
 #include <TMath.h>
 #include <TTree.h>
-#include <TROOT.h>
 #include <TStyle.h>
 #include <TGraph.h>
 #include <TStopwatch.h>
@@ -29,7 +28,6 @@ Grid::Grid(size_t n1, size_t n2, size_t n3) : N1(n1), N2(n2), N3(n3),
    fTree(0), fDetector(0)
 {
    // pick up a good style to modify
-   gROOT->SetStyle("Plain");
    gStyle->SetName("GeFiCa");
    gStyle->SetLegendBorderSize(0);
    gStyle->SetLegendFont(132);
@@ -113,7 +111,7 @@ bool Grid::IsDepleted()
 //
 void Grid::SuccessiveOverRelax()
 {
-   if (fDetector==0) {
+   if (dC1p.size()<1) {
       Error("SuccessiveOverRelax", "Grid is not ready. "
             "Please call GetBoundaryConditionFrom(Detector&) first.");
       abort();
@@ -142,6 +140,15 @@ void Grid::SuccessiveOverRelax()
    Printf("%4zu steps, precision: %.1e (target: %.0e)",
          fIterations, cp, Precision);
    Info("SuccessiveOverRelax", "CPU time: %.1f s", watch.CpuTime());
+}
+//_____________________________________________________________________________
+//
+void Grid::SolveAnalytically()
+{
+   if (Src[0]!=Src[N1-1]) {
+      Error("SolveAnalytically", "can't handle changing impurity.");
+      abort();
+   }
 }
 //_____________________________________________________________________________
 //
@@ -217,4 +224,28 @@ TTree* Grid::GetTree(bool createNew)
    fTree->GetListOfBranches()->ls();
    fTree->ResetBranchAddresses(); // disconnect from local variables
    return fTree;
+}
+//_____________________________________________________________________________
+//
+double Grid::GetData(const std::vector<double> &data,
+      double x, double y, double z) const
+{
+   if (z==0) { // <3D
+      if (y==0) { // 1D
+         //     |<---dC1m[idx]--->|
+         //     +---r1---+---r2---+
+         // C1[idx-1]    x      C1[idx]
+         size_t idx=GetIdxOfPointToTheRightOf(x);
+         double r2=(C1[idx]-x)/dC1m[idx];
+         double r1=1-r2;
+         double xval=data[idx]*r1+data[idx-1]*r2;
+         if (gDebug>0) Info("GetData","data(x=%.4f)=%.2f, "
+               "C1[%zu]=%.4f, C1[%zu]=%.4f, r1=%.2f, r2=%0.2f",
+               x,xval,idx-1,C1[idx-1],idx,C1[idx],r1,r2);
+         return xval;
+      }
+      // 2D
+   }
+   // 3D
+   return 0;
 }
