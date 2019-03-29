@@ -4,7 +4,7 @@ using namespace GeFiCa;
 
 PointContact::PointContact(const char *name, const char *title)
    : Detector(name, title), Radius(3*cm),
-   PointContactH(300*nm), PointContactR(1*mm),
+   PointContactR(1*mm), PointContactH(300*nm),
    BoreH(0), BoreR(0), BoreTaperW(0), BoreTaperH(0),
    TaperW(1*mm), TaperH(1*mm), CornerW(1*mm), CornerH(1*mm),
    WrapAroundR(-1), GrooveW(0), GrooveH(0)
