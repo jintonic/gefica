@@ -98,6 +98,7 @@ class GeFiCa::Grid : public Points
       /**
        * Get detector capacitance.
        * Calculate C based on \f$CV^2/2 = \epsilon \int E^2/2 dx^3\f$.
+       * http://hyperphysics.phy-astr.gsu.edu/hbase/electric/capeng.html
        */
       double GetC();
       /**
