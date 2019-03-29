@@ -53,9 +53,8 @@ void R::OverRelaxAt(size_t idx)
 {
    if (fIsFixed[idx]) return; // no need to calculate on boundaries
 
-   double vnew=(Src[idx]*(dC1m[idx]+dC1p[idx])/2
-         +1/C1[idx]*(Vp[idx+1]-Vp[idx-1])
-         +Vp[idx+1]/dC1m[idx]+Vp[idx-1]/dC1p[idx])/(1/dC1m[idx]+1/dC1p[idx]);
+   double vnew=Src[idx]*dC1m[idx]*dC1p[idx]/2+(1/C1[idx]*(Vp[idx+1]-Vp[idx-1])
+         +Vp[idx+1]/dC1p[idx]+Vp[idx-1]/dC1m[idx])/(1/dC1m[idx]+1/dC1p[idx]);
    vnew=RelaxationFactor*(vnew-Vp[idx])+Vp[idx];
 
    // check depletion and update Vp[idx] accordingly
