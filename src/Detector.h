@@ -34,6 +34,10 @@ class GeFiCa::Detector : public Crystal, public TNamed
    public:
       std::vector<double> Bias; ///< bias on electrodes
       Detector(const char *name="detector", const char *title="detector");
+      /**
+       * Check if detector configurations make sense.
+       */
+      void CheckConfigurations();
       ClassDef(Detector, 1);
 };
 #endif

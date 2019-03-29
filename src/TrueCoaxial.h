@@ -4,7 +4,7 @@
 #include "Detector.h"
 namespace GeFiCa { class TrueCoaxial; }
 /**
- * Configuration of a true coaxial detector.
+ * Configuration of true coaxial detectors.
  */
 class GeFiCa::TrueCoaxial : public Detector
 {
@@ -14,6 +14,7 @@ class GeFiCa::TrueCoaxial : public Detector
 
       TrueCoaxial(const char *name="tc",
             const char *title="true coaxial detector");
+      void CheckConfigurations();
       ClassDef(TrueCoaxial, 1);
 };
 #endif
