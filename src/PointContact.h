@@ -1,27 +1,23 @@
-#ifndef GeFiCa_POINTCONTACTDZ_H
-#define GeFiCa_POINTCONTACTDZ_H
+#ifndef GeFiCa_PointContact
+#define GeFiCa_PointContact
 
-#include "RhoZ.h"
-
-namespace GeFiCa { class PointContactDZ; }
-
+#include "Detector.h"
+namespace GeFiCa { class PointContact; }
 /**
- * Grid setup for 2D point contact detectors.
- * The grid is set in [-Radius, Radius] and [0, Height].
+ * Configuration of point contact detectors.
  */
-class GeFiCa::PointContactDZ : public GeFiCa::RhoZ
+class GeFiCa::PointContact : public Detector
 {
    public:
-      double Height; ///< Height of crystal
       double Radius; ///< Radius of crystal
 
-      double PointContactH; ///< Height of point contact
       double PointContactR; ///< Radius of point contact
+      double PointContactH; ///< Height of point contact
 
-      double HoleH; ///< Depth of bore hole
-      double HoleR; ///< radius of bore hole
-      double HoleTaperW; ///< width of bore hole taper
-      double HoleTaperH; ///< height of bore hole taper
+      double BoreH; ///< Depth of bore hole
+      double BoreR; ///< radius of bore hole
+      double BoreTaperW; ///< width of bore hole taper
+      double BoreTaperH; ///< height of bore hole taper
 
       double TaperW; ///< Width of taper (point contact side)
       double TaperH; ///<Height of taper (point contact side)
@@ -33,26 +29,10 @@ class GeFiCa::PointContactDZ : public GeFiCa::RhoZ
       double GrooveW; ///< Width of Groove 
       double GrooveH; ///< Height of Groove 
 
-      /**
-       * Default constructor.
-       */
-      PointContactDZ(int nd=300, ///< [in] number of points across diameter
-            int nz=301, ///< [in] number of points along height
-            const char *name="pcdz", ///< [in] name of the class object created
-            const char *title="2D point contact detector");
-
-      void Export2fieldgen(const char *output="ppc.dat");
-
-      ClassDef(PointContactDZ,1);
-
-   protected:
-      virtual void InitializeGrid();
-      virtual void SetGridImpurity();
-      double GetData(double x, double y, double z, double *data);
-      /**
-       * Move grids close to point contact boundary to the boundary.
-       */
-      void SetBoundary();
+      PointContact(const char *name="pc",
+            const char *title="point-contact detector");
+      void CheckConfigurations();
+      ClassDef(PointContact,1);
 };
-
 #endif
+
