@@ -109,6 +109,15 @@ bool Grid::IsDepleted()
 }
 //_____________________________________________________________________________
 //
+void Grid::GetBoundaryConditionFrom(Detector &detector)
+{
+   if (GetN()>0) { // this function can only be called once
+      Warning("GetBoundaryConditionFrom", "has been called. Do nothing.");
+      return;
+   }
+}
+//_____________________________________________________________________________
+//
 void Grid::SuccessiveOverRelax()
 {
    if (dC1p.size()<1) {
