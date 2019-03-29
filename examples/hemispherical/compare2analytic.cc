@@ -1,31 +1,26 @@
 using namespace GeFiCa;
-//Compare numerical result to analytic calculation for 1D spherical detector
+// Compare numerical result to analytic calculation
+// for ideal hemispherical detector
 void compare2analytic()
 {
-   // configure detector
-   Sphere1D *num=new Sphere1D;
-   num->InnerR=0.3*cm;
-   num->OuterR=1*cm;
-   num->SetAverageImpurity(3e9/cm3);
-   num->V0=900*volt;
-   num->V1=0*volt;
-   num->Dump();
-   cout<<"press any key to continue"<<endl; cin.get();
+   Hemispherical detector;
+   detector.Height=1*cm;
+   detector.PointContactR=0.3*cm;
+   detector.SetAverageImpurity(3e9/cm3);
+   detector.Bias[0]=900*volt; // point contact
+   detector.Bias[1]=0*volt; // outer surface
 
-   // make a copy of the detector configuration
-   Sphere1D *ana = (Sphere1D*) num->Clone("ana");
-
-   // calculate potential using SOR method
-   num->SuccessiveOverRelax();
-
-   // fill grid with analytic result
-   ana->FillGridWithAnalyticResult();
+   R grid1, grid2;
+   grid1.GetBoundaryConditionFrom(detector);
+   grid1.SuccessiveOverRelax();
+   grid2.GetBoundaryConditionFrom(detector);
+   grid2.SolveAnalytically();
 
    // generate graphics
-   TTree *tn = num->GetTree();
+   TTree *tn = grid1.GetTree();
    tn->Draw("v:c1","","goff");
    TGraph *gn = new TGraph(tn->GetSelectedRows(), tn->GetV2(), tn->GetV1());
-   TTree *ta = ana->GetTree();
+   TTree *ta = grid2.GetTree();
    ta->Draw("v:c1","","goff");
    TGraph *ga = new TGraph(ta->GetSelectedRows(), ta->GetV2(), ta->GetV1());
 
