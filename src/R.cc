@@ -37,25 +37,14 @@ void R::GetBoundaryConditionFrom(Detector &detector)
 void R::SolveAnalytically()
 {
    Grid::SolveAnalytically(); // check if impurity is constant
-   // https://www.wolframalpha.com/input/?i=(V%27(r)r)%27%2Fr%3Da
-   double c1 = (Vp[N1-1]-Vp[0] + Src[0]*(C1[N1-1]*C1[N1-1]-C1[0]*C1[0])/4);
-   c1/=log(C1[N1-1]/C1[0]);
-   double c2 = Vp[N1-1]*log(C1[0]) - Vp[0]*log(C1[N1-1]) + 
-      Src[0]*(C1[N1-1]*C1[N1-1]*log(C1[0])-C1[0]*C1[0]*log(C1[N1-1]))/4;
-   c2/=log(C1[0])-log(C1[N1-1]);
-   for (size_t i=0; i<N1; i++)
-      Vp[i] = -Src[0]*C1[i]*C1[i]/4 + c1*log(C1[i]) + c2;
+   // https://www.wolframalpha.com/input/?i=(r%5E2V%27)%27%2Fr%5E2%3Da
+   // V(x) = a*r^2/6 + c1/r + c2
+   double a = -Src[0];
+   double c1=(Vp[N1-1]-Vp[0] + a*(C1[fN-1]*C1[fN-1]-C1[0]*C1[0])/6)
+      /(1/C1[fN-1]-1/C1[0]);
+   double c2=Vp[0]+a/6*C1[0]*C1[0]-c1/C1[0];
+   for (size_t i=0; i<N1; i++) Vp[i] = Src[0]*C1[i]*C1[i]/6 + c1/C1[i] + c2;
    CalculateE();
-
-//   double density=fImpurity[0]*Qe;
-//   double c1=(Bias[1]-Bias[0] + density/epsilon/6*(C1[fN-1]*C1[fN-1]-C1[0]*C1[0]))
-//      /(1/C1[fN-1]-1/C1[0]);
-//   double c2=Bias[0]+density/epsilon/6*C1[0]*C1[0]-c1/C1[0];
-//   for (int i=0; i<fN; i++) {
-//      V[i] = -density/6/epsilon*C1[i]*C1[i]+c1/C1[i]+c2;
-//      // Fixme:
-//      if (i!=0||i!=fN-1)E1[i]=(V[i+1]-V[i-1])/(dC1p[i]+dC1m[i]);
-//   }
 }
 //_____________________________________________________________________________
 //
@@ -93,5 +82,3 @@ void R::OverRelaxAt(size_t idx)
 //
 //   if(fIsDepleted[idx]||Bias[0]==Bias[1]) V[idx]=tmp;
 }
-//_____________________________________________________________________________
-//
