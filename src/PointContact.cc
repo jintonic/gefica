@@ -1,5 +1,5 @@
 #include "Units.h"
-#include "PointContactDZ.h"
+#include "PointContact.h"
 using namespace GeFiCa;
 //for the case which point contact may not fall right on the grid, it will case
 //a great different potential on space close to point contact the current
