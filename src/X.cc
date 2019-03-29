@@ -15,6 +15,7 @@ void X::GetBoundaryConditionFrom(Detector &detector)
    }
    Planar& planar = (Planar&) detector;
    planar.CheckConfigurations();
+   fDetector = &detector; // for GetC to use fDetector->Bias[]
 
    for (size_t i=0; i<N1; i++) {
       dC1p.push_back(planar.Height/(N1-1));

@@ -15,6 +15,7 @@ void Rho::GetBoundaryConditionFrom(Detector &detector)
    }
    TrueCoaxial& coaxial = (TrueCoaxial&) detector;
    coaxial.CheckConfigurations();
+   fDetector = &detector; // for GetC to use fDetector->Bias[]
 
    double dR=coaxial.Radius-coaxial.BoreR;
    for (size_t i=0; i<N1; i++) {

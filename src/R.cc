@@ -15,6 +15,7 @@ void R::GetBoundaryConditionFrom(Detector &detector)
    }
    Hemispherical& hemi = (Hemispherical&) detector;
    hemi.CheckConfigurations();
+   fDetector = &detector; // for GetC to use fDetector->Bias[]
 
    double dR=hemi.Height-hemi.PointContactR;
    for (size_t i=0; i<N1; i++) {
