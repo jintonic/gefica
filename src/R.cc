@@ -50,6 +50,22 @@ void R::SolveAnalytically()
 }
 //_____________________________________________________________________________
 //
+double R::GetC()
+{
+   Grid::GetC(); // calculate field excluding undepleted region
+
+   double dV = fDetector->Bias[1]-fDetector->Bias[0]; if (dV<0) dV=-dV;
+   double integral=0;
+   for (size_t i=0; i<GetN(); i++) {
+      integral+=E1[i]*E1[i]*dC1p[i]; // Fixme:: this only works for X
+      if (!fIsDepleted[i]) fIsFixed[i]=false; // release undepleted points
+   }
+   double c=integral*epsilon/dV/dV;
+   Info("GetC","%.2f pF/cm2",c/pF*cm2);
+   return c;
+}
+//_____________________________________________________________________________
+//
 void R::OverRelaxAt(size_t idx)
 {
    if (fIsFixed[idx]) return; // no need to calculate on boundaries

@@ -15,6 +15,7 @@ class GeFiCa::Rho : public Grid, public TNamed
 
       void GetBoundaryConditionFrom(Detector &detector);
       void SolveAnalytically();
+      double GetC();
 
       ClassDef(Rho,1);
    protected:
