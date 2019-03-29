@@ -194,7 +194,7 @@ size_t Grid::GetIdxOfPointToTheRightOf(double c1, double c2,double c3,
    if(C3[mid]>=c3)return GetIdxOfPointToTheRightOf(c1,c2,c3,begin,mid);
    else return GetIdxOfPointToTheRightOf(c1,c2,c3,mid+1,end);
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 double Grid::GetC()
 {
@@ -208,18 +208,9 @@ double Grid::GetC()
    SuccessiveOverRelax(); // calculate potential without impurity
    Src=original; // set impurity back
 
-   // calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
-   double dV = fDetector->Bias[1]-fDetector->Bias[0]; if (dV<0) dV=-dV;
-   double integral=0;
-   for (size_t i=0; i<GetN(); i++) {
-      integral+=Et[i]*Et[i]*dC1p[i];
-      if (!fIsDepleted[i]) fIsFixed[i]=false; // release undepleted points
-   }
-   double c=integral*epsilon/dV/dV;
-   Info("GetC","%.2f pF",c/pF);
-   return c;
+   return 0;
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 TTree* Grid::GetTree(bool createNew)
 {
