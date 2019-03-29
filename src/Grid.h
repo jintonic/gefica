@@ -99,7 +99,7 @@ class GeFiCa::Grid : public Points
        * Get detector capacitance.
        * Calculate C based on \f$CV^2/2 = \epsilon \int E^2/2 dx^3\f$.
        */
-      double GetC() { return 0; }
+      double GetC();
       /**
        * Create &/or return a TTree with field data.
        * \param [in] createNew is a flag

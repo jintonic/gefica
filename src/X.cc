@@ -45,31 +45,6 @@ void X::SolveAnalytically()
 }
 //_____________________________________________________________________________
 //
-double X::GetC()
-{
-   Info("GetC","Start...");
-   SuccessiveOverRelax(); // identify undepleted region
-   std::vector<double>original=Src; // save original rho/epsilon
-   for (size_t i=0; i<GetN(); i++) {
-      Src[i]=0; // set impurity to zero
-      if (fIsDepleted[i]==false) fIsFixed[i]=true; // fix undepleted points
-   }
-   SuccessiveOverRelax(); // calculate potential without impurity
-   Src=original; // set impurity back
-
-   // calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
-   double dV = Vp[N1-1]-Vp[0]; if (dV<0) dV=-dV;
-   double integral=0;
-   for (size_t i=0; i<GetN(); i++) {
-      integral+=E1[i]*E1[i]*dC1p[i];
-      if (!fIsDepleted[i]) fIsFixed[i]=false; // release undepleted points
-   }
-   double c=integral*epsilon/dV/dV;
-   Info("GetC","%.2f pF",c/pF);
-   return c;
-}
-//_____________________________________________________________________________
-//
 void X::OverRelaxAt(size_t idx)
 {
    if (fIsFixed[idx]) return; // no need to calculate on boundaries
