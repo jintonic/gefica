@@ -25,6 +25,7 @@ void X::GetBoundaryConditionFrom(Detector &detector)
       fIsFixed.push_back(false); fIsDepleted.push_back(false);
       Src.push_back(-planar.GetImpurity(C1[i])*Qe/epsilon);
    }
+   dC1m[0]=0; dC1p[N1-1]=0;
    // fix 1st and last points
    fIsFixed[0]=true; fIsFixed[N1-1]=true;
    // linear interpolation between Bias[0] and Bias[1]
