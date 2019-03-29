@@ -5,36 +5,31 @@ using namespace GeFiCa;
 
 void X::GetBoundaryConditionFrom(Detector &detector)
 {
-   if (GetN()>0) { // this function can only be called once
-      Warning("GetBoundaryConditionFrom", "has been called. Do nothing.");
-      return;
-   }
+   Grid::GetBoundaryConditionFrom(detector); // check number of calls
+
    TString type(detector.ClassName());
    if (type.Contains("Planar")==false) {
       Error("GetBoundaryConditionFrom", "%s is not expected. "
             "Please pass in a Planar detector.", type.Data());
       abort();
    }
-   if (detector.Height<=0) {
-      Error("GetBoundaryConditionFrom",
-            "Height(%.1fcm)<=0, abort!", detector.Height/cm);
-      abort();
-   }
+   Planar& planar = (Planar&) detector;
+   planar.CheckConfigurations();
 
    for (size_t i=0; i<N1; i++) {
-      dC1p.push_back(detector.Height/(N1-1));
-      dC1m.push_back(detector.Height/(N1-1));
+      dC1p.push_back(planar.Height/(N1-1));
+      dC1m.push_back(planar.Height/(N1-1));
       C1.push_back(i*dC1p[i]);
       E1.push_back(0); Et.push_back(0);
       fIsFixed.push_back(false); fIsDepleted.push_back(false);
-      Src.push_back(-detector.GetImpurity(C1[i])*Qe/epsilon);
+      Src.push_back(-planar.GetImpurity(C1[i])*Qe/epsilon);
    }
    // fix 1st and last points
    fIsFixed[0]=true; fIsFixed[N1-1]=true;
    // linear interpolation between Bias[0] and Bias[1]
-   double slope = (detector.Bias[1]-detector.Bias[0])/(N1-1);
-   for (size_t i=0; i<N1; i++) Vp.push_back(detector.Bias[0]+slope*i);
-   Vp[N1-1]=detector.Bias[1];
+   double slope = (planar.Bias[1]-planar.Bias[0])/(N1-1);
+   for (size_t i=0; i<N1; i++) Vp.push_back(planar.Bias[0]+slope*i);
+   Vp[N1-1]=planar.Bias[1];
 }
 //_____________________________________________________________________________
 //

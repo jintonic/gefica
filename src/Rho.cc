@@ -5,10 +5,8 @@ using namespace GeFiCa;
 
 void Rho::GetBoundaryConditionFrom(Detector &detector)
 {
-   if (GetN()>0) { // this function can only be called once
-      Warning("GetBoundaryConditionFrom", "has been called. Do nothing.");
-      return;
-   }
+   Grid::GetBoundaryConditionFrom(detector); // check number of calls
+
    TString type(detector.ClassName());
    if (type.Contains("TrueCoaxial")==false) {
       Error("GetBoundaryConditionFrom", "%s is not expected. "
@@ -16,19 +14,7 @@ void Rho::GetBoundaryConditionFrom(Detector &detector)
       abort();
    }
    TrueCoaxial& coaxial = (TrueCoaxial&) detector;
-   if (coaxial.Radius<=0) {
-      Error("GetBoundaryConditionFrom", "Radius(%.1f)<=0!", coaxial.Radius);
-      abort();
-   }
-   if (coaxial.BoreR<=0) {
-      Error("GetBoundaryConditionFrom", "BoreR(%.1f)<=0!", coaxial.BoreR);
-      abort();
-   }
-   if (coaxial.BoreR>=coaxial.Radius) {
-      Error("GetBoundaryConditionFrom", "BoreR(%.1f)>=Raidus(%.1f)!",
-            coaxial.BoreR, coaxial.Radius);
-      abort();
-   }
+   coaxial.CheckConfigurations();
 
    double dR=coaxial.Radius-coaxial.BoreR;
    for (size_t i=0; i<N1; i++) {
