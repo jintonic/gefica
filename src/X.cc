@@ -33,7 +33,7 @@ void X::GetBoundaryConditionFrom(Detector &detector)
    for (size_t i=0; i<N1; i++) Vp.push_back(planar.Bias[0]+slope*i);
    Vp[N1-1]=planar.Bias[1];
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 void X::SolveAnalytically()
 {
@@ -45,7 +45,23 @@ void X::SolveAnalytically()
    for (size_t i=0; i<N1; i++) Vp[i] = a*C1[i]*C1[i]+b*C1[i]+c;
    CalculateE();
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
+//
+double X::GetC()
+{
+   Grid::GetC(); // calculate field excluding undepleted region
+
+   double dV = fDetector->Bias[1]-fDetector->Bias[0]; if (dV<0) dV=-dV;
+   double integral=0;
+   for (size_t i=0; i<GetN(); i++) {
+      integral+=E1[i]*E1[i]*dC1p[i];
+      if (!fIsDepleted[i]) fIsFixed[i]=false; // release undepleted points
+   }
+   double c=integral*epsilon/dV/dV;
+   Info("GetC","%.2f pF/cm2",c/pF*cm2);
+   return c;
+}
+//______________________________________________________________________________
 //
 void X::OverRelaxAt(size_t idx)
 {
