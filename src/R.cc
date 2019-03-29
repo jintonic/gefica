@@ -40,10 +40,11 @@ void R::SolveAnalytically()
    // https://www.wolframalpha.com/input/?i=(r%5E2V%27)%27%2Fr%5E2%3Da
    // V(x) = a*r^2/6 + c1/r + c2
    double a = -Src[0];
-   double c1=(Vp[N1-1]-Vp[0] + a*(C1[N1-1]*C1[N1-1]-C1[0]*C1[0])/6)
-      /(1/C1[N1-1]-1/C1[0]);
-   double c2=Vp[0]+a/6*C1[0]*C1[0]-c1/C1[0];
-   for (size_t i=0; i<N1; i++) Vp[i] = Src[0]*C1[i]*C1[i]/6 + c1/C1[i] + c2;
+   double c1= a*C1[0]*C1[N1-1]*(C1[N1-1]+C1[0])/6
+      -(Vp[N1-1]-Vp[0])*C1[0]*C1[N1-1]/(C1[N1-1]-C1[0]);
+   double c2= (Vp[N1-1]*C1[N1-1]-Vp[0]*C1[0])/(C1[N1-1]-C1[0])
+      -a*(C1[N1-1]*C1[N1-1]+C1[N1-1]*C1[0]+C1[0]*C1[0])/6;
+   for (size_t i=0; i<N1; i++) Vp[i] = a*C1[i]*C1[i]/6 + c1/C1[i] + c2;
    CalculateE();
 }
 //_____________________________________________________________________________
