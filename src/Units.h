@@ -1,9 +1,8 @@
 /** @file Units.h
  * A file defining commonly used units & constants.
  */
-#ifndef GeFiCa_UNITS_H
-#define GeFiCa_UNITS_H
-
+#ifndef GeFiCa_Units
+#define GeFiCa_Units
 namespace GeFiCa { 
    static const double ns=1; ///< nano second
    static const double us=1e3*ns; ///< micro second
@@ -16,6 +15,8 @@ namespace GeFiCa {
    static const double mm=0.1*cm; ///< minimeter
    static const double mm2=mm*mm; ///< minimeter squared
    static const double mm3=mm*mm*mm; ///< minimeter cubed
+   static const double nm=1e-6*mm; ///< nanometer
+   static const double um=1e-3*mm; ///< micrometer
    static const double volt=1;
    static const double kV=1000*volt; ///< kilo volt
    static const double pF=C/volt*1e-12; ///< pico farad
@@ -25,6 +26,5 @@ namespace GeFiCa {
    static const double epsilonR=16; ///< dielectric constant of Ge
    static const double epsilon=epsilonR*epsilon0; ///< permittivity of Ge [C/volt/cm]
 }
-
 #endif
 
