@@ -40,8 +40,8 @@ void R::SolveAnalytically()
    // https://www.wolframalpha.com/input/?i=(r%5E2V%27)%27%2Fr%5E2%3Da
    // V(x) = a*r^2/6 + c1/r + c2
    double a = -Src[0];
-   double c1=(Vp[N1-1]-Vp[0] + a*(C1[fN-1]*C1[fN-1]-C1[0]*C1[0])/6)
-      /(1/C1[fN-1]-1/C1[0]);
+   double c1=(Vp[N1-1]-Vp[0] + a*(C1[N1-1]*C1[N1-1]-C1[0]*C1[0])/6)
+      /(1/C1[N1-1]-1/C1[0]);
    double c2=Vp[0]+a/6*C1[0]*C1[0]-c1/C1[0];
    for (size_t i=0; i<N1; i++) Vp[i] = Src[0]*C1[i]*C1[i]/6 + c1/C1[i] + c2;
    CalculateE();
@@ -50,35 +50,37 @@ void R::SolveAnalytically()
 //
 void R::OverRelaxAt(size_t idx)
 {
-//   if (fIsFixed[idx])return ;
-//   double density=fImpurity[idx]*Qe;
-//   double h2=dC1m[idx];
-//   double h3=dC1p[idx];
-//   double p2=V[idx-1];
-//   double p3=V[idx+1];
-//   double tmp=(+density/epsilon*(h2+h3)*0.5+1/C1[idx]*(p3-p2)
-//         +p3/h2+p2/h3)/(1/h2+1/h3);
+   if (fIsFixed[idx]) return; // no need to calculate on boundaries
+
+   double vnew=(Src[idx]*(dC1m[idx]+dC1p[idx])/2
+         +1/C1[idx]*(Vp[idx+1]-Vp[idx-1])
+         +Vp[idx+1]/dC1m[idx]+Vp[idx-1]/dC1p[idx])/(1/dC1m[idx]+1/dC1p[idx]);
+   vnew=RelaxationFactor*(vnew-Vp[idx])+Vp[idx];
+
+   // check depletion and update Vp[idx] accordingly
+   double min=Vp[idx-1], max=Vp[idx-1];
+   if (min>Vp[idx+1]) min=Vp[idx+1];
+   if (max<Vp[idx+1]) max=Vp[idx+1];
+   if (vnew<min) {
+      fIsDepleted[idx]=false; Vp[idx]=min;
+   } else if (vnew>max) {
+      fIsDepleted[idx]=false; Vp[idx]=max;
+   } else {
+      fIsDepleted[idx]=true; Vp[idx]=vnew;
+   }
+
+   // update Vp for impurity-only case even if the point is undepleted
+   if (Vp[0]==Vp[N1-1]) Vp[idx]=vnew;
+}
+//_____________________________________________________________________________
 //
-//   //find minmium and maxnium of all five grid, the new one should not go overthem.
-//   //find min
-//   double min=p2;
-//   double max=p2;
-//   if(min>p3)min=p3;
-//   //find max
-//   if(max<p3)max=p3;
-//   //if tmp is greater or smaller than max and min, set tmp to it.
-//
-//   //V[idx]=RelaxationFactor*(tmp-V[idx])+V[idx];
-//   double oldP=V[idx];
-//   tmp=RelaxationFactor*(tmp-oldP)+oldP;
-//
-//   if(tmp<min) {
-//      V[idx]=min;
-//      fIsDepleted[idx]=false;
-//   } else if(tmp>max) {
-//      V[idx]=max;
-//      fIsDepleted[idx]=false;
-//   } else fIsDepleted[idx]=true;
-//
-//   if(fIsDepleted[idx]||Bias[0]==Bias[1]) V[idx]=tmp;
+void R::CalculateE()
+{
+   for (size_t i=1; i<N1-1; i++) {
+      E1[i]=(C1[i+1]*Vp[i+1]-C1[i-1]*Vp[i-1])/(dC1p[i]+dC1m[i])/C1[i];
+      Et[i]=E1[i];
+   }
+   E1[0]=(C1[1]*Vp[1]-C1[0]*Vp[0])/dC1p[0]/C1[0]; Et[0]=E1[0];
+   E1[N1-1]=(C1[N1-1]*Vp[N1-1]-C1[N1-2]*Vp[N1-2])/dC1p[N1-2]/C1[N1-2];
+   Et[N1-1]=E1[N1-1];
 }
