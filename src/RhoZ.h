@@ -3,7 +3,7 @@
 
 #include <TNamed.h>
 #include "Grid.h"
-namespace GeFiCa { class RhoZ; }
+namespace GeFiCa { class RhoZ; class PointContact; class Segmented; }
 /**
  * 2D cylindrical coordinates.
  */
@@ -20,11 +20,9 @@ class GeFiCa::RhoZ : public Grid, public TNamed
    protected:
       void OverRelaxAt(size_t idx); 
       void CalculateE();
-      /**
-       * Move grids close to point contact boundary to the boundary.
-       */
-      void SetBoundary();
-      void InitializeGrid();
+      void GetBoundaryConditionFrom(Segmented &detector) {};
+      void GetBoundaryConditionFrom(PointContact &detector);
+      void ReallocateGridPointsNearBoundaries(PointContact &detector);
 };
 #endif 
 

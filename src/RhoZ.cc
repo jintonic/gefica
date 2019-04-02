@@ -8,36 +8,121 @@ void RhoZ::GetBoundaryConditionFrom(Detector &detector)
    Grid::GetBoundaryConditionFrom(detector); // check number of calls
 
    TString type(detector.ClassName());
-   if (type.Contains("PointContact")==false) {
-      Error("GetBoundaryConditionFrom", "%s is not expected. "
-            "Please pass in a PointContact detector.", type.Data());
+   if (type.Contains("PointContact")) {
+      if (N1%2==1) { // we want no grid point right on z-axis
+         Error("GetBoundaryConditionFrom",
+               "Please assign even number of grid points along radius.");
+         abort();
+      }
+      PointContact& pc = (PointContact&) detector;
+      pc.CheckConfigurations();
+      GetBoundaryConditionFrom(pc);
+   } else {
+      Error("GetBoundaryConditionFrom", "%s is not expected.", type.Data());
+      Error("GetBoundaryConditionFrom", "Please use "
+            "PointContact or Segmented detector.");
       abort();
    }
-   PointContact& pc = (PointContact&) detector;
-   pc.CheckConfigurations();
+
    fDetector = &detector; // for GetC to use fDetector->Bias[]
+}
+//______________________________________________________________________________
+//
+void RhoZ::OverRelaxAt(size_t idx)
+{
+   PointContact& pc = (PointContact&) *fDetector;
+   if (fIsFixed[idx])return; 
+   // 2nd-order Successive Over-Relaxation
+   double density=Src[idx];
+   double drm=dC1m[idx]; // dr_minus
+   double drp=dC1p[idx];
+   double dzm=dC2m[idx];
+   double dzp=dC2p[idx];
+   double pzm,pzp,prm,prp; // pzm: potential_z_plus
+   if(idx>=N1)pzm=Vp[idx-N1];
+   else pzm=Vp[idx+N1];
+   if(idx>=GetN()-N1)pzp=Vp[idx];
+   else pzp=Vp[idx+N1];
+   if(idx%N1==0)prm=Vp[idx];
+   else prm=Vp[idx-1];
+   if(idx%N1==N1-1)prp=Vp[idx];
+   else prp=Vp[idx+1];
+   double tmp=(density/epsilon
+         + 1/C1[idx]*(prp-prm)/(drm+drp) +(prp/drp+prm/drm)*2/(drm+drp)
+         + (pzp/dzp+pzm/dzm)*2/(dzp+dzm))/
+      ((1/drm+1/drp)*2/(drm+drp)+(1/dzp+1/dzm)*2/(dzp+dzm));
+   //find minmium and maxnium of all five grid, the new one should not go overthem.
+   //find min
+   double min=prm;
+   double max=prm;
+   if(min>prp)min=prp;
+   if (min>pzp)min=pzp;
+   if (min>pzm)min=pzm;
 
-   for (size_t i=0; i<N1; i++) {
-      C1[i]=i*2*pc.Radius/(N1-1);
-      dC1p[i]=2*pc.Radius/(N1-1);
-      dC1m[i]=2*pc.Radius/(N1-1);
+   //find max
+   if(max<prp)max=prp;
+   if (max<pzp)max=pzp;
+   if (max<pzm)max=pzm;
+   //if tmp is greater or smaller than max and min, set tmp to it.
+
+   //over relax
+   //Vp[idx]=RelaxationFactor*(tmp-Vp[idx])+Vp[idx];
+   //if need calculate depleted voltage
+   double oldP=Vp[idx];
+   tmp=RelaxationFactor*(tmp-oldP)+oldP;
+   if(tmp<min) {
+      Vp[idx]=min;
+      fIsDepleted[idx]=false;
+   } else if(tmp>max) {
+      Vp[idx]=max;
+      fIsDepleted[idx]=false;
+   } else
+      fIsDepleted[idx]=true;
+
+   if(fIsDepleted[idx]||pc.Bias[0]==pc.Bias[1]) Vp[idx]=tmp;
+}
+//______________________________________________________________________________
+//
+double RhoZ::GetC()
+{
+   Grid::GetC(); // calculate field excluding undepleted region
+
+   // calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
+   PointContact& pc = (PointContact&) *fDetector;
+   double dV=pc.Bias[0]-pc.Bias[1]; if(dV<0)dV=-dV;
+   double SumofElectricField=0;
+   for(size_t i=0;i<GetN();i++) {
+      double e1=E1[i];
+      double e2=E2[i];
+      double dr=dC1p[i];
+      double dz=dC2p[i];
+      SumofElectricField+=(e1*e1+e2*e2)*C1[i]*dr*dz;
+   }
+   double c=SumofElectricField*2*3.14159*epsilon/dV/dV;
+   Info("GetC","%.2f pF",c/pF);
+   return c;
+}
+//______________________________________________________________________________
+//
+void RhoZ::GetBoundaryConditionFrom(PointContact& pc)
+{
+   for (size_t i=0; i<N1; i++) { // bottom line
       dC1p.push_back(2*pc.Radius/(N1-1)); dC1m.push_back(2*pc.Radius/(N1-1));
-      C1.push_back(pc.BoreR+i*dC1p[i]);
-      E1.push_back(0); Et.push_back(0);
+      dC2p.push_back(pc.Height/(N2-1)); dC2m.push_back(0);
+      C1.push_back(-pc.Radius+i*dC1p[i]); C2.push_back(0);
+      E1.push_back(0); E2.push_back(0); Et.push_back(0);
       fIsFixed.push_back(false); fIsDepleted.push_back(false);
-      Src.push_back(-pc.GetImpurity(C1[i])*Qe/epsilon);
+      Src.push_back(-pc.GetImpurity(C2[i])*Qe/epsilon);
    }
-   for (size_t i=0; i<GetN(); i++) {
-      if(i>N1-1)C2[i]=C2[i-N1]+pc.Height/(N2-1);
-      else C2[i]=0;
-      if(i%N1==0)C1[i]=0;
-      else C1[i]=C1[i-1]+2*pc.Radius/(N1-1);
+   for (size_t i=N1; i<GetN(); i++) { // the rest
+      dC1p.push_back(2*pc.Radius/(N1-1)); dC1m.push_back(2*pc.Radius/(N1-1));
+      dC2p.push_back(pc.Height/(N2-1)); dC2m.push_back(pc.Height/(N2-1));
+      C1.push_back(C1[i-N1]); C2.push_back(C2[i-N1]+dC2p[i-N1]);
+      E1.push_back(0); E2.push_back(0); Et.push_back(0);
+      fIsFixed.push_back(false); fIsDepleted.push_back(false);
+      Src.push_back(-pc.GetImpurity(C2[i])*Qe/epsilon);
+   }
 
-      E2[i]=0;
-      dC2m[i]=pc.Height/(N2-1);
-      dC2p[i]=pc.Height/(N2-1);
-   }
-   for(size_t i=GetN();i-->0;) C1[i]=C1[i]-pc.Radius;
 
    dC1m[0]=0; dC1p[N1-1]=0;
    // fix 1st and last points
@@ -52,17 +137,6 @@ void RhoZ::GetBoundaryConditionFrom(Detector &detector)
       if (((C1[i]>pc.WrapAroundR-pc.GrooveW && C1[i]<pc.WrapAroundR) ||
                (C1[i]>-pc.WrapAroundR && C1[i]<-pc.WrapAroundR+pc.GrooveW))
             && C2[i]<pc.GrooveH) Src[i]=0;
-}
-//_____________________________________________________________________________
-//
-void RhoZ::InitializeGrid()
-{
-   PointContact& pc = (PointContact&) *fDetector;
-   // we want no grid point right on z-axis
-   if (N1%2==1) {
-      Error("InitializeGrid", "Number of points in D can't be odd! Abort.");
-      abort();
-   }
 
    // set initial potential values
    for(size_t i=GetN();i-->0;) {
@@ -136,89 +210,12 @@ void RhoZ::InitializeGrid()
          Vp[i]=pc.Bias[1];
       }
    }
-   SetBoundary();
-}
-//_____________________________________________________________________________
-//
-void RhoZ::OverRelaxAt(size_t idx)
-{
-   PointContact& pc = (PointContact&) *fDetector;
-   if (fIsFixed[idx])return; 
-   // 2nd-order Successive Over-Relaxation
-   double density=Src[idx];
-   double drm=dC1m[idx]; // dr_minus
-   double drp=dC1p[idx];
-   double dzm=dC2m[idx];
-   double dzp=dC2p[idx];
-   double pzm,pzp,prm,prp; // pzm: potential_z_plus
-   if(idx>=N1)pzm=Vp[idx-N1];
-   else pzm=Vp[idx+N1];
-   if(idx>=GetN()-N1)pzp=Vp[idx];
-   else pzp=Vp[idx+N1];
-   if(idx%N1==0)prm=Vp[idx];
-   else prm=Vp[idx-1];
-   if(idx%N1==N1-1)prp=Vp[idx];
-   else prp=Vp[idx+1];
-   double tmp=(density/epsilon
-         + 1/C1[idx]*(prp-prm)/(drm+drp) +(prp/drp+prm/drm)*2/(drm+drp)
-         + (pzp/dzp+pzm/dzm)*2/(dzp+dzm))/
-      ((1/drm+1/drp)*2/(drm+drp)+(1/dzp+1/dzm)*2/(dzp+dzm));
-   //find minmium and maxnium of all five grid, the new one should not go overthem.
-   //find min
-   double min=prm;
-   double max=prm;
-   if(min>prp)min=prp;
-   if (min>pzp)min=pzp;
-   if (min>pzm)min=pzm;
-
-   //find max
-   if(max<prp)max=prp;
-   if (max<pzp)max=pzp;
-   if (max<pzm)max=pzm;
-   //if tmp is greater or smaller than max and min, set tmp to it.
-
-   //over relax
-   //Vp[idx]=RelaxationFactor*(tmp-Vp[idx])+Vp[idx];
-   //if need calculate depleted voltage
-   double oldP=Vp[idx];
-   tmp=RelaxationFactor*(tmp-oldP)+oldP;
-   if(tmp<min) {
-      Vp[idx]=min;
-      fIsDepleted[idx]=false;
-   } else if(tmp>max) {
-      Vp[idx]=max;
-      fIsDepleted[idx]=false;
-   } else
-      fIsDepleted[idx]=true;
-
-   if(fIsDepleted[idx]||pc.Bias[0]==pc.Bias[1]) Vp[idx]=tmp;
-}
-//_____________________________________________________________________________
-//
-double RhoZ::GetC()
-{
-   Grid::GetC(); // calculate field excluding undepleted region
-
-   // calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
-   PointContact& pc = (PointContact&) *fDetector;
-   double dV=pc.Bias[0]-pc.Bias[1]; if(dV<0)dV=-dV;
-   double SumofElectricField=0;
-   for(size_t i=0;i<GetN();i++) {
-      double e1=E1[i];
-      double e2=E2[i];
-      double dr=dC1p[i];
-      double dz=dC2p[i];
-      SumofElectricField+=(e1*e1+e2*e2)*C1[i]*dr*dz;
-   }
-   double c=SumofElectricField*2*3.14159*epsilon/dV/dV;
-   Info("GetC","%.2f pF",c/pF);
-   return c;
+   ReallocateGridPointsNearBoundaries(pc);
 }
 //______________________________________________________________________________
 //
-void RhoZ::SetBoundary()
+void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
 {
-   PointContact& pc = (PointContact&) *fDetector;
    for(size_t i=0;i<GetN();i++) {
       if (C2[i]-pc.PointContactH<dC2m[i]&&C2[i]>pc.PointContactH
             &&C1[i]<pc.PointContactR&&C1[i]>-pc.PointContactR)
@@ -313,6 +310,3 @@ void RhoZ::SetBoundary()
          dC2p[i]=y2-C2[i];
    }
 }
-//_____________________________________________________________________________
-//
-
