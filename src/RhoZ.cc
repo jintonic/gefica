@@ -16,7 +16,7 @@ void RhoZ::GetBoundaryConditionFrom(Detector &detector)
       }
       PointContact& pc = (PointContact&) detector;
       pc.CheckConfigurations();
-      GetBoundaryConditionFrom(pc);
+      GetInfoFrom(pc);
    } else {
       Error("GetBoundaryConditionFrom", "%s is not expected.", type.Data());
       Error("GetBoundaryConditionFrom", "Please use "
@@ -104,9 +104,9 @@ double RhoZ::GetC()
 }
 //______________________________________________________________________________
 //
-void RhoZ::GetBoundaryConditionFrom(PointContact& pc)
+void RhoZ::GetInfoFrom(PointContact& pc)
 {
-   // rough setup of grid points
+   // set positions of grid points
    for (size_t i=0; i<N1; i++) { // bottom line
       dC1p.push_back(2*pc.Radius/(N1-1)); dC1m.push_back(2*pc.Radius/(N1-1));
       dC2p.push_back(pc.Height/(N2-1)); dC2m.push_back(0);
@@ -123,91 +123,56 @@ void RhoZ::GetBoundaryConditionFrom(PointContact& pc)
       fIsFixed.push_back(false); fIsDepleted.push_back(false);
       Src.push_back(-pc.GetImpurity(C2[i])*Qe/epsilon);
    }
-
-   // set potential
-   for (size_t i=GetN();i-->0;) {
+   // set impurity in groove and potentials of grid points
+   for (size_t i=GetN(); i-->0;) {
       if (C1[i]>=-pc.PointContactR && C1[i]<=pc.PointContactR
             && C2[i]<=pc.PointContactH) { // point contact
-         Vp[i]=pc.Bias[0];
-         fIsFixed[i]=true;
-      } else Vp[i]=(pc.Bias[0]+pc.Bias[1])/2;
-   }
-   // set potential for outer electrodes
-   for(size_t i=GetN()-1;i>=GetN()-N1;i--) {
-      fIsFixed[i]=true;
-      Vp[i]=pc.Bias[1];
-   }
-   for(size_t i=0;i<GetN()-N1;i=i+N1) {
-      fIsFixed[i]=true;
-      fIsFixed[i+N1-1]=true;
-      Vp[i]=pc.Bias[1];
-      Vp[i+N1-1]=pc.Bias[1];
-   }
-   for (size_t i=0;i<N1;i++) {
-      if(C1[i]>=pc.WrapAroundR||C1[i]<=-pc.WrapAroundR) {
-         fIsFixed[i]=true;
-         Vp[i]=pc.Bias[1];
-      }
-   }
-
-   double x1=pc.BoreR+pc.BoreTaperW,
-          y1=pc.Height,
-          x2=pc.BoreR,
-          y2=pc.Height-pc.BoreTaperH,
-          x3=pc.Radius-pc.CornerW,
-          y3=pc.Height,
-          x4=pc.Radius,
-          y4=pc.Height-pc.CornerH;
-   double k1=(y1-y2)/(x1-x2);
-   double b1=y1-k1*x1;
-   double k2=(y3-y4)/(x3-x4);
-   double b2=(y3-k2*x3);
-   if(x3!=x4)
-      for(size_t i=0;i<GetN();i++) {
-         if(C2[i]>-k2*(C1[i])+b2||(C2[i]>k2*(C1[i])+b2)) {
-            fIsFixed[i]=true;
-            Vp[i]=pc.Bias[1];
+         Vp[i]=pc.Bias[0]; fIsFixed[i]=true;
+      } else if (C1[i]<=pc.BoreR && C1[i]>=-pc.BoreR
+            && C2[i]>=pc.Height-pc.BoreH) { // bore hole
+         Vp[i]=pc.Bias[1]; fIsFixed[i]=true;
+      } else if (((C1[i]>pc.WrapAroundR-pc.GrooveW && C1[i]<pc.WrapAroundR)
+               || (C1[i]>-pc.WrapAroundR && C1[i]<-pc.WrapAroundR+pc.GrooveW))
+            && C2[i]<pc.GrooveH) { // groove
+         Src[i]=0;
+      } else // bulk
+         Vp[i]=(pc.Bias[0]+pc.Bias[1])/2;
+      if (pc.CornerW>0) { // has top taper
+         double slope=-pc.CornerH/pc.CornerW;
+         double intercept=pc.Height-slope*(pc.Radius-pc.CornerW);
+         if (C2[i]>-slope*C1[i]+intercept||C2[i]>slope*C1[i]+intercept) {
+            Vp[i]=pc.Bias[1]; fIsFixed[i]=true;
          }
       }
-   if(x1!=x2) {
-      for (size_t i=0;i<GetN();i++) {
-         if(((C2[i]>-k1*(C1[i])+b1 && C2[i]>y2))&&C1[i]<0) {
-            fIsFixed[i]=true;
-            Vp[i]=pc.Bias[1];
-         }
-         if(((C2[i]>k1*(C1[i])+b1 && C2[i]>y2))&&C1[i]>0) {
-            fIsFixed[i]=true;
-            Vp[i]=pc.Bias[1];
+      if (pc.BoreTaperW>0) { // has bore taper
+         double slope=pc.BoreTaperH/pc.BoreTaperW;
+         double intercept=pc.Height-slope*(pc.BoreR+pc.BoreTaperW);
+         if(C2[i]>-slope*C1[i]+intercept || C2[i]>slope*(C1[i])+intercept) {
+            Vp[i]=pc.Bias[1]; fIsFixed[i]=true;
          }
       }
-   } else { //x1==x2
-      for (size_t i=0;i<GetN();i++) {
-         if(C1[i]<=x1&&C1[i]>=-x1&&C2[i]>=y2) {
-            fIsFixed[i]=true;
-            Vp[i]=pc.Bias[1];
+      if (pc.TaperW>0) { // has bottom taper
+         double slope=pc.TaperH/(pc.TaperW);
+         double intercept=-(pc.Radius-pc.TaperW)*slope;
+         if (C2[i]<=C1[i]*slope+intercept || C2[i]<=-C1[i]*slope+intercept) {
+            Vp[i]=pc.Bias[1]; fIsFixed[i]=true;
          }
       }
    }
-   for (size_t i=0;i<GetN();i++) {
-      if(C1[i]<=pc.BoreR&&C1[i]>=-pc.BoreR&&C2[i]>=pc.Height-pc.BoreH) {
+   for (size_t i=GetN()-1; i>=GetN()-N1; i--) { // top boundary
+      Vp[i]=pc.Bias[1]; fIsFixed[i]=true; dC2p[i]=0;
+   }
+   for (size_t i=0; i<GetN()-N1; i=i+N1) { // left & right boundaries
+      Vp[i]=pc.Bias[1]; Vp[i+N1-1]=pc.Bias[1];
+      fIsFixed[i]=true; fIsFixed[i+N1-1]=true;
+      dC1m[i]=0; dC1p[i+N1-1]=0;
+   }
+   for (size_t i=0; i<N1; i++) { // wrap arround
+      if (C1[i]>=pc.WrapAroundR||C1[i]<=-pc.WrapAroundR) {
          fIsFixed[i]=true;
          Vp[i]=pc.Bias[1];
       }
    }
-
-   dC1m[0]=0; dC1p[N1-1]=0;
-   // fix 1st and last points
-   fIsFixed[0]=true; fIsFixed[N1-1]=true;
-   // linear interpolation between Bias[0] and Bias[1]
-   double slope = (pc.Bias[1]-pc.Bias[0])/(N1-1);
-   for (size_t i=0; i<N1; i++) Vp.push_back(pc.Bias[0]+slope*i);
-   Vp[N1-1]=pc.Bias[1];
-
-   // vacuum
-   for (size_t i=0; i<GetN(); i++)
-      if (((C1[i]>pc.WrapAroundR-pc.GrooveW && C1[i]<pc.WrapAroundR) ||
-               (C1[i]>-pc.WrapAroundR && C1[i]<-pc.WrapAroundR+pc.GrooveW))
-            && C2[i]<pc.GrooveH) Src[i]=0;
 
    ReallocateGridPointsNearBoundaries(pc);
 }
@@ -232,14 +197,6 @@ void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
    double b=-(pc.Radius-pc.TaperW)*k;
 
    for(size_t i=0;i<GetN();i++) {
-      if(C2[i]<=C1[i]*k+b) {
-         fIsFixed[i]=true;
-         Vp[i]=pc.Bias[1];
-      }
-      if(C2[i]<=-C1[i]*k+b) {
-         fIsFixed[i]=true;
-         Vp[i]=pc.Bias[1];
-      }
       if(C2[i]-(C1[i]*k+b)<dC2p[i]) {
          dC2m[i]=C2[i]-(k*C1[i]+b);
          dC1p[i]=C1[i]-b/k-C2[i]/k;
@@ -261,7 +218,7 @@ void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
    double k1=(y1-y2)/(x1-x2);
    double b1=y1-k1*x1;
    double k2=(y3-y4)/(x3-x4);
-   double b2=y3-k2*x3;
+   double intercept=y3-k2*x3;
 
    for (size_t i=0;i<GetN();i++) {
       if (x1!=x2) {
@@ -286,24 +243,24 @@ void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
       if (-C1[i]-pc.BoreR>0&&-C1[i]-pc.BoreR<dC1p[i]&&C2[i]>pc.BoreH)
          dC1p[i]=-C1[i]-pc.BoreR;
       //left corner
-      if (C1[i]+C2[i]/k2-b2/k2>0 && C1[i]+C2[i]/k2-b2/k2<dC1m[i] &&
-            C2[i]>y4) dC1m[i]=C1[i]+C2[i]/k2-b2/k2;
+      if (C1[i]+C2[i]/k2-intercept/k2>0 && C1[i]+C2[i]/k2-intercept/k2<dC1m[i] &&
+            C2[i]>y4) dC1m[i]=C1[i]+C2[i]/k2-intercept/k2;
       //right corner
-      if (-C1[i]+C2[i]/k2-b2/k2>0
-            &&-C1[i]+C2[i]/k2-b2/k2<dC1p[i]&&C2[i]>y4)
-         dC1p[i]=-C1[i]+C2[i]/k2-b2/k2;
+      if (-C1[i]+C2[i]/k2-intercept/k2>0
+            &&-C1[i]+C2[i]/k2-intercept/k2<dC1p[i]&&C2[i]>y4)
+         dC1p[i]=-C1[i]+C2[i]/k2-intercept/k2;
       //down right side of hole
       if (-C2[i]+C1[i]*k1+b1>0&&-C2[i]+C1[i]*k1+b1<dC2p[i]&&C2[i]>y2)
          dC2p[i]=-C2[i]+C1[i]*k1+b1;
       //down right of corner
-      if (-C2[i]-C1[i]*k2+b2>0&&-C2[i]-C1[i]*k2+b2<dC2p[i]&&C2[i]>y4)
-         dC2p[i]=-C2[i]-C1[i]*k2+b2;
+      if (-C2[i]-C1[i]*k2+intercept>0&&-C2[i]-C1[i]*k2+intercept<dC2p[i]&&C2[i]>y4)
+         dC2p[i]=-C2[i]-C1[i]*k2+intercept;
       //down left side of hole
       if (-C2[i]-C1[i]*k1+b1>0&&-C2[i]-C1[i]*k1+b1<dC2p[i]&&C2[i]>y2)
          dC2p[i]=-C2[i]-C1[i]*k1+b1;
       //down left of corner
-      if (-C2[i]+C1[i]*k2+b2>0&&-C2[i]+C1[i]*k2+b2<dC2p[i]&&C2[i]>y4)
-         dC2p[i]=-C2[i]+C1[i]*k2+b2;
+      if (-C2[i]+C1[i]*k2+intercept>0&&-C2[i]+C1[i]*k2+intercept<dC2p[i]&&C2[i]>y4)
+         dC2p[i]=-C2[i]+C1[i]*k2+intercept;
       //down center of hole
       if (y2-C2[i]<dC2p[i]&&C1[i]>-pc.BoreR&&C1[i]<pc.BoreR)
          dC2p[i]=y2-C2[i];
