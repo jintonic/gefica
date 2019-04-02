@@ -87,7 +87,7 @@ void X::OverRelaxAt(size_t idx)
    // update Vp for impurity-only case even if the point is undepleted
    if (Vp[0]==Vp[N1-1]) Vp[idx]=vnew;
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 void X::CalculateE()
 {

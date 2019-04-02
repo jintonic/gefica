@@ -9,7 +9,7 @@ PointContact::PointContact(const char *name, const char *title)
    TaperW(1*mm), TaperH(1*mm), CornerW(1*mm), CornerH(1*mm),
    WrapAroundR(-1), GrooveW(0), GrooveH(0)
 { Height=5*cm; Bias.push_back(1*kV); }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 void PointContact::CheckConfigurations()
 {

@@ -20,7 +20,7 @@ TGraph* FieldLine::GetGraph()
    fGl->SetName(GetName()); fGl->SetTitle(GetTitle());
    return fGl;
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 
 Grid::Grid(size_t n1, size_t n2, size_t n3) : N1(n1), N2(n2), N3(n3),
@@ -47,7 +47,7 @@ Grid::Grid(size_t n1, size_t n2, size_t n3) : N1(n1), N2(n2), N3(n3),
    TColor::CreateGradientColorTable(nRGBs, stops, red, green, blue, nCont);
    gStyle->SetNumberContours(nCont);
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 Grid& Grid::operator+=(Grid& other)
 {
@@ -62,14 +62,14 @@ Grid& Grid::operator+=(Grid& other)
    }
    return *this;
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 Grid& Grid::operator*=(double scale)
 {
    for (size_t i=0; i<GetN(); i++) Vp[i]=Vp[i]*scale;
    return *this;
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 size_t Grid::GetIdxOfMaxV()
 {
@@ -82,7 +82,7 @@ size_t Grid::GetIdxOfMaxV()
    }
    return idx;
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 size_t Grid::GetIdxOfMinV()
 {
@@ -95,7 +95,7 @@ size_t Grid::GetIdxOfMinV()
    }
    return idx;
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 bool Grid::IsDepleted()
 {
@@ -107,7 +107,7 @@ bool Grid::IsDepleted()
    }
    return true;
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 void Grid::GetBoundaryConditionFrom(Detector &detector)
 {
@@ -116,7 +116,7 @@ void Grid::GetBoundaryConditionFrom(Detector &detector)
       return;
    }
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 void Grid::SuccessiveOverRelax()
 {
@@ -150,7 +150,7 @@ void Grid::SuccessiveOverRelax()
          fIterations, cp, Precision);
    Info("SuccessiveOverRelax", "CPU time: %.1f s", watch.CpuTime());
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 void Grid::SolveAnalytically()
 {
@@ -159,7 +159,7 @@ void Grid::SolveAnalytically()
       abort();
    }
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 size_t Grid::GetIdxOfPointToTheRightOf(double c1,size_t begin,size_t end) const
 {
@@ -169,7 +169,7 @@ size_t Grid::GetIdxOfPointToTheRightOf(double c1,size_t begin,size_t end) const
    if(C1[mid]>=c1)return GetIdxOfPointToTheRightOf(c1,begin,mid);
    else return GetIdxOfPointToTheRightOf(c1,mid+1,end);
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 size_t Grid::GetIdxOfPointToTheRightOf(double c1,double c2,
       size_t begin,size_t end) const
@@ -182,7 +182,7 @@ size_t Grid::GetIdxOfPointToTheRightOf(double c1,double c2,
    if(C2[mid*N1]>=c2) return GetIdxOfPointToTheRightOf(c1,c2,begin,mid);
    else return GetIdxOfPointToTheRightOf(c1,c2,mid+1,end);
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 size_t Grid::GetIdxOfPointToTheRightOf(double c1, double c2,double c3,
       size_t begin,size_t end) const
@@ -250,7 +250,7 @@ TTree* Grid::GetTree(bool createNew)
    fTree->ResetBranchAddresses(); // disconnect from local variables
    return fTree;
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 double Grid::GetData(const std::vector<double> &data,
       double x, double y, double z) const

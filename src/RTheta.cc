@@ -33,7 +33,7 @@ void RTheta::GetBoundaryConditionFrom(Detector &detector)
    for (size_t i=0; i<N1; i++) Vp.push_back(hemi.Bias[0]+slope*i);
    Vp[N1-1]=hemi.Bias[1];
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 void RTheta::OverRelaxAt(size_t idx)
 {
@@ -58,7 +58,7 @@ void RTheta::OverRelaxAt(size_t idx)
    // update Vp for impurity-only case even if the point is undepleted
    if (Vp[0]==Vp[N1-1]) Vp[idx]=vnew;
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 void RTheta::CalculateE()
 {

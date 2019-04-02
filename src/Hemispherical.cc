@@ -5,7 +5,7 @@ using namespace GeFiCa;
 Hemispherical::Hemispherical(const char *name, const char *title)
    : Detector(name, title), PointContactR(2*mm), PointContactH(300*nm)
 { Bias.push_back(1*kV); }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 void Hemispherical::CheckConfigurations()
 {

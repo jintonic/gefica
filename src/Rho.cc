@@ -33,7 +33,7 @@ void Rho::GetBoundaryConditionFrom(Detector &detector)
    for (size_t i=0; i<N1; i++) Vp.push_back(coaxial.Bias[0]+slope*i);
    Vp[N1-1]=coaxial.Bias[1];
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 void Rho::SolveAnalytically()
 {
@@ -48,7 +48,7 @@ void Rho::SolveAnalytically()
       Vp[i] = -Src[0]*C1[i]*C1[i]/4 + c1*log(C1[i]) + c2;
    CalculateE();
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 double Rho::GetC()
 {
@@ -92,7 +92,7 @@ void Rho::OverRelaxAt(size_t idx)
    // update Vp for impurity-only case even if the point is undepleted
    if (Vp[0]==Vp[N1-1]) Vp[idx]=vnew;
 }
-//_____________________________________________________________________________
+//______________________________________________________________________________
 //
 void Rho::CalculateE()
 {
