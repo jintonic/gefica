@@ -106,11 +106,12 @@ double RhoZ::GetC()
 //
 void RhoZ::GetBoundaryConditionFrom(PointContact& pc)
 {
+   // rough setup of grid points
    for (size_t i=0; i<N1; i++) { // bottom line
       dC1p.push_back(2*pc.Radius/(N1-1)); dC1m.push_back(2*pc.Radius/(N1-1));
       dC2p.push_back(pc.Height/(N2-1)); dC2m.push_back(0);
       C1.push_back(-pc.Radius+i*dC1p[i]); C2.push_back(0);
-      E1.push_back(0); E2.push_back(0); Et.push_back(0);
+      E1.push_back(0); E2.push_back(0); Et.push_back(0); Vp.push_back(0);
       fIsFixed.push_back(false); fIsDepleted.push_back(false);
       Src.push_back(-pc.GetImpurity(C2[i])*Qe/epsilon);
    }
@@ -118,35 +119,18 @@ void RhoZ::GetBoundaryConditionFrom(PointContact& pc)
       dC1p.push_back(2*pc.Radius/(N1-1)); dC1m.push_back(2*pc.Radius/(N1-1));
       dC2p.push_back(pc.Height/(N2-1)); dC2m.push_back(pc.Height/(N2-1));
       C1.push_back(C1[i-N1]); C2.push_back(C2[i-N1]+dC2p[i-N1]);
-      E1.push_back(0); E2.push_back(0); Et.push_back(0);
+      E1.push_back(0); E2.push_back(0); Et.push_back(0); Vp.push_back(0);
       fIsFixed.push_back(false); fIsDepleted.push_back(false);
       Src.push_back(-pc.GetImpurity(C2[i])*Qe/epsilon);
    }
 
-
-   dC1m[0]=0; dC1p[N1-1]=0;
-   // fix 1st and last points
-   fIsFixed[0]=true; fIsFixed[N1-1]=true;
-   // linear interpolation between Bias[0] and Bias[1]
-   double slope = (pc.Bias[1]-pc.Bias[0])/(N1-1);
-   for (size_t i=0; i<N1; i++) Vp.push_back(pc.Bias[0]+slope*i);
-   Vp[N1-1]=pc.Bias[1];
-
-   // vacuum
-   for (size_t i=0; i<GetN(); i++)
-      if (((C1[i]>pc.WrapAroundR-pc.GrooveW && C1[i]<pc.WrapAroundR) ||
-               (C1[i]>-pc.WrapAroundR && C1[i]<-pc.WrapAroundR+pc.GrooveW))
-            && C2[i]<pc.GrooveH) Src[i]=0;
-
-   // set initial potential values
-   for(size_t i=GetN();i-->0;) {
-      Vp[i]=(pc.Bias[1]+pc.Bias[0])/2;
-      // set potential for inner electrodes
-      if(C1[i]>=-pc.PointContactR && C1[i]<=pc.PointContactR
-            && C2[i]<=pc.PointContactH) {
+   // set potential
+   for (size_t i=GetN();i-->0;) {
+      if (C1[i]>=-pc.PointContactR && C1[i]<=pc.PointContactR
+            && C2[i]<=pc.PointContactH) { // point contact
          Vp[i]=pc.Bias[0];
          fIsFixed[i]=true;
-      }
+      } else Vp[i]=(pc.Bias[0]+pc.Bias[1])/2;
    }
    // set potential for outer electrodes
    for(size_t i=GetN()-1;i>=GetN()-N1;i--) {
@@ -210,6 +194,21 @@ void RhoZ::GetBoundaryConditionFrom(PointContact& pc)
          Vp[i]=pc.Bias[1];
       }
    }
+
+   dC1m[0]=0; dC1p[N1-1]=0;
+   // fix 1st and last points
+   fIsFixed[0]=true; fIsFixed[N1-1]=true;
+   // linear interpolation between Bias[0] and Bias[1]
+   double slope = (pc.Bias[1]-pc.Bias[0])/(N1-1);
+   for (size_t i=0; i<N1; i++) Vp.push_back(pc.Bias[0]+slope*i);
+   Vp[N1-1]=pc.Bias[1];
+
+   // vacuum
+   for (size_t i=0; i<GetN(); i++)
+      if (((C1[i]>pc.WrapAroundR-pc.GrooveW && C1[i]<pc.WrapAroundR) ||
+               (C1[i]>-pc.WrapAroundR && C1[i]<-pc.WrapAroundR+pc.GrooveW))
+            && C2[i]<pc.GrooveH) Src[i]=0;
+
    ReallocateGridPointsNearBoundaries(pc);
 }
 //______________________________________________________________________________
