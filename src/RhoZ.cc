@@ -115,7 +115,7 @@ void RhoZ::GetInfoFrom(PointContact& pc)
       fIsFixed.push_back(false); fIsDepleted.push_back(false);
       Src.push_back(-pc.GetImpurity(C2[i])*Qe/epsilon);
    }
-   for (size_t i=N1; i<GetN(); i++) { // the rest
+   for (size_t i=N1; i<N1*N2; i++) { // the rest
       dC1p.push_back(2*pc.Radius/(N1-1)); dC1m.push_back(2*pc.Radius/(N1-1));
       dC2p.push_back(pc.Height/(N2-1)); dC2m.push_back(pc.Height/(N2-1));
       C1.push_back(C1[i-N1]); C2.push_back(C2[i-N1]+dC2p[i-N1]);
@@ -124,7 +124,7 @@ void RhoZ::GetInfoFrom(PointContact& pc)
       Src.push_back(-pc.GetImpurity(C2[i])*Qe/epsilon);
    }
    // set impurity in groove and potentials of grid points
-   for (size_t i=GetN(); i-->0;) {
+   for (size_t i=N1*N2; i-->0;) {
       if (C1[i]>=-pc.PointContactR && C1[i]<=pc.PointContactR
             && C2[i]<=pc.PointContactH) { // point contact
          Vp[i]=pc.Bias[0]; fIsFixed[i]=true;
@@ -134,20 +134,13 @@ void RhoZ::GetInfoFrom(PointContact& pc)
       } else if (((C1[i]>pc.WrapAroundR-pc.GrooveW && C1[i]<pc.WrapAroundR)
                || (C1[i]>-pc.WrapAroundR && C1[i]<-pc.WrapAroundR+pc.GrooveW))
             && C2[i]<pc.GrooveH) { // groove
-         Src[i]=0;
+         Vp[i]=pc.Bias[1]/4; Src[i]=0;
       } else // bulk
          Vp[i]=(pc.Bias[0]+pc.Bias[1])/2;
       if (pc.CornerW>0) { // has top taper
          double slope=-pc.CornerH/pc.CornerW;
          double intercept=pc.Height-slope*(pc.Radius-pc.CornerW);
          if (C2[i]>-slope*C1[i]+intercept||C2[i]>slope*C1[i]+intercept) {
-            Vp[i]=pc.Bias[1]; fIsFixed[i]=true;
-         }
-      }
-      if (pc.BoreTaperW>0) { // has bore taper
-         double slope=pc.BoreTaperH/pc.BoreTaperW;
-         double intercept=pc.Height-slope*(pc.BoreR+pc.BoreTaperW);
-         if(C2[i]>-slope*C1[i]+intercept || C2[i]>slope*(C1[i])+intercept) {
             Vp[i]=pc.Bias[1]; fIsFixed[i]=true;
          }
       }
@@ -158,11 +151,19 @@ void RhoZ::GetInfoFrom(PointContact& pc)
             Vp[i]=pc.Bias[1]; fIsFixed[i]=true;
          }
       }
+      if (pc.BoreTaperW>0) { // has bore taper
+         double slope=pc.BoreTaperH/pc.BoreTaperW;
+         double intercept=pc.Height-slope*(pc.BoreR+pc.BoreTaperW);
+         if ((C2[i]>-slope*C1[i]+intercept && C1[i]<0) ||
+              (C2[i]>slope*C1[i]+intercept && C1[i]>0)) {
+            Vp[i]=pc.Bias[1]; fIsFixed[i]=true;
+         }
+      }
    }
-   for (size_t i=GetN()-1; i>=GetN()-N1; i--) { // top boundary
+   for (size_t i=N1*N2-1; i>=N1*N2-N1; i--) { // top boundary
       Vp[i]=pc.Bias[1]; fIsFixed[i]=true; dC2p[i]=0;
    }
-   for (size_t i=0; i<GetN()-N1; i=i+N1) { // left & right boundaries
+   for (size_t i=0; i<N1*N2-N1; i=i+N1) { // left & right boundaries
       Vp[i]=pc.Bias[1]; Vp[i+N1-1]=pc.Bias[1];
       fIsFixed[i]=true; fIsFixed[i+N1-1]=true;
       dC1m[i]=0; dC1p[i+N1-1]=0;
@@ -174,7 +175,7 @@ void RhoZ::GetInfoFrom(PointContact& pc)
       }
    }
 
-   ReallocateGridPointsNearBoundaries(pc);
+//   ReallocateGridPointsNearBoundaries(pc);
 }
 //______________________________________________________________________________
 //
