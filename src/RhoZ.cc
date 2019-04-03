@@ -91,7 +91,8 @@ void RhoZ::GetInfoFrom(PointContact& pc)
    // set positions of grid points
    for (size_t i=0; i<N1; i++) { // bottom line
       dC1p.push_back(2*pc.Radius/(N1-1)); dC1m.push_back(2*pc.Radius/(N1-1));
-      dC2p.push_back(pc.Height/(N2-1)); dC2m.push_back(0);
+      dC2p.push_back(pc.Height/(N2-1));
+      dC2m.push_back(pc.Height/(N2-1)); // there are mirrored points below
       C1.push_back(-pc.Radius+i*dC1p[i]); C2.push_back(0);
       E1.push_back(0); E2.push_back(0); Et.push_back(0); Vp.push_back(0);
       fIsFixed.push_back(false); fIsDepleted.push_back(false);
