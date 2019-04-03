@@ -10,7 +10,7 @@ namespace GeFiCa { class RhoZ; class PointContact; class Segmented; }
 class GeFiCa::RhoZ : public Grid, public TNamed
 {
    public:
-      RhoZ(size_t n1=100, size_t n2=101) : Grid(n1, n2),
+      RhoZ(size_t n1=200, size_t n2=201) : Grid(n1, n2),
       TNamed("rhoz", "2D cylindrical coordinates") {};
 
       void GetBoundaryConditionFrom(Detector &detector);
