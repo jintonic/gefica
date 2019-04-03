@@ -2,37 +2,32 @@ using namespace GeFiCa;
 // calculate and save fields of a PPC
 void calculateFields(const char *output="ppc.root")
 {
-   PointContactDZ *ppc = new PointContactDZ(404,501);
-   ppc->V1=2.5*kV; ppc->V0=0;
+   PointContact detector;
+   detector.Bias[0]=-2.5*kV; // bias on point contact
+   detector.Bias[1]=0; // ground outer contact
 
-   ppc->Radius=3.45*cm;
-   ppc->Height=5.05*cm;
+   detector.Radius=3.45*cm; detector.Height=5.05*cm;
 
-   ppc->PointContactR=1.40*mm;
-   ppc->PointContactH=2.10*mm;
+   detector.PointContactR=1.40*mm; detector.PointContactH=2.10*mm;
 
-   ppc->WrapAroundR=1.20*cm;
-   ppc->TaperW=0.1*cm;
-   ppc->TaperH=0.1*cm;
-   ppc->CornerW=0.1*cm;
-   ppc->CornerH=0.1*cm;
+   detector.WrapAroundR=1.20*cm;
+   detector.TaperW=0.1*cm; detector.TaperH=0.1*cm;
+   detector.CornerW=0.1*cm; detector.CornerH=0.1*cm;
 
-   ppc->HoleH=0;//2.5*cm;
-   ppc->HoleR=0;//0.5*cm;
-   ppc->HoleTaperH=0;//0.2*cm;
-   ppc->HoleTaperW=0;//0.2*cm;
+   detector.BoreH=2*cm; detector.BoreR=2*cm;
+   detector.BoreTaperH=2*mm; detector.BoreTaperW=2*mm;
 
-   ppc->GrooveH=0;//0.1*cm;
-   ppc->GrooveW=0;//0.1*cm;
+   detector.GrooveH=1*mm; detector.GrooveW=1*mm;
 
-   // x in TF3 -> r, y in TF3 -> z
-   TF3 *fid = new TF3("fImpDistr","-0.318e10+0.025e10*y");
-   ppc->SetImpurity(fid);
+   detector.BottomImpurity=-3.18e9/cm3; detector.TopImpurity=-1.9175e9/cm3;
 
-   ppc->RelaxationFactor=1.995;
-   ppc->SuccessiveOverRelax();
+   RhoZ grid;
+   grid.GetBoundaryConditionFrom(detector);
+   grid.RelaxationFactor=1.995;
+   grid.SuccessiveOverRelax();
    
    TFile *file = new TFile(output,"recreate");
-   ppc->Write();
+   detector.Write();
+   grid.GetTree()->Write();
    file->Close();
 }
