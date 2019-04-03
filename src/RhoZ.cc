@@ -107,10 +107,11 @@ void RhoZ::GetInfoFrom(PointContact& pc)
       Src.push_back(-pc.GetImpurity(C2[i])*Qe/epsilon);
    }
    // set impurity in groove and potentials of grid points
+   size_t npc=0; // number of grid points in PC
    for (size_t i=N1*N2; i-->0;) {
       if (C1[i]>=-pc.PointContactR && C1[i]<=pc.PointContactR
             && C2[i]<=pc.PointContactH) { // point contact
-         Vp[i]=pc.Bias[0]; fIsFixed[i]=true;
+         Vp[i]=pc.Bias[0]; fIsFixed[i]=true; npc++;
       } else if (C1[i]<=pc.BoreR && C1[i]>=-pc.BoreR
             && C2[i]>=pc.Height-pc.BoreH) { // bore hole
          Vp[i]=pc.Bias[1]; fIsFixed[i]=true;
@@ -144,6 +145,7 @@ void RhoZ::GetInfoFrom(PointContact& pc)
          }
       }
    }
+   if (npc<1) { Error("GetInfoFrom", "no point in point contact!"); abort(); }
    for (size_t i=N1*N2-1; i>=N1*N2-N1; i--) { // top boundary
       Vp[i]=pc.Bias[1]; fIsFixed[i]=true; dC2p[i]=0;
    }
