@@ -130,9 +130,8 @@ void Grid::SuccessiveOverRelax()
    fIterations=0;
    TStopwatch watch; watch.Start();
    while (fIterations<MaxIterations) {
-      if (fIterations%100==0)
-         Printf("%4zu steps, precision: %.1e (target: %.0e)",
-               fIterations, cp, Precision);
+      if (fIterations%100==0) Printf("%4zu steps, "
+            "precision: %.1e (target: %.0e)", fIterations, cp, Precision);
       double numerator=0, denominator=0;
       for (size_t i=0; i<GetN(); i++) {
          double old=Vp[i]; // save old value of Vp[i]
@@ -140,6 +139,9 @@ void Grid::SuccessiveOverRelax()
          if(old>0) denominator+=old; else denominator-=old;
          double diff=Vp[i]-old;
          if(diff>0) numerator+=(diff); else numerator-=(diff);
+      }
+      if (denominator==0) {
+         Error("SuccessiveOverRelax","Sum of Vs == 0!"); abort();
       }
       cp = numerator/denominator;
       fIterations++;
