@@ -5,13 +5,13 @@
 #include "Grid.h"
 namespace GeFiCa { class RhoZ; class PointContact; class Segmented; }
 /**
- * 2D cylindrical coordinates.
+ * 2D cylindrical coordinates in rho-z plane.
  */
 class GeFiCa::RhoZ : public Grid, public TNamed
 {
    public:
       RhoZ(size_t n1=200, size_t n2=201) : Grid(n1, n2),
-      TNamed("rhoz", "2D cylindrical coordinates") {};
+      TNamed("rhoz", "2D cylindrical coordinates in rho-z") {};
 
       void GetBoundaryConditionFrom(Detector &detector);
       double GetC();
@@ -19,7 +19,7 @@ class GeFiCa::RhoZ : public Grid, public TNamed
       ClassDef(RhoZ,1);
    protected:
       void OverRelaxAt(size_t idx); 
-      void CalculateE() {};
+      void CalculateE() {}; // Fixme
       void GetInfoFrom(Segmented &detector) {};
       void GetInfoFrom(PointContact &detector);
       void ReallocateGridPointsNearBoundaries(PointContact &detector);
