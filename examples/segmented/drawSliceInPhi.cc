@@ -3,14 +3,19 @@ using namespace GeFiCa;
 void CalculateWeightingPotential()
 {
    if (gSystem->Which(".","siegfried.root")) return;
-   SegmentedInPhi *siegfried = new SegmentedInPhi;
-   siegfried->V0=0*volt;
-   siegfried->V1=1*volt;
-   siegfried->Nseg=6;
-   siegfried->SegmentId=2;
-   siegfried->SuccessiveOverRelax();
+   Segmented detector;
+   detector.SetAverageImpurity(0);
+   detector.Bias[0]=0*volt; detector.Bias[1]=1*volt; // weighting potential
+   detector.Nphi=6;
+   detector.SegmentId=2;
+
+   RhoPhi grid;
+   grid.GetBoundaryConditionFrom(detector);
+   grid.SuccessiveOverRelax();
+
    TFile *output = new TFile("siegfried.root", "recreate");
-   siegfried->Write();
+   detector.Write();
+   grid.Write();
    output->Close();
 }
 //______________________________________________________________________________
@@ -18,9 +23,9 @@ void CalculateWeightingPotential()
 void DrawWeightingPotential()
 { 
    // load data
-   TFile *input = new TFile("siegfried.root","update");
-   SegmentedInPhi *siegfried = (SegmentedInPhi*) input->Get("sip");
-   TTree *t = siegfried->GetTree();
+   TFile *input = new TFile("siegfried.root");
+   RhoPhi *grid = (RhoPhi*) input->Get("rhophi");
+   TTree *t = grid->GetTree();
    const int n = t->GetEntries();
    t->Draw("c1*cos(c2):c1*sin(c2):v","","goff");
    TGraph2D *gv = new TGraph2D(n, t->GetV1(), t->GetV2(), t->GetV3());
@@ -43,19 +48,8 @@ void DrawWeightingPotential()
    palette->SetX2NDC(0.92);
 
    // draw segmentation scheme
-   double r=siegfried->OuterR, ri=siegfried->InnerR;
-   double x=r*cos(3.14/3), y=r*sin(3.14/3);
-
-   TLine *l1 = new TLine(-r,0,r,0);
-   l1->SetLineColor(kBlack); l1->SetLineStyle(kDashed); l1->Draw();
-   TLine *l2 = new TLine(-x,-y,x,y);
-   l2->SetLineColor(kBlack); l2->SetLineStyle(kDashed); l2->Draw();
-   TLine *l3 = new TLine(-x,y,x,-y);
-   l3->SetLineColor(kBlack); l3->SetLineStyle(kDashed); l3->Draw();
-
-   TEllipse *e1 = new TEllipse(0,0,ri,ri); e1->Draw();
-   TEllipse *e2 = new TEllipse(0,0,r,r); e2->SetFillStyle(0); e2->Draw();
-
+   Segmented *detector = (Segmented*) input->Get("sip");
+   detector->Draw("top");
    gPad->Print("sip.png");
 }
 //______________________________________________________________________________
