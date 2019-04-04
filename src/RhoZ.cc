@@ -58,7 +58,7 @@ void RhoZ::OverRelaxAt(size_t idx)
    } else if (vnew>vmax) {
       Vp[idx]=vmax; fIsDepleted[idx]=false;
    } else {
-      fIsDepleted[idx]=true; Vp[idx]=vnew;
+      Vp[idx]=vnew; fIsDepleted[idx]=true;
    }
    // update Vp for impurity-only case even if the point is undepleted
    if (fDetector->Bias[0]==fDetector->Bias[1]) Vp[idx]=vnew;
