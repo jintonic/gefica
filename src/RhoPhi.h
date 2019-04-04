@@ -1,29 +1,25 @@
-#ifndef GeFiCa_RHOPHI_H
-#define GeFiCa_RHOPHI_H
+#ifndef GeFiCa_RhoPhi
+#define GeFiCa_RhoPhi
 
-#include "XY.h"
-
-namespace GeFiCa { class RhoPhi; }
-
+#include <TNamed.h>
+#include "Grid.h"
+namespace GeFiCa { class RhoPhi; class Segmented; }
 /**
- * 2D cylindrical coordinates.
+ * 2D cylindrical coordinates in rho-phi plane.
  */
-class GeFiCa::RhoPhi : public GeFiCa::XY
+class GeFiCa::RhoPhi : public Grid, public TNamed
 {
    public:
-      /**
-       * Default constructor
-       */
-      RhoPhi(int N1=101, int N2=101,
-            const char *name="rp",
-            const char *title="2D cylindrical coordinates")
-         : XY(N1, N2, name, title) {}; 
+      RhoPhi(int n1=101, int n2=180) : Grid(n1, n2),
+      TNamed("rhophi", "2D cylindrical coordinates in rho-phi") {};
+
+      void GetBoundaryConditionFrom(Detector &detector);
+      double GetC();
 
       ClassDef(RhoPhi,1);
-
    protected:
-      void OverRelaxAt(int idx);
-      virtual double GetData(double x, double y, double z, double *data);
+      void OverRelaxAt(size_t idx);
+      void CalculateE() {}; // Fixme
 };
 #endif
 
