@@ -25,6 +25,8 @@ namespace GeFiCa {
    static const double epsilon0=8.854187817e-14*C/volt/cm; ///< vacumm permittivity [C/volt/cm]
    static const double epsilonR=16; ///< dielectric constant of Ge
    static const double epsilon=epsilonR*epsilon0; ///< permittivity of Ge [C/volt/cm]
+
+   static const double Pi=3.14159265;
 }
 #endif
 
