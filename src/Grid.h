@@ -64,7 +64,7 @@ class GeFiCa::Grid : public Points
       virtual ~Grid() {};
       /**
        * Fix potentials on boundaries based on \param detector geometry.
-       * It fills \class Points data based on \param detector geometry and N1,
+       * It fills Points data based on \param detector geometry and N1,
        * N2 and/or N3, and raises the flag fIsFixed for points on/outside
        * electrodes. It has to be called before SuccessiveOverRelax().
        */
