@@ -1,45 +1,41 @@
 #include "Units.h"
-#include "SegmentedInPhi.h"
+#include "Segmented.h"
 using namespace GeFiCa;
 
-SegmentedInPhi::SegmentedInPhi(int nr, int np,
-      const char *name, const char *title) : RhoPhi(nr, np, name, title),
-   OuterR(2.5),InnerR(0.5),Nseg(6), SegmentId(1) {};
+Segmented::Segmented(const char *name, const char *title) :
+   Detector(name, title), Radius(3.5*cm), BoreR(0.5*cm),
+   Nphi(6), Nz(3), SegmentId(1)
+{ Height=5*cm; Bias.push_back(2*kV); }
 //______________________________________________________________________________
 //
-void SegmentedInPhi::InitializeGrid()
+void Segmented::CheckConfigurations()
 {
-   if (InnerR>=OuterR) Fatal("InitializeGrid",
-            "Inner R (%.1f) >= Outer R (%.1f)! Abort!", InnerR, OuterR);
-   if (Nseg==0) Fatal("InitializeGrid",
-            "Total number of segments cannot be zero! Abort!");
-   
-   if (Nseg<0)Nseg=-Nseg;
-   if (SegmentId<0)SegmentId=-SegmentId;
-   if(SegmentId>Nseg)SegmentId=SegmentId%Nseg;
-
-   double steplength1=(OuterR-InnerR)/(N1-1);
-   double steplength2=2*TMath::Pi()/(N2);
-   double SegmentUpperBound=2*TMath::Pi()*SegmentId/Nseg;
-   double SegmentLowerBound=2*TMath::Pi()*(SegmentId-1)/Nseg;
-   SetStepLength(steplength1,steplength2);
-   for(int i=0;i<fN;i++) {
-      C1[i]+=InnerR;
-      if(i%N1==0) {
-         fIsFixed[i]=true;
-         if(SegmentId==0)V[i]=Bias[1];
-         else V[i]=Bias[0];
-      } else if(i%N1==N1-1) { //need shift boundary as pointcontact
-         fIsFixed[i]=true;
-         if(SegmentId==0)V[i]=Bias[0];
-         else if(C2[i]<=SegmentUpperBound&&C2[i]>=SegmentLowerBound) {
-            V[i]=Bias[1];
-         } else if(C2[i]>=SegmentUpperBound||C2[i]<=SegmentLowerBound) {
-            V[i]=Bias[0];
-         }
-      } else {
-         fIsFixed[i]=false;
-         V[i]=0;
-      }
+   if (Radius<=0) {
+      Error("CheckConfigurations", "Radius==%.1f!", Radius);
+      abort();
+   }
+   if (BoreR<=0) {
+      Error("CheckConfigurations", "BoreR==%.1f!", BoreR);
+      abort();
+   }
+   if (BoreR>=Radius) {
+      Error("CheckConfigurations",
+            "BoreR (%.1f) >= Radius (%.1f)!", BoreR, Radius);
+      abort();
+   }
+   if (Nphi==0) {
+      Error("CheckConfigurations",
+         "Total number of segments in phi cannot be zero!");
+      abort();
+   }
+   if (Nz==0) {
+      Error("CheckConfigurations",
+         "Total number of segments in z cannot be zero!");
+      abort();
+   }
+   if (SegmentId>Nphi*Nz) {
+      Error("CheckConfigurations",
+            "SegmentId(%zu)>Nphi(%zu)*Nz(%zu)!",SegmentId, Nphi, Nz);
+      abort();
    }
 }

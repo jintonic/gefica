@@ -1,34 +1,26 @@
-#ifndef GeFiCa_SIEGFRIEDInPhi_H
-#define GeFiCa_SIEGFRIEDInPhi_H
+#ifndef GeFiCa_Segmented
+#define GeFiCa_Segmented
 
-#include "RhoPhi.h"
-#include <TMath.h> 
+#include "Detector.h"
 
-namespace GeFiCa { class SegmentedInPhi; }
+namespace GeFiCa { class Segmented; }
 
 /**
- * Grid setup for 2D true coaxial detectors segmented in phi.
+ * Configuration of segmented true coaxial detectors.
  */
-class GeFiCa::SegmentedInPhi : public GeFiCa::RhoPhi
+class GeFiCa::Segmented: public Detector
 {
    public:
-      double OuterR; ///< outer radius
-      double InnerR; ///< inner radius
-      int Nseg; ///< total number of segments
-      int SegmentId; ///< segment Id
+      double Radius; ///< radius of the crystal
+      double BoreR; ///< radius of the bore hole
+      size_t Nphi; ///< total number of segments in phi
+      size_t Nz; ///< total number of segments in z
+      size_t SegmentId; ///< segment Id in [0, Nphi*Nz]
  
-      /**
-       * Default constructor
-       */
-      SegmentedInPhi(int nr=360, ///< [in] number of grid points along rho
-            int np=301, ///< [in] number of grid points along phi
-            const char *name="sip", ///< [in] name of object
-            const char *title="2D true coaxial detector segmented in phi");
-
-      ClassDef(SegmentedInPhi,1);
-
-   protected:
-      virtual void InitializeGrid();
+      Segmented(const char *name="seg",
+            const char *title="segmented detector");
+      void CheckConfigurations();
+      ClassDef(Segmented,1);
 };
-
 #endif
+
