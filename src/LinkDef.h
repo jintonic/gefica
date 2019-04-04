@@ -9,16 +9,12 @@
 #pragma link C++ class GeFiCa::Grid+;
 
 #pragma link C++ class GeFiCa::X+;
-#pragma link C++ class GeFiCa::XY+;
-#pragma link C++ class GeFiCa::XYZ+;
 
 #pragma link C++ class GeFiCa::R+;
 #pragma link C++ class GeFiCa::RTheta+;
-#pragma link C++ class GeFiCa::RThetaPhi+;
 
 #pragma link C++ class GeFiCa::Rho+;
 #pragma link C++ class GeFiCa::RhoPhi+;
-#pragma link C++ class GeFiCa::RhoPhiZ+;
 #pragma link C++ class GeFiCa::RhoZ+;
 
 #pragma link C++ class GeFiCa::Crystal+;
