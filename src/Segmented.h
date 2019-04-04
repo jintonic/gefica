@@ -17,9 +17,10 @@ class GeFiCa::Segmented: public Detector
       size_t Nz; ///< total number of segments in z
       size_t SegmentId; ///< segment Id in [0, Nphi*Nz]
  
-      Segmented(const char *name="seg",
+      Segmented(const char *name="sip",
             const char *title="segmented detector");
       void CheckConfigurations();
+      void Draw(Option_t* option="");
       ClassDef(Segmented,1);
 };
 #endif

@@ -38,4 +38,31 @@ void Segmented::CheckConfigurations()
             "SegmentId(%zu)>Nphi(%zu)*Nz(%zu)!",SegmentId, Nphi, Nz);
       abort();
    }
+   if (SegmentId==0) {
+      Info("CheckConfigurations", "SegmentId==0, "
+            "please use TrueCoaxial for the core electrode.");
+      abort();
+   }
+}
+//______________________________________________________________________________
+//
+#include <TLine.h>
+#include <TEllipse.h>
+void Segmented::Draw(Option_t* option)
+{
+   TString pointOfView(option); pointOfView.ToLower();
+   if (pointOfView.Contains("top")) {
+      double x=Radius*cos(2*Pi/Nphi), y=Radius*sin(2*Pi/Nphi);
+
+      TLine *l1 = new TLine(-Radius,0,Radius,0);
+      l1->SetLineColor(kBlack); l1->SetLineStyle(kDashed); l1->Draw();
+      TLine *l2 = new TLine(-x,-y,x,y);
+      l2->SetLineColor(kBlack); l2->SetLineStyle(kDashed); l2->Draw();
+      TLine *l3 = new TLine(-x,y,x,-y);
+      l3->SetLineColor(kBlack); l3->SetLineStyle(kDashed); l3->Draw();
+
+      TEllipse *e1 = new TEllipse(0,0,BoreR,BoreR); e1->Draw();
+      TEllipse *e2 = new TEllipse(0,0,Radius,Radius); e2->SetFillStyle(0);
+      e2->Draw();
+   }
 }
