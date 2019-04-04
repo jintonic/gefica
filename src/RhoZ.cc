@@ -169,16 +169,12 @@ void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
 {
    double slope, intercept;
    for (size_t i=0; i<GetN(); i++) {
-      // Fixme: if dC2m is too small, say 1e-5, 1/dC2m becomes too large
       if (C2[i]-pc.PointContactH<dC2m[i] && C2[i]>pc.PointContactH
-            && C1[i]<pc.PointContactR && C1[i]>-pc.PointContactR)
-      {
+            && C1[i]<pc.PointContactR && C1[i]>-pc.PointContactR) {
          dC2m[i]=C2[i]-pc.PointContactH; // top of point contact
-         if(dC2m[i]<1e-4)//should check all boundary relocate
-         {
-            Vp[i]=pc.Bias[0];
-            fIsFixed[i]=true;
-         }
+         // since C2[i] is too close to boundary, we regard it as on the boundary
+         // Fixme: same protection should be applied to other boundaries
+         if (dC2m[i]<1e-4*cm) { Vp[i]=pc.Bias[0]; fIsFixed[i]=true; }
       }
       if (C1[i]-pc.PointContactR<dC1m[i]&&C1[i]>0&&C2[i]<pc.PointContactH)
          dC1m[i]=C1[i]-pc.PointContactR; // right of point contact
@@ -214,18 +210,14 @@ void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
       if (pc.TaperW>0) { // has bottom taper
          slope=pc.TaperH/pc.TaperW;
          intercept=-(pc.Radius-pc.TaperW)*slope;
-         if (C2[i]-(C1[i]*slope+intercept)<dC2p[i]) {
+         if (C2[i]-(slope*C1[i]+intercept)<dC2m[i]) // right side, C2
             dC2m[i]=C2[i]-(slope*C1[i]+intercept);
-         }
-         if (C1[i]-((C2[i]+intercept)/slope)<dC1p[i]) {
-            dC1p[i]=C1[i]-intercept/slope-C2[i]/slope; // Fixme: only true when slope>45 deg
-         }
-         if (C2[i]-(-slope*C1[i]+intercept)<dC2m[i]) {
-            dC2m[i]=C2[i]-(-C1[i]*slope+intercept);
-         }
-         if (-C1[i]/slope-intercept/slope-C2[i]<dC2m[i]) {
-            dC1m[i]=-C1[i]/slope-intercept/slope-C2[i]; // Fixme: only true when slope>45 deg
-         }
+         if ((C2[i]-intercept)/slope-C1[i]<dC1p[i]) // right side, C1
+            dC1p[i]=(C2[i]-intercept)/slope-C1[i];
+         if (C2[i]-(-slope*C1[i]+intercept)<dC2m[i]) // left side, C2
+            dC2m[i]=C2[i]-(-slope*C1[i]+intercept);
+         if (C1[i]+(C2[i]-intercept)/slope<dC1m[i]) // left side, C1
+            dC1m[i]=C1[i]+(C2[i]-intercept)/slope;
       }
       if (pc.BoreTaperW>0) { // has bore taper
          slope=pc.BoreTaperH/pc.BoreTaperW;
