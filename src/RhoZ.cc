@@ -169,7 +169,7 @@ void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
 {
    double slope, intercept;
    for (size_t i=0; i<GetN(); i++) {
-      // how about very thin point contact?
+      // Fixme: if dC2m is too small, say 1e-5, 1/dC2m becomes too large
       if (C2[i]-pc.PointContactH<dC2m[i] && C2[i]>pc.PointContactH
             && C1[i]<pc.PointContactR && C1[i]>-pc.PointContactR)
          dC2m[i]=C2[i]-pc.PointContactH; // top of point contact
@@ -186,7 +186,8 @@ void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
       //down side of bore
       if (pc.Height-pc.BoreTaperH-C2[i]<dC2p[i]&&C1[i]>-pc.BoreR&&
             C1[i]<pc.BoreR) dC2p[i]=pc.Height-pc.BoreTaperH-C2[i];
-      // how about groove?
+      // Fixme: V around groove bounaries are all changable,
+      // which should be reallocated?
       if (pc.WrapAroundR-C1[i]<dC1p[i]&&C1[i]<pc.WrapAroundR&&i<N1)
          dC1p[i]=pc.WrapAroundR-C1[i];
       if (pc.WrapAroundR+C1[i]<dC1p[i]&&C1[i]>-pc.WrapAroundR&&i<N1)
@@ -207,12 +208,12 @@ void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
          slope=pc.TaperH/pc.TaperW;
          intercept=-(pc.Radius-pc.TaperW)*slope;
          if (C2[i]-(C1[i]*slope+intercept)<dC2p[i]) {
-            dC2p[i]=C2[i]-(slope*C1[i]+intercept);
-            dC1p[i]=C1[i]-intercept/slope-C2[i]/slope; // right?
+            dC2m[i]=C2[i]-(slope*C1[i]+intercept);
+            dC1p[i]=C1[i]-intercept/slope-C2[i]/slope; // Fixme: only true when slope>45 deg
          }
-         if (C2[i]-(-slope*C1[i]+intercept)<dC2m[i]) { // not symmetric
+         if (C2[i]-(-slope*C1[i]+intercept)<dC2m[i]) {
             dC2m[i]=C2[i]-(-C1[i]*slope+intercept);
-            dC1m[i]=-C1[i]/slope-intercept/slope-C2[i];
+            dC1m[i]=-C1[i]/slope-intercept/slope-C2[i]; // Fixme: only true when slope>45 deg
          }
       }
       if (pc.BoreTaperW>0) { // has bore taper
