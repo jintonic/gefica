@@ -38,6 +38,7 @@ class GeFiCa::Detector : public Crystal, public TNamed
        * Check if detector configurations make sense.
        */
       void CheckConfigurations();
+      void Draw(Option_t* option="") {};
       ClassDef(Detector, 1);
 };
 #endif
