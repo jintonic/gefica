@@ -28,8 +28,8 @@ class GeFiCa::Points
 class TGraph;
 /**
  * Electric field line data.
- * It inherits from \class TNamed the ability to be retreived from a ROOT file
- * by its name. One can get either a TGraph or C1, C2... from it for plotting.
+ * It inherits from TNamed the ability to be retreived from a ROOT file by its
+ * name. One can get either a TGraph or C1, C2... from it for plotting.
  */
 class GeFiCa::FieldLine : public Points, public TNamed
 {
@@ -43,8 +43,8 @@ class GeFiCa::FieldLine : public Points, public TNamed
 class TTree;
 /**
  * Data structure of a electric field grid.
- * It inherits the flat data structure from \class Points instead of using the
- * class to save typing.  Compare `C1[i]` with `point.C1[i]`.
+ * It inherits the flat data structure from Points instead of using the class
+ * to save typing. Compare `C1[i]` with `point.C1[i]`.
  */
 class GeFiCa::Grid : public Points
 {
