@@ -2,8 +2,8 @@
 #include "PointContact.h"
 using namespace GeFiCa;
 
-PointContact::PointContact(const char *name, const char *title)
-   : Detector(name, title), Radius(3*cm),
+PointContact::PointContact(const char *name, const char *title) :
+   Detector(name, title), Radius(3*cm),
    PointContactR(1*mm), PointContactH(300*nm),
    BoreH(0), BoreR(0), BoreTaperW(0), BoreTaperH(0),
    TaperW(1*mm), TaperH(1*mm), CornerW(1*mm), CornerH(1*mm),
@@ -14,6 +14,10 @@ PointContact::PointContact(const char *name, const char *title)
 void PointContact::CheckConfigurations()
 {
    Detector::CheckConfigurations();
+   if (Radius<=0) {
+      Error("CheckConfigurations", "Radius==%.1f!", Radius);
+      abort();
+   }
    if (PointContactR<=0) {
       Error("CheckConfigurations", "PointContactR==%.1f!", PointContactR);
       abort();
