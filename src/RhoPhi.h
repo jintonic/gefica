@@ -10,7 +10,7 @@ namespace GeFiCa { class RhoPhi; class Segmented; }
 class GeFiCa::RhoPhi : public Grid, public TNamed
 {
    public:
-      RhoPhi(int n1=101, int n2=180) : Grid(n1, n2),
+      RhoPhi(size_t n1=101, size_t n2=180) : Grid(n1, n2),
       TNamed("rhophi", "2D cylindrical coordinates in rho-phi") {};
 
       void GetBoundaryConditionFrom(Detector &detector);
