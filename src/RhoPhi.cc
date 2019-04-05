@@ -18,11 +18,10 @@ void RhoPhi::GetBoundaryConditionFrom(Detector &detector)
    fDetector = &detector; // for GetC to use fDetector->Bias[]
 
    double dR=sip.Radius-sip.BoreR;
-   double slope = (sip.Bias[1]-sip.Bias[0])/(N1-1);
    for (size_t i=0; i<N1*N2; i++) {
       dC1p.push_back(dR/(N1-1)); dC1m.push_back(dR/(N1-1));
       dC2p.push_back(2*Pi/N2); dC2m.push_back(2*Pi/N2);
-      C1.push_back(sip.BoreR+i*dC1p[i]); C2.push_back(i%N1*2*Pi/N2);
+      C1.push_back(sip.BoreR+i%N1*dC1p[i]); C2.push_back(i/N1*2*Pi/N2);
       E1.push_back(0); E2.push_back(0); Et.push_back(0); Vp.push_back(0);
       fIsFixed.push_back(false); fIsDepleted.push_back(false);
       Src.push_back(-sip.TopImpurity*Qe/epsilon);
@@ -36,7 +35,7 @@ void RhoPhi::GetBoundaryConditionFrom(Detector &detector)
             Vp[i]=sip.Bias[1]; // weighting potential for the selected segment
          else Vp[i]=sip.Bias[0]; // weighting potential for other segments
       } else
-         Vp[i]=sip.Bias[0]+i%N1*slope; // linear interpolation
+         Vp[i]=(sip.Bias[0]+sip.Bias[1])/2;
    }
 }
 //______________________________________________________________________________
