@@ -219,7 +219,7 @@ TTree* Grid::GetTree(bool createNew)
    if (fTree) { if (createNew) delete fTree; else return fTree; }
 
    // define tree
-   bool b,d; double vp,et,e1,e2,e3,c1,c2,c3;
+   bool b,d; double vp,et,e1,e2,e3,c1,c2,c3,p1,p2,p3,m1,m2,m3;
    fTree = new TTree("t","field data");
    fTree->SetDirectory(0);
    fTree->Branch("v",&vp,"v/D");
@@ -227,13 +227,19 @@ TTree* Grid::GetTree(bool createNew)
    // 1D data
    fTree->Branch("e1",&e1,"e1/D");
    fTree->Branch("c1",&c1,"c1/D");
+   fTree->Branch("p1",&p1,"p1/D");
+   fTree->Branch("m1",&m1,"m1/D");
    if (N2!=0) { // 2D data
       fTree->Branch("e2",&e2,"e2/D");
       fTree->Branch("c2",&c2,"c2/D");
+      fTree->Branch("p2",&p2,"p2/D");
+      fTree->Branch("m2",&m2,"m2/D");
    }
    if (N3!=0) { // 3D data
       fTree->Branch("e3",&e3,"e3/D");
       fTree->Branch("c3",&c3,"c3/D");
+      fTree->Branch("p3",&p3,"p3/D");
+      fTree->Branch("m3",&m3,"m3/D");
    }
    fTree->Branch("b",&b,"b/O"); // boundary flag
    fTree->Branch("d",&d,"d/O"); // depletion flag
@@ -241,9 +247,9 @@ TTree* Grid::GetTree(bool createNew)
    // fill tree
    Info("GetTree","%zu entries",GetN());
    for (size_t i=0; i<GetN(); i++) {
-      e1=E1[i]; c1=C1[i]; // 1D data
-      if (N2!=0) { e2=E2[i]; c2=C2[i]; } // 2D data
-      if (N3!=0) { e3=E3[i]; c3=C3[i]; } // 3D data
+      e1=E1[i]; c1=C1[i]; p1=dC1p[i]; m1=dC1m[i]; // 1D data
+      if (N2!=0) { e2=E2[i]; c2=C2[i]; p2=dC2p[i]; m2=dC2m[i]; } // 2D data
+      if (N3!=0) { e3=E3[i]; c3=C3[i]; p3=dC3p[i]; m3=dC3m[i]; } // 3D data
       vp=Vp[i]; et=Et[i]; b=fIsFixed[i]; d=fIsDepleted[i]; // common data
       fTree->Fill();
    }
