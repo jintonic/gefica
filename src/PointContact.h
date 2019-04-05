@@ -32,6 +32,7 @@ class GeFiCa::PointContact : public Detector
       PointContact(const char *name="pc",
             const char *title="point-contact detector");
       void CheckConfigurations();
+      void Draw(Option_t* option="side");
       ClassDef(PointContact,1);
 };
 #endif
