@@ -9,9 +9,13 @@
    detector.GrooveW=2*GeFiCa::mm; detector.GrooveH=2*GeFiCa::mm;
    detector.Dump(); // call TObject::Dump() to print data members
 
-   GeFiCa::RhoZ grid;
+   GeFiCa::RhoZ grid(40,21);
    grid.GetBoundaryConditionFrom(detector);
    TTree *t = grid.GetTree(); // create a ROOT tree for quick check
    gStyle->SetPadRightMargin(0.12); // give enough space for color palette
-   t->Draw("c2:c1:v","","colz"); // visualize initial setup
+   t->Draw("c2:c1:p1","","colz"); // visualize initial setup
+   detector.Draw();
+   TCanvas c1;
+   t->Draw("c2:c1:m1","","colz"); // visualize initial setup
+   detector.Draw();
 }
