@@ -149,7 +149,7 @@ void RhoZ::GetInfoFrom(PointContact& pc)
    for (size_t i=N1*N2-1; i>=N1*N2-N1; i--) { // top boundary
       Vp[i]=pc.Bias[1]; fIsFixed[i]=true; dC2p[i]=0;
    }
-   for (size_t i=0; i<N1*N2-N1; i=i+N1) { // left & right boundaries
+   for (size_t i=0; i<=N1*N2-N1; i=i+N1) { // left & right boundaries
       Vp[i]=pc.Bias[1]; Vp[i+N1-1]=pc.Bias[1];
       fIsFixed[i]=true; fIsFixed[i+N1-1]=true;
       dC1m[i]=0; dC1p[i+N1-1]=0;
@@ -176,15 +176,17 @@ void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
          // Fixme: same protection should be applied to other boundaries
          if (dC2m[i]<1e-4*cm) { Vp[i]=pc.Bias[0]; fIsFixed[i]=true; }
       }
-      if (C1[i]-pc.PointContactR<dC1m[i]&&C1[i]>0&&C2[i]<pc.PointContactH)
+      if (C1[i]-pc.PointContactR<dC1m[i]&&C1[i]>pc.PointContactR
+            &&C2[i]<pc.PointContactH)
          dC1m[i]=C1[i]-pc.PointContactR; // right of point contact
-      if (-C1[i]-pc.PointContactR<dC1p[i]&&C1[i]<0&&C2[i]<pc.PointContactH)
+      if (-C1[i]-pc.PointContactR<dC1p[i]&&C1[i]<-pc.PointContactR
+            &&C2[i]<pc.PointContactH)
          dC1p[i]=-C1[i]-pc.PointContactR; // left of point contact
       //right side of bore
-      if (C1[i]-pc.BoreR<dC1m[i] && C2[i]>pc.BoreH && C1[i]-pc.BoreR>0)
+      if (C1[i]-pc.BoreR>0&&C1[i]-pc.BoreR<dC1m[i]&&C2[i]>=pc.Height-pc.BoreH)
          dC1m[i]=C1[i]-pc.BoreR;
       //left side of bore
-      if (-C1[i]-pc.BoreR>0&&-C1[i]-pc.BoreR<dC1p[i]&&C2[i]>pc.BoreH)
+      if (-C1[i]-pc.BoreR>0&&-C1[i]-pc.BoreR<dC1p[i]&&C2[i]>=pc.Height-pc.BoreH)
          dC1p[i]=-C1[i]-pc.BoreR;
       //down side of bore
       if (pc.Height-pc.BoreTaperH-C2[i]<dC2p[i]&&C1[i]>-pc.BoreR&&
@@ -210,13 +212,17 @@ void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
       if (pc.TaperW>0) { // has bottom taper
          slope=pc.TaperH/pc.TaperW;
          intercept=-(pc.Radius-pc.TaperW)*slope;
-         if (C2[i]-(slope*C1[i]+intercept)<dC2m[i]) // right side, C2
+         if (C2[i]-(slope*C1[i]+intercept)<dC2m[i]
+               && C2[i]-(slope*C1[i]+intercept)>0) // right side, C2
             dC2m[i]=C2[i]-(slope*C1[i]+intercept);
-         if ((C2[i]-intercept)/slope-C1[i]<dC1p[i]) // right side, C1
+         if ((C2[i]-intercept)/slope-C1[i]<dC1p[i]
+               && (C2[i]-intercept)/slope-C1[i]>0) // right side, C1
             dC1p[i]=(C2[i]-intercept)/slope-C1[i];
-         if (C2[i]-(-slope*C1[i]+intercept)<dC2m[i]) // left side, C2
+         if (C2[i]-(-slope*C1[i]+intercept)<dC2m[i]
+               && C2[i]-(-slope*C1[i]+intercept)>0) // left side, C2
             dC2m[i]=C2[i]-(-slope*C1[i]+intercept);
-         if (C1[i]+(C2[i]-intercept)/slope<dC1m[i]) // left side, C1
+         if (C1[i]+(C2[i]-intercept)/slope<dC1m[i]
+               && C1[i]+(C2[i]-intercept)/slope>0) // left side, C1
             dC1m[i]=C1[i]+(C2[i]-intercept)/slope;
       }
       if (pc.BoreTaperW>0) { // has bore taper
