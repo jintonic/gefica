@@ -154,8 +154,9 @@ void RhoZ::GetInfoFrom(PointContact& pc)
       fIsFixed[i]=true; fIsFixed[i+N1-1]=true;
       dC1m[i]=0; dC1p[i+N1-1]=0;
    }
-   for (size_t i=0; i<N1; i++) { // wrap arround
-      if (C1[i]>=pc.WrapAroundR||C1[i]<=-pc.WrapAroundR) {
+   for (size_t i=0; i<N1; i++) { // bottom boundary
+      dC2m[i]=0;
+      if (C1[i]>=pc.WrapAroundR||C1[i]<=-pc.WrapAroundR) {// wrap arround
          fIsFixed[i]=true;
          Vp[i]=pc.Bias[1];
       }
@@ -189,8 +190,9 @@ void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
       if (-C1[i]-pc.BoreR>0&&-C1[i]-pc.BoreR<dC1p[i]&&C2[i]>=pc.Height-pc.BoreH)
          dC1p[i]=-C1[i]-pc.BoreR;
       //down side of bore
-      if (pc.Height-pc.BoreTaperH-C2[i]<dC2p[i]&&C1[i]>-pc.BoreR&&
-            C1[i]<pc.BoreR) dC2p[i]=pc.Height-pc.BoreTaperH-C2[i];
+      if (pc.Height-pc.BoreH-C2[i]>0 && pc.Height-pc.BoreH-C2[i]<dC2p[i]
+            && C1[i]>-pc.BoreR && C1[i]<pc.BoreR)
+         dC2p[i]=pc.Height-pc.BoreH-C2[i];
       // Fixme: V around groove bounaries are all changable,
       // which should be reallocated?
       if (pc.WrapAroundR-C1[i]<dC1p[i]&&C1[i]<pc.WrapAroundR&&i<N1)
