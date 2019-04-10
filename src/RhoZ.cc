@@ -175,7 +175,7 @@ void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
          dC2m[i]=C2[i]-pc.PointContactH; // top of point contact
          // since C2[i] is too close to boundary, we regard it as on the boundary
          // Fixme: same protection should be applied to other boundaries
-         if (dC2m[i]<1e-4*cm) { Vp[i]=pc.Bias[0]; fIsFixed[i]=true; }
+         if (dC2m[i]<1e-4*mm) { Vp[i]=pc.Bias[0]; fIsFixed[i]=true; }
       }
       if (C1[i]-pc.PointContactR<dC1m[i]&&C1[i]>pc.PointContactR
             &&C2[i]<pc.PointContactH)
@@ -183,16 +183,18 @@ void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
       if (-C1[i]-pc.PointContactR<dC1p[i]&&C1[i]<-pc.PointContactR
             &&C2[i]<pc.PointContactH)
          dC1p[i]=-C1[i]-pc.PointContactR; // left of point contact
-      //right side of bore
-      if (C1[i]-pc.BoreR>0&&C1[i]-pc.BoreR<dC1m[i]&&C2[i]>=pc.Height-pc.BoreH)
+      if (C1[i]-pc.BoreR>0&&C1[i]-pc.BoreR<dC1m[i]
+            &&C2[i]>pc.Height-pc.BoreH-1e-4*mm) //right side of bore
          dC1m[i]=C1[i]-pc.BoreR;
-      //left side of bore
-      if (-C1[i]-pc.BoreR>0&&-C1[i]-pc.BoreR<dC1p[i]&&C2[i]>=pc.Height-pc.BoreH)
+      if (-C1[i]-pc.BoreR>0&&-C1[i]-pc.BoreR<dC1p[i]
+            &&C2[i]>=pc.Height-pc.BoreH-1e-4*mm) //left side of bore
          dC1p[i]=-C1[i]-pc.BoreR;
       //down side of bore
       if (pc.Height-pc.BoreH-C2[i]>0 && pc.Height-pc.BoreH-C2[i]<dC2p[i]
-            && C1[i]>-pc.BoreR && C1[i]<pc.BoreR)
+            && C1[i]>-pc.BoreR && C1[i]<pc.BoreR) {
          dC2p[i]=pc.Height-pc.BoreH-C2[i];
+         if (dC2p[i]<1e-4*mm) { Vp[i]=pc.Bias[1]; fIsFixed[i]=true; }
+      }
       // Fixme: V around groove bounaries are all changable,
       // which should be reallocated?
       if (pc.WrapAroundR-C1[i]<dC1p[i]&&C1[i]<pc.WrapAroundR&&i<N1)
@@ -245,10 +247,12 @@ void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
                C2[i]>pc.Height-pc.BoreTaperH) //left side of hole taper
             dC1p[i]=-C1[i]-C2[i]/slope+intercept/slope;
          if((C1[i]*slope+intercept)-C2[i]<dC2p[i] &&
-               C1[i]<pc.BoreR+pc.BoreTaperW&&C1[i]>pc.BoreR&&(C1[i]*slope+intercept)-C2[i]>0)
+               C1[i]<pc.BoreR+pc.BoreTaperW && C1[i]>pc.BoreR
+               && (C1[i]*slope+intercept)-C2[i]>0) // right side of hole taper
             dC2p[i]=(C1[i]*slope+intercept)-C2[i];
          if((-C1[i]*slope+intercept)-C2[i]<dC2p[i] &&
-               C1[i]>pc.BoreR+pc.BoreTaperW&&C1[i]<pc.BoreR&&(-C1[i]*slope+intercept)-C2[i]>0)
+               C1[i]>-pc.BoreR-pc.BoreTaperW && C1[i]<-pc.BoreR
+               && (-C1[i]*slope+intercept)-C2[i]>0) // left side of hole taper
             dC2p[i]=(-C1[i]*slope+intercept)-C2[i];
       }
    }
