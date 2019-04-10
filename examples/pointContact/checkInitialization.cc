@@ -13,9 +13,9 @@
    grid.GetBoundaryConditionFrom(detector);
    TTree *t = grid.GetTree(); // create a ROOT tree for quick check
    gStyle->SetPadRightMargin(0.12); // give enough space for color palette
-   t->Draw("c2:c1:p1","","colz"); // visualize initial setup
+   t->Draw("c2:c1:p2","","colz"); // visualize initial setup
    detector.Draw();
    TCanvas c1;
-   t->Draw("c2:c1:m1","","colz"); // visualize initial setup
+   t->Draw("c2:c1:m2","","colz"); // visualize initial setup
    detector.Draw();
 }

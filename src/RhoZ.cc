@@ -214,7 +214,7 @@ void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
                C1[i]>pc.Radius-pc.CornerW&&(C1[i]*slope+intercept)-C2[i]>0)
             dC2p[i]=(C1[i]*slope+intercept)-C2[i];
          if((-C1[i]*slope+intercept)-C2[i]<dC2p[i] &&
-               C1[i]<-pc.Radius+pc.CornerW&&(C1[i]*slope+intercept)-C2[i]>0)
+               C1[i]<-pc.Radius+pc.CornerW&&(-C1[i]*slope+intercept)-C2[i]>0)
             dC2p[i]=(-C1[i]*slope+intercept)-C2[i];
       }
       if (pc.TaperW>0) { // has bottom taper
