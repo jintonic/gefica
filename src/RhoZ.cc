@@ -170,28 +170,36 @@ void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
 {
    double slope, intercept;
    for (size_t i=0; i<GetN(); i++) {
-      if (C2[i]-pc.PointContactH<dC2m[i] && C2[i]>pc.PointContactH
-            && C1[i]<pc.PointContactR && C1[i]>-pc.PointContactR) {
+      if (C2[i]-pc.PointContactH<dC2m[i] && C2[i]>pc.PointContactH+1e-4*mm
+            && C1[i]<(pc.PointContactR+1e-4*mm) && C1[i]>-(pc.PointContactR+1e-4*mm)) {
          dC2m[i]=C2[i]-pc.PointContactH; // top of point contact
          // since C2[i] is too close to boundary, we regard it as on the boundary
          // Fixme: same protection should be applied to other boundaries
          if (dC2m[i]<1e-4*mm) { Vp[i]=pc.Bias[0]; fIsFixed[i]=true; }
       }
-      if (C1[i]-pc.PointContactR<dC1m[i]&&C1[i]>pc.PointContactR
-            &&C2[i]<pc.PointContactH)
+      if (C1[i]-pc.PointContactR<dC1m[i]&&C1[i]>(pc.PointContactR+1e-4*mm)
+            &&C2[i]<pc.PointContactH+1e-4*mm){
          dC1m[i]=C1[i]-pc.PointContactR; // right of point contact
-      if (-C1[i]-pc.PointContactR<dC1p[i]&&C1[i]<-pc.PointContactR
-            &&C2[i]<pc.PointContactH)
+         if (dC1m[i]<1e-4*mm) { Vp[i]=pc.Bias[0]; fIsFixed[i]=true; }
+      }
+      if (-C1[i]-pc.PointContactR<dC1p[i]&&C1[i]<-(pc.PointContactR+1e-4*mm)
+            &&C2[i]<pc.PointContactH+1e-4*mm){
          dC1p[i]=-C1[i]-pc.PointContactR; // left of point contact
+         if (dC1p[i]<1e-4*mm) { Vp[i]=pc.Bias[0]; fIsFixed[i]=true; }
+      }
       if (C1[i]-pc.BoreR>0&&C1[i]-pc.BoreR<dC1m[i]
-            &&C2[i]>pc.Height-pc.BoreH-1e-4*mm) //right side of bore
+            &&C2[i]>pc.Height-pc.BoreH-1e-4*mm){ //right side of bore
          dC1m[i]=C1[i]-pc.BoreR;
+         if (dC1m[i]<1e-4*mm) { Vp[i]=pc.Bias[0]; fIsFixed[i]=true; }
+      }
       if (-C1[i]-pc.BoreR>0&&-C1[i]-pc.BoreR<dC1p[i]
-            &&C2[i]>=pc.Height-pc.BoreH-1e-4*mm) //left side of bore
+            &&C2[i]>=pc.Height-pc.BoreH-1e-4*mm){ //left side of bore
          dC1p[i]=-C1[i]-pc.BoreR;
+         if (dC1p[i]<1e-4*mm) { Vp[i]=pc.Bias[0]; fIsFixed[i]=true; }
+      }
       //down side of bore
-      if (pc.Height-pc.BoreH-C2[i]>0 && pc.Height-pc.BoreH-C2[i]<dC2p[i]
-            && C1[i]>-pc.BoreR && C1[i]<pc.BoreR) {
+      if (pc.Height-pc.BoreH-1e-4*mm-C2[i]>0 && pc.Height-pc.BoreH-C2[i]<dC2p[i]
+            && C1[i]>-pc.BoreR-1e-4*mm && C1[i]<pc.BoreR+1e-4*mm) {
          dC2p[i]=pc.Height-pc.BoreH-C2[i];
          if (dC2p[i]<1e-4*mm) { Vp[i]=pc.Bias[1]; fIsFixed[i]=true; }
       }
