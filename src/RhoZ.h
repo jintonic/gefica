@@ -23,6 +23,7 @@ class GeFiCa::RhoZ : public Grid, public TNamed
       void GetInfoFrom(Segmented &detector) {};
       void GetInfoFrom(PointContact &detector);
       void ReallocateGridPointsNearBoundaries(PointContact &detector);
+      void CalculateE();
 };
 #endif 
 
