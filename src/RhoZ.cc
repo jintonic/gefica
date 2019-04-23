@@ -270,7 +270,7 @@ void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
 void RhoZ::CalculateE()
 {
    Grid::CalculateE(); // deal with E1
-   for (size_t i=0; i<N; i++) { // deal with E2
+   for (size_t i=0; i<GetN(); i++) { // deal with E2
       E2[i]=(Vp[i+N1]-Vp[i-N1])/(dC2p[i]+dC2m[i]);
       if (i<N1) E2[i]=(Vp[i+N1]-Vp[i])/dC2p[i]; // lower boundary
       if (i>N-N1) E2[i]=(Vp[i]-Vp[i-N1])/dC2m[i]; // upper boundary
