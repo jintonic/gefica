@@ -20,6 +20,5 @@ class GeFiCa::Rho : public Grid, public TNamed
       ClassDef(Rho,1);
    protected:
       void OverRelaxAt(size_t idx); 
-      void CalculateE();
 };
 #endif

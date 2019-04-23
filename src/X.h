@@ -19,6 +19,5 @@ class GeFiCa::X : public Grid, public TNamed
       ClassDef(X,1);
    protected:
       void OverRelaxAt(size_t idx); 
-      void CalculateE();
 };
 #endif

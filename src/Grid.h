@@ -162,6 +162,6 @@ class GeFiCa::Grid : public Points
       /**
        * Calculate Et, E1, E2, E3 from Vp.
        */
-      virtual void CalculateE() {};
+      virtual void CalculateE();
 };
 #endif

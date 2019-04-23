@@ -20,7 +20,6 @@ class GeFiCa::R : public Grid, public TNamed
       ClassDef(R,1);
    protected:
       virtual void OverRelaxAt(size_t idx);
-      void CalculateE();
 };
 #endif
 
