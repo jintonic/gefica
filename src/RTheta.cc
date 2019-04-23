@@ -64,7 +64,7 @@ void RTheta::CalculateE()
 {
    for (size_t i=1; i<N1-1; i++) {
       E1[i]=(C1[i+1]*Vp[i+1]-C1[i-1]*Vp[i-1])/(dC1p[i]+dC1m[i])/C1[i];
-      E2[i]=(C2[i+n1]*Vp[i+n1]-C2[i-n1]*Vp[i-n1])/(dC2p[i]+dC2m[i])/C2[i]/C1[i];
+      E2[i]=(C2[i+N1]*Vp[i+N1]-C2[i-N1]*Vp[i-N1])/(dC2p[i]+dC2m[i])/C2[i]/C1[i];
       Et[i]=sqrt(E1[i]*E1[i]+E2[i]*E2[i]);
    }
 }
