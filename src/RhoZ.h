@@ -19,7 +19,6 @@ class GeFiCa::RhoZ : public Grid, public TNamed
       ClassDef(RhoZ,1);
    protected:
       void OverRelaxAt(size_t idx); 
-      void CalculateE() {}; // Fixme
       void GetInfoFrom(Segmented &detector) {};
       void GetInfoFrom(PointContact &detector);
       void ReallocateGridPointsNearBoundaries(PointContact &detector);
