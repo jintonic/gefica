@@ -94,10 +94,10 @@ void R::OverRelaxAt(size_t idx)
 void R::CalculateE()
 {
    for (size_t i=1; i<N1-1; i++) {
-      E1[i]=(C1[i+1]*Vp[i+1]-C1[i-1]*Vp[i-1])/(dC1p[i]+dC1m[i])/C1[i];
+      E1[i]=(C1[i+1]*C1[i+1]*Vp[i+1]-C1[i+1]*C1[i-1]*Vp[i-1])/(dC1p[i]+dC1m[i])/C1[i+1]/C1[i];
       Et[i]=E1[i];
    }
-   E1[0]=(C1[1]*Vp[1]-C1[0]*Vp[0])/dC1p[0]/C1[0]; Et[0]=E1[0];
-   E1[N1-1]=(C1[N1-1]*Vp[N1-1]-C1[N1-2]*Vp[N1-2])/dC1p[N1-2]/C1[N1-2];
+   E1[0]=(C1[1]*C1[1]*Vp[1]-C1[1]*C1[0]*Vp[0])/dC1p[0]/C1[1]/C1[0]; Et[0]=E1[0];
+   E1[N1-1]=(C1[N1-1]*C1[N1-1]*Vp[N1-1]-C1[N1-1]*C1[N1-2]*Vp[N1-2])/dC1p[N1-2]/C1[N1-1]/C1[N1-2];
    Et[N1-1]=E1[N1-1];
 }
