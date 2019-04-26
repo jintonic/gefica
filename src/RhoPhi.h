@@ -19,7 +19,7 @@ class GeFiCa::RhoPhi : public Grid, public TNamed
       ClassDef(RhoPhi,1);
    protected:
       void OverRelaxAt(size_t idx);
-      void CalculateE() {}; // Fixme
+      void CalculateE() ; // Fixme
 };
 #endif
 
