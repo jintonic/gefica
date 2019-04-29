@@ -1,4 +1,5 @@
 // Compare numerically calculated C-V curves with analytic solution
+
 using namespace GeFiCa;
 const int n=401;
 // get capacitance based on C=epsilon*A/d
@@ -6,7 +7,7 @@ double GetCfromDepletionDepth(double voltage, double radius,double borer)
 {
    TrueCoaxial detector;
    detector.Radius=radius;
-   detector.BoreR=borer
+   detector.BoreR=borer;
    detector.Bias[0]=0*volt; // for bottom electrode
    detector.Bias[1]=voltage; // for top electrode
    detector.SetAverageImpurity(-1e10/cm3); // deplete from bottom
@@ -17,7 +18,7 @@ double GetCfromDepletionDepth(double voltage, double radius,double borer)
    grid.SuccessiveOverRelax();
    
    //search for depletion depth
-   double up=height, down=0, depth=height;
+   double up=radius, down=borer, depth=radius;
    while(up-down>1e-3) {
       depth=(down+up)/2;
       if (grid.GetV(depth)<voltage) down=depth; else up=depth;
@@ -33,7 +34,7 @@ double GetCfromGeFiCa(double voltage, double radius,double borer)
    // calculate fields
    TrueCoaxial detector;
    detector.Radius=radius;
-   detector.BoreR=borer
+   detector.BoreR=borer;
    detector.Bias[0]=0*volt; // for bottom electrode
    detector.Bias[1]=voltage; // for top electrode
    detector.SetAverageImpurity(-1e10/cm3);
@@ -45,6 +46,21 @@ double GetCfromGeFiCa(double voltage, double radius,double borer)
 }
 //______________________________________________________________________________
 //
+double findr(double voltage,double topr,double downr, double rho)
+{
+   if(topr<downr)return topr;
+   double r=(topr+downr)/2;
+   double c1=-rho*r*r/2;
+   double V=1/4*rho*r*r+c1*log(r);
+   cout<<V<<endl;
+   if(V>voltage)return findr(voltage,r-1e-5,downr,rho);
+   else if(V<voltage)return findr(voltage,topr,r+1e-5,rho);
+   else return topr;
+
+
+}
+//______________________________________________________________________________
+//
 double GetCanalytically(double voltage, double radius,double borer)
 {
    //voltage=ax^2+c2x+c1
@@ -52,39 +68,26 @@ double GetCanalytically(double voltage, double radius,double borer)
    //c2=-ad, when E=dV/dx=0 at x=0, where just depleted
    //a is rho/epsilon
    //voltage=-ax^2/2, solve voltage when x=depth
-   double rho=1e10/cm3*Qe;
+   double rho=-1e10/cm3*Qe;
    double depth=findr(voltage,radius,borer,rho);
-   if (depth>height) depth=height;
+   if (depth>radius) depth=radius;
 
    double L = 1*cm;
-   return epsilon*L*pi*2/ln(depth/borer);
-}
-//______________________________________________________________________________
-//
-double findr(double voltage,double topr,double downr, double rho)
-{
-   if(topr<downr)return topr;
-   double r=(topr+downr)/2;
-   double c1=-rho*r*r/2;
-   double V=1/4*rho*r*r+c1*ln(r);
-   if(V>voltage)findr(voltage,r-1e5,downr,rho);
-   else if(V<voltage)findr(voltage,topr,r+1e5,rho);
-   else return V;
-
-
+   return epsilon*L*3.14159*2/log(depth/borer);
 }
 //______________________________________________________________________________
 //
 void verifyCV()
 {
-   double height=1*cm;
+   double radius=1*cm;
+   double borer=0.1*cm;
    const int np=16;
    Double_t V[np], Cn[np], Ca[np],Cg[np];
    for (Int_t i=0;i<np;i++) {
       V[i] = (i+2)*50*volt; Printf("voltage: %.0f V", V[i]);
-      Cn[i] = GetCfromDepletionDepth(V[i],height)/pF;
-      Cg[i] = GetCfromGeFiCa(V[i],height)/pF;
-      Ca[i] = GetCanalytically(V[i],height)/pF; 
+      Cn[i] = GetCfromDepletionDepth(V[i],radius,borer)/pF;
+      Cg[i] = GetCfromGeFiCa(V[i],radius,borer)/pF;
+      Ca[i] = GetCanalytically(V[i],radius,borer)/pF; 
    }
 
    TGraph *gn = new TGraph(np,V,Cn); gn->SetMarkerStyle(22);
