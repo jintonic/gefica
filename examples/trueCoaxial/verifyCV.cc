@@ -24,8 +24,8 @@ double GetCfromDepletionDepth(double voltage, double radius,double borer)
       if (grid.GetV(depth)<voltage) down=depth; else up=depth;
    }
 
-   double A = 1*cm*1*cm;
-   return epsilon*A/depth;
+   double L = 1*cm;
+   return L*epsilon*3.14159*2/log(depth/borer);
 }
 //______________________________________________________________________________
 // use GefiCa::X::GetC()
@@ -56,24 +56,22 @@ double findr(double voltage,double topr,double downr, double rho)
    if(V>voltage)return findr(voltage,r-1e-5,downr,rho);
    else if(V<voltage)return findr(voltage,topr,r+1e-5,rho);
    else return topr;
-
-
 }
 //______________________________________________________________________________
 //
 double GetCanalytically(double voltage, double radius,double borer)
 {
-   //voltage=ax^2+c2x+c1
+   //voltage= -rho/epsilon*r*r/4 + c1*log(r) + c2;
    //c1=0, when voltage=0 at x=0
    //c2=-ad, when E=dV/dx=0 at x=0, where just depleted
    //a is rho/epsilon
    //voltage=-ax^2/2, solve voltage when x=depth
-   double rho=-1e10/cm3*Qe;
+   double rho=1e10/cm3*Qe/epsilon;
    double depth=findr(voltage,radius,borer,rho);
    if (depth>radius) depth=radius;
 
    double L = 1*cm;
-   return epsilon*L*3.14159*2/log(depth/borer);
+   return L*epsilon*3.14159*2/log(depth/borer);
 }
 //______________________________________________________________________________
 //
