@@ -57,11 +57,11 @@ double Rho::GetC()
    double dV = fDetector->Bias[1]-fDetector->Bias[0]; if (dV<0) dV=-dV;
    double integral=0;
    for (size_t i=0; i<GetN(); i++) {
-      integral+=E1[i]*E1[i]*dC1p[i]*C1[i]; // Fixme:: this only works for X
+      integral+=E1[i]*E1[i]*dC1p[i]*C1[i];
       if (!fIsDepleted[i]) fIsFixed[i]=false; // release undepleted points
    }
-   double c=integral*2*3.14159*epsilon/dV/dV;
-   Info("GetC","%.2f pF/cm2",c/pF*cm2);
+   double c=integral*2*Pi*epsilon/dV/dV;
+   Info("GetC","%.2f pF/cm",c/pF*cm);
    return c;
 }
 //______________________________________________________________________________
