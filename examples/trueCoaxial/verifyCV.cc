@@ -46,15 +46,15 @@ double GetCfromGeFiCa(double voltage, double radius,double borer)
 }
 //______________________________________________________________________________
 //
-double findr(double voltage,double topr,double downr, double rho)
+double FindR(double voltage,double topr,double downr,double innerr, double rho)
 {
    if(topr<downr)return topr;
    double r=(topr+downr)/2;
-   double c1=-rho*r*r/2;
-   double V=1/4*rho*r*r+c1*log(r);
-   cout<<V<<endl;
-   if(V>voltage)return findr(voltage,r-1e-5,downr,rho);
-   else if(V<voltage)return findr(voltage,topr,r+1e-5,rho);
+   double c1=rho*r*r/2;
+   double c2=1/4*rho*innerr*innerr-c1*log(innerr);
+   double V=-1/4*rho*r*r+c1*log(r)+c2;
+   if(V>voltage)return FindR(voltage,r-1e-5,downr,innerr,rho);
+   else if(V<voltage)return FindR(voltage,topr,r+1e-5,innerr,rho);
    else return topr;
 }
 //______________________________________________________________________________
@@ -67,7 +67,7 @@ double GetCanalytically(double voltage, double radius,double borer)
    //a is rho/epsilon
    //voltage=-ax^2/2, solve voltage when x=depth
    double rho=1e10/cm3*Qe/epsilon;
-   double depth=findr(voltage,radius,borer,rho);
+   double depth=FindR(voltage,radius,borer,borer,rho);
    if (depth>radius) depth=radius;
 
    double L = 1*cm;
