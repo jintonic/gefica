@@ -50,7 +50,7 @@ double FindR(double voltage,double topr,double downr,double innerr, double rho)
 {
    if(topr<downr)return topr;
    double r=(topr+downr)/2;
-   double c1=rho*r*r/2;
+   double c1=-rho*r*r/2;
    double c2=1/4*rho*innerr*innerr-c1*log(innerr);
    double V=-1/4*rho*r*r+c1*log(r)+c2;
    if(V>voltage)return FindR(voltage,r-1e-5,downr,innerr,rho);
@@ -62,11 +62,11 @@ double FindR(double voltage,double topr,double downr,double innerr, double rho)
 double GetCanalytically(double voltage, double radius,double borer)
 {
    //voltage= -rho/epsilon*r*r/4 + c1*log(r) + c2;
-   //c1=0, when voltage=0 at x=0
-   //c2=-ad, when E=dV/dx=0 at x=0, where just depleted
+   //c1=-rho*e^2/2, when E=0 at r is just depleted
+   //c2=rho/epsilon*r*r/4 - c1*log(r), when V=0 at r=borer,
    //a is rho/epsilon
    //voltage=-ax^2/2, solve voltage when x=depth
-   double rho=1e10/cm3*Qe/epsilon;
+   double rho=-1e10/cm3*Qe/epsilon;
    double depth=FindR(voltage,radius,borer,borer,rho);
    if (depth>radius) depth=radius;
 
