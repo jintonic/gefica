@@ -25,6 +25,7 @@ double GetCfromDepletionRadius(double voltage, double radius, double boreR)
       if (grid.GetV(depletionR)<voltage) down=depletionR; else up=depletionR;
    }
 
+   cout<<depletionR<<endl;
    double L = 1*cm;
    return L*epsilon*3.14159*2/log(depletionR/boreR);
 }
@@ -56,7 +57,7 @@ double FindR(double voltage,double topr,double downr,double innerr, double rho)
    //c2=rho*boreR*boreR/4 - c1*log(boreR) <= V(boreR)=0
    double c1=-rho*r*r/2;
    double c2=rho*innerr*innerr/4-c1*log(innerr);
-   double V=-rho*r*r/4+c1*log(r)+c2;
+   double V=rho*r*r/4+c1*log(r)+c2;
    if (V>voltage) return FindR(voltage,r,downr,innerr,rho);
    else return FindR(voltage,topr,r,innerr,rho);
 }
@@ -78,7 +79,7 @@ void verifyCV()
 {
    double radius=1*cm;
    double boreR=0.1*cm;
-   const int np=40;
+   const int np=10;
    Double_t V[np], Cn[np], Ca[np],Cg[np];
    for (Int_t i=0;i<np;i++) {
       V[i] = (i+2)*50*volt; Printf("voltage: %.0f V", V[i]);
