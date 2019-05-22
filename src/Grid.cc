@@ -291,7 +291,7 @@ double Grid::GetData(const std::vector<double> &data,
       if(!tl&&!br&&!bl) {
          return data[idx];
       } else if(tl&&!br&&!bl) {
-         return twopoint({data[idx-1],data[idx]},{x,y},{C1[idx-1],C1[idx]});
+         return twopoint(new double[2] {data[idx-1],data[idx]},new double[2]{x,y},new double[2] {C1[idx-1],C1[idx]});
       }
       else if(!tl&&!bl&&br)
       {
@@ -319,7 +319,7 @@ double Grid::GetData(const std::vector<double> &data,
             double mmv=(C2[idx]-yb)/(C2[idx]-C2[idx-N1])*bmv+(yb-C2[idx-N1])/(C2[idx]-C2[idx-N1])*tmv;
             if(x>xb)
             {
-               return fourpoint({tmv,data[idx],bmv,data[idx-N1]},{x,y},{xb,C1[idx],xb,C1[idx-N1]},{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
+               return fourpoint((dobule*){tmv,data[idx],bmv,data[idx-N1]},{x,y},{xb,C1[idx],xb,C1[idx-N1]},{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
             }
             else if(y<yb)
             {
@@ -421,7 +421,7 @@ double Grid::GetData(const std::vector<double> &data,
                return threepoint({bmv,data[idx-N1],mrv},{x,y},{xb,C1[idx],C1[idx-1]},{C2[idx-N1],C2[idx-N1],yb});
             }
          }
-         //cross top down
+         //cross top down o
          if(dC1p[idx-1]!=dC1m[idx]&&
                dC1p[idx-N1-1]!=dC1m[idx-N1]&&
                dC2p[idx-N1-1]==dC2m[idx-1]&&
@@ -478,30 +478,61 @@ double Grid::GetData(const std::vector<double> &data,
                    threepoint({TopLeft,TopLeftV,BottomLeftV},{x,y},{TopLeft,BottomLeft,BottomLeft},{C2[idx],C2[idx],C2[idx-N1]});
             }
          }
-         if(dC1p[idx-1]==dC1m[idx]&&dC1p[idx-N1-1]==dC1m[idx-N1]&&
-               dC2p[idx-N1-1]==dC2m[idx-1]&&dC2p[idx-N1]==dC2m[idx])
+         //cross left right 
+         if(dC1p[idx-1]==dC1m[idx]&&
+               dC1p[idx-N1-1]==dC1m[idx-N1]&&
+               dC2p[idx-N1-1]!=dC2m[idx-1]&&
+               dC2p[idx-N1]!=dC2m[idx])
          {
-            double xb=dC1m[idx]<dC1p[idx-1] ? C1[idx]-dC1m[idx] : C1[idx-1]+dC1p[idx-1];
-            double yb=dC2m[idx-1]<dC2p[idx-N1-1] ? C2[idx-1]-dC2m[idx-1] : C2[idx-N1-1]+dC2p[idx-N1-1];
-            double bmv=(C1[idx-N1]-xb)/(C1[idx-N1]-C1[idx-N1-1])*data[idx-N1-1]+(xb-C1[idx-N1-1])/(C1[idx-N1]-C1[idx-N1-1])*data[idx-N1];
+            double topb=dC1m[idx]<dC1p[idx-1] ? C1[idx]-dC1m[idx] : C1[idx-1]+dC1p[idx-1];
+            double bottomb=dC1m[idx-N1]<dC1p[idx-N1-1] ? C1[idx-N1]-dC1m[idx-N1] : C1[idx-N1-1]+dC1p[idx-N1-1];
+            double bmv=fIsFixed[idx-N1]?data[idx-N1]:data[idx-N1-1];
             double tmv=fIsFixed[idx]?data[idx]:data[idx-1];
-            double mlv=fIsFixed[idx-1]?data[idx-1]:data[idx-N1-1];
-            double mmv=(C2[idx]-yb)/(C2[idx]-C2[idx-N1])*bmv+(yb-C2[idx-N1])/(C2[idx]-C2[idx-N1])*tmv;
-            if(x>xb)
+            double TopValueWithBottomCorssPoint=topb>bottomb ? (topb-bottomb)/(topb-C1[idx-1])*data[idx-1]+(bottomb-C1[idx-1])/(topb-C1[idx-1])*tmv : 
+               (bottomb-topb)/(C1[idx]-topb)*data[idx]+(C1[idx]-bottomb)/(C1[idx-1]-topb)*tmv ;
+            double BottomValueWithTopCorssPoint=topb>bottomb ? (topb-bottomb)/(C1[idx]-bottomb)*bmv+(C1[idx]-topb)/(C1[idx-1]-bottomb)*data[idx-N1] : 
+               (topb-C1[idx-N1-1])/(bottomb-C1[idx])*bmv+(bottomb-topb)/(bottomb-C1[idx-1-N1])*data[idx-N1-1] ;
+            double TopLeft,TopRight,BottomLeft,BottomRight;
+            double TopLeftV,TopRightV,BottomLeftV,BottomRightV;
+            if(topb>bottomb)
             {
-               return fourpoint({tmv,data[idx],bmv,data[idx-N1]},{x,y},{xb,C1[idx],xb,C1[idx-N1]},{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
+               TopLeft=bottomb;
+               TopLeftV=TopValueWithBottomCorssPoint;
+               TopRight=topb;
+               TopRightV=tmv;
+               BottomLeft=bottomb;
+               BottomLeftV=bmv;
+               BottomRight=topb;
+               BottomRightV=BottomValueWithTopCorssPoint;
             }
-            else if(y<yb)
+            else
             {
-               return fourpoint({mlv,mmv,data[idx-N1-1],bmv},{x,y},{C1[idx-1],xb,C1[idx-1],xb},{yb,yb,C2[idx-N1],C2[idx-N1]});
+               TopRight=bottomb;
+               TopRightV=TopValueWithBottomCorssPoint;
+               TopLeft=topb;
+               TopLeftV=tmv;
+               BottomRight=bottomb;
+               BottomRightV=bmv;
+               BottomLeft=topb;
+               BottomLeftV=BottomValueWithTopCorssPoint;
             }
-            else if((C2[idx]-yb)/(xb-C1[idx-1]*(x-C1[idx-1])+yb>y))
+            if(x>TopRight)
             {
-               return threepoint({tmv,mmv,mlv},{x,y},{xb,xb,C1[idx-1]},{C2[idx],yb,yb});
+               return fourpoint({TopRightV,data[idx],BottomRightV,data[idx-N1]},{x,y},{TopRight,C1[idx],BottomRight,C1[idx-N1]},{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
             }
-            else if((C2[idx]-yb)/(xb-C1[idx-1]*(x-C1[idx-1])+yb<y))
+            else if(x<TopLeft)
             {
-               return threepoint({tmv,tmv,mlv},{x,y},{xb,C1[idx-1],C1[idx-1]},{C2[idx],C2[idx],yb});
+               return fourpoint({data[idx-1],TopLeftV,data[idx-N1-1],BottomLeftV},{x,y},{C1[idx-1],TopLeft,C1[idx-1],BottomLeft},{C2[idx-1],C2[idx-1],C2[idx-N1],C2[idx-N1]});
+            }
+            else if((dC2m[idx])/((topb-bottomb)*(x-(TopRight-TopLeft)/2)+C2[idx-N1]>y-dC2m[idx]/2))
+            {
+               return topb>bottomb ? threepoint({TopRightV,BottomLeftV,BottomRightV},{x,y},{TopRight,BottomLeft,BottomRight},{C2[idx],C2[idx-N1],C2[idx-N1]}) :
+                   threepoint({TopLeft,BottomLeftV,BottomRightV},{x,y},{TopLeft,BottomLeft,BottomRight},{C2[idx],C2[idx-N1],C2[idx-N1]});
+            }
+            else if((dC2m[idx])/((topb-bottomb)*(x-(TopRight-TopLeft)/2)+C2[idx-N1]<=y-dC2m[idx]/2))
+            {
+               return topb<bottomb ? threepoint({TopRightV,TopLeftV,BottomRightV},{x,y},{TopRight,TopLeft,BottomRight},{C2[idx],C2[idx],C2[idx-N1]}) :
+                   threepoint({TopLeft,TopLeftV,BottomLeftV},{x,y},{TopLeft,BottomLeft,BottomLeft},{C2[idx],C2[idx],C2[idx-N1]});
             }
          }
 
@@ -522,12 +553,54 @@ double Grid::GetData(const std::vector<double> &data,
       }//1D
       return 0;
    }
-   //______________________________________________________________________________
-   void Grid::CalculateE()
-   {
-      for (size_t i=0; i<GetN(); i++) { // deal with E1 only
-         E1[i]=(Vp[i+1]-Vp[i-1])/(dC1p[i]+dC1m[i]); Et[i]=E1[i];
-      }
-      E1[0]=(Vp[1]-Vp[0])/dC1p[0]; Et[0]=E1[0];
-      E1[N1-1]=(Vp[N1-1]-Vp[N1-2])/dC1m[N1-1]; Et[N1-1]=E1[N1-1];
+}
+//______________________________________________________________________________
+void Grid::CalculateE()
+{
+   for (size_t i=0; i<GetN(); i++) { // deal with E1 only
+      E1[i]=(Vp[i+1]-Vp[i-1])/(dC1p[i]+dC1m[i]); Et[i]=E1[i];
    }
+   E1[0]=(Vp[1]-Vp[0])/dC1p[0]; Et[0]=E1[0];
+   E1[N1-1]=(Vp[N1-1]-Vp[N1-2])/dC1m[N1-1]; Et[N1-1]=E1[N1-1];
+}
+double Grid::twopoint(double dataset[2],double tarlocationset[2],double pointxset[2])
+{
+   double ab=abs(pointxset[0]-tarlocationset[0])/abs(pointxset[1]-pointxset[0]);
+   double aa=1-ab;
+   return dataset[0]*aa/(aa+ab) + dataset[1]*ab/(aa+ab);
+}
+
+double Grid::threepoint(double dataset[3],double tarlocationset[2],double pointxset[3],double pointyset[3])
+{
+   double x=tarlocationset[0];
+   double x1=pointxset[0];
+   double x2=pointxset[1];
+   double x3=pointxset[2];
+
+      double y=tarlocationset[1];
+   double y1=pointyset[0];
+   double y2=pointyset[1];
+   double y3=pointyset[2];
+   //x=(1-u-v)*x1+u*x2+v*x3
+   //y=(1-u-v)*y1+u*y2+v*y3
+   double v=((y2-y1)*(x-x1)-(y-y1)*(x2-x1))/((x3-x1*(y2-y1)-(y3-y1)*(x2-x1)));
+   double u=(y-y1-v*(y3-y1))/(y2-y1);
+
+   return dataset[0]*(1-u-v)+dataset[1]*u+dataset[2]*v;
+}
+//0---------1
+//|         |
+//|         |
+//|         |
+//|         |
+//|         |
+//2---------3
+      double Grid::fourpoint(double dataset[4],double tarlocationset[2],double pointxset[4],double pointyset[4])
+{
+   double ab=(pointxset[1]-tarlocationset[0])/(pointxset[1]-pointxset[0]);
+   double aa=1-ab;
+   double ba=(tarlocationset[1]-pointyset[1])/(pointyset[3]-pointyset[1]);
+   double bb=1-ba;
+
+   return (dataset[1]*ab+dataset[0]*aa)*bb+(dataset[2]*ab+dataset[3]*aa)*ba;
+}

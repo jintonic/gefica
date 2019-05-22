@@ -164,5 +164,8 @@ class GeFiCa::Grid : public Points
        * Calculate Et, E1, E2, E3 from Vp.
        */
       virtual void CalculateE();
+      double twopoint(double dataset[2],double tarlocationset[2],double pointxset[2])const;
+      double threepoint(double dataset[3],double tarlocationset[2],double pointxset[3],double pointyset[3]);
+      double fourpoint(double dataset[4],double tarlocationset[2],double pointxset[4],double pointyset[4]);
 };
 #endif
