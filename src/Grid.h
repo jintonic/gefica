@@ -165,7 +165,7 @@ class GeFiCa::Grid : public Points
        */
       virtual void CalculateE();
       double twopoint(double dataset[2],double tarlocationset[2],double pointxset[2])const;
-      double threepoint(double dataset[3],double tarlocationset[2],double pointxset[3],double pointyset[3]);
-      double fourpoint(double dataset[4],double tarlocationset[2],double pointxset[4],double pointyset[4]);
+      double threepoint(double dataset[3],double tarlocationset[2],double pointxset[3],double pointyset[3])const;
+      double fourpoint(double dataset[4],double tarlocationset[2],double pointxset[4],double pointyset[4])const;
 };
 #endif

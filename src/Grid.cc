@@ -295,7 +295,7 @@ double Grid::GetData(const std::vector<double> &data,
       }
       else if(!tl&&!bl&&br)
       {
-         return twopoint({data[idx-N1],data[idx]},{x,y},{C2[idx-N1],C2[idx]});
+         return twopoint(new double[2]{data[idx-N1],data[idx]},new double[2]{x,y},new double[2]{C2[idx-N1],C2[idx]});
       }
       else
       {
@@ -303,7 +303,7 @@ double Grid::GetData(const std::vector<double> &data,
          if(dC1p[idx-1]==dC1m[idx]&&dC1p[idx-N1-1]==dC1m[idx-N1]&&
                dC2p[idx-N1-1]==dC2m[idx-1]&&dC2p[idx-N1]==dC2m[idx])
          {
-            return fourpoint({data[idx-1],data[idx],data[idx-N1-1],data[idx-N1]},{x,y},{C1[idx-1],C1[idx],C1[idx-N1-1],C1[idx-N1]},{C2[idx-1],C2[idx],C2[idx-N1-1],C2[idx-N1]});
+            return fourpoint(new double[4]{data[idx-1],data[idx],data[idx-N1-1],data[idx-N1]},new double[2]{x,y},new double[4]{C1[idx-1],C1[idx],C1[idx-N1-1],C1[idx-N1]},new double[4]{C2[idx-1],C2[idx],C2[idx-N1-1],C2[idx-N1]});
          }
          //topleft case o
          if(dC1p[idx-1]!=dC1m[idx]&&
@@ -319,19 +319,19 @@ double Grid::GetData(const std::vector<double> &data,
             double mmv=(C2[idx]-yb)/(C2[idx]-C2[idx-N1])*bmv+(yb-C2[idx-N1])/(C2[idx]-C2[idx-N1])*tmv;
             if(x>xb)
             {
-               return fourpoint((dobule*){tmv,data[idx],bmv,data[idx-N1]},{x,y},{xb,C1[idx],xb,C1[idx-N1]},{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
+               return fourpoint(new double[4]{tmv,data[idx],bmv,data[idx-N1]},new double[2]{x,y},new double[4]{xb,C1[idx],xb,C1[idx-N1]},new double[4]{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
             }
             else if(y<yb)
             {
-               return fourpoint({mlv,mmv,data[idx-N1-1],bmv},{x,y},{C1[idx-1],xb,C1[idx-1],xb},{yb,yb,C2[idx-N1],C2[idx-N1]});
+               return fourpoint(new double[4]{mlv,mmv,data[idx-N1-1],bmv},new double[2]{x,y},new double[4]{C1[idx-1],xb,C1[idx-1],xb},new double[4]{yb,yb,C2[idx-N1],C2[idx-N1]});
             }
             else if((C2[idx]-yb)/(xb-C1[idx-1]*(x-C1[idx-1])+yb>y))
             {
-               return threepoint({tmv,mmv,mlv},{x,y},{xb,xb,C1[idx-1]},{C2[idx],yb,yb});
+               return threepoint(new double[3]{tmv,mmv,mlv},new double[2]{x,y},new double[3]{xb,xb,C1[idx-1]},new double[3]{C2[idx],yb,yb});
             }
             else if((C2[idx]-yb)/(xb-C1[idx-1]*(x-C1[idx-1])+yb<y))
             {
-               return threepoint({tmv,tmv,mlv},{x,y},{xb,C1[idx-1],C1[idx-1]},{C2[idx],C2[idx],yb});
+               return threepoint(new double[3]{tmv,tmv,mlv},new double[2]{x,y},new double[3]{xb,C1[idx-1],C1[idx-1]},new double[3]{C2[idx],C2[idx],yb});
             }
          }
          //topright case o
@@ -348,19 +348,19 @@ double Grid::GetData(const std::vector<double> &data,
             double mmv=(C2[idx]-yb)/(C2[idx]-C2[idx-N1])*bmv+(yb-C2[idx-N1])/(C2[idx]-C2[idx-N1])*tmv;
             if(x<xb)
             {
-               return fourpoint({data[idx-1],tmv,data[idx-N1-1],bmv},{x,y},{C1[idx-1],xb,C1[idx-N1-1],xb},{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
+               return fourpoint(new double[4]{data[idx-1],tmv,data[idx-N1-1],bmv},new double[2]{x,y},new double[4]{C1[idx-1],xb,C1[idx-N1-1],xb},new double[4]{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
             }
             else if(y<yb)
             {
-               return fourpoint({mmv,mrv,bmv,data[idx-N1]},{x,y},{xb,C1[idx],xb,C1[idx-1]},{yb,yb,C2[idx-N1],C2[idx-N1]});
+               return fourpoint(new double[4]{mmv,mrv,bmv,data[idx-N1]},new double[2]{x,y},new double[4]{xb,C1[idx],xb,C1[idx-1]},new double[4]{yb,yb,C2[idx-N1],C2[idx-N1]});
             }
             else if((C2[idx]-yb)/(C1[idx]-x*(x-C1[idx])+yb>y))
             {
-               return threepoint({tmv,mmv,mrv},{x,y},{xb,xb,C1[idx]},{C2[idx],yb,yb});
+               return threepoint(new double[3]{tmv,mmv,mrv},new double[2]{x,y},new double[3]{xb,xb,C1[idx]},new double[3]{C2[idx],yb,yb});
             }
             else if((C2[idx]-yb)/(C1[idx]-xb*(x-C1[idx])+yb<y))
             {
-               return threepoint({tmv,data[idx],mrv},{x,y},{xb,C1[idx],C1[idx]},{C2[idx],C2[idx],yb});
+               return threepoint(new double[3]{tmv,data[idx],mrv},new double[2]{x,y},new double[3]{xb,C1[idx],C1[idx]},new double[3]{C2[idx],C2[idx],yb});
             }
          }
          //bottom left case o
@@ -377,19 +377,19 @@ double Grid::GetData(const std::vector<double> &data,
             double mmv=(C2[idx]-yb)/(C2[idx]-C2[idx-N1])*bmv+(yb-C2[idx-N1])/(C2[idx]-C2[idx-N1])*tmv;
             if(x>xb)
             {
-               return fourpoint({tmv,data[idx],bmv,data[idx-N1]},{x,y},{xb,C1[idx],xb,C1[idx-N1]},{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
+               return fourpoint(new double[4]{tmv,data[idx],bmv,data[idx-N1]},new double[2]{x,y},new double[4]{xb,C1[idx],xb,C1[idx-N1]},new double[4]{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
             }
             else if(y>yb)
             {
-               return fourpoint({data[idx-N1-1],tmv,mlv,mmv},{x,y},{C1[idx-1],xb,C1[idx-1],xb},{C2[idx],C2[idx],yb,yb});
+               return fourpoint(new double[4]{data[idx-N1-1],tmv,mlv,mmv},new double[2]{x,y},new double[4]{C1[idx-1],xb,C1[idx-1],xb},new double[4]{C2[idx],C2[idx],yb,yb});
             }
             else if((C2[idx]-yb)/(xb-C1[idx-1]*(x-C1[idx-1])+C2[idx-N1]>y))
             {
-               return threepoint({bmv,mmv,mlv},{x,y},{xb,xb,C1[idx-1]},{yb,yb,C2[idx-N1]});
+               return threepoint(new double[3]{bmv,mmv,mlv},new double[2]{x,y},new double[3]{xb,xb,C1[idx-1]},new double[3]{yb,yb,C2[idx-N1]});
             }
             else if((C2[idx]-yb)/(xb-C1[idx-1]*(x-C1[idx-1])+C2[idx-N1]<y))
             {
-               return threepoint({data[idx-N1-1],bmv,mlv},{x,y},{C1[idx-1],xb,C1[idx-1]},{C2[idx],C2[idx],yb});
+               return threepoint(new double[3]{data[idx-N1-1],bmv,mlv},new double[2]{x,y},new double[3]{C1[idx-1],xb,C1[idx-1]},new double[3]{C2[idx],C2[idx],yb});
             }
          }
          //bottom right case o
@@ -406,19 +406,19 @@ double Grid::GetData(const std::vector<double> &data,
             double mmv=(C2[idx]-yb)/(C2[idx]-C2[idx-N1])*bmv+(yb-C2[idx-N1])/(C2[idx]-C2[idx-N1])*tmv;
             if(x<xb)
             {
-               return fourpoint({data[idx-1],tmv,data[idx-N1-1],bmv},{x,y},{C1[idx-1],xb,C1[idx-N1-1],xb},{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
+               return fourpoint(new double[4]{data[idx-1],tmv,data[idx-N1-1],bmv},new double[2]{x,y},new double[4]{C1[idx-1],xb,C1[idx-N1-1],xb},new double[4]{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
             }
             else if(y>yb)
             {
-               return fourpoint({tmv,data[idx],mmv,mrv},{x,y},{xb,C1[idx],xb,C1[idx]},{C2[idx],C2[idx],yb,yb});
+               return fourpoint(new double[4]{tmv,data[idx],mmv,mrv},new double[2]{x,y},new double[4]{xb,C1[idx],xb,C1[idx]},new double[4]{C2[idx],C2[idx],yb,yb});
             }
             else if((yb-C2[idx-N1])/(C1[idx]-xb*(x-xb)+C2[idx-N1]>y))
             {
-               return threepoint({bmv,mmv,mrv},{x,y},{xb,xb,C1[idx]},{C2[idx-N1],yb,yb});
+               return threepoint(new double[3]{bmv,mmv,mrv},new double[2]{x,y},new double[3]{xb,xb,C1[idx]},new double[3]{C2[idx-N1],yb,yb});
             }
             else if((yb-C2[idx-N1])/(C1[idx]-xb*(x-xb)+C2[idx-N1]<=y))
             {
-               return threepoint({bmv,data[idx-N1],mrv},{x,y},{xb,C1[idx],C1[idx-1]},{C2[idx-N1],C2[idx-N1],yb});
+               return threepoint(new double[3]{bmv,data[idx-N1],mrv},new double[2]{x,y},new double[4]{xb,C1[idx],C1[idx-1]},new double[4]{C2[idx-N1],C2[idx-N1],yb});
             }
          }
          //cross top down o
@@ -461,21 +461,21 @@ double Grid::GetData(const std::vector<double> &data,
             }
             if(x>TopRight)
             {
-               return fourpoint({TopRightV,data[idx],BottomRightV,data[idx-N1]},{x,y},{TopRight,C1[idx],BottomRight,C1[idx-N1]},{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
+               return fourpoint(new double[4]{TopRightV,data[idx],BottomRightV,data[idx-N1]},new double[2]{x,y},new double[4]{TopRight,C1[idx],BottomRight,C1[idx-N1]},new double[4]{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
             }
             else if(x<TopLeft)
             {
-               return fourpoint({data[idx-1],TopLeftV,data[idx-N1-1],BottomLeftV},{x,y},{C1[idx-1],TopLeft,C1[idx-1],BottomLeft},{C2[idx-1],C2[idx-1],C2[idx-N1],C2[idx-N1]});
+               return fourpoint(new double[4]{data[idx-1],TopLeftV,data[idx-N1-1],BottomLeftV},new double[2]{x,y},new double[4]{C1[idx-1],TopLeft,C1[idx-1],BottomLeft},new double[4]{C2[idx-1],C2[idx-1],C2[idx-N1],C2[idx-N1]});
             }
             else if((dC2m[idx])/((topb-bottomb)*(x-(TopRight-TopLeft)/2)+C2[idx-N1]>y-dC2m[idx]/2))
             {
-               return topb>bottomb ? threepoint({TopRightV,BottomLeftV,BottomRightV},{x,y},{TopRight,BottomLeft,BottomRight},{C2[idx],C2[idx-N1],C2[idx-N1]}) :
-                   threepoint({TopLeft,BottomLeftV,BottomRightV},{x,y},{TopLeft,BottomLeft,BottomRight},{C2[idx],C2[idx-N1],C2[idx-N1]});
+               return topb>bottomb ? threepoint(new double[3]{TopRightV,BottomLeftV,BottomRightV},new double[2]{x,y},new double[3]{TopRight,BottomLeft,BottomRight},new double[3]{C2[idx],C2[idx-N1],C2[idx-N1]}) :
+                   threepoint(new double[3]{TopLeft,BottomLeftV,BottomRightV},new double[2]{x,y},new double[3]{TopLeft,BottomLeft,BottomRight},new double[3]{C2[idx],C2[idx-N1],C2[idx-N1]});
             }
             else if((dC2m[idx])/((topb-bottomb)*(x-(TopRight-TopLeft)/2)+C2[idx-N1]<=y-dC2m[idx]/2))
             {
-               return topb<bottomb ? threepoint({TopRightV,TopLeftV,BottomRightV},{x,y},{TopRight,TopLeft,BottomRight},{C2[idx],C2[idx],C2[idx-N1]}) :
-                   threepoint({TopLeft,TopLeftV,BottomLeftV},{x,y},{TopLeft,BottomLeft,BottomLeft},{C2[idx],C2[idx],C2[idx-N1]});
+               return topb<bottomb ? threepoint(new double[3]{TopRightV,TopLeftV,BottomRightV},new double[2]{x,y},new double[3]{TopRight,TopLeft,BottomRight},new double[3]{C2[idx],C2[idx],C2[idx-N1]}) :
+                   threepoint(new double[3]{TopLeft,TopLeftV,BottomLeftV},new double[2]{x,y},new double[3]{TopLeft,BottomLeft,BottomLeft},new double[3]{C2[idx],C2[idx],C2[idx-N1]});
             }
          }
          //cross left right 
@@ -518,21 +518,21 @@ double Grid::GetData(const std::vector<double> &data,
             }
             if(x>TopRight)
             {
-               return fourpoint({TopRightV,data[idx],BottomRightV,data[idx-N1]},{x,y},{TopRight,C1[idx],BottomRight,C1[idx-N1]},{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
+               return fourpoint(new double[4]{TopRightV,data[idx],BottomRightV,data[idx-N1]},new double[2]{x,y},new double[4]{TopRight,C1[idx],BottomRight,C1[idx-N1]},new double[4]{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
             }
             else if(x<TopLeft)
             {
-               return fourpoint({data[idx-1],TopLeftV,data[idx-N1-1],BottomLeftV},{x,y},{C1[idx-1],TopLeft,C1[idx-1],BottomLeft},{C2[idx-1],C2[idx-1],C2[idx-N1],C2[idx-N1]});
+               return fourpoint(new double[4]{data[idx-1],TopLeftV,data[idx-N1-1],BottomLeftV},new double[2]{x,y},new double[4]{C1[idx-1],TopLeft,C1[idx-1],BottomLeft},new double[4]{C2[idx-1],C2[idx-1],C2[idx-N1],C2[idx-N1]});
             }
             else if((dC2m[idx])/((topb-bottomb)*(x-(TopRight-TopLeft)/2)+C2[idx-N1]>y-dC2m[idx]/2))
             {
-               return topb>bottomb ? threepoint({TopRightV,BottomLeftV,BottomRightV},{x,y},{TopRight,BottomLeft,BottomRight},{C2[idx],C2[idx-N1],C2[idx-N1]}) :
-                   threepoint({TopLeft,BottomLeftV,BottomRightV},{x,y},{TopLeft,BottomLeft,BottomRight},{C2[idx],C2[idx-N1],C2[idx-N1]});
+               return topb>bottomb ? threepoint(new double[3]{TopRightV,BottomLeftV,BottomRightV},new double[2]{x,y},new double[3]{TopRight,BottomLeft,BottomRight},new double[3]{C2[idx],C2[idx-N1],C2[idx-N1]}) :
+                   threepoint(new double[3]{TopLeft,BottomLeftV,BottomRightV},new double[2]{x,y},new double[3]{TopLeft,BottomLeft,BottomRight},new double[3]{C2[idx],C2[idx-N1],C2[idx-N1]});
             }
             else if((dC2m[idx])/((topb-bottomb)*(x-(TopRight-TopLeft)/2)+C2[idx-N1]<=y-dC2m[idx]/2))
             {
-               return topb<bottomb ? threepoint({TopRightV,TopLeftV,BottomRightV},{x,y},{TopRight,TopLeft,BottomRight},{C2[idx],C2[idx],C2[idx-N1]}) :
-                   threepoint({TopLeft,TopLeftV,BottomLeftV},{x,y},{TopLeft,BottomLeft,BottomLeft},{C2[idx],C2[idx],C2[idx-N1]});
+               return topb<bottomb ? threepoint(new double[3]{TopRightV,TopLeftV,BottomRightV},new double[2]{x,y},new double[3]{TopRight,TopLeft,BottomRight},new double[3]{C2[idx],C2[idx],C2[idx-N1]}) :
+                   threepoint(new double[3] {TopLeft,TopLeftV,BottomLeftV},new double[2]{x,y},new double[3]{TopLeft,BottomLeft,BottomLeft},new double[3]{C2[idx],C2[idx],C2[idx-N1]});
             }
          }
 
@@ -563,14 +563,14 @@ void Grid::CalculateE()
    E1[0]=(Vp[1]-Vp[0])/dC1p[0]; Et[0]=E1[0];
    E1[N1-1]=(Vp[N1-1]-Vp[N1-2])/dC1m[N1-1]; Et[N1-1]=E1[N1-1];
 }
-double Grid::twopoint(double dataset[2],double tarlocationset[2],double pointxset[2])
+double Grid::twopoint(double dataset[2],double tarlocationset[2],double pointxset[2])const
 {
    double ab=abs(pointxset[0]-tarlocationset[0])/abs(pointxset[1]-pointxset[0]);
    double aa=1-ab;
    return dataset[0]*aa/(aa+ab) + dataset[1]*ab/(aa+ab);
 }
 
-double Grid::threepoint(double dataset[3],double tarlocationset[2],double pointxset[3],double pointyset[3])
+double Grid::threepoint(double dataset[3],double tarlocationset[2],double pointxset[3],double pointyset[3])const
 {
    double x=tarlocationset[0];
    double x1=pointxset[0];
@@ -595,7 +595,7 @@ double Grid::threepoint(double dataset[3],double tarlocationset[2],double pointx
 //|         |
 //|         |
 //2---------3
-      double Grid::fourpoint(double dataset[4],double tarlocationset[2],double pointxset[4],double pointyset[4])
+      double Grid::fourpoint(double dataset[4],double tarlocationset[2],double pointxset[4],double pointyset[4])const
 {
    double ab=(pointxset[1]-tarlocationset[0])/(pointxset[1]-pointxset[0]);
    double aa=1-ab;
