@@ -484,26 +484,26 @@ double Grid::GetData(const std::vector<double> &data,
                dC2p[idx-N1-1]!=dC2m[idx-1]&&
                dC2p[idx-N1]!=dC2m[idx])
          {
-            double topb=dC1m[idx]<dC1p[idx-1] ? C1[idx]-dC1m[idx] : C1[idx-1]+dC1p[idx-1];
-            double bottomb=dC1m[idx-N1]<dC1p[idx-N1-1] ? C1[idx-N1]-dC1m[idx-N1] : C1[idx-N1-1]+dC1p[idx-N1-1];
-            double bmv=fIsFixed[idx-N1]?data[idx-N1]:data[idx-N1-1];
-            double tmv=fIsFixed[idx]?data[idx]:data[idx-1];
-            double TopValueWithBottomCorssPoint=topb>bottomb ? (topb-bottomb)/(topb-C1[idx-1])*data[idx-1]+(bottomb-C1[idx-1])/(topb-C1[idx-1])*tmv : 
-               (bottomb-topb)/(C1[idx]-topb)*data[idx]+(C1[idx]-bottomb)/(C1[idx-1]-topb)*tmv ;
-            double BottomValueWithTopCorssPoint=topb>bottomb ? (topb-bottomb)/(C1[idx]-bottomb)*bmv+(C1[idx]-topb)/(C1[idx-1]-bottomb)*data[idx-N1] : 
-               (topb-C1[idx-N1-1])/(bottomb-C1[idx])*bmv+(bottomb-topb)/(bottomb-C1[idx-1-N1])*data[idx-N1-1] ;
-            double TopLeft,TopRight,BottomLeft,BottomRight;
-            double TopLeftV,TopRightV,BottomLeftV,BottomRightV;
-            if(topb>bottomb)
+            double leftb=dC2m[idx-1]<dC2p[idx-N1-1] ? C2[idx-1]-dC2m[idx-1] : C2[idx-N1-1]+dC2p[idx-N1-1];
+            double rightb=dC2m[idx]<dC2p[idx-N1] ? C2[idx]-dC2m[idx] : C2[idx-N1]+dC2p[idx-N1];
+            double lmv=fIsFixed[idx-1]?data[idx-1]:data[idx-N1-1];
+            double rmv=fIsFixed[idx]?data[idx]:data[idx-N1];
+            double LeftValueWithRightCorssPoint=leftb>rightb ? (leftb-rightb)/(leftb-C2[idx-N1-1])*data[idx-N1-1]+(rightb-C2[idx-N1-1])/(leftb-C2[idx-N1-1])*lmv : 
+               (rightb-leftb)/(C2[idx-1]-leftb)*data[idx-1]+(C2[idx-1]-rightb)/(C2[idx-1]-leftb)*lmv ;
+            double RightValueWithLeftCorssPoint=leftb>rightb ? (rightb-leftb)/(C2[idx]-rightb)*data[idx]+(C2[idx]-leftb)/(C2[idx]-rightb)*rmv : 
+               (leftb-C1[idx-N1])/(rightb-C2[idx-N1])*rmv+(rightb-leftb)/(rightb-C2[idx-N1])*data[idx-N1] ;
+            double LeftTop,RightTop,LeftBottom,RightBottom;
+            double LeftTopV,RightTopV,LeftBottomV,RightBottomV;
+            if(leftb>rightb)
             {
-               TopLeft=bottomb;
-               TopLeftV=TopValueWithBottomCorssPoint;
-               TopRight=topb;
-               TopRightV=tmv;
-               BottomLeft=bottomb;
-               BottomLeftV=bmv;
-               BottomRight=topb;
-               BottomRightV=BottomValueWithTopCorssPoint;
+               LeftTop=leftb;
+               LeftTopV=lmv;
+               RightTop=leftb;
+               RightTopV=RightValueWithLeftCorssPoint;
+               LeftBottom=rightb;
+               LeftBottomV=LeftValueWithRightCorssPoint;
+               RightBottom=rightb;
+               RightBottomV=rmv;
             }
             else
             {
