@@ -507,32 +507,32 @@ double Grid::GetData(const std::vector<double> &data,
             }
             else
             {
-               TopRight=bottomb;
-               TopRightV=TopValueWithBottomCorssPoint;
-               TopLeft=topb;
-               TopLeftV=tmv;
-               BottomRight=bottomb;
-               BottomRightV=bmv;
-               BottomLeft=topb;
-               BottomLeftV=BottomValueWithTopCorssPoint;
+               RightTop=rightb;
+               RightTopV=rmv;
+               LeftTop=rightb;
+               LeftTopV=LeftValueWithRightCorssPoint;
+               RightBottom=leftb;
+               RightBottomV=RightValueWithLeftCorssPoint;
+               LeftBottom=rightb;
+               LeftBottomV=lmv;
             }
-            if(x>TopRight)
+            if(y>RightTop)
             {
-               return fourpoint(new double[4]{TopRightV,data[idx],BottomRightV,data[idx-N1]},new double[2]{x,y},new double[4]{TopRight,C1[idx],BottomRight,C1[idx-N1]},new double[4]{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
+               return fourpoint(new double[4]{data[idx-1],data[idx],LeftTopV,RightTopV},new double[2]{x,y},new double[4]{C1[idx-1],C1[idx],C1[idx-1],C1[idx]},new double[4]{C2[idx],C2[idx],LeftTop,RightTop});
             }
-            else if(x<TopLeft)
+            else if(y<LeftBottom)
             {
-               return fourpoint(new double[4]{data[idx-1],TopLeftV,data[idx-N1-1],BottomLeftV},new double[2]{x,y},new double[4]{C1[idx-1],TopLeft,C1[idx-1],BottomLeft},new double[4]{C2[idx-1],C2[idx-1],C2[idx-N1],C2[idx-N1]});
+               return fourpoint(new double[4]{LeftBottomV,RightBottomV,data[idx-N1-1],data[idx-N1]},new double[2]{x,y},new double[4]{C1[idx-1],C1[idx],C1[idx-N1-1],C1[idx-N1]},new double[4]{LeftBottom,RightBottom,C2[idx-N1-1],C2[idx-N1]});
             }
-            else if((dC2m[idx])/((topb-bottomb)*(x-(TopRight-TopLeft)/2)+C2[idx-N1]>y-dC2m[idx]/2))
+            else if((rightb-leftb)/(dC1m[idx])*(x-C1[idx-1])+(LeftBottom)>y)
             {
-               return topb>bottomb ? threepoint(new double[3]{TopRightV,BottomLeftV,BottomRightV},new double[2]{x,y},new double[3]{TopRight,BottomLeft,BottomRight},new double[3]{C2[idx],C2[idx-N1],C2[idx-N1]}) :
-                   threepoint(new double[3]{TopLeft,BottomLeftV,BottomRightV},new double[2]{x,y},new double[3]{TopLeft,BottomLeft,BottomRight},new double[3]{C2[idx],C2[idx-N1],C2[idx-N1]});
+               return leftb>rightb ? threepoint(new double[3]{RightTopV,LeftBottomV,RightBottomV},new double[2]{x,y},new double[3]{C1[idx],C1[idx-N1],C1[idx-N1]},new double[3]{RightTop,LeftBottom,RightBottom}) :
+                   threepoint(new double[3]{LeftTopV,LeftBottomV,RightBottomV},new double[2]{x,y},new double[3]{C1[idx],C1[idx-N1],C1[idx-N1]},new double[3]{LeftTop,LeftBottom,RightBottom});
             }
-            else if((dC2m[idx])/((topb-bottomb)*(x-(TopRight-TopLeft)/2)+C2[idx-N1]<=y-dC2m[idx]/2))
+            else if((rightb-leftb)/(dC1m[idx])*(x-C1[idx-1])+(LeftBottom)<=y)
             {
-               return topb<bottomb ? threepoint(new double[3]{TopRightV,TopLeftV,BottomRightV},new double[2]{x,y},new double[3]{TopRight,TopLeft,BottomRight},new double[3]{C2[idx],C2[idx],C2[idx-N1]}) :
-                   threepoint(new double[3] {TopLeft,TopLeftV,BottomLeftV},new double[2]{x,y},new double[3]{TopLeft,BottomLeft,BottomLeft},new double[3]{C2[idx],C2[idx],C2[idx-N1]});
+               return leftb>rightb ? threepoint(new double[3]{LeftTopV,LeftBottomV,RightBottomV},new double[2]{x,y},new double[3]{C1[idx-1],C1[idx-1],C1[idx]},new double[3]{LeftTop,LeftBottom,RightBottom}) :
+                   threepoint(new double[3] {RightTopV,LeftBottomV,RightBottomV},new double[2]{x,y},new double[3]{C1[idx],C1[idx-1],C2[idx]},new double[3]{RightTop,LeftBottom,RightBottom});
             }
          }
 
