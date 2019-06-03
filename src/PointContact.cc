@@ -26,19 +26,19 @@ void PointContact::CheckConfigurations()
       Error("CheckConfigurations", "PointContactH==%.1f!", PointContactH);
       abort();
    }
-   if (BoreH<=0) {
+   if (BoreH<0) {
       Error("CheckConfigurations", "BoreH==%.1f!", BoreH);
       abort();
    }
-   if (BoreR<=0) {
+   if (BoreR<0) {
       Error("CheckConfigurations", "BoreR==%.1f!", BoreR);
       abort();
    }
-   if (BoreTaperW<=0) {
+   if (BoreTaperW<0) {
       Error("CheckConfigurations", "BoreTaperW==%.1f!", BoreTaperW);
       abort();
    }
-   if (BoreTaperH<=0) {
+   if (BoreTaperH<0) {
       Error("CheckConfigurations", "BoreTaperH==%.1f!", BoreTaperH);
       abort();
    }
@@ -58,11 +58,11 @@ void PointContact::CheckConfigurations()
       Error("CheckConfigurations", "CornerH==%.1f!", CornerH);
       abort();
    }
-   if (GrooveW<=0) {
+   if (GrooveW<0) {
       Error("CheckConfigurations", "GrooveW==%.1f!", GrooveW);
       abort();
    }
-   if (GrooveH<=0) {
+   if (GrooveH<0) {
       Error("CheckConfigurations", "GrooveH==%.1f!", GrooveH);
       abort();
    }

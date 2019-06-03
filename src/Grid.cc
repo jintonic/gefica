@@ -535,24 +535,24 @@ double Grid::GetData(const std::vector<double> &data,
                    threepoint(new double[3] {RightTopV,LeftBottomV,RightBottomV},new double[2]{x,y},new double[3]{C1[idx],C1[idx-1],C2[idx]},new double[3]{RightTop,LeftBottom,RightBottom});
             }
          }
+      }
+   } // 2D
+   if (x!=0) {
 
-      } // 2D
-      if (x!=0) {
+      //     |<---dC1m[idx]--->|
+      //     +---r1---+---r2---+
+      // C1[idx-1]    x      C1[idx]
+      size_t idx=GetIdxOfPointToTheRightOf(x);
+      double r2=(C1[idx]-x)/dC1m[idx];
+      double r1=1-r2;
+      double xval=data[idx]*r1+data[idx-1]*r2;
+      if (gDebug>0) Info("GetData","data(x=%.4f)=%.2f, "
+            "C1[%zu]=%.4f, C1[%zu]=%.4f, r1=%.2f, r2=%0.2f",
+            x,xval,idx-1,C1[idx-1],idx,C1[idx],r1,r2);
+      return xval;
+   }//1D
+   return 0;
 
-         //     |<---dC1m[idx]--->|
-         //     +---r1---+---r2---+
-         // C1[idx-1]    x      C1[idx]
-         size_t idx=GetIdxOfPointToTheRightOf(x);
-         double r2=(C1[idx]-x)/dC1m[idx];
-         double r1=1-r2;
-         double xval=data[idx]*r1+data[idx-1]*r2;
-         if (gDebug>0) Info("GetData","data(x=%.4f)=%.2f, "
-               "C1[%zu]=%.4f, C1[%zu]=%.4f, r1=%.2f, r2=%0.2f",
-               x,xval,idx-1,C1[idx-1],idx,C1[idx],r1,r2);
-         return xval;
-      }//1D
-      return 0;
-   }
 }
 //______________________________________________________________________________
 void Grid::CalculateE()
@@ -577,7 +577,7 @@ double Grid::threepoint(double dataset[3],double tarlocationset[2],double pointx
    double x2=pointxset[1];
    double x3=pointxset[2];
 
-      double y=tarlocationset[1];
+   double y=tarlocationset[1];
    double y1=pointyset[0];
    double y2=pointyset[1];
    double y3=pointyset[2];
@@ -595,7 +595,7 @@ double Grid::threepoint(double dataset[3],double tarlocationset[2],double pointx
 //|         |
 //|         |
 //2---------3
-      double Grid::fourpoint(double dataset[4],double tarlocationset[2],double pointxset[4],double pointyset[4])const
+double Grid::fourpoint(double dataset[4],double tarlocationset[2],double pointxset[4],double pointyset[4])const
 {
    double ab=(pointxset[1]-tarlocationset[0])/(pointxset[1]-pointxset[0]);
    double aa=1-ab;

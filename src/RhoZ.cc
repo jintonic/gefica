@@ -30,6 +30,7 @@ void RhoZ::GetBoundaryConditionFrom(Detector &detector)
 //
 void RhoZ::OverRelaxAt(size_t idx)
 {
+   /*wrong implement
    if (fIsFixed[idx]) return; // no need to calculate on boundaries
 
    double vzm; // previous(minus) Vp along z
@@ -41,6 +42,7 @@ void RhoZ::OverRelaxAt(size_t idx)
          + (Vp[idx+N1]/dC2p[idx]+vzm/dC2m[idx])*2/(dC2p[idx]+dC2m[idx]))/
       ((1/dC1m[idx]+1/dC1p[idx])*2/(dC1m[idx]+dC1p[idx])
        +(1/dC2p[idx]+1/dC2m[idx])*2/(dC2p[idx]+dC2m[idx]));
+   Printf("checl %.4e",vnew);
    vnew=RelaxationFactor*(vnew-Vp[idx])+Vp[idx]; // over relax
 
    double vmin=Vp[idx-1]; // minimal Vp around point[idx]
@@ -62,6 +64,56 @@ void RhoZ::OverRelaxAt(size_t idx)
    }
    // update Vp for impurity-only case even if the point is undepleted
    if (fDetector->Bias[0]==fDetector->Bias[1]) Vp[idx]=vnew;
+   Printf("%.4e",vnew);
+   */
+    if (fIsFixed[idx])return;
+   // 2nd-order Successive Over-Relaxation
+   double drm=dC1m[idx]!=0?dC1m[idx]:dC1p[idx]; // dr_minus
+   double drp=dC1p[idx]!=0?dC1p[idx]:dC1m[idx];
+   double dzm=dC2m[idx]!=0?dC1m[idx]:dC1p[idx];
+   double dzp=dC2p[idx]!=0?dC1p[idx]:dC1m[idx];
+   double pzm,pzp,prm,prp; // pzm: potential_z_plus
+   if(idx>=N1)pzm=Vp[idx-N1];
+   else pzm=Vp[idx+N1];
+   if(idx>=N1*N2-N1)pzp=Vp[idx];
+   else pzp=Vp[idx+N1];
+   if(idx%N1==0)prm=Vp[idx];
+   else prm=Vp[idx-1];
+   if(idx%N1==N1-1)prp=Vp[idx];
+   else prp=Vp[idx+1];
+   double tmp=(Src[idx]
+         + 1/C1[idx]*(prp-prm)/(drm+drp) +(prp/drp+prm/drm)*2/(drm+drp)
+         + (pzp/dzp+pzm/dzm)*2/(dzp+dzm))/
+      ((1/drm+1/drp)*2/(drm+drp)+(1/dzp+1/dzm)*2/(dzp+dzm));
+   //find minmium and maxnium of all five grid, the new one should not go overthem.
+   //find min
+   double min=prm;
+   double max=prm;
+   if(min>prp)min=prp;
+   if (min>pzp)min=pzp;
+   if (min>pzm)min=pzm;
+
+   //find max
+   if(max<prp)max=prp;
+   if (max<pzp)max=pzp;
+   if (max<pzm)max=pzm;
+//if tmp is greater or smaller than max and min, set tmp to it.
+
+      //over relax
+   //V[idx]=RelaxationFactor*(tmp-V[idx])+V[idx];
+   //if need calculate depleted voltage
+   double oldP=Vp[idx];
+   tmp=RelaxationFactor*(tmp-oldP)+oldP;
+   if(tmp<min) {
+      Vp[idx]=min;
+      fIsDepleted[idx]=false;
+   } else if(tmp>max) {
+      Vp[idx]=max;
+      fIsDepleted[idx]=false;
+   } else
+      fIsDepleted[idx]=true;
+
+   if(fIsDepleted[idx]||fDetector->Bias[0]==fDetector->Bias[1]) Vp[idx]=tmp;
 }
 //______________________________________________________________________________
 //
