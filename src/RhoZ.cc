@@ -81,6 +81,9 @@ void RhoZ::OverRelaxAt(size_t idx)
    else prm=Vp[idx-1];
    if(idx%N1==N1-1)prp=Vp[idx];
    else prp=Vp[idx+1];
+   if (idx<200)
+   Printf("idx=%zu, drm=%f, drp=%f, dzm=%f, dzp=%f, pzm=%f, pzp=%f, prm=%f, prp=%f\n",
+         idx,drm, drp, dzm, dzp, pzm, pzp, prm, prp);
    double tmp=(Src[idx]
          + 1/C1[idx]*(prp-prm)/(drm+drp) +(prp/drp+prm/drm)*2/(drm+drp)
          + (pzp/dzp+pzm/dzm)*2/(dzp+dzm))/
@@ -110,10 +113,12 @@ void RhoZ::OverRelaxAt(size_t idx)
    } else if(tmp>max) {
       Vp[idx]=max;
       fIsDepleted[idx]=false;
-   } else
+   } else {
+      Vp[idx]=tmp;
       fIsDepleted[idx]=true;
+   }
 
-   if(fIsDepleted[idx]||fDetector->Bias[0]==fDetector->Bias[1]) Vp[idx]=tmp;
+   if(fDetector->Bias[0]==fDetector->Bias[1]) Vp[idx]=tmp;
 }
 //______________________________________________________________________________
 //
