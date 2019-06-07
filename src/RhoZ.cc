@@ -70,8 +70,8 @@ void RhoZ::OverRelaxAt(size_t idx)
    // 2nd-order Successive Over-Relaxation
    double drm=dC1m[idx]!=0?dC1m[idx]:dC1p[idx]; // dr_minus
    double drp=dC1p[idx]!=0?dC1p[idx]:dC1m[idx];
-   double dzm=dC2m[idx]!=0?dC1m[idx]:dC1p[idx];
-   double dzp=dC2p[idx]!=0?dC1p[idx]:dC1m[idx];
+   double dzm=dC2m[idx]!=0?dC2m[idx]:dC2p[idx];
+   double dzp=dC2p[idx]!=0?dC2p[idx]:dC2m[idx];
    double pzm,pzp,prm,prp; // pzm: potential_z_plus
    if(idx>=N1)pzm=Vp[idx-N1];
    else pzm=Vp[idx+N1];
@@ -81,9 +81,9 @@ void RhoZ::OverRelaxAt(size_t idx)
    else prm=Vp[idx-1];
    if(idx%N1==N1-1)prp=Vp[idx];
    else prp=Vp[idx+1];
-   if (idx<200)
-   Printf("idx=%zu, drm=%f, drp=%f, dzm=%f, dzp=%f, pzm=%f, pzp=%f, prm=%f, prp=%f\n",
-         idx,drm, drp, dzm, dzp, pzm, pzp, prm, prp);
+   //if (idx<200)
+   //Printf("idx=%zu, drm=%f, drp=%f, dzm=%f, dzp=%f, pzm=%f, pzp=%f, prm=%f, prp=%f\n",
+   //      idx,drm, drp, dC2m[idx], dC2p[idx], pzm, pzp, prm, prp);
    double tmp=(Src[idx]
          + 1/C1[idx]*(prp-prm)/(drm+drp) +(prp/drp+prm/drm)*2/(drm+drp)
          + (pzp/dzp+pzm/dzm)*2/(dzp+dzm))/
@@ -288,13 +288,13 @@ void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
          slope=pc.TaperH/pc.TaperW;
          intercept=-(pc.Radius-pc.TaperW)*slope;
          if (C2[i]-(slope*C1[i]+intercept)<dC2m[i]
-               && C2[i]-(slope*C1[i]+intercept)>0) // right side, C2
-            dC2m[i]=C2[i]-(slope*C1[i]+intercept);
+               && C2[i]-(slope*C1[i]+intercept)>0 && i>=N1-1) // right side, C2
+            dC2m[i]=C2[i]-(slope*C1[i]+intercept );
          if ((C2[i]-intercept)/slope-C1[i]<dC1p[i]
                && (C2[i]-intercept)/slope-C1[i]>0) // right side, C1
             dC1p[i]=(C2[i]-intercept)/slope-C1[i];
          if (C2[i]-(-slope*C1[i]+intercept)<dC2m[i]
-               && C2[i]-(-slope*C1[i]+intercept)>0) // left side, C2
+               && C2[i]-(-slope*C1[i]+intercept)>0 && i>=N1-1) // left side, C2
             dC2m[i]=C2[i]-(-slope*C1[i]+intercept);
          if (C1[i]+(C2[i]-intercept)/slope<dC1m[i]
                && C1[i]+(C2[i]-intercept)/slope>0) // left side, C1
