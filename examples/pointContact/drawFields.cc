@@ -3,9 +3,10 @@ using namespace GeFiCa;
 void drawFields(const char *input="ppc.root")
 {
    // Get data from input file
-   TFile *file = new TFile(input, "update"); // "update" allows creation of TH3
-   PointContactDZ *detector = (PointContactDZ*) file->Get("pcdz");
-   TTree *t = detector->GetTree(true);
+   TFile *file = new TFile(input);
+   RhoZ *grid = (RhoZ*) file->Get("grhoz");
+   PointContact *detector = (PointContact*) file->Get("pc");
+   TTree *t = grid->GetTree();
    const int n = t->GetEntries();
 
    // fine tune margins, etc.
@@ -21,19 +22,18 @@ void drawFields(const char *input="ppc.root")
    hv->SetTitle(";Radius [cm];Height [cm];Potential [V]");
    hv->GetZaxis()->CenterTitle();
    hv->Draw("colz");
+   detector->Draw();
 
    // draw E field lines
-   const int np=12;
-   TGraph *gl[np];
-   double x[np] = {-25, 0.01, 25, -4, -3, -2, -1, 0.01, 1, 2, 3, 4};
-   double y[np] = {49.9, 24.9, 49.9, 2, 2, 2, 2, 2, 2, 2, 2, 2};
-   bool positive[np] = {0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-   for (int i=0; i<np; i++) {
-      gDebug=1;
-      gl[i] = detector->GetFieldLineFrom(x[i]*mm, y[i]*mm, positive[i]);
-      gDebug=0;
-      gl[i]->Draw("l");
-   }
+   //const int np=12;
+   //TGraph *gl[np];
+   //double x[np] = {-25, 0.01, 25, -4, -3, -2, -1, 0.01, 1, 2, 3, 4};
+   //double y[np] = {49.9, 24.9, 49.9, 2, 2, 2, 2, 2, 2, 2, 2, 2};
+   //bool positive[np] = {0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+   //for (int i=0; i<np; i++) {
+   //   gl[i] = grid->GetFieldLineFrom(x[i]*mm, y[i]*mm, positive[i]);
+   //   gl[i]->Draw("l");
+   //}
 
    TCanvas *ce = new TCanvas;
    ce->SetLogz();
@@ -44,5 +44,5 @@ void drawFields(const char *input="ppc.root")
    he->SetTitle(";Radius [cm];Height [cm];E [V/cm]");
    he->GetZaxis()->CenterTitle();
    he->Draw("colz");
-   for (int i=0; i<np; i++) gl[i]->Draw("p");
+   //for (int i=0; i<np; i++) gl[i]->Draw("p");
 }
