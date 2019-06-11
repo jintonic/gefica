@@ -29,6 +29,6 @@ void calculateFields(const char *output="ppc.root")
    
    TFile *file = new TFile(output,"recreate");
    detector.Write();
-   grid.GetTree()->Write();
+   grid.Write();
    file->Close();
 }
