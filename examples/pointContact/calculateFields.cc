@@ -3,8 +3,8 @@ using namespace GeFiCa;
 void calculateFields(const char *output="ppc.root")
 {
    PointContact detector;
-   detector.Bias[0]=2.5*kV; // bias on point contact
-   detector.Bias[1]=0; // ground outer contact
+   detector.Bias[0]=0*kV; // bias on point contact
+   detector.Bias[1]=2500; // ground outer contact
 
    detector.Radius=3.45*cm; detector.Height=5.05*cm;
 
@@ -19,7 +19,7 @@ void calculateFields(const char *output="ppc.root")
 */
 //   detector.GrooveH=0.001*mm; detector.GrooveW=.5*mm;
 
- //  detector.BottomImpurity=-3.18e9/cm3; detector.TopImpurity=-1.9175e9/cm3;
+   detector.BottomImpurity=0/cm3; detector.TopImpurity=0/cm3;
 
    RhoZ grid;
    grid.GetBoundaryConditionFrom(detector);

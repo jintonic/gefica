@@ -266,6 +266,7 @@ double Grid::GetData(const std::vector<double> &data,
    if (z!=0) { 
    }// 3D
    if (y!=0) { // <2D
+         Printf("%i\n",(int)y);
       // https://codeplea.com/triangular-interpolation
       //       tmv
       // +-aa--+--ab--+(C1[idx], C2[idx])
@@ -288,9 +289,12 @@ double Grid::GetData(const std::vector<double> &data,
       if (idx>=N1) br=true; // not bottom boundary
       if (tl&&bl) bl=true; // neither left nor bottom boundary
       //
-      if(!tl&&!br&&!bl) {
+      if(!tl&&!br&&!bl) 
+      {
          return data[idx];
-      } else if(tl&&!br&&!bl) {
+      }
+      else if(tl&&!br&&!bl) 
+      {
          return twopoint(new double[2] {data[idx-1],data[idx]},new double[2]{x,y},new double[2] {C1[idx-1],C1[idx]});
       }
       else if(!tl&&!bl&&br)
@@ -539,6 +543,7 @@ double Grid::GetData(const std::vector<double> &data,
    } // 2D
    if (x!=0) {
 
+
       //     |<---dC1m[idx]--->|
       //     +---r1---+---r2---+
       // C1[idx-1]    x      C1[idx]
@@ -546,6 +551,9 @@ double Grid::GetData(const std::vector<double> &data,
       double r2=(C1[idx]-x)/dC1m[idx];
       double r1=1-r2;
       double xval=data[idx]*r1+data[idx-1]*r2;
+      Info("GetData","data(x=%.4f)=%.2f, "
+            "C1[%zu]=%.4f, C1[%zu]=%.4f, r1=%.2f, r2=%0.2f",
+            x,xval,idx-1,C1[idx-1],idx,C1[idx],r1,r2);
       if (gDebug>0) Info("GetData","data(x=%.4f)=%.2f, "
             "C1[%zu]=%.4f, C1[%zu]=%.4f, r1=%.2f, r2=%0.2f",
             x,xval,idx-1,C1[idx-1],idx,C1[idx],r1,r2);

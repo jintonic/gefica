@@ -86,7 +86,7 @@ class GeFiCa::Grid : public Points
        * Get potential at (c1,c2,c3) by interpolation.
        */
       double GetV(double c1, double c2=0, double c3=0) const
-      { return GetData(Vp,c1,c2,c3); }
+      {return GetData(Vp,c1,c2,c3); }
       double GetE(double c1, double c2=0, double c3=0) const
       { return GetData(Et,c1,c2,c3); }
       double GetE1(double c1, double c2=0, double c3=0) const
