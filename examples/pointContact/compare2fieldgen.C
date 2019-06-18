@@ -17,27 +17,28 @@ void drawresult(const char *fieldgen)
    TTree *tg = new TTree("tg","tg");
    tg->ReadFile("gVSf.txt", "r:z:v:d:e1:e2:e:de1:de2:de");
    tg->Draw("z:r:v","","colz");
-   TCanvas *c4 = new TCanvas;
-   
-   c4->SetFillColor(kBlue);
-   
-   tg->Draw("z:r:e","","colz");
-   TCanvas *c5 = new TCanvas;
-   tg->Draw("z:r:e1","","colz");
-   TCanvas *c6 = new TCanvas;
-   tg->Draw("z:r:e2","","colz");
 
-   // draw difference
-   TCanvas *c3 = new TCanvas;
-   tg->Draw("z:r:d","","colz");
-   TCanvas *c7 = new TCanvas;
-   tg->Draw("z:r:de1","","colz");
-   TCanvas *c8 = new TCanvas;
-   tg->Draw("z:r:de2","","colz");
-   TCanvas *c9 = new TCanvas;
-   
-   c9->SetFillColor(kBlue);
-   tg->Draw("z:r:de","","colz");
+   //TCanvas *c4 = new TCanvas;
+   //
+   //c4->SetFillColor(kBlue);
+   //
+   //tg->Draw("z:r:e","","colz");
+   //TCanvas *c5 = new TCanvas;
+   //tg->Draw("z:r:e1","","colz");
+   //TCanvas *c6 = new TCanvas;
+   //tg->Draw("z:r:e2","","colz");
+
+   //// draw difference
+   //TCanvas *c3 = new TCanvas;
+   //tg->Draw("z:r:d","","colz");
+   //TCanvas *c7 = new TCanvas;
+   //tg->Draw("z:r:de1","","colz");
+   //TCanvas *c8 = new TCanvas;
+   //tg->Draw("z:r:de2","","colz");
+   //TCanvas *c9 = new TCanvas;
+   //
+   //c9->SetFillColor(kBlue);
+   //tg->Draw("z:r:de","","colz");
 }
 
 //______________________________________________________________________________
@@ -45,8 +46,8 @@ void drawresult(const char *fieldgen)
 void compare2fieldgen(const char *gefica="ppc.root",
       const char *fieldgen="ev.dat")
 {
-   TFile *inrootfile=new TFile(gefica,"update");
-   GeFiCa::Grid *detector2=(Grid*)inrootfile ->Get("grhoz");
+   TFile *inrootfile=new TFile(gefica);
+   RhoZ *field=(RhoZ*)inrootfile ->Get("grhoz");
 
    ifstream infile(fieldgen); if (!infile.is_open()) exit(-1);
    ofstream outfile("gVSf.txt");
@@ -57,14 +58,17 @@ void compare2fieldgen(const char *gefica="ppc.root",
    while (infile>>x>>y>>v>>e>>er>>ez) {
       sizeofr=x;
       sizeofz=y;
-      anotherV=detector2->GetV(x/10,y/10);
-      E1=detector2->GetE1(x/10,y/10);
-      E2=detector2->GetE2(x/10,y/10);
+      anotherV=field->GetV(x*mm,y*mm);
+      E1=field->GetE1(x*mm,y*mm);
+      E2=field->GetE2(x*mm,y*mm);
       E=sqrt(E1*E1+E2*E2);
       outfile<<x<<"  "<<y<<"  "<<anotherV<<"  "<<v-anotherV<<"  "<<E1<<"  "<<E2<<"  "<<E<<"  "<<er-E1<<"  "<<ez-E2<<"  "<<e-E<<endl;
    }
    infile.close();
    outfile.close();
+
+   inrootfile->Close();
+   delete inrootfile;
 
    drawresult(fieldgen);
 }
