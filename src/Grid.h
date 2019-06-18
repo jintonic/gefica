@@ -137,7 +137,6 @@ class GeFiCa::Grid : public Points
        * Over relax potential Vp[\param idx].
        */
       virtual void OverRelaxAt(size_t idx) {};
-      size_t GetIdxOfPointNear(double c1, double c2) const { return 0; }
       /**
        * Get index of point near \param c1 in between \param begin & \param end.
        */

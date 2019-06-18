@@ -263,10 +263,10 @@ TTree* Grid::GetTree(bool createNew)
 double Grid::GetData(const std::vector<double> &data,
       double x, double y, double z) const
 {
-   if (z!=0) { 
-   }// 3D
-   if (y!=0) { // <2D
-         Printf("%i\n",(int)y);
+   if (N3!=0) { // 3D
+      Warning("GetData", "not yet implemented. Abort."); abort();
+   }
+   if (N2!=0) { // 2D
       // https://codeplea.com/triangular-interpolation
       //       tmv
       // +-aa--+--ab--+(C1[idx], C2[idx])
@@ -279,8 +279,8 @@ double Grid::GetData(const std::vector<double> &data,
       // |     v      |
       // +-----+------+
       //       bmv
-      size_t idx=GetIdxOfPointNear(x,y); // always exists
-
+      size_t idx=GetIdxOfPointToTheRightOf(x,y); // always exists
+      Info("GetData", "idx: %zu", idx);
 
       bool tl=false; // existence of top left grid point
       bool br=false; // existence of bottom right grid point
@@ -288,279 +288,269 @@ double Grid::GetData(const std::vector<double> &data,
       if (idx%N1!=0) tl=true; // not left boundary
       if (idx>=N1) br=true; // not bottom boundary
       if (tl&&bl) bl=true; // neither left nor bottom boundary
-      //
-      if(!tl&&!br&&!bl) 
-      {
+
+      if(!tl&&!br&&!bl) { // bottom left corner
+         Printf("bottom left corner\n");
          return data[idx];
+      } else if(tl&&!br&&!bl) { // bottom boundary
+         Printf("bottom boundary\n");
+         return twopoint(new double[2] {data[idx-1],data[idx]},
+               new double[2]{x,y},new double[2] {C1[idx-1],C1[idx]});
+      } else if(!tl&&!bl&&br) { // left boundary
+         Printf("left boundary\n");
+         return twopoint(new double[2]{data[idx-N1],data[idx]},
+               new double[2]{x,y},new double[2]{C2[idx-N1],C2[idx]});
       }
-      else if(tl&&!br&&!bl) 
-      {
-         return twopoint(new double[2] {data[idx-1],data[idx]},new double[2]{x,y},new double[2] {C1[idx-1],C1[idx]});
+      // no boundary case
+      Printf("bulk\n");
+      if(dC1p[idx-1]==dC1m[idx]&&dC1p[idx-N1-1]==dC1m[idx-N1]&&
+            dC2p[idx-N1-1]==dC2m[idx-1]&&dC2p[idx-N1]==dC2m[idx]) {
+         return fourpoint(new double[4]{data[idx-1],data[idx],data[idx-N1-1],data[idx-N1]},new double[2]{x,y},new double[4]{C1[idx-1],C1[idx],C1[idx-N1-1],C1[idx-N1]},new double[4]{C2[idx-1],C2[idx],C2[idx-N1-1],C2[idx-N1]});
       }
-      else if(!tl&&!bl&&br)
+
+      //top left case o
+      if(dC1p[idx-1]!=dC1m[idx]&&
+            dC1p[idx-N1-1]==dC1m[idx-N1]&&
+            dC2p[idx-N1-1]!=dC2m[idx-1]&&
+            dC2p[idx-N1]==dC2m[idx])
       {
-         return twopoint(new double[2]{data[idx-N1],data[idx]},new double[2]{x,y},new double[2]{C2[idx-N1],C2[idx]});
+         double xb=dC1m[idx]<dC1p[idx-1] ? C1[idx]-dC1m[idx] : C1[idx-1]+dC1p[idx-1];
+         double yb=dC2m[idx-1]<dC2p[idx-N1-1] ? C2[idx-1]-dC2m[idx-1] : C2[idx-N1-1]+dC2p[idx-N1-1];
+         double bmv=(C1[idx-N1]-xb)/(C1[idx-N1]-C1[idx-N1-1])*data[idx-N1-1]+(xb-C1[idx-N1-1])/(C1[idx-N1]-C1[idx-N1-1])*data[idx-N1];
+         double tmv=fIsFixed[idx]?data[idx]:data[idx-1];
+         double mlv=fIsFixed[idx-1]?data[idx-1]:data[idx-N1-1];
+         double mmv=(C2[idx]-yb)/(C2[idx]-C2[idx-N1])*bmv+(yb-C2[idx-N1])/(C2[idx]-C2[idx-N1])*tmv;
+         if(x>xb)
+         {
+            return fourpoint(new double[4]{tmv,data[idx],bmv,data[idx-N1]},new double[2]{x,y},new double[4]{xb,C1[idx],xb,C1[idx-N1]},new double[4]{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
+         }
+         else if(y<yb)
+         {
+            return fourpoint(new double[4]{mlv,mmv,data[idx-N1-1],bmv},new double[2]{x,y},new double[4]{C1[idx-1],xb,C1[idx-1],xb},new double[4]{yb,yb,C2[idx-N1],C2[idx-N1]});
+         }
+         else if((C2[idx]-yb)/(xb-C1[idx-1]*(x-C1[idx-1])+yb>y))
+         {
+            return threepoint(new double[3]{tmv,mmv,mlv},new double[2]{x,y},new double[3]{xb,xb,C1[idx-1]},new double[3]{C2[idx],yb,yb});
+         }
+         else if((C2[idx]-yb)/(xb-C1[idx-1]*(x-C1[idx-1])+yb<y))
+         {
+            return threepoint(new double[3]{tmv,tmv,mlv},new double[2]{x,y},new double[3]{xb,C1[idx-1],C1[idx-1]},new double[3]{C2[idx],C2[idx],yb});
+         }
       }
-      else
+      //topright case o
+      if(dC1p[idx-1]!=dC1m[idx]&&
+            dC1p[idx-N1-1]==dC1m[idx-N1]&&
+            dC2p[idx-N1-1]==dC2m[idx-1]&&
+            dC2p[idx-N1]!=dC2m[idx])
       {
-         //no bound case
-         if(dC1p[idx-1]==dC1m[idx]&&dC1p[idx-N1-1]==dC1m[idx-N1]&&
-               dC2p[idx-N1-1]==dC2m[idx-1]&&dC2p[idx-N1]==dC2m[idx])
+         double xb=dC1m[idx]<dC1p[idx-1] ? C1[idx]-dC1m[idx] : C1[idx-1]+dC1p[idx-1];
+         double yb=dC2m[idx]<dC2p[idx-N1] ? C2[idx]-dC2m[idx] : C2[idx-N1]+dC2p[idx-N1];
+         double bmv=(C1[idx-N1]-xb)/(C1[idx-N1]-C1[idx-N1-1])*data[idx-N1-1]+(xb-C1[idx-N1-1])/(C1[idx-N1]-C1[idx-N1-1])*data[idx-N1];
+         double tmv=fIsFixed[idx]?data[idx]:data[idx-1];
+         double mrv=fIsFixed[idx]?data[idx]:data[idx-N1];
+         double mmv=(C2[idx]-yb)/(C2[idx]-C2[idx-N1])*bmv+(yb-C2[idx-N1])/(C2[idx]-C2[idx-N1])*tmv;
+         if(x<xb)
          {
-            return fourpoint(new double[4]{data[idx-1],data[idx],data[idx-N1-1],data[idx-N1]},new double[2]{x,y},new double[4]{C1[idx-1],C1[idx],C1[idx-N1-1],C1[idx-N1]},new double[4]{C2[idx-1],C2[idx],C2[idx-N1-1],C2[idx-N1]});
+            return fourpoint(new double[4]{data[idx-1],tmv,data[idx-N1-1],bmv},new double[2]{x,y},new double[4]{C1[idx-1],xb,C1[idx-N1-1],xb},new double[4]{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
          }
-         //topleft case o
-         if(dC1p[idx-1]!=dC1m[idx]&&
-               dC1p[idx-N1-1]==dC1m[idx-N1]&&
-               dC2p[idx-N1-1]!=dC2m[idx-1]&&
-               dC2p[idx-N1]==dC2m[idx])
+         else if(y<yb)
          {
-            double xb=dC1m[idx]<dC1p[idx-1] ? C1[idx]-dC1m[idx] : C1[idx-1]+dC1p[idx-1];
-            double yb=dC2m[idx-1]<dC2p[idx-N1-1] ? C2[idx-1]-dC2m[idx-1] : C2[idx-N1-1]+dC2p[idx-N1-1];
-            double bmv=(C1[idx-N1]-xb)/(C1[idx-N1]-C1[idx-N1-1])*data[idx-N1-1]+(xb-C1[idx-N1-1])/(C1[idx-N1]-C1[idx-N1-1])*data[idx-N1];
-            double tmv=fIsFixed[idx]?data[idx]:data[idx-1];
-            double mlv=fIsFixed[idx-1]?data[idx-1]:data[idx-N1-1];
-            double mmv=(C2[idx]-yb)/(C2[idx]-C2[idx-N1])*bmv+(yb-C2[idx-N1])/(C2[idx]-C2[idx-N1])*tmv;
-            if(x>xb)
-            {
-               return fourpoint(new double[4]{tmv,data[idx],bmv,data[idx-N1]},new double[2]{x,y},new double[4]{xb,C1[idx],xb,C1[idx-N1]},new double[4]{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
-            }
-            else if(y<yb)
-            {
-               return fourpoint(new double[4]{mlv,mmv,data[idx-N1-1],bmv},new double[2]{x,y},new double[4]{C1[idx-1],xb,C1[idx-1],xb},new double[4]{yb,yb,C2[idx-N1],C2[idx-N1]});
-            }
-            else if((C2[idx]-yb)/(xb-C1[idx-1]*(x-C1[idx-1])+yb>y))
-            {
-               return threepoint(new double[3]{tmv,mmv,mlv},new double[2]{x,y},new double[3]{xb,xb,C1[idx-1]},new double[3]{C2[idx],yb,yb});
-            }
-            else if((C2[idx]-yb)/(xb-C1[idx-1]*(x-C1[idx-1])+yb<y))
-            {
-               return threepoint(new double[3]{tmv,tmv,mlv},new double[2]{x,y},new double[3]{xb,C1[idx-1],C1[idx-1]},new double[3]{C2[idx],C2[idx],yb});
-            }
+            return fourpoint(new double[4]{mmv,mrv,bmv,data[idx-N1]},new double[2]{x,y},new double[4]{xb,C1[idx],xb,C1[idx-1]},new double[4]{yb,yb,C2[idx-N1],C2[idx-N1]});
          }
-         //topright case o
-         if(dC1p[idx-1]!=dC1m[idx]&&
-               dC1p[idx-N1-1]==dC1m[idx-N1]&&
-               dC2p[idx-N1-1]==dC2m[idx-1]&&
-               dC2p[idx-N1]!=dC2m[idx])
+         else if((C2[idx]-yb)/(C1[idx]-x*(x-C1[idx])+yb>y))
          {
-            double xb=dC1m[idx]<dC1p[idx-1] ? C1[idx]-dC1m[idx] : C1[idx-1]+dC1p[idx-1];
-            double yb=dC2m[idx]<dC2p[idx-N1] ? C2[idx]-dC2m[idx] : C2[idx-N1]+dC2p[idx-N1];
-            double bmv=(C1[idx-N1]-xb)/(C1[idx-N1]-C1[idx-N1-1])*data[idx-N1-1]+(xb-C1[idx-N1-1])/(C1[idx-N1]-C1[idx-N1-1])*data[idx-N1];
-            double tmv=fIsFixed[idx]?data[idx]:data[idx-1];
-            double mrv=fIsFixed[idx]?data[idx]:data[idx-N1];
-            double mmv=(C2[idx]-yb)/(C2[idx]-C2[idx-N1])*bmv+(yb-C2[idx-N1])/(C2[idx]-C2[idx-N1])*tmv;
-            if(x<xb)
-            {
-               return fourpoint(new double[4]{data[idx-1],tmv,data[idx-N1-1],bmv},new double[2]{x,y},new double[4]{C1[idx-1],xb,C1[idx-N1-1],xb},new double[4]{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
-            }
-            else if(y<yb)
-            {
-               return fourpoint(new double[4]{mmv,mrv,bmv,data[idx-N1]},new double[2]{x,y},new double[4]{xb,C1[idx],xb,C1[idx-1]},new double[4]{yb,yb,C2[idx-N1],C2[idx-N1]});
-            }
-            else if((C2[idx]-yb)/(C1[idx]-x*(x-C1[idx])+yb>y))
-            {
-               return threepoint(new double[3]{tmv,mmv,mrv},new double[2]{x,y},new double[3]{xb,xb,C1[idx]},new double[3]{C2[idx],yb,yb});
-            }
-            else if((C2[idx]-yb)/(C1[idx]-xb*(x-C1[idx])+yb<y))
-            {
-               return threepoint(new double[3]{tmv,data[idx],mrv},new double[2]{x,y},new double[3]{xb,C1[idx],C1[idx]},new double[3]{C2[idx],C2[idx],yb});
-            }
+            return threepoint(new double[3]{tmv,mmv,mrv},new double[2]{x,y},new double[3]{xb,xb,C1[idx]},new double[3]{C2[idx],yb,yb});
          }
-         //bottom left case o
-         if(dC1p[idx-1]==dC1m[idx]&&
-               dC1p[idx-N1-1]!=dC1m[idx-N1]&&
-               dC2p[idx-N1-1]!=dC2m[idx-1]&&
-               dC2p[idx-N1]==dC2m[idx])
+         else if((C2[idx]-yb)/(C1[idx]-xb*(x-C1[idx])+yb<y))
          {
-            double xb=dC1m[idx-N1]<dC1p[idx-N1-1] ? C1[idx-N1]-dC1m[idx-N1] : C1[idx-N1-1]+dC1p[idx-N1-1];
-            double yb=dC2m[idx-1]<dC2p[idx-N1-1] ? C2[idx-1]-dC2m[idx-1] : C2[idx-N1-1]+dC2p[idx-N1-1];
-            double tmv=(C1[idx]-xb)/(C1[idx]-C1[idx-1])*data[idx-1]+(xb-C1[idx-1])/(C1[idx]-C1[idx-1])*data[idx];
-            double bmv=fIsFixed[idx]?data[idx]:data[idx-1];
-            double mlv=fIsFixed[idx-1]?data[idx-1]:data[idx-N1-1];
-            double mmv=(C2[idx]-yb)/(C2[idx]-C2[idx-N1])*bmv+(yb-C2[idx-N1])/(C2[idx]-C2[idx-N1])*tmv;
-            if(x>xb)
-            {
-               return fourpoint(new double[4]{tmv,data[idx],bmv,data[idx-N1]},new double[2]{x,y},new double[4]{xb,C1[idx],xb,C1[idx-N1]},new double[4]{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
-            }
-            else if(y>yb)
-            {
-               return fourpoint(new double[4]{data[idx-N1-1],tmv,mlv,mmv},new double[2]{x,y},new double[4]{C1[idx-1],xb,C1[idx-1],xb},new double[4]{C2[idx],C2[idx],yb,yb});
-            }
-            else if((C2[idx]-yb)/(xb-C1[idx-1]*(x-C1[idx-1])+C2[idx-N1]>y))
-            {
-               return threepoint(new double[3]{bmv,mmv,mlv},new double[2]{x,y},new double[3]{xb,xb,C1[idx-1]},new double[3]{yb,yb,C2[idx-N1]});
-            }
-            else if((C2[idx]-yb)/(xb-C1[idx-1]*(x-C1[idx-1])+C2[idx-N1]<y))
-            {
-               return threepoint(new double[3]{data[idx-N1-1],bmv,mlv},new double[2]{x,y},new double[3]{C1[idx-1],xb,C1[idx-1]},new double[3]{C2[idx],C2[idx],yb});
-            }
+            return threepoint(new double[3]{tmv,data[idx],mrv},new double[2]{x,y},new double[3]{xb,C1[idx],C1[idx]},new double[3]{C2[idx],C2[idx],yb});
          }
-         //bottom right case o
-         if(dC1p[idx-1]==dC1m[idx]&&
-               dC1p[idx-N1-1]!=dC1m[idx-N1]&&
-               dC2p[idx-N1-1]==dC2m[idx-1]&&
-               dC2p[idx-N1]!=dC2m[idx])
+      }
+      //bottom left case o
+      if(dC1p[idx-1]==dC1m[idx]&&
+            dC1p[idx-N1-1]!=dC1m[idx-N1]&&
+            dC2p[idx-N1-1]!=dC2m[idx-1]&&
+            dC2p[idx-N1]==dC2m[idx])
+      {
+         double xb=dC1m[idx-N1]<dC1p[idx-N1-1] ? C1[idx-N1]-dC1m[idx-N1] : C1[idx-N1-1]+dC1p[idx-N1-1];
+         double yb=dC2m[idx-1]<dC2p[idx-N1-1] ? C2[idx-1]-dC2m[idx-1] : C2[idx-N1-1]+dC2p[idx-N1-1];
+         double tmv=(C1[idx]-xb)/(C1[idx]-C1[idx-1])*data[idx-1]+(xb-C1[idx-1])/(C1[idx]-C1[idx-1])*data[idx];
+         double bmv=fIsFixed[idx]?data[idx]:data[idx-1];
+         double mlv=fIsFixed[idx-1]?data[idx-1]:data[idx-N1-1];
+         double mmv=(C2[idx]-yb)/(C2[idx]-C2[idx-N1])*bmv+(yb-C2[idx-N1])/(C2[idx]-C2[idx-N1])*tmv;
+         if(x>xb)
          {
-            double xb=dC1m[idx-N1]<dC1p[idx-N1-1] ? C1[idx-N1]-dC1m[idx-N1] : C1[idx-N1-1]+dC1p[idx-N1-1];
-            double yb=dC2m[idx]<dC2p[idx-N1] ? C2[idx]-dC2m[idx] : C2[idx-N1]+dC2p[idx-N1];
-            double tmv=(C1[idx]-xb)/(C1[idx]-C1[idx-1])*data[idx-1]+(xb-C1[idx-1])/(C1[idx]-C1[idx-1])*data[idx];
-            double bmv=fIsFixed[idx-N1]?data[idx-N1]:data[idx-N1-1];
-            double mrv=fIsFixed[idx-N1]?data[idx-N1]:data[idx];
-            double mmv=(C2[idx]-yb)/(C2[idx]-C2[idx-N1])*bmv+(yb-C2[idx-N1])/(C2[idx]-C2[idx-N1])*tmv;
-            if(x<xb)
-            {
-               return fourpoint(new double[4]{data[idx-1],tmv,data[idx-N1-1],bmv},new double[2]{x,y},new double[4]{C1[idx-1],xb,C1[idx-N1-1],xb},new double[4]{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
-            }
-            else if(y>yb)
-            {
-               return fourpoint(new double[4]{tmv,data[idx],mmv,mrv},new double[2]{x,y},new double[4]{xb,C1[idx],xb,C1[idx]},new double[4]{C2[idx],C2[idx],yb,yb});
-            }
-            else if((yb-C2[idx-N1])/(C1[idx]-xb*(x-xb)+C2[idx-N1]>y))
-            {
-               return threepoint(new double[3]{bmv,mmv,mrv},new double[2]{x,y},new double[3]{xb,xb,C1[idx]},new double[3]{C2[idx-N1],yb,yb});
-            }
-            else if((yb-C2[idx-N1])/(C1[idx]-xb*(x-xb)+C2[idx-N1]<=y))
-            {
-               return threepoint(new double[3]{bmv,data[idx-N1],mrv},new double[2]{x,y},new double[4]{xb,C1[idx],C1[idx-1]},new double[4]{C2[idx-N1],C2[idx-N1],yb});
-            }
+            return fourpoint(new double[4]{tmv,data[idx],bmv,data[idx-N1]},new double[2]{x,y},new double[4]{xb,C1[idx],xb,C1[idx-N1]},new double[4]{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
          }
-         //cross top down o
-         if(dC1p[idx-1]!=dC1m[idx]&&
-               dC1p[idx-N1-1]!=dC1m[idx-N1]&&
-               dC2p[idx-N1-1]==dC2m[idx-1]&&
-               dC2p[idx-N1]==dC2m[idx])
+         else if(y>yb)
          {
-            double topb=dC1m[idx]<dC1p[idx-1] ? C1[idx]-dC1m[idx] : C1[idx-1]+dC1p[idx-1];
-            double bottomb=dC1m[idx-N1]<dC1p[idx-N1-1] ? C1[idx-N1]-dC1m[idx-N1] : C1[idx-N1-1]+dC1p[idx-N1-1];
-            double bmv=fIsFixed[idx-N1]?data[idx-N1]:data[idx-N1-1];
-            double tmv=fIsFixed[idx]?data[idx]:data[idx-1];
-            double TopValueWithBottomCorssPoint=topb>bottomb ? (topb-bottomb)/(topb-C1[idx-1])*data[idx-1]+(bottomb-C1[idx-1])/(topb-C1[idx-1])*tmv : 
-               (bottomb-topb)/(C1[idx]-topb)*data[idx]+(C1[idx]-bottomb)/(C1[idx-1]-topb)*tmv ;
-            double BottomValueWithTopCorssPoint=topb>bottomb ? (topb-bottomb)/(C1[idx]-bottomb)*bmv+(C1[idx]-topb)/(C1[idx-1]-bottomb)*data[idx-N1] : 
-               (topb-C1[idx-N1-1])/(bottomb-C1[idx])*bmv+(bottomb-topb)/(bottomb-C1[idx-1-N1])*data[idx-N1-1] ;
-            double TopLeft,TopRight,BottomLeft,BottomRight;
-            double TopLeftV,TopRightV,BottomLeftV,BottomRightV;
-            if(topb>bottomb)
-            {
-               TopLeft=bottomb;
-               TopLeftV=TopValueWithBottomCorssPoint;
-               TopRight=topb;
-               TopRightV=tmv;
-               BottomLeft=bottomb;
-               BottomLeftV=bmv;
-               BottomRight=topb;
-               BottomRightV=BottomValueWithTopCorssPoint;
-            }
-            else
-            {
-               TopRight=bottomb;
-               TopRightV=TopValueWithBottomCorssPoint;
-               TopLeft=topb;
-               TopLeftV=tmv;
-               BottomRight=bottomb;
-               BottomRightV=bmv;
-               BottomLeft=topb;
-               BottomLeftV=BottomValueWithTopCorssPoint;
-            }
-            if(x>TopRight)
-            {
-               return fourpoint(new double[4]{TopRightV,data[idx],BottomRightV,data[idx-N1]},new double[2]{x,y},new double[4]{TopRight,C1[idx],BottomRight,C1[idx-N1]},new double[4]{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
-            }
-            else if(x<TopLeft)
-            {
-               return fourpoint(new double[4]{data[idx-1],TopLeftV,data[idx-N1-1],BottomLeftV},new double[2]{x,y},new double[4]{C1[idx-1],TopLeft,C1[idx-1],BottomLeft},new double[4]{C2[idx-1],C2[idx-1],C2[idx-N1],C2[idx-N1]});
-            }
-            else if((dC2m[idx])/((topb-bottomb)*(x-(TopRight-TopLeft)/2)+C2[idx-N1]>y-dC2m[idx]/2))
-            {
-               return topb>bottomb ? threepoint(new double[3]{TopRightV,BottomLeftV,BottomRightV},new double[2]{x,y},new double[3]{TopRight,BottomLeft,BottomRight},new double[3]{C2[idx],C2[idx-N1],C2[idx-N1]}) :
-                   threepoint(new double[3]{TopLeft,BottomLeftV,BottomRightV},new double[2]{x,y},new double[3]{TopLeft,BottomLeft,BottomRight},new double[3]{C2[idx],C2[idx-N1],C2[idx-N1]});
-            }
-            else if((dC2m[idx])/((topb-bottomb)*(x-(TopRight-TopLeft)/2)+C2[idx-N1]<=y-dC2m[idx]/2))
-            {
-               return topb<bottomb ? threepoint(new double[3]{TopRightV,TopLeftV,BottomRightV},new double[2]{x,y},new double[3]{TopRight,TopLeft,BottomRight},new double[3]{C2[idx],C2[idx],C2[idx-N1]}) :
-                   threepoint(new double[3]{TopLeft,TopLeftV,BottomLeftV},new double[2]{x,y},new double[3]{TopLeft,BottomLeft,BottomLeft},new double[3]{C2[idx],C2[idx],C2[idx-N1]});
-            }
+            return fourpoint(new double[4]{data[idx-N1-1],tmv,mlv,mmv},new double[2]{x,y},new double[4]{C1[idx-1],xb,C1[idx-1],xb},new double[4]{C2[idx],C2[idx],yb,yb});
          }
-         //cross left right 
-         if(dC1p[idx-1]==dC1m[idx]&&
-               dC1p[idx-N1-1]==dC1m[idx-N1]&&
-               dC2p[idx-N1-1]!=dC2m[idx-1]&&
-               dC2p[idx-N1]!=dC2m[idx])
+         else if((C2[idx]-yb)/(xb-C1[idx-1]*(x-C1[idx-1])+C2[idx-N1]>y))
          {
-            double leftb=dC2m[idx-1]<dC2p[idx-N1-1] ? C2[idx-1]-dC2m[idx-1] : C2[idx-N1-1]+dC2p[idx-N1-1];
-            double rightb=dC2m[idx]<dC2p[idx-N1] ? C2[idx]-dC2m[idx] : C2[idx-N1]+dC2p[idx-N1];
-            double lmv=fIsFixed[idx-1]?data[idx-1]:data[idx-N1-1];
-            double rmv=fIsFixed[idx]?data[idx]:data[idx-N1];
-            double LeftValueWithRightCorssPoint=leftb>rightb ? (leftb-rightb)/(leftb-C2[idx-N1-1])*data[idx-N1-1]+(rightb-C2[idx-N1-1])/(leftb-C2[idx-N1-1])*lmv : 
-               (rightb-leftb)/(C2[idx-1]-leftb)*data[idx-1]+(C2[idx-1]-rightb)/(C2[idx-1]-leftb)*lmv ;
-            double RightValueWithLeftCorssPoint=leftb>rightb ? (rightb-leftb)/(C2[idx]-rightb)*data[idx]+(C2[idx]-leftb)/(C2[idx]-rightb)*rmv : 
-               (leftb-C1[idx-N1])/(rightb-C2[idx-N1])*rmv+(rightb-leftb)/(rightb-C2[idx-N1])*data[idx-N1] ;
-            double LeftTop,RightTop,LeftBottom,RightBottom;
-            double LeftTopV,RightTopV,LeftBottomV,RightBottomV;
-            if(leftb>rightb)
-            {
-               LeftTop=leftb;
-               LeftTopV=lmv;
-               RightTop=leftb;
-               RightTopV=RightValueWithLeftCorssPoint;
-               LeftBottom=rightb;
-               LeftBottomV=LeftValueWithRightCorssPoint;
-               RightBottom=rightb;
-               RightBottomV=rmv;
-            }
-            else
-            {
-               RightTop=rightb;
-               RightTopV=rmv;
-               LeftTop=rightb;
-               LeftTopV=LeftValueWithRightCorssPoint;
-               RightBottom=leftb;
-               RightBottomV=RightValueWithLeftCorssPoint;
-               LeftBottom=rightb;
-               LeftBottomV=lmv;
-            }
-            if(y>RightTop)
-            {
-               return fourpoint(new double[4]{data[idx-1],data[idx],LeftTopV,RightTopV},new double[2]{x,y},new double[4]{C1[idx-1],C1[idx],C1[idx-1],C1[idx]},new double[4]{C2[idx],C2[idx],LeftTop,RightTop});
-            }
-            else if(y<LeftBottom)
-            {
-               return fourpoint(new double[4]{LeftBottomV,RightBottomV,data[idx-N1-1],data[idx-N1]},new double[2]{x,y},new double[4]{C1[idx-1],C1[idx],C1[idx-N1-1],C1[idx-N1]},new double[4]{LeftBottom,RightBottom,C2[idx-N1-1],C2[idx-N1]});
-            }
-            else if((rightb-leftb)/(dC1m[idx])*(x-C1[idx-1])+(LeftBottom)>y)
-            {
-               return leftb>rightb ? threepoint(new double[3]{RightTopV,LeftBottomV,RightBottomV},new double[2]{x,y},new double[3]{C1[idx],C1[idx-N1],C1[idx-N1]},new double[3]{RightTop,LeftBottom,RightBottom}) :
-                   threepoint(new double[3]{LeftTopV,LeftBottomV,RightBottomV},new double[2]{x,y},new double[3]{C1[idx],C1[idx-N1],C1[idx-N1]},new double[3]{LeftTop,LeftBottom,RightBottom});
-            }
-            else if((rightb-leftb)/(dC1m[idx])*(x-C1[idx-1])+(LeftBottom)<=y)
-            {
-               return leftb>rightb ? threepoint(new double[3]{LeftTopV,LeftBottomV,RightBottomV},new double[2]{x,y},new double[3]{C1[idx-1],C1[idx-1],C1[idx]},new double[3]{LeftTop,LeftBottom,RightBottom}) :
-                   threepoint(new double[3] {RightTopV,LeftBottomV,RightBottomV},new double[2]{x,y},new double[3]{C1[idx],C1[idx-1],C2[idx]},new double[3]{RightTop,LeftBottom,RightBottom});
-            }
+            return threepoint(new double[3]{bmv,mmv,mlv},new double[2]{x,y},new double[3]{xb,xb,C1[idx-1]},new double[3]{yb,yb,C2[idx-N1]});
+         }
+         else if((C2[idx]-yb)/(xb-C1[idx-1]*(x-C1[idx-1])+C2[idx-N1]<y))
+         {
+            return threepoint(new double[3]{data[idx-N1-1],bmv,mlv},new double[2]{x,y},new double[3]{C1[idx-1],xb,C1[idx-1]},new double[3]{C2[idx],C2[idx],yb});
+         }
+      }
+      //bottom right case o
+      if(dC1p[idx-1]==dC1m[idx]&&
+            dC1p[idx-N1-1]!=dC1m[idx-N1]&&
+            dC2p[idx-N1-1]==dC2m[idx-1]&&
+            dC2p[idx-N1]!=dC2m[idx])
+      {
+         double xb=dC1m[idx-N1]<dC1p[idx-N1-1] ? C1[idx-N1]-dC1m[idx-N1] : C1[idx-N1-1]+dC1p[idx-N1-1];
+         double yb=dC2m[idx]<dC2p[idx-N1] ? C2[idx]-dC2m[idx] : C2[idx-N1]+dC2p[idx-N1];
+         double tmv=(C1[idx]-xb)/(C1[idx]-C1[idx-1])*data[idx-1]+(xb-C1[idx-1])/(C1[idx]-C1[idx-1])*data[idx];
+         double bmv=fIsFixed[idx-N1]?data[idx-N1]:data[idx-N1-1];
+         double mrv=fIsFixed[idx-N1]?data[idx-N1]:data[idx];
+         double mmv=(C2[idx]-yb)/(C2[idx]-C2[idx-N1])*bmv+(yb-C2[idx-N1])/(C2[idx]-C2[idx-N1])*tmv;
+         if(x<xb)
+         {
+            return fourpoint(new double[4]{data[idx-1],tmv,data[idx-N1-1],bmv},new double[2]{x,y},new double[4]{C1[idx-1],xb,C1[idx-N1-1],xb},new double[4]{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
+         }
+         else if(y>yb)
+         {
+            return fourpoint(new double[4]{tmv,data[idx],mmv,mrv},new double[2]{x,y},new double[4]{xb,C1[idx],xb,C1[idx]},new double[4]{C2[idx],C2[idx],yb,yb});
+         }
+         else if((yb-C2[idx-N1])/(C1[idx]-xb*(x-xb)+C2[idx-N1]>y))
+         {
+            return threepoint(new double[3]{bmv,mmv,mrv},new double[2]{x,y},new double[3]{xb,xb,C1[idx]},new double[3]{C2[idx-N1],yb,yb});
+         }
+         else if((yb-C2[idx-N1])/(C1[idx]-xb*(x-xb)+C2[idx-N1]<=y))
+         {
+            return threepoint(new double[3]{bmv,data[idx-N1],mrv},new double[2]{x,y},new double[4]{xb,C1[idx],C1[idx-1]},new double[4]{C2[idx-N1],C2[idx-N1],yb});
+         }
+      }
+      //cross top down o
+      if(dC1p[idx-1]!=dC1m[idx]&&
+            dC1p[idx-N1-1]!=dC1m[idx-N1]&&
+            dC2p[idx-N1-1]==dC2m[idx-1]&&
+            dC2p[idx-N1]==dC2m[idx])
+      {
+         double topb=dC1m[idx]<dC1p[idx-1] ? C1[idx]-dC1m[idx] : C1[idx-1]+dC1p[idx-1];
+         double bottomb=dC1m[idx-N1]<dC1p[idx-N1-1] ? C1[idx-N1]-dC1m[idx-N1] : C1[idx-N1-1]+dC1p[idx-N1-1];
+         double bmv=fIsFixed[idx-N1]?data[idx-N1]:data[idx-N1-1];
+         double tmv=fIsFixed[idx]?data[idx]:data[idx-1];
+         double TopValueWithBottomCorssPoint=topb>bottomb ? (topb-bottomb)/(topb-C1[idx-1])*data[idx-1]+(bottomb-C1[idx-1])/(topb-C1[idx-1])*tmv : 
+            (bottomb-topb)/(C1[idx]-topb)*data[idx]+(C1[idx]-bottomb)/(C1[idx-1]-topb)*tmv ;
+         double BottomValueWithTopCorssPoint=topb>bottomb ? (topb-bottomb)/(C1[idx]-bottomb)*bmv+(C1[idx]-topb)/(C1[idx-1]-bottomb)*data[idx-N1] : 
+            (topb-C1[idx-N1-1])/(bottomb-C1[idx])*bmv+(bottomb-topb)/(bottomb-C1[idx-1-N1])*data[idx-N1-1] ;
+         double TopLeft,TopRight,BottomLeft,BottomRight;
+         double TopLeftV,TopRightV,BottomLeftV,BottomRightV;
+         if(topb>bottomb)
+         {
+            TopLeft=bottomb;
+            TopLeftV=TopValueWithBottomCorssPoint;
+            TopRight=topb;
+            TopRightV=tmv;
+            BottomLeft=bottomb;
+            BottomLeftV=bmv;
+            BottomRight=topb;
+            BottomRightV=BottomValueWithTopCorssPoint;
+         }
+         else
+         {
+            TopRight=bottomb;
+            TopRightV=TopValueWithBottomCorssPoint;
+            TopLeft=topb;
+            TopLeftV=tmv;
+            BottomRight=bottomb;
+            BottomRightV=bmv;
+            BottomLeft=topb;
+            BottomLeftV=BottomValueWithTopCorssPoint;
+         }
+         if(x>TopRight)
+         {
+            return fourpoint(new double[4]{TopRightV,data[idx],BottomRightV,data[idx-N1]},new double[2]{x,y},new double[4]{TopRight,C1[idx],BottomRight,C1[idx-N1]},new double[4]{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
+         }
+         else if(x<TopLeft)
+         {
+            return fourpoint(new double[4]{data[idx-1],TopLeftV,data[idx-N1-1],BottomLeftV},new double[2]{x,y},new double[4]{C1[idx-1],TopLeft,C1[idx-1],BottomLeft},new double[4]{C2[idx-1],C2[idx-1],C2[idx-N1],C2[idx-N1]});
+         }
+         else if((dC2m[idx])/((topb-bottomb)*(x-(TopRight-TopLeft)/2)+C2[idx-N1]>y-dC2m[idx]/2))
+         {
+            return topb>bottomb ? threepoint(new double[3]{TopRightV,BottomLeftV,BottomRightV},new double[2]{x,y},new double[3]{TopRight,BottomLeft,BottomRight},new double[3]{C2[idx],C2[idx-N1],C2[idx-N1]}) :
+               threepoint(new double[3]{TopLeft,BottomLeftV,BottomRightV},new double[2]{x,y},new double[3]{TopLeft,BottomLeft,BottomRight},new double[3]{C2[idx],C2[idx-N1],C2[idx-N1]});
+         }
+         else if((dC2m[idx])/((topb-bottomb)*(x-(TopRight-TopLeft)/2)+C2[idx-N1]<=y-dC2m[idx]/2))
+         {
+            return topb<bottomb ? threepoint(new double[3]{TopRightV,TopLeftV,BottomRightV},new double[2]{x,y},new double[3]{TopRight,TopLeft,BottomRight},new double[3]{C2[idx],C2[idx],C2[idx-N1]}) :
+               threepoint(new double[3]{TopLeft,TopLeftV,BottomLeftV},new double[2]{x,y},new double[3]{TopLeft,BottomLeft,BottomLeft},new double[3]{C2[idx],C2[idx],C2[idx-N1]});
+         }
+      }
+      //cross left right 
+      if(dC1p[idx-1]==dC1m[idx]&&
+            dC1p[idx-N1-1]==dC1m[idx-N1]&&
+            dC2p[idx-N1-1]!=dC2m[idx-1]&&
+            dC2p[idx-N1]!=dC2m[idx])
+      {
+         double leftb=dC2m[idx-1]<dC2p[idx-N1-1] ? C2[idx-1]-dC2m[idx-1] : C2[idx-N1-1]+dC2p[idx-N1-1];
+         double rightb=dC2m[idx]<dC2p[idx-N1] ? C2[idx]-dC2m[idx] : C2[idx-N1]+dC2p[idx-N1];
+         double lmv=fIsFixed[idx-1]?data[idx-1]:data[idx-N1-1];
+         double rmv=fIsFixed[idx]?data[idx]:data[idx-N1];
+         double LeftValueWithRightCorssPoint=leftb>rightb ? (leftb-rightb)/(leftb-C2[idx-N1-1])*data[idx-N1-1]+(rightb-C2[idx-N1-1])/(leftb-C2[idx-N1-1])*lmv : 
+            (rightb-leftb)/(C2[idx-1]-leftb)*data[idx-1]+(C2[idx-1]-rightb)/(C2[idx-1]-leftb)*lmv ;
+         double RightValueWithLeftCorssPoint=leftb>rightb ? (rightb-leftb)/(C2[idx]-rightb)*data[idx]+(C2[idx]-leftb)/(C2[idx]-rightb)*rmv : 
+            (leftb-C1[idx-N1])/(rightb-C2[idx-N1])*rmv+(rightb-leftb)/(rightb-C2[idx-N1])*data[idx-N1] ;
+         double LeftTop,RightTop,LeftBottom,RightBottom;
+         double LeftTopV,RightTopV,LeftBottomV,RightBottomV;
+         if(leftb>rightb)
+         {
+            LeftTop=leftb;
+            LeftTopV=lmv;
+            RightTop=leftb;
+            RightTopV=RightValueWithLeftCorssPoint;
+            LeftBottom=rightb;
+            LeftBottomV=LeftValueWithRightCorssPoint;
+            RightBottom=rightb;
+            RightBottomV=rmv;
+         }
+         else
+         {
+            RightTop=rightb;
+            RightTopV=rmv;
+            LeftTop=rightb;
+            LeftTopV=LeftValueWithRightCorssPoint;
+            RightBottom=leftb;
+            RightBottomV=RightValueWithLeftCorssPoint;
+            LeftBottom=rightb;
+            LeftBottomV=lmv;
+         }
+         if(y>RightTop)
+         {
+            return fourpoint(new double[4]{data[idx-1],data[idx],LeftTopV,RightTopV},new double[2]{x,y},new double[4]{C1[idx-1],C1[idx],C1[idx-1],C1[idx]},new double[4]{C2[idx],C2[idx],LeftTop,RightTop});
+         }
+         else if(y<LeftBottom)
+         {
+            return fourpoint(new double[4]{LeftBottomV,RightBottomV,data[idx-N1-1],data[idx-N1]},new double[2]{x,y},new double[4]{C1[idx-1],C1[idx],C1[idx-N1-1],C1[idx-N1]},new double[4]{LeftBottom,RightBottom,C2[idx-N1-1],C2[idx-N1]});
+         }
+         else if((rightb-leftb)/(dC1m[idx])*(x-C1[idx-1])+(LeftBottom)>y)
+         {
+            return leftb>rightb ? threepoint(new double[3]{RightTopV,LeftBottomV,RightBottomV},new double[2]{x,y},new double[3]{C1[idx],C1[idx-N1],C1[idx-N1]},new double[3]{RightTop,LeftBottom,RightBottom}) :
+               threepoint(new double[3]{LeftTopV,LeftBottomV,RightBottomV},new double[2]{x,y},new double[3]{C1[idx],C1[idx-N1],C1[idx-N1]},new double[3]{LeftTop,LeftBottom,RightBottom});
+         }
+         else if((rightb-leftb)/(dC1m[idx])*(x-C1[idx-1])+(LeftBottom)<=y)
+         {
+            return leftb>rightb ? threepoint(new double[3]{LeftTopV,LeftBottomV,RightBottomV},new double[2]{x,y},new double[3]{C1[idx-1],C1[idx-1],C1[idx]},new double[3]{LeftTop,LeftBottom,RightBottom}) :
+               threepoint(new double[3] {RightTopV,LeftBottomV,RightBottomV},new double[2]{x,y},new double[3]{C1[idx],C1[idx-1],C2[idx]},new double[3]{RightTop,LeftBottom,RightBottom});
          }
       }
    } // 2D
-   if (x!=0) {
-
-
-      //     |<---dC1m[idx]--->|
-      //     +---r1---+---r2---+
-      // C1[idx-1]    x      C1[idx]
-      size_t idx=GetIdxOfPointToTheRightOf(x);
-      double r2=(C1[idx]-x)/dC1m[idx];
-      double r1=1-r2;
-      double xval=data[idx]*r1+data[idx-1]*r2;
-      Info("GetData","data(x=%.4f)=%.2f, "
-            "C1[%zu]=%.4f, C1[%zu]=%.4f, r1=%.2f, r2=%0.2f",
-            x,xval,idx-1,C1[idx-1],idx,C1[idx],r1,r2);
-      if (gDebug>0) Info("GetData","data(x=%.4f)=%.2f, "
-            "C1[%zu]=%.4f, C1[%zu]=%.4f, r1=%.2f, r2=%0.2f",
-            x,xval,idx-1,C1[idx-1],idx,C1[idx],r1,r2);
-      return xval;
-   }//1D
-   return 0;
-
+   // 1D
+   //     |<---dC1m[idx]--->|
+   //     +---r1---+---r2---+
+   // C1[idx-1]    x      C1[idx]
+   size_t idx=GetIdxOfPointToTheRightOf(x);
+   double r2=(C1[idx]-x)/dC1m[idx];
+   double r1=1-r2;
+   double xval=data[idx]*r1+data[idx-1]*r2;
+   if (gDebug>0) Info("GetData","data(x=%.4f)=%.2f, "
+         "C1[%zu]=%.4f, C1[%zu]=%.4f, r1=%.2f, r2=%0.2f",
+         x,xval,idx-1,C1[idx-1],idx,C1[idx],r1,r2);
+   return xval;
 }
 //______________________________________________________________________________
 void Grid::CalculateE()
