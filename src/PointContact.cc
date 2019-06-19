@@ -18,11 +18,11 @@ void PointContact::CheckConfigurations()
       Error("CheckConfigurations", "Radius==%.1f!", Radius);
       abort();
    }
-   if (PointContactR<=0) {
+   if (PointContactR<0) {
       Error("CheckConfigurations", "PointContactR==%.1f!", PointContactR);
       abort();
    }
-   if (PointContactH<=0) {
+   if (PointContactH<0) {
       Error("CheckConfigurations", "PointContactH==%.1f!", PointContactH);
       abort();
    }
@@ -42,19 +42,19 @@ void PointContact::CheckConfigurations()
       Error("CheckConfigurations", "BoreTaperH==%.1f!", BoreTaperH);
       abort();
    }
-   if (TaperW<=0) {
+   if (TaperW<0) {
       Error("CheckConfigurations", "TaperW==%.1f!", TaperW);
       abort();
    }
-   if (TaperH<=0) {
+   if (TaperH<0) {
       Error("CheckConfigurations", "TaperH==%.1f!", TaperH);
       abort();
    }
-   if (CornerW<=0) {
+   if (CornerW<0) {
       Error("CheckConfigurations", "CornerW==%.1f!", CornerW);
       abort();
    }
-   if (CornerH<=0) {
+   if (CornerH<0) {
       Error("CheckConfigurations", "CornerH==%.1f!", CornerH);
       abort();
    }

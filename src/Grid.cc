@@ -165,7 +165,7 @@ void Grid::SolveAnalytically()
 //
 size_t Grid::GetIdxOfPointToTheRightOf(double c1,size_t begin,size_t end) const
 {
-   if (end==0) end=N1-1;
+   //if (end==0) end=N1-1;
    if (begin>=end)return end;
    size_t mid=(begin+end)/2;
    if(C1[mid]>=c1)return GetIdxOfPointToTheRightOf(c1,begin,mid);
@@ -176,7 +176,7 @@ size_t Grid::GetIdxOfPointToTheRightOf(double c1,size_t begin,size_t end) const
 size_t Grid::GetIdxOfPointToTheRightOf(double c1,double c2,
       size_t begin,size_t end) const
 {
-   if (end==0) end=N2-1;
+   //if (end==0) end=N2-1;
    //search using binary search
    // if(begin>=end)cout<<"to x"<<begin<<" "<<end<<endl;;
    if(begin>=end)return GetIdxOfPointToTheRightOf(c1,end*N1,(end+1)*N1-1);
@@ -189,7 +189,7 @@ size_t Grid::GetIdxOfPointToTheRightOf(double c1,double c2,
 size_t Grid::GetIdxOfPointToTheRightOf(double c1, double c2,double c3,
       size_t begin,size_t end) const
 {
-   if (end==0) end=N3-1;
+   //if (end==0) end=N3-1;
    //search using binary search
    if(begin>=end)return GetIdxOfPointToTheRightOf(c1,c2,begin,begin+N1*N2-1);
    size_t mid=((begin/(N1*N2)+end/(N1*N2))/2)*N1*N2;
@@ -279,8 +279,8 @@ double Grid::GetData(const std::vector<double> &data,
       // |     v      |
       // +-----+------+
       //       bmv
-      size_t idx=GetIdxOfPointToTheRightOf(x,y); // always exists
-      Info("GetData", "idx: %zu", idx);
+      size_t idx=GetIdxOfPointToTheRightOf(x,y,0,N2-1); // always exists
+      //Info("GetData", "idx: %zu", idx);
 
       bool tl=false; // existence of top left grid point
       bool br=false; // existence of bottom right grid point
@@ -290,19 +290,19 @@ double Grid::GetData(const std::vector<double> &data,
       if (tl&&bl) bl=true; // neither left nor bottom boundary
 
       if(!tl&&!br&&!bl) { // bottom left corner
-         Printf("bottom left corner\n");
+        // Printf("bottom left corner\n");
          return data[idx];
       } else if(tl&&!br&&!bl) { // bottom boundary
-         Printf("bottom boundary\n");
+         //Printf("bottom boundary\n");
          return twopoint(new double[2] {data[idx-1],data[idx]},
                new double[2]{x,y},new double[2] {C1[idx-1],C1[idx]});
       } else if(!tl&&!bl&&br) { // left boundary
-         Printf("left boundary\n");
+         //Printf("left boundary\n");
          return twopoint(new double[2]{data[idx-N1],data[idx]},
                new double[2]{x,y},new double[2]{C2[idx-N1],C2[idx]});
       }
       // no boundary case
-      Printf("bulk\n");
+      //Printf("bulk\n");
       if(dC1p[idx-1]==dC1m[idx]&&dC1p[idx-N1-1]==dC1m[idx-N1]&&
             dC2p[idx-N1-1]==dC2m[idx-1]&&dC2p[idx-N1]==dC2m[idx]) {
          return fourpoint(new double[4]{data[idx-1],data[idx],data[idx-N1-1],data[idx-N1]},new double[2]{x,y},new double[4]{C1[idx-1],C1[idx],C1[idx-N1-1],C1[idx-N1]},new double[4]{C2[idx-1],C2[idx],C2[idx-N1-1],C2[idx-N1]});
@@ -543,7 +543,7 @@ double Grid::GetData(const std::vector<double> &data,
    //     |<---dC1m[idx]--->|
    //     +---r1---+---r2---+
    // C1[idx-1]    x      C1[idx]
-   size_t idx=GetIdxOfPointToTheRightOf(x);
+   size_t idx=GetIdxOfPointToTheRightOf(x,0,N1);
    double r2=(C1[idx]-x)/dC1m[idx];
    double r1=1-r2;
    double xval=data[idx]*r1+data[idx-1]*r2;

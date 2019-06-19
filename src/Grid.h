@@ -141,11 +141,11 @@ class GeFiCa::Grid : public Points
        * Get index of point near \param c1 in between \param begin & \param end.
        */
       size_t GetIdxOfPointToTheRightOf(double c1,
-            size_t begin=0, size_t end=0) const;
+            size_t begin, size_t end) const;
       size_t GetIdxOfPointToTheRightOf(double c1, double c2,
-            size_t begin=0, size_t end=0) const;
+            size_t begin, size_t end) const;
       size_t GetIdxOfPointToTheRightOf(double c1, double c2, double c3,
-            size_t begin=0, size_t end=0) const;
+            size_t begin, size_t end) const;
       /**
        * Interpolate grid data at (c1,c2,c3).
        */

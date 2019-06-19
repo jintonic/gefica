@@ -29,8 +29,8 @@ void drawresult(const char *fieldgen)
    //tg->Draw("z:r:e2","","colz");
 
    //// draw difference
-   //TCanvas *c3 = new TCanvas;
-   //tg->Draw("z:r:d","","colz");
+   TCanvas *c3 = new TCanvas;
+   tg->Draw("z:r:d","","colz");
    //TCanvas *c7 = new TCanvas;
    //tg->Draw("z:r:de1","","colz");
    //TCanvas *c8 = new TCanvas;
