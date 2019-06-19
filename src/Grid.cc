@@ -295,11 +295,11 @@ double Grid::GetData(const std::vector<double> &data,
       } else if(tl&&!br&&!bl) { // bottom boundary
          //Printf("bottom boundary\n");
          return twopoint(new double[2] {data[idx-1],data[idx]},
-               new double[2]{x,y},new double[2] {C1[idx-1],C1[idx]});
+               x,new double[2] {C1[idx-1],C1[idx]});
       } else if(!tl&&!bl&&br) { // left boundary
          //Printf("left boundary\n");
          return twopoint(new double[2]{data[idx-N1],data[idx]},
-               new double[2]{x,y},new double[2]{C2[idx-N1],C2[idx]});
+               y,new double[2]{C2[idx-N1],C2[idx]});
       }
       // no boundary case
       //Printf("bulk\n");
@@ -543,7 +543,7 @@ double Grid::GetData(const std::vector<double> &data,
    //     |<---dC1m[idx]--->|
    //     +---r1---+---r2---+
    // C1[idx-1]    x      C1[idx]
-   size_t idx=GetIdxOfPointToTheRightOf(x,0,N1);
+   size_t idx=GetIdxOfPointToTheRightOf(x,0,N1-1);
    double r2=(C1[idx]-x)/dC1m[idx];
    double r1=1-r2;
    double xval=data[idx]*r1+data[idx-1]*r2;
@@ -553,6 +553,7 @@ double Grid::GetData(const std::vector<double> &data,
    return xval;
 }
 //______________________________________________________________________________
+//
 void Grid::CalculateE()
 {
    for (size_t i=0; i<GetN(); i++) { // deal with E1 only
@@ -561,14 +562,18 @@ void Grid::CalculateE()
    E1[0]=(Vp[1]-Vp[0])/dC1p[0]; Et[0]=E1[0];
    E1[N1-1]=(Vp[N1-1]-Vp[N1-2])/dC1m[N1-1]; Et[N1-1]=E1[N1-1];
 }
-double Grid::twopoint(double dataset[2],double tarlocationset[2],double pointxset[2])const
+//______________________________________________________________________________
+//
+double Grid::twopoint(double dataset[2],double tarlocationset,
+      double pointxset[2])const
 {
-   double ab=abs(pointxset[0]-tarlocationset[0])/abs(pointxset[1]-pointxset[0]);
-   double aa=1-ab;
-   return dataset[0]*aa/(aa+ab) + dataset[1]*ab/(aa+ab);
+   double ab=(tarlocationset-pointxset[0])/(pointxset[1]-pointxset[0]);
+   return dataset[0]*(1-ab) + dataset[1]*ab;
 }
-
-double Grid::threepoint(double dataset[3],double tarlocationset[2],double pointxset[3],double pointyset[3])const
+//______________________________________________________________________________
+//
+double Grid::threepoint(double dataset[3],double tarlocationset[2],
+      double pointxset[3],double pointyset[3])const
 {
    double x=tarlocationset[0];
    double x1=pointxset[0];
@@ -586,15 +591,16 @@ double Grid::threepoint(double dataset[3],double tarlocationset[2],double pointx
 
    return dataset[0]*(1-u-v)+dataset[1]*u+dataset[2]*v;
 }
+//______________________________________________________________________________
+//
+double Grid::fourpoint(double dataset[4],double tarlocationset[2],
+      double pointxset[4],double pointyset[4])const
+{
 //0---------1
 //|         |
 //|         |
 //|         |
-//|         |
-//|         |
 //2---------3
-double Grid::fourpoint(double dataset[4],double tarlocationset[2],double pointxset[4],double pointyset[4])const
-{
    double ab=(pointxset[1]-tarlocationset[0])/(pointxset[1]-pointxset[0]);
    double aa=1-ab;
    double ba=(tarlocationset[1]-pointyset[1])/(pointyset[3]-pointyset[1]);
