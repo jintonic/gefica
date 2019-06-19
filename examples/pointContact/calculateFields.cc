@@ -9,7 +9,7 @@ void calculateFields(const char *output="ppc.root")
    detector.Radius=3.45*cm; detector.Height=5.05*cm;
 
    detector.PointContactR=1.40*mm; detector.PointContactH=2.10*mm;
-   detector.WrapAroundR=1.50*mm;
+   //detector.WrapAroundR=1.50*mm;
    detector.TaperW=0.*cm; detector.TaperH=0.*cm;
    detector.CornerW=0.*cm; detector.CornerH=0.*cm;
 
