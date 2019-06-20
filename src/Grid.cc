@@ -614,10 +614,10 @@ double Grid::fourpoint(double dataset[4],double tarlocationset[2],
 //2---------3
    double ab=(pointxset[1]-tarlocationset[0])/(pointxset[1]-pointxset[0]);
    double aa=1-ab;
-   double ba=(tarlocationset[1]-pointyset[1])/(pointyset[3]-pointyset[1]);
+   double ba=(tarlocationset[1]-pointyset[3])/(pointyset[1]-pointyset[3]);
    double bb=1-ba;
 
-   double result=(dataset[1]*ab+dataset[0]*aa)*bb+(dataset[2]*ab+dataset[3]*aa)*ba;
+   double result=(dataset[1]*ab+dataset[0]*aa)*ba+(dataset[2]*ab+dataset[3]*aa)*bb;
    delete [] dataset;
    delete [] tarlocationset;
    delete [] pointxset;
