@@ -59,8 +59,8 @@ void compare2fieldgen(const char *gefica="ppc.root",
       sizeofr=x;
       sizeofz=y;
       anotherV=field->GetV(x*mm,y*mm);
-      E1=field->GetE1(x*mm,y*mm);
-      E2=field->GetE2(x*mm,y*mm);
+      E1=field->GetV(x*mm,y*mm);
+      E2=field->GetV(x*mm,y*mm);
       E=sqrt(E1*E1+E2*E2);
       outfile<<x<<"  "<<y<<"  "<<anotherV<<"  "<<v-anotherV<<"  "<<E1<<"  "<<E2<<"  "<<E<<"  "<<er-E1<<"  "<<ez-E2<<"  "<<e-E<<endl;
    }
