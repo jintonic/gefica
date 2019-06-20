@@ -424,7 +424,7 @@ double Grid::GetData(const std::vector<double> &data,
             return threepoint(new double[3]{bmv,data[idx-N1],mrv},new double[2]{x,y},new double[4]{xb,C1[idx],C1[idx-1]},new double[4]{C2[idx-N1],C2[idx-N1],yb});
          }
       }
-      //cross top down o
+      //cross top down case o
       if(dC1p[idx-1]!=dC1m[idx]&&
             dC1p[idx-N1-1]!=dC1m[idx-N1]&&
             dC2p[idx-N1-1]==dC2m[idx-1]&&
@@ -481,61 +481,70 @@ double Grid::GetData(const std::vector<double> &data,
                threepoint(new double[3]{TopLeft,TopLeftV,BottomLeftV},new double[2]{x,y},new double[3]{TopLeft,BottomLeft,BottomLeft},new double[3]{C2[idx],C2[idx],C2[idx-N1]});
          }
       }
-      //cross left right 
+      // cross left right case:
+      //         +----+ ... C2[idx]
+      //         |    |
+      //     tlv + trv+ ... t2
+      //         |\   |
+      //         | \  |
+      //         |  \ |
+      //         |   \|
+      //     blv + brv+ ... b2
+      //         |    |
+      //         |    |
+      //         +----+ ... C2[idx-N1]
+      //         .    .
+      //         .    .
+      // C1[idx-1]    C1[idx]
       if(dC1p[idx-1]==dC1m[idx]&&
             dC1p[idx-N1-1]==dC1m[idx-N1]&&
             dC2p[idx-N1-1]!=dC2m[idx-1]&&
             dC2p[idx-N1]!=dC2m[idx])
       {
-         double leftb=dC2m[idx-1]<dC2p[idx-N1-1] ? C2[idx-1]-dC2m[idx-1] : C2[idx-N1-1]+dC2p[idx-N1-1];
-         double rightb=dC2m[idx]<dC2p[idx-N1] ? C2[idx]-dC2m[idx] : C2[idx-N1]+dC2p[idx-N1];
-         double lmv=fIsFixed[idx-1]?data[idx-1]:data[idx-N1-1];
-         double rmv=fIsFixed[idx]?data[idx]:data[idx-N1];
-         double LeftValueWithRightCorssPoint=leftb>rightb ? (leftb-rightb)/(leftb-C2[idx-N1-1])*data[idx-N1-1]+(rightb-C2[idx-N1-1])/(leftb-C2[idx-N1-1])*lmv : 
-            (rightb-leftb)/(C2[idx-1]-leftb)*data[idx-1]+(C2[idx-1]-rightb)/(C2[idx-1]-leftb)*lmv ;
-         double RightValueWithLeftCorssPoint=leftb>rightb ? (rightb-leftb)/(C2[idx]-rightb)*data[idx]+(C2[idx]-leftb)/(C2[idx]-rightb)*rmv : 
-            (leftb-C1[idx-N1])/(rightb-C2[idx-N1])*rmv+(rightb-leftb)/(rightb-C2[idx-N1])*data[idx-N1] ;
-         double LeftTop,RightTop,LeftBottom,RightBottom;
-         double LeftTopV,RightTopV,LeftBottomV,RightBottomV;
-         if(leftb>rightb)
-         {
-            LeftTop=leftb;
-            LeftTopV=lmv;
-            RightTop=leftb;
-            RightTopV=RightValueWithLeftCorssPoint;
-            LeftBottom=rightb;
-            LeftBottomV=LeftValueWithRightCorssPoint;
-            RightBottom=rightb;
-            RightBottomV=rmv;
+         double leftb=dC2m[idx-1]<dC2p[idx-N1-1] ? C2[idx-1]-dC2m[idx-1] : C2[idx-N1-1]+dC2p[idx-N1-1]; // y of left intersection
+         double rightb=dC2m[idx]<dC2p[idx-N1] ? C2[idx]-dC2m[idx] : C2[idx-N1]+dC2p[idx-N1]; // y of right intersection
+         double lmv=fIsFixed[idx-1]?data[idx-1]:data[idx-N1-1]; // voltage of leftb
+         double rmv=fIsFixed[idx]?data[idx]:data[idx-N1]; // voltage of rightb
+         double LeftValueWithRightCorssPoint=leftb>rightb ?
+            (leftb-rightb)/(leftb-C2[idx-N1-1])*data[idx-N1-1]+(rightb-C2[idx-N1-1])/(leftb-C2[idx-N1-1])*lmv : 
+            (rightb-leftb)/(C2[idx-1]-leftb)*data[idx-1]+(C2[idx-1]-rightb)/(C2[idx-1]-leftb)*lmv;
+         Printf("leftb: %f, rightb: %f, rmv: %f, data[%zu-%zu]: %f", leftb, rightb, rmv, idx, N1, data[idx-N1]);
+         double RightValueWithLeftCorssPoint=leftb>rightb ?
+            (rightb-leftb)/(C2[idx]-rightb)*data[idx]+(C2[idx]-leftb)/(C2[idx]-rightb)*rmv : 
+            (leftb-C2[idx-N1])/(rightb-C2[idx-N1])*rmv+(rightb-leftb)/(rightb-C2[idx-N1])*data[idx-N1];
+         double t2,b2,tlv,trv,blv,brv;
+
+         if(leftb>rightb) {
+            t2=leftb;
+            tlv=lmv;
+            trv=RightValueWithLeftCorssPoint;
+            b2=rightb;
+            blv=LeftValueWithRightCorssPoint;
+            brv=rmv;
+         } else {
+            trv=rmv;
+            t2=rightb;
+            tlv=LeftValueWithRightCorssPoint;
+            brv=RightValueWithLeftCorssPoint;
+            b2=rightb;
+            blv=lmv;
          }
-         else
-         {
-            RightTop=rightb;
-            RightTopV=rmv;
-            LeftTop=rightb;
-            LeftTopV=LeftValueWithRightCorssPoint;
-            RightBottom=leftb;
-            RightBottomV=RightValueWithLeftCorssPoint;
-            LeftBottom=rightb;
-            LeftBottomV=lmv;
-         }
-         if(y>RightTop)
-         {
-            return fourpoint(new double[4]{data[idx-1],data[idx],LeftTopV,RightTopV},new double[2]{x,y},new double[4]{C1[idx-1],C1[idx],C1[idx-1],C1[idx]},new double[4]{C2[idx],C2[idx],LeftTop,RightTop});
-         }
-         else if(y<LeftBottom)
-         {
-            return fourpoint(new double[4]{LeftBottomV,RightBottomV,data[idx-N1-1],data[idx-N1]},new double[2]{x,y},new double[4]{C1[idx-1],C1[idx],C1[idx-N1-1],C1[idx-N1]},new double[4]{LeftBottom,RightBottom,C2[idx-N1-1],C2[idx-N1]});
-         }
-         else if((rightb-leftb)/(dC1m[idx])*(x-C1[idx-1])+(LeftBottom)>y)
-         {
-            return leftb>rightb ? threepoint(new double[3]{RightTopV,LeftBottomV,RightBottomV},new double[2]{x,y},new double[3]{C1[idx],C1[idx-N1],C1[idx-N1]},new double[3]{RightTop,LeftBottom,RightBottom}) :
-               threepoint(new double[3]{LeftTopV,LeftBottomV,RightBottomV},new double[2]{x,y},new double[3]{C1[idx],C1[idx-N1],C1[idx-N1]},new double[3]{LeftTop,LeftBottom,RightBottom});
-         }
-         else if((rightb-leftb)/(dC1m[idx])*(x-C1[idx-1])+(LeftBottom)<=y)
-         {
-            return leftb>rightb ? threepoint(new double[3]{LeftTopV,LeftBottomV,RightBottomV},new double[2]{x,y},new double[3]{C1[idx-1],C1[idx-1],C1[idx]},new double[3]{LeftTop,LeftBottom,RightBottom}) :
-               threepoint(new double[3] {RightTopV,LeftBottomV,RightBottomV},new double[2]{x,y},new double[3]{C1[idx],C1[idx-1],C2[idx]},new double[3]{RightTop,LeftBottom,RightBottom});
+         Printf ("here? C2[%zu]=%f, t2: %f, b2: %f, tlv: %f, trv: %f, blv: %f, brv: %f", idx, C2[idx], t2,b2,tlv,trv,blv,brv);
+         // find out whether the boundary goes from top-right to bottom-left or
+         // from top-left to bottom-right and then do interpolation
+         if(y>=t2) {
+            Printf("here?");
+            return fourpoint(new double[4]{data[idx-1],data[idx],tlv,trv},
+                  new double[2]{x,y},new double[4]{C1[idx-1],C1[idx],C1[idx-1],C1[idx]},
+                  new double[4]{C2[idx],C2[idx],t2,t2});
+         } else if(y<b2) {
+            return fourpoint(new double[4]{blv,brv,data[idx-N1-1],data[idx-N1]},new double[2]{x,y},new double[4]{C1[idx-1],C1[idx],C1[idx-N1-1],C1[idx-N1]},new double[4]{b2,b2,C2[idx-N1-1],C2[idx-N1]});
+         } else if((rightb-leftb)/(dC1m[idx])*(x-C1[idx-1])+(b2)>y) {
+            return leftb>rightb ? threepoint(new double[3]{trv,blv,brv},new double[2]{x,y},new double[3]{C1[idx],C1[idx-N1],C1[idx-N1]},new double[3]{t2,b2,b2}) :
+               threepoint(new double[3]{tlv,blv,brv},new double[2]{x,y},new double[3]{C1[idx],C1[idx-N1],C1[idx-N1]},new double[3]{t2,b2,b2});
+         } else if((rightb-leftb)/(dC1m[idx])*(x-C1[idx-1])+(b2)<=y) {
+            return leftb>rightb ? threepoint(new double[3]{tlv,blv,brv},new double[2]{x,y},new double[3]{C1[idx-1],C1[idx-1],C1[idx]},new double[3]{t2,b2,b2}) :
+               threepoint(new double[3] {trv,blv,brv},new double[2]{x,y},new double[3]{C1[idx],C1[idx-1],C2[idx]},new double[3]{t2,b2,b2});
          }
       }
    } // 2D
@@ -568,7 +577,7 @@ double Grid::twopoint(double dataset[2],double tarlocationset,
       double pointxset[2])const
 {
    double ab=(tarlocationset-pointxset[0])/(pointxset[1]-pointxset[0]);
-   
+
    double result=dataset[0]*(1-ab) + dataset[1]*ab;
    delete [] dataset;
    delete [] pointxset;
@@ -607,11 +616,11 @@ double Grid::threepoint(double dataset[3],double tarlocationset[2],
 double Grid::fourpoint(double dataset[4],double tarlocationset[2],
       double pointxset[4],double pointyset[4])const
 {
-//0---------1
-//|         |
-//|         |
-//|         |
-//2---------3
+   //0---------1
+   //|         |
+   //|         |
+   //|         |
+   //2---------3
    double ab=(pointxset[1]-tarlocationset[0])/(pointxset[1]-pointxset[0]);
    double aa=1-ab;
    double ba=(tarlocationset[1]-pointyset[3])/(pointyset[1]-pointyset[3]);
