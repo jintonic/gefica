@@ -568,7 +568,11 @@ double Grid::twopoint(double dataset[2],double tarlocationset,
       double pointxset[2])const
 {
    double ab=(tarlocationset-pointxset[0])/(pointxset[1]-pointxset[0]);
-   return dataset[0]*(1-ab) + dataset[1]*ab;
+   
+   double result=dataset[0]*(1-ab) + dataset[1]*ab;
+   delete [] dataset;
+   delete [] pointxset;
+   return result;
 }
 //______________________________________________________________________________
 //
@@ -589,7 +593,14 @@ double Grid::threepoint(double dataset[3],double tarlocationset[2],
    double v=((y2-y1)*(x-x1)-(y-y1)*(x2-x1))/((x3-x1*(y2-y1)-(y3-y1)*(x2-x1)));
    double u=(y-y1-v*(y3-y1))/(y2-y1);
 
-   return dataset[0]*(1-u-v)+dataset[1]*u+dataset[2]*v;
+   double result=dataset[0]*(1-u-v)+dataset[1]*u+dataset[2]*v;
+
+   delete [] dataset;
+   delete [] tarlocationset;
+   delete [] pointxset;
+   delete [] pointyset;
+
+   return result;
 }
 //______________________________________________________________________________
 //
@@ -606,5 +617,11 @@ double Grid::fourpoint(double dataset[4],double tarlocationset[2],
    double ba=(tarlocationset[1]-pointyset[1])/(pointyset[3]-pointyset[1]);
    double bb=1-ba;
 
-   return (dataset[1]*ab+dataset[0]*aa)*bb+(dataset[2]*ab+dataset[3]*aa)*ba;
+   double result=(dataset[1]*ab+dataset[0]*aa)*bb+(dataset[2]*ab+dataset[3]*aa)*ba;
+   delete [] dataset;
+   delete [] tarlocationset;
+   delete [] pointxset;
+   delete [] pointyset;
+
+   return result;
 }
