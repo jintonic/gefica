@@ -600,7 +600,8 @@ double Grid::threepoint(double dataset[3],double tarlocationset[2],
    //x=(1-u-v)*x1+u*x2+v*x3
    //y=(1-u-v)*y1+u*y2+v*y3
    double v=((y2-y1)*(x-x1)-(y-y1)*(x2-x1))/((x3-x1*(y2-y1)-(y3-y1)*(x2-x1)));
-   double u=(y-y1-v*(y3-y1))/(y2-y1);
+   double u=((y3-y1)*(x-x1)-(y-y1)*(x3-x1))/((x2-x1*(y3-y1)-(y2-y1)*(x3-x1)));
+   //double u=(y-y1-v*(y3-y1))/(y2-y1);
 
    double result=dataset[0]*(1-u-v)+dataset[1]*u+dataset[2]*v;
 
