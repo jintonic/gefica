@@ -19,7 +19,7 @@ void calculateFields(const char *output="ppc.root")
 
    detector.BottomImpurity=0/cm3; detector.TopImpurity=0/cm3;
 
-   RhoZ grid;
+   RhoZ grid(500,500);
    grid.GetBoundaryConditionFrom(detector);
 //   grid.MaxIterations=2; ///< maximal iterations of SOR to be performed
    grid.RelaxationFactor=1.995;
