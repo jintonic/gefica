@@ -59,7 +59,7 @@ void compare2fieldgen(const char *gefica="ppc.root",
       sizeofz=y;
       
       anotherV=field->GetV(x*mm,y*mm);
-      if(v-anotherV>1000)Printf("%f,%f,%f",x,y,v-anotherV);
+      if(v-anotherV>1000)Printf("%f,%f,%f",x,y,anotherV);
       E1=field->GetV(x*mm,y*mm);
       E2=field->GetV(x*mm,y*mm);
       E=sqrt(E1*E1+E2*E2);

@@ -301,12 +301,12 @@ double Grid::GetData(const std::vector<double> &data,
          return twopoint(new double[2]{data[idx-N1],data[idx]},
                y,new double[2]{C2[idx-N1],C2[idx]});
       }
+      //if(x==0&&y==5.04)Printf("idx:%f,dC1:%f,dC2:%f data:%f,",(double)idx,dC1p[idx-1],dC2m[idx-1],data[idx] );
+      //Printf("idx:%f,C1:%f,C2:%f data:%f, ret:%f",(double)idx,C1[idx],C2[idx],data[idx],ret);
       // no boundary case
       //Printf("bulk\n");
       if(dC1p[idx-1]==dC1m[idx]&&dC1p[idx-N1-1]==dC1m[idx-N1]&&
             dC2p[idx-N1-1]==dC2m[idx-1]&&dC2p[idx-N1]==dC2m[idx]) {
-         double ret=fourpoint(new double[4]{data[idx-1],data[idx],data[idx-N1-1],data[idx-N1]},new double[2]{x,y},new double[4]{C1[idx-1],C1[idx],C1[idx-N1-1],C1[idx-N1]},new double[4]{C2[idx-1],C2[idx],C2[idx-N1-1],C2[idx-N1]});
-         if(TMath::Abs(x)<0.23&&TMath::Abs(y-0.17)<0.01)Printf("idx:%f,C1:%f,C2:%f data:%f, ret:%f",(double)idx,C1[idx],C2[idx],data[idx],ret);
          return fourpoint(new double[4]{data[idx-1],data[idx],data[idx-N1-1],data[idx-N1]},new double[2]{x,y},new double[4]{C1[idx-1],C1[idx],C1[idx-N1-1],C1[idx-N1]},new double[4]{C2[idx-1],C2[idx],C2[idx-N1-1],C2[idx-N1]});
       }
 
@@ -549,6 +549,7 @@ double Grid::GetData(const std::vector<double> &data,
                threepoint(new double[3] {trv,blv,brv},new double[2]{x,y},new double[3]{C1[idx],C1[idx-1],C2[idx]},new double[3]{t2,b2,b2});
          }
       }
+      return data[idx];
    } // 2D
    // 1D
    //     |<---dC1m[idx]--->|
