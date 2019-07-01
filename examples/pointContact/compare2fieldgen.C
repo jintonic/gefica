@@ -37,7 +37,7 @@ void drawresult(const char *fieldgen)
    //tg->Draw("z:r:de2","","colz");
    TCanvas *c9 = new TCanvas;
    //
-   tg->Draw("z:r:de","","colz");
+   tg->Draw("z:r:log(de)","","colz");
 }
 
 //______________________________________________________________________________
@@ -60,8 +60,8 @@ void compare2fieldgen(const char *gefica="ppc.root",
       
       anotherV=field->GetV(x*mm,y*mm);
       if(v-anotherV>1000)Printf("%f,%f,%f",x,y,anotherV);
-      E1=field->GetV(x*mm,y*mm);
-      E2=field->GetV(x*mm,y*mm);
+      E1=field->GetE1(x*mm,y*mm);
+      E2=field->GetE2(x*mm,y*mm);
       E=sqrt(E1*E1+E2*E2);
       outfile<<x<<"  "<<y<<"  "<<anotherV<<"  "<<v-anotherV<<"  "<<E1<<"  "<<E2<<"  "<<E<<"  "<<er-E1<<"  "<<ez-E2<<"  "<<e-E<<endl;
    }
