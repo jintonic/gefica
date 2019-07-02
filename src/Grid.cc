@@ -578,6 +578,7 @@ double Grid::twopoint(double dataset[2],double tarlocationset,
    double result=dataset[0]*(1-ab) + dataset[1]*ab;
    delete [] dataset;
    delete [] pointxset;
+   if (TMath::Abs(result)<1e-10) return 0;
    return result;
 }
 //______________________________________________________________________________
@@ -607,6 +608,7 @@ double Grid::threepoint(double dataset[3],double tarlocationset[2],
    delete [] pointxset;
    delete [] pointyset;
 
+   if (TMath::Abs(result)<1e-10) return 0;
    return result;
 }
 //______________________________________________________________________________
@@ -631,5 +633,6 @@ double Grid::fourpoint(double dataset[4],double tarlocationset[2],
    delete [] pointxset;
    delete [] pointyset;
 
+   if (TMath::Abs(result)<1e-10) return 0;
    return result;
 }
