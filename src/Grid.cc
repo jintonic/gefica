@@ -290,21 +290,15 @@ double Grid::GetData(const std::vector<double> &data,
       if (tl&&bl) bl=true; // neither left nor bottom boundary
 
       if(!tl&&!br&&!bl) { // bottom left corner
-        // Printf("bottom left corner\n");
          return data[idx];
       } else if(tl&&!br&&!bl) { // bottom boundary
-         //Printf("bottom boundary\n");
          return twopoint(new double[2] {data[idx-1],data[idx]},
                x,new double[2] {C1[idx-1],C1[idx]});
       } else if(!tl&&!bl&&br) { // left boundary
-         //Printf("left boundary\n");
          return twopoint(new double[2]{data[idx-N1],data[idx]},
                y,new double[2]{C2[idx-N1],C2[idx]});
       }
-      //if(x==0&&y==5.04)Printf("idx:%f,dC1:%f,dC2:%f data:%f,",(double)idx,dC1p[idx-1],dC2m[idx-1],data[idx] );
-      //Printf("idx:%f,C1:%f,C2:%f data:%f, ret:%f",(double)idx,C1[idx],C2[idx],data[idx],ret);
       // no boundary case
-      //Printf("bulk\n");
       if(dC1p[idx-1]==dC1m[idx]&&dC1p[idx-N1-1]==dC1m[idx-N1]&&
             dC2p[idx-N1-1]==dC2m[idx-1]&&dC2p[idx-N1]==dC2m[idx]) {
          return fourpoint(new double[4]{data[idx-1],data[idx],data[idx-N1-1],data[idx-N1]},new double[2]{x,y},new double[4]{C1[idx-1],C1[idx],C1[idx-N1-1],C1[idx-N1]},new double[4]{C2[idx-1],C2[idx],C2[idx-N1-1],C2[idx-N1]});
