@@ -227,20 +227,20 @@ void RhoZ::ReallocateGridPointsNearBoundaries(PointContact &pc)
 {
    double slope, intercept;
    for (size_t i=0; i<GetN(); i++) {
-      if (C2[i]-pc.PointContactH<dC2m[i] && C2[i]>pc.PointContactH+1e-4*mm
+      if (C2[i]-pc.PointContactH<dC2m[i] && C2[i]>pc.PointContactH
             && C1[i]<(pc.PointContactR+1e-4*mm) && C1[i]>-(pc.PointContactR+1e-4*mm)) {
          dC2m[i]=C2[i]-pc.PointContactH; // top of point contact
          // since C2[i] is too close to boundary, we regard it as on the boundary
          // Fixme: same protection should be applied to other boundaries
          if (dC2m[i]<1e-4*mm) { Vp[i]=pc.Bias[0]; fIsFixed[i]=true; }
       }
-      if (C1[i]-pc.PointContactR<dC1m[i]&&C1[i]>(pc.PointContactR+1e-4*mm)
-            &&C2[i]<pc.PointContactH+1e-4*mm){
+      if (C1[i]-pc.PointContactR<dC1m[i]&&C1[i]>pc.PointContactR
+            &&C2[i]<pc.PointContactH+1e-4*mm) {
          dC1m[i]=C1[i]-pc.PointContactR; // right of point contact
          if (dC1m[i]<1e-4*mm) { Vp[i]=pc.Bias[0]; fIsFixed[i]=true; }
       }
-      if (-C1[i]-pc.PointContactR<dC1p[i]&&C1[i]<-(pc.PointContactR+1e-4*mm)
-            &&C2[i]<pc.PointContactH+1e-4*mm){
+      if (-C1[i]-pc.PointContactR<dC1p[i]&&C1[i]<-pc.PointContactR
+            &&C2[i]<pc.PointContactH+1e-4*mm) {
          dC1p[i]=-C1[i]-pc.PointContactR; // left of point contact
          if (dC1p[i]<1e-4*mm) { Vp[i]=pc.Bias[0]; fIsFixed[i]=true; }
       }
