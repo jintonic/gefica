@@ -432,11 +432,10 @@ double Grid::GetData(const std::vector<double> &data,
          double TopValueWithBottomCorssPoint=topb>bottomb ? (topb-bottomb)/(topb-C1[idx-1])*data[idx-1]+(bottomb-C1[idx-1])/(topb-C1[idx-1])*tmv : 
             (bottomb-topb)/(C1[idx]-topb)*data[idx]+(C1[idx]-bottomb)/(C1[idx-1]-topb)*tmv ;
          double BottomValueWithTopCorssPoint=topb>bottomb ? (topb-bottomb)/(C1[idx]-bottomb)*bmv+(C1[idx]-topb)/(C1[idx-1]-bottomb)*data[idx-N1] : 
-            (topb-C1[idx-N1-1])/(bottomb-C1[idx])*bmv+(bottomb-topb)/(bottomb-C1[idx-1-N1])*data[idx-N1-1] ;
+            (topb-C1[idx-N1-1])/(bottomb-C1[idx-N1-1])*bmv+(bottomb-topb)/(bottomb-C1[idx-1-N1])*data[idx-N1-1] ;
          double TopLeft,TopRight,BottomLeft,BottomRight;
          double TopLeftV,TopRightV,BottomLeftV,BottomRightV;
-         if(topb>bottomb)
-         {
+         if(topb>bottomb) {
             TopLeft=bottomb;
             TopLeftV=TopValueWithBottomCorssPoint;
             TopRight=topb;
@@ -445,9 +444,7 @@ double Grid::GetData(const std::vector<double> &data,
             BottomLeftV=bmv;
             BottomRight=topb;
             BottomRightV=BottomValueWithTopCorssPoint;
-         }
-         else
-         {
+         } else {
             TopRight=bottomb;
             TopRightV=TopValueWithBottomCorssPoint;
             TopLeft=topb;
@@ -457,21 +454,18 @@ double Grid::GetData(const std::vector<double> &data,
             BottomLeft=topb;
             BottomLeftV=BottomValueWithTopCorssPoint;
          }
-         if(x>TopRight)
-         {
-            return fourpoint(new double[4]{TopRightV,data[idx],BottomRightV,data[idx-N1]},new double[2]{x,y},new double[4]{TopRight,C1[idx],BottomRight,C1[idx-N1]},new double[4]{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
-         }
-         else if(x<TopLeft)
-         {
-            return fourpoint(new double[4]{data[idx-1],TopLeftV,data[idx-N1-1],BottomLeftV},new double[2]{x,y},new double[4]{C1[idx-1],TopLeft,C1[idx-1],BottomLeft},new double[4]{C2[idx-1],C2[idx-1],C2[idx-N1],C2[idx-N1]});
-         }
-         else if((dC2m[idx])/((topb-bottomb)*(x-(TopRight-TopLeft)/2)+C2[idx-N1]>y-dC2m[idx]/2))
-         {
+         if(x>TopRight) {
+            return fourpoint(new double[4]{TopRightV,data[idx],BottomRightV,data[idx-N1]},
+                  new double[2]{x,y},new double[4]{TopRight,C1[idx],BottomRight,C1[idx-N1]},
+                  new double[4]{C2[idx],C2[idx],C2[idx-N1],C2[idx-N1]});
+         } else if(x<TopLeft) {
+            return fourpoint(new double[4]{data[idx-1],TopLeftV,data[idx-N1-1],BottomLeftV},
+                  new double[2]{x,y},new double[4]{C1[idx-1],TopLeft,C1[idx-N1-1],BottomLeft},
+                  new double[4]{C2[idx-1],C2[idx-1],C2[idx-N1-1],C2[idx-N1-1]});
+         } else if((dC2m[idx])/((topb-bottomb)*(x-(TopRight-TopLeft)/2)+C2[idx-N1]>y-dC2m[idx]/2)) {
             return topb>bottomb ? threepoint(new double[3]{TopRightV,BottomLeftV,BottomRightV},new double[2]{x,y},new double[3]{TopRight,BottomLeft,BottomRight},new double[3]{C2[idx],C2[idx-N1],C2[idx-N1]}) :
                threepoint(new double[3]{TopLeft,BottomLeftV,BottomRightV},new double[2]{x,y},new double[3]{TopLeft,BottomLeft,BottomRight},new double[3]{C2[idx],C2[idx-N1],C2[idx-N1]});
-         }
-         else if((dC2m[idx])/((topb-bottomb)*(x-(TopRight-TopLeft)/2)+C2[idx-N1]<=y-dC2m[idx]/2))
-         {
+         } else if((dC2m[idx])/((topb-bottomb)*(x-(TopRight-TopLeft)/2)+C2[idx-N1]<=y-dC2m[idx]/2)) {
             return topb<bottomb ? threepoint(new double[3]{TopRightV,TopLeftV,BottomRightV},new double[2]{x,y},new double[3]{TopRight,TopLeft,BottomRight},new double[3]{C2[idx],C2[idx],C2[idx-N1]}) :
                threepoint(new double[3]{TopLeft,TopLeftV,BottomLeftV},new double[2]{x,y},new double[3]{TopLeft,BottomLeft,BottomLeft},new double[3]{C2[idx],C2[idx],C2[idx-N1]});
          }
@@ -503,7 +497,6 @@ double Grid::GetData(const std::vector<double> &data,
          double LeftValueWithRightCorssPoint=leftb>rightb ?
             (leftb-rightb)/(leftb-C2[idx-N1-1])*data[idx-N1-1]+(rightb-C2[idx-N1-1])/(leftb-C2[idx-N1-1])*lmv : 
             (rightb-leftb)/(C2[idx-1]-leftb)*data[idx-1]+(C2[idx-1]-rightb)/(C2[idx-1]-leftb)*lmv;
-         //Printf("leftb: %f, rightb: %f, rmv: %f, data[%zu-%zu]: %f", leftb, rightb, rmv, idx, N1, data[idx-N1]);
          double RightValueWithLeftCorssPoint=leftb>rightb ?
             (rightb-leftb)/(C2[idx]-rightb)*data[idx]+(C2[idx]-leftb)/(C2[idx]-rightb)*rmv : 
             (leftb-C2[idx-N1])/(rightb-C2[idx-N1])*rmv+(rightb-leftb)/(rightb-C2[idx-N1])*data[idx-N1];
@@ -524,11 +517,9 @@ double Grid::GetData(const std::vector<double> &data,
             b2=rightb;
             blv=lmv;
          }
-         //Printf ("here? C2[%zu]=%f, t2: %f, b2: %f, tlv: %f, trv: %f, blv: %f, brv: %f", idx, C2[idx], t2,b2,tlv,trv,blv,brv);
          // find out whether the boundary goes from top-right to bottom-left or
          // from top-left to bottom-right and then do interpolation
          if(y>=t2) {
-            //Printf("here?");
             return fourpoint(new double[4]{data[idx-1],data[idx],tlv,trv},
                   new double[2]{x,y},new double[4]{C1[idx-1],C1[idx],C1[idx-1],C1[idx]},
                   new double[4]{C2[idx],C2[idx],t2,t2});
@@ -620,7 +611,6 @@ double Grid::fourpoint(double dataset[4],double tarlocationset[2],
    //|         |
    //|         |
    //2---------3
-   //      if(TMath::Abs(tarlocationset[0]-2.2)<0.01&&TMath::Abs(tarlocationset[1]-1.4)<0.01)Printf("%f",dataset[0]);
    double ab=(pointxset[1]-tarlocationset[0])/(pointxset[1]-pointxset[0]);
    double aa=1-ab;
    double ba=(tarlocationset[1]-pointyset[3])/(pointyset[1]-pointyset[3]);
