@@ -280,7 +280,6 @@ double Grid::GetData(const std::vector<double> &data,
       // +-----+------+
       //       bmv
       size_t idx=GetIdxOfPointToTheRightOf(x,y,0,N2-1); // always exists
-      //Info("GetData", "idx: %zu", idx);
 
       bool tl=false; // existence of top left grid point
       bool br=false; // existence of bottom right grid point

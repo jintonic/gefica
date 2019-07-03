@@ -8,13 +8,13 @@ void calculateFields(const char *output="ppc.root")
 
    detector.Radius=3.45*cm; detector.Height=5.05*cm;
 
-   detector.PointContactR=1.40*mm; detector.PointContactH=2.10*mm;
-   //detector.WrapAroundR=1.50*mm;
-   detector.TaperW=0.4*cm; detector.TaperH=0.4*cm;
-   detector.CornerW=0.*cm; detector.CornerH=0.*cm;
+//   detector.PointContactR=1.40*mm; detector.PointContactH=2.10*mm;
+//   detector.WrapAroundR=1.50*mm;
+//   detector.TaperW=0.4*cm; detector.TaperH=0.4*cm;
+//   detector.CornerW=0.4*cm; detector.CornerH=0.4*cm;
 
-   detector.BoreH=0*cm; detector.BoreR=0*cm;
-   detector.BoreTaperH=0*mm; detector.BoreTaperW=0*mm;
+//   detector.BoreH=1*cm; detector.BoreR=1*cm;
+//   detector.BoreTaperH=3*mm; detector.BoreTaperW=3*mm;
 //   detector.GrooveH=0.001*mm; detector.GrooveW=.5*mm;
 
    detector.BottomImpurity=0/cm3; detector.TopImpurity=0/cm3;
