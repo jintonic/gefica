@@ -15,7 +15,7 @@ void drawFields(const char *input="ppc.root")
    gStyle->SetPadLeftMargin(0.08);
 
    // generate plots
-   t->Draw("c1:c2:(v)","v<0","goff");
+   t->Draw("c1:c2:v","","goff");
    TGraph2D *gv = new TGraph2D(n, t->GetV1(), t->GetV2(), t->GetV3());
    gv->SetName("gv"); gv->SetNpx(500); gv->SetNpy(500); // fine bin histogram
    TH2D *hv = gv->GetHistogram();
@@ -36,7 +36,7 @@ void drawFields(const char *input="ppc.root")
    //}
 
    TCanvas *ce = new TCanvas;
-   ce->SetLogz();
+   //ce->SetLogz();
    t->Draw("c1:c2:e","","goff");
    TGraph2D *ge = new TGraph2D(n, t->GetV1(), t->GetV2(), t->GetV3());
    ge->SetName("ge"); ge->SetNpx(500); ge->SetNpy(500); // fine bin histogram
@@ -44,5 +44,6 @@ void drawFields(const char *input="ppc.root")
    he->SetTitle(";Radius [cm];Height [cm];E [V/cm]");
    he->GetZaxis()->CenterTitle();
    he->Draw("colz");
+   detector->Draw();
    //for (int i=0; i<np; i++) gl[i]->Draw("p");
 }
