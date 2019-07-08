@@ -196,8 +196,8 @@ void RhoZ::GetInfoFrom(PointContact& pc)
       if (pc.BoreTaperW>0) { // has bore taper
          slope=pc.BoreTaperH/pc.BoreTaperW;
          intercept=pc.Height-slope*(pc.BoreR+pc.BoreTaperW);
-         if ((C2[i]>-slope*C1[i]+intercept && C1[i]<0) ||
-               (C2[i]>slope*C1[i]+intercept && C1[i]>0)) {
+         if ((C2[i]>-slope*C1[i]+intercept && C1[i]<=-pc.BoreR) ||
+               (C2[i]>slope*C1[i]+intercept && C1[i]>=pc.BoreR)) {
             Vp[i]=pc.Bias[1]; fIsFixed[i]=true;
          }
       }
