@@ -25,15 +25,15 @@ void drawFields(const char *input="ppc.root")
    detector->Draw();
 
    // draw E field lines
-   //const int np=12;
-   //TGraph *gl[np];
-   //double x[np] = {-25, 0.01, 25, -4, -3, -2, -1, 0.01, 1, 2, 3, 4};
-   //double y[np] = {49.9, 24.9, 49.9, 2, 2, 2, 2, 2, 2, 2, 2, 2};
-   //bool positive[np] = {0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-   //for (int i=0; i<np; i++) {
-   //   gl[i] = grid->GetFieldLineFrom(x[i]*mm, y[i]*mm, positive[i]);
-   //   gl[i]->Draw("l");
-   //}
+   const int np=12;
+   TGraph *gl[np];
+   double x[np] = {-25, 0.01, 25, -4, -3, -2, -1, 0.01, 1, 2, 3, 4};
+   double y[np] = {49.9, 24.9, 49.9, 2, 2, 2, 2, 2, 2, 2, 2, 2};
+   bool positive[np] = {0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+   for (int i=0; i<np; i++) {
+      gl[i] =(TGraph) grid->GetFieldLineFrom(x[i]*mm, y[i]*mm, positive[i]);
+      gl[i]->Draw("l");
+   }
 
    TCanvas *ce = new TCanvas;
    //ce->SetLogz();

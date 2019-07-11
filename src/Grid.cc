@@ -626,3 +626,50 @@ double Grid::fourpoint(double dataset[4],double tarlocationset[2],
    if (TMath::Abs(result)<1e-10) return 0;
    return result;
 }
+
+//______________________________________________________________________________
+//
+FieldLine* Grid::GetFieldLineFrom(double x, double y, double z,bool positive)
+{
+   //const char *name = Form("g%.0f%.0f%d",100+x/mm,100+y/mm,positive);
+   FieldLine *result=new FieldLine();
+   int N=GetN();
+
+   int i=0;
+   while (true) { // if (x,y) is in crystal
+      //gl->SetPoint(i,x/cm,y/cm); // add a point to the graph
+      if (x>=C1[N-1]||x<=C1[0]||y>=C2[N-1]||y<=C2[0]) {//out of crystal
+         if (i==0) // initial point is not in crystal
+            Warning("GetFieldLineFrom", "Start point (%.1fcm,%.1fcm)"
+                  " is not in crystal! Stop propagating.", x/cm, y/cm);
+         break;
+      }
+
+      double ex = GetE1(x,y), ey = GetE2(x,y);
+      double et = TMath::Sqrt(ex*ex+ey*ey); // total E
+      if (et==0) {
+         Warning("GetFieldLineFrom", "E@(x=%.1fmm,y=%.1fmm)=%.1fV/cm!",
+               x/mm, y/mm, et/volt*cm);
+         break;
+      }
+      double weight=5/(et/volt*mm); // propagate more in weaker field
+      double dt=10*ns, mu=50000*cm2/volt/sec; // mu is mobility
+      double dx=mu*ex*dt*weight, dy=mu*ey*dt*weight;
+      if (gDebug>0)
+         Printf("%04d x=%.3fmm, y=%.3fmm, Ex=%.2fV/cm, Ey=%.2fV/cm, "
+               "weight=%.3f, dx=%.3fmm, dy=%.3fmm", i, x/mm, y/mm, ex/volt*cm,
+               ey/volt*cm, weight, dx/mm, dy/mm);
+      if (i>2000) {
+         Info("GetFieldLineFrom", "Propagated more than 2000 steps. Stop");
+         break;
+      }
+      if (positive) { x+=dx; y+=dy; } else { x-=dx; y-=dy; }
+      result->C1.push_back(x);
+      result->C2.push_back(y);
+      result->dC1p.push_back(dx);
+      result->dC2p.push_back(dy);
+      i++;
+   }
+
+return result;
+}
