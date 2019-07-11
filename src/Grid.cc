@@ -629,16 +629,16 @@ double Grid::fourpoint(double dataset[4],double tarlocationset[2],
 
 //______________________________________________________________________________
 //
-FieldLine* Grid::GetFieldLineFrom(double x, double y, double z,bool positive)
+FieldLine* Grid::GetFieldLineFrom(double x, double y, double z, bool positive)
 {
-   //const char *name = Form("g%.0f%.0f%d",100+x/mm,100+y/mm,positive);
-   FieldLine *result=new FieldLine();
-   int N=GetN();
+   FieldLine *line=new FieldLine();
 
    int i=0;
    while (true) { // if (x,y) is in crystal
-      //gl->SetPoint(i,x/cm,y/cm); // add a point to the graph
-      if (x>=C1[N-1]||x<=C1[0]||y>=C2[N-1]||y<=C2[0]) {//out of crystal
+      line->C1.push_back(x);
+      line->C2.push_back(y);
+      if (x>=C1[GetN()-1]||x<=C1[0]||y>=C2[GetN()-1]||y<=C2[0]
+            || fIsFixed[GetIdxOfPointToTheRightOf(x,y,0,N2)]) {//out of crystal
          if (i==0) // initial point is not in crystal
             Warning("GetFieldLineFrom", "Start point (%.1fcm,%.1fcm)"
                   " is not in crystal! Stop propagating.", x/cm, y/cm);
@@ -655,6 +655,8 @@ FieldLine* Grid::GetFieldLineFrom(double x, double y, double z,bool positive)
       double weight=5/(et/volt*mm); // propagate more in weaker field
       double dt=10*ns, mu=50000*cm2/volt/sec; // mu is mobility
       double dx=mu*ex*dt*weight, dy=mu*ey*dt*weight;
+      line->dC1p.push_back(dx);
+      line->dC2p.push_back(dy);
       if (gDebug>0)
          Printf("%04d x=%.3fmm, y=%.3fmm, Ex=%.2fV/cm, Ey=%.2fV/cm, "
                "weight=%.3f, dx=%.3fmm, dy=%.3fmm", i, x/mm, y/mm, ex/volt*cm,
@@ -664,12 +666,8 @@ FieldLine* Grid::GetFieldLineFrom(double x, double y, double z,bool positive)
          break;
       }
       if (positive) { x+=dx; y+=dy; } else { x-=dx; y-=dy; }
-      result->C1.push_back(x);
-      result->C2.push_back(y);
-      result->dC1p.push_back(dx);
-      result->dC2p.push_back(dy);
       i++;
    }
 
-return result;
+   return line;
 }
