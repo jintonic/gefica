@@ -554,10 +554,10 @@ double Grid::GetData(const std::vector<double> &data,
 void Grid::CalculateE()
 {
    for (size_t i=0; i<GetN(); i++) { // deal with E1 only
-      E1[i]=(Vp[i+1]-Vp[i-1])/(dC1p[i]+dC1m[i]); Et[i]=E1[i];
+      E1[i]=-(Vp[i+1]-Vp[i-1])/(dC1p[i]+dC1m[i]); Et[i]=E1[i];
    }
-   E1[0]=(Vp[1]-Vp[0])/dC1p[0]; Et[0]=E1[0];
-   E1[N1-1]=(Vp[N1-1]-Vp[N1-2])/dC1m[N1-1]; Et[N1-1]=E1[N1-1];
+   E1[0]=-(Vp[1]-Vp[0])/dC1p[0]; Et[0]=E1[0];
+   E1[N1-1]=-(Vp[N1-1]-Vp[N1-2])/dC1m[N1-1]; Et[N1-1]=E1[N1-1];
 }
 //______________________________________________________________________________
 //
