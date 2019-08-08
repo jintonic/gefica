@@ -32,7 +32,7 @@ void RhoZ::OverRelaxAt(size_t idx)
 {
    if (fIsFixed[idx]) return; // no need to calculate on boundaries
 
-   // setup potencial differences
+   // setup potential differences
    double drm=dC1m[idx]!=0?dC1m[idx]:dC1p[idx]; // dr_minus
    double drp=dC1p[idx]!=0?dC1p[idx]:dC1m[idx];
    double dzm=dC2m[idx]!=0?dC2m[idx]:dC2p[idx];
