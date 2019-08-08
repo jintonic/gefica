@@ -38,12 +38,7 @@ void CV()
    }
    TGraph *gr = new TGraph(n,v,c);
 
-   // pick up a good default drawing style to modify
-   gROOT->SetStyle("Plain");
-   gStyle->SetLabelFont(132,"XY");
-   gStyle->SetTitleFont(132,"XY");
-   gStyle->SetLabelSize(0.05,"XY");
-   gStyle->SetTitleSize(0.05,"XY");
+   gROOT->SetStyle("GeFiCa");
    gStyle->SetTitleOffset(0.7,"Y");
    gStyle->SetPadRightMargin(0.01);
    gStyle->SetPadLeftMargin(0.08);
