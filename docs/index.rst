@@ -95,7 +95,7 @@ Update GeFiCa and fieldgen
 
    cd gefica
    git pull
-   cd examples/point/Contact/fieldgen
+   cd examples/pointContact/fieldgen
    git pull
 
 Compare to FEniCS
