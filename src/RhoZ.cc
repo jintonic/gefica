@@ -30,95 +30,54 @@ void RhoZ::GetBoundaryConditionFrom(Detector &detector)
 //
 void RhoZ::OverRelaxAt(size_t idx)
 {
-   /*wrong implement
    if (fIsFixed[idx]) return; // no need to calculate on boundaries
 
-   double vzm; // previous(minus) Vp along z
+   // setup potencial differences
+   double drm=dC1m[idx]!=0?dC1m[idx]:dC1p[idx]; // dr_minus
+   double drp=dC1p[idx]!=0?dC1p[idx]:dC1m[idx];
+   double dzm=dC2m[idx]!=0?dC2m[idx]:dC2p[idx];
+   double dzp=dC2p[idx]!=0?dC2p[idx]:dC2m[idx]; // dz_plus
+
+   // setup potential for boundary points
+   double vzm,vzp,vrm,vrp; // vzm: v_z_minus
    if (idx>=N1) vzm=Vp[idx-N1];
-   else vzm=Vp[idx+N1]; // mirroring potential for bottom grid points
+   else vzm=Vp[idx+N1]; // mirroring potential for bottom boundary points
+   if (idx>=N1*N2-N1) vzp=Vp[idx]; // set potential for top boundary points
+   else vzp=Vp[idx+N1];
+   if (idx%N1==0) vrm=Vp[idx]; // set potential for left boundary points
+   else vrm=Vp[idx-1];
+   if (idx%N1==N1-1) vrp=Vp[idx]; // set potential for right boundary points
+   else vrp=Vp[idx+1];
 
-   double vnew=(Src[idx]+1/C1[idx]*(Vp[idx+1]-Vp[idx-1])/(dC1m[idx]+dC1p[idx]) 
-         +(Vp[idx+1]/dC1p[idx]+Vp[idx-1]/dC1m[idx])*2/(dC1m[idx]+dC1p[idx])
-         + (Vp[idx+N1]/dC2p[idx]+vzm/dC2m[idx])*2/(dC2p[idx]+dC2m[idx]))/
-      ((1/dC1m[idx]+1/dC1p[idx])*2/(dC1m[idx]+dC1p[idx])
-       +(1/dC2p[idx]+1/dC2m[idx])*2/(dC2p[idx]+dC2m[idx]));
-   Printf("checl %.4e",vnew);
-   vnew=RelaxationFactor*(vnew-Vp[idx])+Vp[idx]; // over relax
+   // update potential
+   double vnew = (Src[idx] + 1/C1[idx]*(vrp-vrm)/(drm+drp)
+         + (vrp/drp+vrm/drm)*2/(drm+drp) + (vzp/dzp+vzm/dzm)*2/(dzp+dzm))
+      /((1/drm+1/drp)*2/(drm+drp) + (1/dzp+1/dzm)*2/(dzp+dzm));
+   vnew = RelaxationFactor*(vnew-Vp[idx])+Vp[idx]; // over relax
 
-   double vmin=Vp[idx-1]; // minimal Vp around point[idx]
-   if(vmin>Vp[idx+1]) vmin=Vp[idx+1];
-   if (vmin>Vp[idx+N1]) vmin=Vp[idx+N1];
+   //find minimal potential in all neighboring points
+   double vmin=vrm; // minimal Vp around point[idx]
+   if (vmin>vrp) vmin=vrp;
+   if (vmin>vzp) vmin=vzp;
    if (vmin>vzm) vmin=vzm;
 
-   double vmax=Vp[idx-1]; // maximal Vp around point[idx]
-   if (vmax<Vp[idx+1]) vmax=Vp[idx+1];
-   if (vmax<Vp[idx+N1]) vmax=Vp[idx+N1];
+   //find maximal potential in all neighboring points
+   double vmax=vrm; // maximal Vp around point[idx]
+   if (vmax<vrp) vmax=vrp;
+   if (vmax<vzp) vmax=vzp;
    if (vmax<vzm) vmax=vzm;
 
+   //if vnew is greater or smaller than vmax and vmin, set vnew to it.
    if (vnew<vmin) {
       Vp[idx]=vmin; fIsDepleted[idx]=false;
-   } else if (vnew>vmax) {
+   } else if(vnew>vmax) {
       Vp[idx]=vmax; fIsDepleted[idx]=false;
    } else {
       Vp[idx]=vnew; fIsDepleted[idx]=true;
    }
+
    // update Vp for impurity-only case even if the point is undepleted
    if (fDetector->Bias[0]==fDetector->Bias[1]) Vp[idx]=vnew;
-   Printf("%.4e",vnew);
-   */
-    if (fIsFixed[idx])return;
-   // 2nd-order Successive Over-Relaxation
-   double drm=dC1m[idx]!=0?dC1m[idx]:dC1p[idx]; // dr_minus
-   double drp=dC1p[idx]!=0?dC1p[idx]:dC1m[idx];
-   double dzm=dC2m[idx]!=0?dC2m[idx]:dC2p[idx];
-   double dzp=dC2p[idx]!=0?dC2p[idx]:dC2m[idx];
-   double pzm,pzp,prm,prp; // pzm: potential_z_plus
-   if(idx>=N1)pzm=Vp[idx-N1];
-   else pzm=Vp[idx+N1];
-   if(idx>=N1*N2-N1)pzp=Vp[idx];
-   else pzp=Vp[idx+N1];
-   if(idx%N1==0)prm=Vp[idx];
-   else prm=Vp[idx-1];
-   if(idx%N1==N1-1)prp=Vp[idx];
-   else prp=Vp[idx+1];
-   //if (idx<200)
-   //Printf("idx=%zu, drm=%f, drp=%f, dzm=%f, dzp=%f, pzm=%f, pzp=%f, prm=%f, prp=%f\n",
-   //      idx,drm, drp, dC2m[idx], dC2p[idx], pzm, pzp, prm, prp);
-   double tmp=(Src[idx]
-         + 1/C1[idx]*(prp-prm)/(drm+drp) +(prp/drp+prm/drm)*2/(drm+drp)
-         + (pzp/dzp+pzm/dzm)*2/(dzp+dzm))/
-      ((1/drm+1/drp)*2/(drm+drp)+(1/dzp+1/dzm)*2/(dzp+dzm));
-   //find minmium and maxnium of all five grid, the new one should not go overthem.
-   //find min
-   double min=prm;
-   double max=prm;
-   if(min>prp)min=prp;
-   if (min>pzp)min=pzp;
-   if (min>pzm)min=pzm;
-
-   //find max
-   if(max<prp)max=prp;
-   if (max<pzp)max=pzp;
-   if (max<pzm)max=pzm;
-//if tmp is greater or smaller than max and min, set tmp to it.
-
-      //over relax
-   //V[idx]=RelaxationFactor*(tmp-V[idx])+V[idx];
-   //if need calculate depleted voltage
-   double oldP=Vp[idx];
-   tmp=RelaxationFactor*(tmp-oldP)+oldP;
-   if(tmp<min) {
-      Vp[idx]=min;
-      fIsDepleted[idx]=false;
-   } else if(tmp>max) {
-      Vp[idx]=max;
-      fIsDepleted[idx]=false;
-   } else {
-      Vp[idx]=tmp;
-      fIsDepleted[idx]=true;
-   }
-
-   if(fDetector->Bias[0]==fDetector->Bias[1]) Vp[idx]=tmp;
 }
 //______________________________________________________________________________
 //
