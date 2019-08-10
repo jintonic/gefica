@@ -1,28 +1,29 @@
 using namespace GeFiCa;
-// calculate and save fields of a PPC
-void calculateFields(const char *output="ppc.root")
+// calculate and save fields of an Inverted Coaxial Point-Contact (ICPC) HPGe
+void calculateFields(const char *output="ICPC.root")
 {
    PointContact detector;
-   detector.Bias[0]=0*kV; // bias on point contact
-   detector.Bias[1]=2500; // ground outer contact
+   detector.Bias[0]=-2.5*kV; // bias on point contact
+   detector.Bias[1]=0; // ground outer contact
 
    detector.Radius=3.45*cm; detector.Height=5.05*cm;
 
-   detector.PointContactR=1.40*mm; detector.PointContactH=2.10*mm;
-   //detector.WrapAroundR=1.50*mm;
-   detector.TaperW=0.*cm; detector.TaperH=0.*cm;
-   detector.CornerW=0.*cm; detector.CornerH=0.*cm;
+   detector.PointContactR=1.4*mm; detector.PointContactH=0.1*mm;
 
-   detector.BoreH=1*cm; detector.BoreR=1*cm;
+   detector.TaperW=3*mm; detector.TaperH=3*mm;
+   detector.CornerW=3*mm; detector.CornerH=3*mm;
+
+   detector.BoreH=2*cm; detector.BoreR=8*mm;
    detector.BoreTaperH=3*mm; detector.BoreTaperW=3*mm;
-   //detector.GrooveH=0.001*mm; detector.GrooveW=.5*mm;
 
-   detector.BottomImpurity=0/cm3; detector.TopImpurity=0/cm3;
+   detector.WrapAroundR=2.5*cm;
+   detector.GrooveH=3*mm; detector.GrooveW=3*mm;
 
-   RhoZ grid(500,500);
+   detector.BottomImpurity=3e9/cm3; detector.TopImpurity=7e9/cm3;
+
+   RhoZ grid(690,506);
    grid.GetBoundaryConditionFrom(detector);
-//   grid.MaxIterations=2; ///< maximal iterations of SOR to be performed
-   grid.RelaxationFactor=1.995;
+   grid.RelaxationFactor=1.994;
    grid.SuccessiveOverRelax();
    
    TFile *file = new TFile(output,"recreate");
