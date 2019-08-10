@@ -133,8 +133,8 @@ void PointContact::Draw(Option_t* option)
    // grove
    TBox *lg = new TBox(-WrapAroundR,0,-WrapAroundR+GrooveW,GrooveH);
    lg->SetLineColor(kBlack); lg->SetLineStyle(kDashed);
-   lg->SetFillColor(0); lg->Draw();
+   lg->SetFillStyle(0); lg->Draw();
    TBox *rg = new TBox(WrapAroundR-GrooveW,0,WrapAroundR,GrooveH);
    rg->SetLineColor(kBlack); rg->SetLineStyle(kDashed);
-   rg->SetFillColor(0); rg->Draw();
+   rg->SetFillStyle(0); rg->Draw();
 }
