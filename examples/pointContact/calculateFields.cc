@@ -21,7 +21,7 @@ void calculateFields(const char *output="ICPC.root")
 
    detector.BottomImpurity=3e9/cm3; detector.TopImpurity=7e9/cm3;
 
-   RhoZ grid(690,506);
+   RhoZ grid(int nr=345*2,int nz=505+1); // no point on r=0, please
    grid.GetBoundaryConditionFrom(detector);
    grid.RelaxationFactor=1.994;
    grid.SuccessiveOverRelax();
