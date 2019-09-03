@@ -31,13 +31,14 @@
         </header>
     </div>
 
-    <!-- MAIN CONTENT
+    <!-- MAIN CONTENT-->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         {{ content }}
       </section>
-    </div> -->
-    <div class="row">
+    </div>
+    <div id="main_content_wrap" class="outer">
+      <div class="row inner" id="main_content">
       <div class="col-md-4">
         {{ content }}
       </div>
@@ -57,7 +58,8 @@
           <span class="sr-only">Next</span>
         </a>
       </div><!-- carousel slide -->
-  </div>
+      </div>
+    </div>
     
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
