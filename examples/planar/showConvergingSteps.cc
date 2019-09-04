@@ -9,7 +9,7 @@ void showConvergingSteps()
    detector.Bias[1]=300*volt; // for top electrode
 
    X grid; // 1D Cartesian grid
-   grid.GetBoundaryConditionFrom(detector);
+   grid.SetupWith(detector);
 
    // make plot
    TMultiGraph *mg = new TMultiGraph;

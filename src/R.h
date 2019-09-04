@@ -13,7 +13,7 @@ class GeFiCa::R : public Grid, public TNamed
       R(size_t n1=101) : Grid(n1),
       TNamed("r", "1D spherical coordinate") {};
 
-      void GetBoundaryConditionFrom(Detector &detector);
+      void SetupWith(Detector &detector);
       void SolveAnalytically();
       double GetC();
 

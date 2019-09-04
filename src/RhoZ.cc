@@ -3,14 +3,14 @@
 #include "PointContact.h"
 using namespace GeFiCa;
 
-void RhoZ::GetBoundaryConditionFrom(Detector &detector)
+void RhoZ::SetupWith(Detector &detector)
 {
-   Grid::GetBoundaryConditionFrom(detector); // check number of calls
+   Grid::SetupWith(detector); // check number of calls
 
    TString type(detector.ClassName());
    if (type.Contains("PointContact")) {
       if (N1%2==1) { // we want no grid point right on z-axis
-         Error("GetBoundaryConditionFrom",
+         Error("SetupWith",
                "Please assign even number of grid points along radius.");
          abort();
       }
@@ -18,8 +18,8 @@ void RhoZ::GetBoundaryConditionFrom(Detector &detector)
       pc.CheckConfigurations();
       GetInfoFrom(pc);
    } else {
-      Error("GetBoundaryConditionFrom", "%s is not expected.", type.Data());
-      Error("GetBoundaryConditionFrom", "Please use "
+      Error("SetupWith", "%s is not expected.", type.Data());
+      Error("SetupWith", "Please use "
             "PointContact or Segmented detector.");
       abort();
    }

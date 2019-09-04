@@ -109,10 +109,10 @@ bool Grid::IsDepleted()
 }
 //______________________________________________________________________________
 //
-void Grid::GetBoundaryConditionFrom(Detector &detector)
+void Grid::SetupWith(Detector &detector)
 {
    if (GetN()>0) { // this function can only be called once
-      Warning("GetBoundaryConditionFrom", "has been called. Do nothing.");
+      Warning("SetupWith", "has been called. Do nothing.");
       return;
    }
 }
@@ -122,7 +122,7 @@ void Grid::SuccessiveOverRelax()
 {
    if (dC1p.size()<1) {
       Error("SuccessiveOverRelax", "Grid is not ready. "
-            "Please call GetBoundaryConditionFrom(Detector&) first.");
+            "Please call SetupWith(Detector&) first.");
       abort();
    }
    Info("SuccessiveOverRelax","Start...");

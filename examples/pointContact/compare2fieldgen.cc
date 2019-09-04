@@ -17,7 +17,7 @@ void compare2fieldgen(const char *fieldgenOutput="fieldgen/fields/p1/ev.dat")
    detector.GrooveH=0; detector.GrooveW=0;
 
    RhoZ grid(690,506); // grid step length is about 0.1 mm
-   grid.GetBoundaryConditionFrom(detector);
+   grid.SetupWith(detector);
    grid.RelaxationFactor=1.994; // fastest
    grid.SuccessiveOverRelax();
 

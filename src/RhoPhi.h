@@ -13,7 +13,7 @@ class GeFiCa::RhoPhi : public Grid, public TNamed
       RhoPhi(size_t n1=101, size_t n2=180) : Grid(n1, n2),
       TNamed("rhophi", "2D cylindrical coordinates in rho-phi") {};
 
-      void GetBoundaryConditionFrom(Detector &detector);
+      void SetupWith(Detector &detector);
       double GetC();
 
       ClassDef(RhoPhi,1);

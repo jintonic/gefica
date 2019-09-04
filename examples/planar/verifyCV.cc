@@ -11,7 +11,7 @@ double GetCfromDepletionDepth(double voltage, double height)
    detector.SetAverageImpurity(-1e10/cm3); // deplete from bottom
 
    X grid(n);
-   grid.GetBoundaryConditionFrom(detector);
+   grid.SetupWith(detector);
    grid.RelaxationFactor=1.986;
    grid.SuccessiveOverRelax();
    
@@ -37,7 +37,7 @@ double GetCfromGeFiCa(double voltage, double height)
    detector.SetAverageImpurity(-1e10/cm3);
 
    X grid(n);
-   grid.GetBoundaryConditionFrom(detector);
+   grid.SetupWith(detector);
    grid.RelaxationFactor=1.986;
    return grid.GetC();
 }

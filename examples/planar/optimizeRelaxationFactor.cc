@@ -17,7 +17,7 @@ void optimizeRelaxationFactor()
       g[j] = new TGraph; g[j]->SetName(Form("g%d",ng));
       for (int i=0; i<nd; i++) {
          grid[j][i]=new X(j*100+101);
-         grid[j][i]->GetBoundaryConditionFrom(detector);
+         grid[j][i]->SetupWith(detector);
          grid[j][i]->RelaxationFactor = 1.93 + i*0.002;
          grid[j][i]->MaxIterations = 10500;
          grid[j][i]->SuccessiveOverRelax();

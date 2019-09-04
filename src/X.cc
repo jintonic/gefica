@@ -3,13 +3,13 @@
 #include "Planar.h"
 using namespace GeFiCa;
 
-void X::GetBoundaryConditionFrom(Detector &detector)
+void X::SetupWith(Detector &detector)
 {
-   Grid::GetBoundaryConditionFrom(detector); // check number of calls
+   Grid::SetupWith(detector); // check number of calls
 
    TString type(detector.ClassName());
    if (type.Contains("Planar")==false) {
-      Error("GetBoundaryConditionFrom", "%s is not expected. "
+      Error("SetupWith", "%s is not expected. "
             "Please pass in a Planar detector.", type.Data());
       abort();
    }

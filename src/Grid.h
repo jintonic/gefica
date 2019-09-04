@@ -68,7 +68,7 @@ class GeFiCa::Grid : public Points
        * N2 and/or N3, and raises the flag fIsFixed for points on/outside
        * electrodes. It has to be called before SuccessiveOverRelax().
        */
-      virtual void GetBoundaryConditionFrom(Detector &detector);
+      virtual void SetupWith(Detector &detector);
       /**
        * Successively over-relax potentials on grid points.
        */

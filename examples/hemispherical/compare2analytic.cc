@@ -11,9 +11,9 @@ void compare2analytic()
    detector.Bias[1]=0*volt; // outer surface
 
    R grid1, grid2;
-   grid1.GetBoundaryConditionFrom(detector);
+   grid1.SetupWith(detector);
    grid1.SuccessiveOverRelax();
-   grid2.GetBoundaryConditionFrom(detector);
+   grid2.SetupWith(detector);
    grid2.SolveAnalytically();
 
    // generate graphics

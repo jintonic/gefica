@@ -13,7 +13,7 @@ class GeFiCa::Rho : public Grid, public TNamed
       Rho(size_t n1=101) : Grid(n1),
       TNamed("rho", "1D cylindrical coordinates") {};
 
-      void GetBoundaryConditionFrom(Detector &detector);
+      void SetupWith(Detector &detector);
       void SolveAnalytically();
       double GetC();
 

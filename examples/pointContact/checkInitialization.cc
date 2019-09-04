@@ -14,7 +14,7 @@
    detector.Dump(); // call TObject::Dump() to print data members
 
    GeFiCa::RhoZ grid;
-   grid.GetBoundaryConditionFrom(detector);
+   grid.SetupWith(detector);
    TTree *t = grid.GetTree(); // create a ROOT tree for quick check
    gStyle->SetPadRightMargin(0.12); // give enough space for color palette
    t->Draw("c2:c1:p2","","colz"); // visualize initial setup

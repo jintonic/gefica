@@ -12,7 +12,7 @@ class GeFiCa::X : public Grid, public TNamed
    public:
       X(size_t n1=101) : Grid(n1), TNamed("x","1D Cartesian coordinate") {};
 
-      void GetBoundaryConditionFrom(Detector &detector);
+      void SetupWith(Detector &detector);
       void SolveAnalytically();
       double GetC();
 

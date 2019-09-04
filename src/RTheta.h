@@ -13,7 +13,7 @@ class GeFiCa::RTheta : public Grid, public TNamed
       RTheta(size_t n1=101, size_t n2=181) : Grid(n1, n2),
       TNamed("rt", "2D spherical coordinate") {};
 
-      void GetBoundaryConditionFrom(Detector &detector);
+      void SetupWith(Detector &detector);
 
       ClassDef(RTheta,1);
    protected:
