@@ -28,8 +28,8 @@ void calculateFields(const char *output="ICPC.root")
    grid.RelaxationFactor=1.994;
    grid.SuccessiveOverRelax();
    
-   TFile *file = new TFile(output,"recreate");
+   TFile file(output,"recreate");
    detector.Write();
    grid.Write();
-   file->Close();
+   file.Close();
 }
