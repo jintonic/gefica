@@ -46,7 +46,7 @@ class TTree;
  * It inherits the flat data structure from Points instead of using the class
  * to save typing. Compare `C1[i]` with `point.C1[i]`.
  */
-class GeFiCa::Grid : public Points
+class GeFiCa::Grid : public Points, public TNamed
 {
    public:
       std::vector<double> Src; ///< -(net impurity concentration)x|Qe|/epsilon
@@ -165,5 +165,6 @@ class GeFiCa::Grid : public Points
       double twopoint(double dataset[2],double tarlocationset,double pointxset[2])const;
       double threepoint(double dataset[3],double tarlocationset[2],double pointxset[3],double pointyset[3])const;
       double fourpoint(double dataset[4],double tarlocationset[2],double pointxset[4],double pointyset[4])const;
+      ClassDef(Grid,1);
 };
 #endif
