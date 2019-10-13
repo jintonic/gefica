@@ -22,10 +22,9 @@ TGraph* FieldLine::GetGraph()
 }
 //______________________________________________________________________________
 //
-
-Grid::Grid(size_t n1, size_t n2, size_t n3) : N1(n1), N2(n2), N3(n3),
-   MaxIterations(5000), RelaxationFactor(1.95), Precision(1e-7*volt),
-   fTree(0), fDetector(0)
+Grid::Grid(size_t n1, size_t n2, size_t n3) : Points(), TNamed("grid","grid"),
+   N1(n1), N2(n2), N3(n3), MaxIterations(5000), RelaxationFactor(1.95),
+   Precision(1e-7*volt), fTree(0), fDetector(0), fIterations(0)
 {
    // pick up a good style to modify
    gStyle->SetName("GeFiCa");
