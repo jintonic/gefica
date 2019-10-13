@@ -287,9 +287,9 @@ void RhoZ::CalculateE()
 {
    Grid::CalculateE(); // deal with E1
    for (size_t i=0; i<GetN(); i++) { // deal with E2
-      E2[i]=-(Vp[i+N1]-Vp[i-N1])/(dC2p[i]+dC2m[i]);
       if (i<N1) E2[i]=-(Vp[i+N1]-Vp[i])/dC2p[i]; // lower boundary
-      if (i>GetN()-N1) E2[i]=-(Vp[i]-Vp[i-N1])/dC2m[i]; // upper boundary
+      else if (i>GetN()-N1) E2[i]=-(Vp[i]-Vp[i-N1])/dC2m[i]; // upper boundary
+      else E2[i]=-(Vp[i+N1]-Vp[i-N1])/(dC2p[i]+dC2m[i]); // the rest
       if (i%N1==0) E1[i]=-(Vp[i+1]-Vp[i])/dC1p[i]; // left boundary
       if ((i+1)%N1==0) E1[i]=-(Vp[i]-Vp[i-1])/dC1m[i]; // right boundary
       Et[i]=sqrt(E1[i]*E1[i]+E2[i]*E2[i]);
