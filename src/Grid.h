@@ -1,6 +1,7 @@
 #ifndef GeFiCa_Grid
 #define GeFiCa_Grid
 namespace GeFiCa { class Points; class FieldLine; class Grid; class Detector; }
+#include <stdlib.h>
 #include <vector>
 /**
  * A group of discrete points.
