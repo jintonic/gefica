@@ -4,7 +4,7 @@ void drawFields(const char *input="ICPC.root")
 {
    // Get data from input file
    TFile *file = new TFile(input);
-   RhoZ *grid = (RhoZ*) file->Get("grhoz");
+   RhoZ *grid = (RhoZ*) file->Get("rhoz");
    PointContact *detector = (PointContact*) file->Get("pc");
    TTree *t = grid->GetTree();
    const int n = t->GetEntries();
