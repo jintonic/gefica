@@ -45,11 +45,10 @@ double GetCfromGeFiCa(double voltage, double height)
 //
 double GetCanalytically(double voltage, double height)
 {
-   //voltage=ax^2+c2x+c1
-   //c1=0, when voltage=0 at x=0
-   //c2=-ad, when E=dV/dx=0 at x=0, where just depleted
-   //a is rho/epsilon
-   //voltage=-ax^2/2, solve voltage when x=depth
+   // voltage = ax^2 + c2x + c1, where a = -rho/(2epsilon)
+   // c1=0, if voltage=0 at x=0
+   // c2=-2ad, if E=dV/dx=0 at x=d, where d is the depletion depth
+   // hence voltage=-ad^2 at x=d
    double rho=1e10/cm3*Qe;
    double depth=TMath::Sqrt(2*epsilon*voltage/rho);
    if (depth>height) depth=height;
