@@ -52,15 +52,7 @@ void getVd(double thickness=1*cm)
       absi[i] = abs(impurity[i]);
    }
 
-   gROOT->SetStyle("Plain"); // pick up a good default drawing style
-   // modify the default style
-   gStyle->SetLegendBorderSize(0);
-   gStyle->SetLegendFont(132);
-   gStyle->SetTextFont(132);
-   gStyle->SetLabelFont(132,"XY");
-   gStyle->SetTitleFont(132,"XY");
-   gStyle->SetLabelSize(0.05,"XY");
-   gStyle->SetTitleSize(0.05,"XY");
+   gROOT->SetStyle("GeFiCa");
    gStyle->SetTitleOffset(1.1,"XY");
    gStyle->SetPadRightMargin(0.01);
    gStyle->SetPadLeftMargin(0.11);

@@ -10,7 +10,7 @@ void CalculateWeightingPotential()
    detector.SegmentId=2;
 
    RhoPhi grid;
-   grid.GetBoundaryConditionFrom(detector);
+   grid.SetupWith(detector);
    grid.SuccessiveOverRelax();
 
    TFile *output = new TFile("siegfried.root", "recreate");

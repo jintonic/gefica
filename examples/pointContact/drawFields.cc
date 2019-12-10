@@ -1,10 +1,10 @@
 using namespace GeFiCa;
 // draw V, E distributions saved in an input ROOT file
-void drawFields(const char *input="ppc.root")
+void drawFields(const char *input="ICPC.root")
 {
    // Get data from input file
    TFile *file = new TFile(input);
-   RhoZ *grid = (RhoZ*) file->Get("grhoz");
+   RhoZ *grid = (RhoZ*) file->Get("rhoz");
    PointContact *detector = (PointContact*) file->Get("pc");
    TTree *t = grid->GetTree();
    const int n = t->GetEntries();
@@ -36,10 +36,11 @@ void drawFields(const char *input="ppc.root")
    detector->Draw();
 
    // draw E field lines
-   const int np=12;
-   double x[np] = {-2.5, 0.0, 2.5, -4, -3, -2, -1, 0.0, 1, 2, 3, 4};
-   double y[np] = {4.99, 3.99, 4.99, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2, 2.2};
-   bool positive[np] = {0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+   const int np=9;
+   double x[np] = {-2.3, 0.0, 2.3, -3.4, -3, -0.89, 0.89, 3, 3.4};
+   double y[np] = {5.03, 3., 5.03, 2.5, 0.1, 4.0, 4.0, 0.1, 2.5};
+   bool positive[np] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
    for (int i=0; i<np; i++)
-      grid->GetFieldLineFrom(x[i]*cm, y[i]*cm, 0, positive[i])->GetGraph()->Draw("p");
+      grid->GetFieldLineFrom(x[i]*cm, y[i]*cm, 0, positive[i])
+         ->GetGraph()->Draw("p");
 }

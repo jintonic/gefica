@@ -22,10 +22,9 @@ TGraph* FieldLine::GetGraph()
 }
 //______________________________________________________________________________
 //
-
-Grid::Grid(size_t n1, size_t n2, size_t n3) : N1(n1), N2(n2), N3(n3),
-   MaxIterations(5000), RelaxationFactor(1.95), Precision(1e-7*volt),
-   fTree(0), fDetector(0)
+Grid::Grid(size_t n1, size_t n2, size_t n3) : Points(), TNamed("grid","grid"),
+   N1(n1), N2(n2), N3(n3), MaxIterations(5000), RelaxationFactor(1.95),
+   Precision(1e-7*volt), fTree(0), fDetector(0), fIterations(0)
 {
    // pick up a good style to modify
    gStyle->SetName("GeFiCa");
@@ -109,10 +108,10 @@ bool Grid::IsDepleted()
 }
 //______________________________________________________________________________
 //
-void Grid::GetBoundaryConditionFrom(Detector &detector)
+void Grid::SetupWith(Detector &detector)
 {
    if (GetN()>0) { // this function can only be called once
-      Warning("GetBoundaryConditionFrom", "has been called. Do nothing.");
+      Warning("SetupWith", "has been called. Do nothing.");
       return;
    }
 }
@@ -122,7 +121,7 @@ void Grid::SuccessiveOverRelax()
 {
    if (dC1p.size()<1) {
       Error("SuccessiveOverRelax", "Grid is not ready. "
-            "Please call GetBoundaryConditionFrom(Detector&) first.");
+            "Please call SetupWith(Detector&) first.");
       abort();
    }
    Info("SuccessiveOverRelax","Start...");

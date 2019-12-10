@@ -1,6 +1,7 @@
 #ifndef GeFiCa_Grid
 #define GeFiCa_Grid
 namespace GeFiCa { class Points; class FieldLine; class Grid; class Detector; }
+#include <stdlib.h>
 #include <vector>
 /**
  * A group of discrete points.
@@ -46,7 +47,7 @@ class TTree;
  * It inherits the flat data structure from Points instead of using the class
  * to save typing. Compare `C1[i]` with `point.C1[i]`.
  */
-class GeFiCa::Grid : public Points
+class GeFiCa::Grid : public Points, public TNamed
 {
    public:
       std::vector<double> Src; ///< -(net impurity concentration)x|Qe|/epsilon
@@ -68,7 +69,7 @@ class GeFiCa::Grid : public Points
        * N2 and/or N3, and raises the flag fIsFixed for points on/outside
        * electrodes. It has to be called before SuccessiveOverRelax().
        */
-      virtual void GetBoundaryConditionFrom(Detector &detector);
+      virtual void SetupWith(Detector &detector);
       /**
        * Successively over-relax potentials on grid points.
        */
@@ -174,5 +175,6 @@ class GeFiCa::Grid : public Points
        * Calculate interpolation value between four point (rectangle)
        */
       double fourpoint(double dataset[4],double tarlocationset[2],double pointxset[4],double pointyset[4])const;
+      ClassDef(Grid,1);
 };
 #endif

@@ -13,7 +13,7 @@ double GetCfromDepletionRadius(double voltage, double radius, double boreR)
    detector.SetAverageImpurity(-4e9/cm3); // deplete from inside out
 
    Rho grid(n);
-   grid.GetBoundaryConditionFrom(detector);
+   grid.SetupWith(detector);
    grid.RelaxationFactor=1.986;
    grid.Precision=1e-18;
    grid.SuccessiveOverRelax();
@@ -42,7 +42,7 @@ double GetCfromGeFiCa(double voltage, double radius,double boreR)
    detector.SetAverageImpurity(-4e9/cm3);
 
    Rho grid(n);
-   grid.GetBoundaryConditionFrom(detector);
+   grid.SetupWith(detector);
    grid.RelaxationFactor=1.986;
    grid.Precision=1e-18;
 

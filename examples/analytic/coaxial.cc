@@ -58,9 +58,11 @@ void drawV()
       vi[i] = 2000*volt;
       fV[i] = new TF1(Form("fV%d",i), V, ri[i], ro[i], 5);
       fV[i]->SetParameters(ri[i],ro[i],vi[i],vo[i],rho[i]);
-      fV[i]->SetLineStyle(i+1);
-      fV[i]->SetLineColor(i+1);
-      if (i+1==5) fV[i]->SetLineColor(28); // yellow -> brown
+      fV[i]->SetLineStyle(i+2);
+      fV[i]->SetLineColor(i+2);
+      if (i+2==4) fV[i]->SetLineStyle(1);
+      if (i+2==4) fV[i]->SetLineColor(1); // blue -> black
+      if (i+2==5) fV[i]->SetLineColor(28); // yellow -> brown
       if (i==0) fV[i]->Draw();
       else fV[i]->Draw("same");
       // net impurity concentration = - rho/e
@@ -89,9 +91,11 @@ void drawE()
       vi[i] = 2000*volt;
       fE[i] = new TF1(Form("fE%d",i), E, ri[i], ro[i], 5);
       fE[i]->SetParameters(ri[i],ro[i],vi[i],vo[i],rho[i]);
-      fE[i]->SetLineStyle(i+1);
-      fE[i]->SetLineColor(i+1);
-      if (i+1==5) fE[i]->SetLineColor(28); // yellow -> brown
+      fE[i]->SetLineStyle(i+2);
+      fE[i]->SetLineColor(i+2);
+      if (i+2==4) fE[i]->SetLineStyle(1);
+      if (i+2==4) fE[i]->SetLineColor(1); // blue -> black
+      if (i+2==5) fE[i]->SetLineColor(28); // yellow -> brown
       if (i==0) fE[i]->Draw();
       else fE[i]->Draw("same");
       // net impurity concentration = - rho/e
@@ -108,14 +112,7 @@ void drawE()
 //
 void coaxial()
 {
-   gROOT->SetStyle("Plain"); // pick up a good default drawing style
-   // modify the default style
-   gStyle->SetLegendBorderSize(0);
-   gStyle->SetLegendFont(132);
-   gStyle->SetLabelFont(132,"XY");
-   gStyle->SetTitleFont(132,"XY");
-   gStyle->SetLabelSize(0.05,"XY");
-   gStyle->SetTitleSize(0.05,"XY");
+   gROOT->SetStyle("GeFiCa");
    gStyle->SetTitleOffset(1.2,"Y");
    gStyle->SetPadRightMargin(0.01);
    gStyle->SetPadLeftMargin(0.12);

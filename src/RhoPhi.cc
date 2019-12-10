@@ -3,13 +3,13 @@
 #include "Segmented.h"
 using namespace GeFiCa;
 
-void RhoPhi::GetBoundaryConditionFrom(Detector &detector)
+void RhoPhi::SetupWith(Detector &detector)
 {
-   Grid::GetBoundaryConditionFrom(detector); // check number of calls
+   Grid::SetupWith(detector); // check number of calls
 
    TString type(detector.ClassName());
    if (type.Contains("Segmented")==false) {
-      Error("GetBoundaryConditionFrom", "%s is not expected. "
+      Error("SetupWith", "%s is not expected. "
             "Please pass in a Segmented detector.", type.Data());
       abort();
    }

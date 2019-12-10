@@ -130,4 +130,11 @@ void PointContact::Draw(Option_t* option)
    lb->SetLineColor(kBlack); lb->SetLineStyle(kDashed); lb->Draw();
    TLine *rb = new TLine(BoreR,Height-BoreTaperH,BoreR+BoreTaperW,Height);
    rb->SetLineColor(kBlack); rb->SetLineStyle(kDashed); rb->Draw();
+   // grove
+   TBox *lg = new TBox(-WrapAroundR,0,-WrapAroundR+GrooveW,GrooveH);
+   lg->SetLineColor(kBlack); lg->SetLineStyle(kDashed);
+   lg->SetFillStyle(0); lg->Draw();
+   TBox *rg = new TBox(WrapAroundR-GrooveW,0,WrapAroundR,GrooveH);
+   rg->SetLineColor(kBlack); rg->SetLineStyle(kDashed);
+   rg->SetFillStyle(0); rg->Draw();
 }

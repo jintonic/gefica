@@ -9,7 +9,7 @@ void calculateC()
    detector.SetAverageImpurity(1e10/cm3);
 
    X grid;
-   grid.GetBoundaryConditionFrom(detector);
+   grid.SetupWith(detector);
    double c = grid.GetC()/pF;
    cout<<"capacitance is "<<c<<" pF/cm2"<<endl;
 }

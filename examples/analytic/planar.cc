@@ -55,9 +55,11 @@ void drawV()
       v1[i] = 2000*volt;
       fV[i] = new TF1(Form("fV%d",i), V, x0[i], x1[i], 5);
       fV[i]->SetParameters(x0[i],x1[i],v0[i],v1[i],rho[i]);
-      fV[i]->SetLineStyle(i+1);
-      fV[i]->SetLineColor(i+1);
-      if (i+1==5) fV[i]->SetLineColor(kMagenta); // yellow -> magenta
+      fV[i]->SetLineStyle(i+2);
+      fV[i]->SetLineColor(i+2);
+      if (i+2==4) fV[i]->SetLineStyle(1);
+      if (i+2==4) fV[i]->SetLineColor(kBlack); // blue -> black
+      if (i+2==5) fV[i]->SetLineColor(kBlue); // yellow -> blue
       if (i==0) fV[i]->Draw(); else fV[i]->Draw("same");
       // net impurity concentration = - rho/e
       l->AddEntry(fV[i],Form("%8.1e",-rho[i]/e*cm3),"l");
@@ -81,9 +83,11 @@ void drawE()
       v1[i] = 2000*volt;
       fE[i] = new TF1(Form("fE%d",i), E, x0[i], x1[i], 5);
       fE[i]->SetParameters(x0[i],x1[i],v0[i],v1[i],rho[i]);
-      fE[i]->SetLineStyle(i+1);
-      fE[i]->SetLineColor(i+1);
-      if (i+1==5) fE[i]->SetLineColor(kMagenta); // yellow -> magenta
+      fE[i]->SetLineStyle(i+2);
+      fE[i]->SetLineColor(i+2);
+      if (i+2==4) fE[i]->SetLineStyle(1);
+      if (i+2==4) fE[i]->SetLineColor(kBlack); // blue -> black
+      if (i+2==5) fE[i]->SetLineColor(kBlue); // yellow -> blue
       if (i==0) fE[i]->Draw(); else fE[i]->Draw("same");
       // net impurity concentration = - rho/e
       l->AddEntry(fE[i],Form("%8.1e",-rho[i]/e*cm3),"l");
@@ -96,14 +100,7 @@ void drawE()
 //
 void planar()
 {
-   gROOT->SetStyle("Plain"); // pick up a good default drawing style
-   // modify the default style
-   gStyle->SetLegendBorderSize(0);
-   gStyle->SetLegendFont(132);
-   gStyle->SetLabelFont(132,"XY");
-   gStyle->SetTitleFont(132,"XY");
-   gStyle->SetLabelSize(0.05,"XY");
-   gStyle->SetTitleSize(0.05,"XY");
+   gROOT->SetStyle("GeFiCa");
    gStyle->SetTitleOffset(1.2,"Y");
    gStyle->SetPadRightMargin(0.01);
    gStyle->SetPadLeftMargin(0.12);

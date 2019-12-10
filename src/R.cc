@@ -3,13 +3,13 @@
 #include "Hemispherical.h"
 using namespace GeFiCa;
 
-void R::GetBoundaryConditionFrom(Detector &detector)
+void R::SetupWith(Detector &detector)
 {
-   Grid::GetBoundaryConditionFrom(detector); // check number of calls
+   Grid::SetupWith(detector); // check number of calls
 
    TString type(detector.ClassName());
    if (type.Contains("Hemispherical")==false) {
-      Error("GetBoundaryConditionFrom", "%s is not expected. "
+      Error("SetupWith", "%s is not expected. "
             "Please pass in a Hemispherical detector.", type.Data());
       abort();
    }
