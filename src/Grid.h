@@ -162,8 +162,17 @@ class GeFiCa::Grid : public Points
        * Calculate Et, E1, E2, E3 from Vp.
        */
       virtual void CalculateE();
+      /**
+       * Calculate interpolation value between two point
+       */
       double twopoint(double dataset[2],double tarlocationset,double pointxset[2])const;
+      /**
+       * Calculate interpolation value between three point (triangle)
+       */
       double threepoint(double dataset[3],double tarlocationset[2],double pointxset[3],double pointyset[3])const;
+      /**
+       * Calculate interpolation value between four point (rectangle)
+       */
       double fourpoint(double dataset[4],double tarlocationset[2],double pointxset[4],double pointyset[4])const;
 };
 #endif
