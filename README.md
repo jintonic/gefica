@@ -6,7 +6,7 @@
 
 ## Introduction
 
-GeFiCa stands for *Ge detector Field Calculator*. It provides classes to calculate static electric fields and potentials in Ge detectors using various coordinates in up to three dimensions. The field potential values together with their grid coordinates are saved in a [ROOT][] [tree][] to take the advantage of the file compression and the [Draw][] function provided by the [ROOT][] [TTree][] class. GeFiCa is provided as a shared library that can be directly loaded by [ROOT][]. All GeFiCa classes can be used directly in a [ROOT][] interactive session. This means that users can modify and run their calculation codes without compilation.
+GeFiCa stands for *Ge detector Field Calculator*. It provides classes to calculate static electric fields and potentials in Ge detectors using various coordinates in up to three dimensions. The field potential values together with their grid coordinates are saved in a [ROOT][] [tree][] to take the advantage of the file compression and the [Draw][] function provided by the [ROOT][] [TTree][] class. GeFiCa is provided as a shared library that can be directly loaded by [ROOT][]. All GeFiCa classes can be used directly in a [ROOT][] interactive session or a Jupyter notebook. Users can modify and run their calculation codes without compilation.
 
 ## Directories
 
@@ -27,15 +27,20 @@ cd gefica/src
 make
 export LD_LIBRARY_PATH=$(PWD):$LD_LIBRARY_PATH
 # change LD_LIBRARY_PATH to DYLD_LIBRARY_PATH for MAC
-cd ../examples
-root -l planar1d.C
+cd ../examples/segmented
+root -l drawSliceInPhi.cc
 ~~~
 
 ## References
 
-- Overview: https://mediatum.ub.tum.de/node?id=701884
-- Field calculation: https://mediatum.ub.tum.de/node?id=969435
-- Numerical methods: https://www.mppmu.mpg.de/~jingliu/ECPI/, Lecture 4 and 5
+- Overview: <https://mediatum.ub.tum.de/node?id=701884>
+- Field calculation: <https://mediatum.ub.tum.de/node?id=969435>
+- Numerical methods: <https://www.mppmu.mpg.de/~jingliu/ECPI/>, Lecture 4 and 5
+
+## Similar projects
+
+- <https://github.com/JuliaPhysics/SolidStateDetectors.jl>
+- <https://radware.phy.ornl.gov/MJ/mjd_siggen/>
 
 [ROOT]:https://root.cern.ch
 [tree]:https://root.cern.ch/root/htmldoc/guides/users-guide/Trees.html
