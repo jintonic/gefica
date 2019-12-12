@@ -42,6 +42,44 @@ root -l drawSliceInPhi.cc
 - <https://github.com/JuliaPhysics/SolidStateDetectors.jl>
 - <https://radware.phy.ornl.gov/MJ/mjd_siggen/>
 
+## Git submodule of MJD fieldgen
+
+GeFiCa contains a Git submodule of [MJD fieldgen](https://github.com/jintonic/siggen). It is a mirror of the MJD siggen (including fieldgen) subversion repository in GitHub. The mirroring is done by
+
+```sh
+apt install git-svn
+git svn clone https://radware.phy.ornl.gov/MJ/mjd_siggen/ siggen
+git remote add origin git@github.com:jintonic/siggen.git
+git push origin master
+```
+
+Adding it as a git submodule to GeFiCa is done by
+
+```sh
+cd /path/to/GeFiCa
+git submodle add https://github.com/jintonic/siggen.git examples/pointContact/fieldgen
+git commit -m "added siggen submodule"
+git push
+```
+
+Cloning GeFiCa with fieldgen can be done by doing
+
+```sh
+git clone https://github.com/jintonic/gefica.git
+cd gefica
+git submodule init
+git submodule update
+```
+
+Updating GeFiCa and fieldgen can be done by doing
+
+```sh
+cd gefica
+git pull
+cd examples/pointContact/fieldgen
+git pull
+```
+
 [ROOT]:https://root.cern.ch
 [tree]:https://root.cern.ch/root/htmldoc/guides/users-guide/Trees.html
 [Draw]:https://root.cern.ch/doc/master/classTTree.html#a73450649dc6e54b5b94516c468523e45

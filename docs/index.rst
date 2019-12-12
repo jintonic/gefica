@@ -46,61 +46,6 @@ The electric potential :math:`\varphi` can be calculated using Poisson's equatio
 
 [table]:https://en.wikipedia.org/wiki/Finite_difference_coefficient
 
-Numerical calculation
-=====================
-
-
-Verification
-============
-
-Compare to analytic solutions
------------------------------
-
-Compare to fieldgen
--------------------
-
-Git submodule of MJD fieldgen
-+++++++++++++++++++++++++++++
-
-Mirror MJD siggen (including fieldgen) subversion repository in GitHub
-
-.. code-block:: sh
-  
-    apt install git-svn
-    git svn clone https://radware.phy.ornl.gov/MJ/mjd_siggen/ siggen
-    git remote add origin git@github.com:jintonic/siggen.git
-    git push origin master
-
-Add it as a git submodule to GeFiCa
-
-.. code-block:: sh
-
-   cd /path/to/GeFiCa
-   git submodle add https://github.com/jintonic/siggen.git examples/pointContact/fieldgen
-   git commit -m "added siggen submodule"
-   git push
-
-Clone GeFiCa with fieldgen
-
-.. code-block:: sh
-
-   git clone https://github.com/jintonic/gefica.git
-   cd gefica
-   git submodule init
-   git submodule update
-
-Update GeFiCa and fieldgen
-
-.. code-block:: sh
-
-   cd gefica
-   git pull
-   cd examples/pointContact/fieldgen
-   git pull
-
-Compare to FEniCS
------------------
-
 Indices and tables
 ==================
 
