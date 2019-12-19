@@ -153,8 +153,6 @@ void getVd(int type=1, double thickness=1*cm)
 				Form("Impurity: %.0e/cm^{3}",impurity[6]/cm3));
 		t10->SetTextFont(132); 
 		t10->Draw();
-
-		c->Print("undepleted.png");
 	} else {
 		// draw lines and texts for p-type
 		TLine *l0 = new TLine(0,0,thickness/cm,0);
@@ -195,4 +193,5 @@ void getVd(int type=1, double thickness=1*cm)
 		t10->SetTextFont(132); 
 		t10->Draw();
 	}
+   c->Print("undepleted.png");
 }
