@@ -53,7 +53,7 @@ void getVd(int type=1, double thickness=1*cm)
 		absi[i] = abs(impurity[i]);
 	}
 
-	gROOT->SetStyle("Plain"); // pick up a good default drawing style
+	gROOT->SetStyle("Plain"); // pick up a good default drawing style to modify
 	// modify the default style
 	gStyle->SetLegendBorderSize(0);
 	gStyle->SetLegendFont(132);
@@ -71,16 +71,15 @@ void getVd(int type=1, double thickness=1*cm)
 	TGraph *g = new TGraph(n,absi,vdep);
 	g->SetTitle(";Net Impurity [cm^{-3}];Depletion Voltage [V]");
 	g->Draw("apc");
-	TText *t1 = new TText(2e9, 6000, Form(
-				"%.0f cm thick planar detector", thickness/cm));
+	TText *t1 = new TText(2e9, 6000,
+         Form("%.0f cm thick planar detector", thickness/cm));
 	t1->Draw();
 	gPad->SetLogx(); gPad->SetGridx(); gPad->SetGridy();
 	gPad->Print("depleted.png");
 
 	// voltage VS thickness
-	TCanvas *c = new TCanvas;
-	double bias = -1000*volt; // p-type
-	if(type==-1) bias = 1000*volt; // n-type
+	double bias = -1000*volt*type;
+   TCanvas *c = new TCanvas;
 
 	// over depleted
 	TF1 *fvo=new TF1("fvo", V, 0, thickness, 3);
@@ -117,8 +116,7 @@ void getVd(int type=1, double thickness=1*cm)
 	fvc->SetLineStyle(5);
 	fvc->Draw("same");
 
-	if (type==-1) {
-		// draw lines and texts for n-type
+	if (type==-1) { // draw lines and texts for n-type
 		TLine *l1 = new TLine(0,bias/volt,thickness/cm,bias/volt);
 		l1->SetLineStyle(kDashed); l1->Draw();
 		TLine *l2 = new TLine(0,vdep[6]/volt,thickness/cm,vdep[6]/volt);
@@ -126,35 +124,26 @@ void getVd(int type=1, double thickness=1*cm)
 		TLine *l3=new TLine(0,(vdep[6]+bias)/volt,thickness/cm,(vdep[6]+bias)/volt);
 		l3->SetLineStyle(kDashed); l3->Draw();
 		TText *t2 = new TText(0.04,bias/volt+20,Form("%.0f V", bias/volt));
-		t2->SetTextFont(132); 
-		t2->Draw();
+		t2->SetTextFont(132); t2->Draw();
 		TText *t3 = new TText(0.04,vdep[6]/volt+20, Form("%.0f V", vdep[6]/volt));
-		t3->SetTextFont(132); 
-		t3->Draw();
+		t3->SetTextFont(132); t3->Draw();
 		TText *t4 = new TText(0.04,(vdep[6]+bias)/volt+20,
 				Form("%.0f V", (vdep[6]+bias)/volt));
 		t4->Draw();
 		TText *t5 = new TText(0.5, 2800, "over depleted");
-		t5->SetTextFont(132); 
-		t5->SetTextColor(kMagenta); t5->Draw();
+		t5->SetTextFont(132); t5->SetTextColor(kMagenta); t5->Draw();
 		TText *t6 = new TText(0.8, 2310, "just depleted");
-		t6->SetTextFont(132); 
-		t6->Draw();
+		t6->SetTextFont(132); t6->Draw();
 		TText *t7 = new TText(0.65, 1250, "undepleted");
-		t7->SetTextFont(132); 
-		t7->SetTextColor(kRed); t7->Draw();
+		t7->SetTextFont(132); t7->SetTextColor(kRed); t7->Draw();
 		TText *t8 = new TText(0.65, 800, "bias alone");
-		t8->SetTextFont(132); 
-		t8->SetTextColor(kBlue); t8->Draw();
+		t8->SetTextFont(132); t8->SetTextColor(kBlue); t8->Draw();
 		TText *t9 = new TText(0.55, 200, "space charges alone");
-		t9->SetTextFont(132); 
-		t9->SetTextColor(kGreen); t9->Draw();
+		t9->SetTextFont(132); t9->SetTextColor(kGreen); t9->Draw();
 		TLatex *t10 = new TLatex(0.1, 2700,
 				Form("Impurity: %.0e/cm^{3}",impurity[6]/cm3));
-		t10->SetTextFont(132); 
-		t10->Draw();
-	} else {
-		// draw lines and texts for p-type
+		t10->SetTextFont(132); t10->Draw();
+	} else { // draw lines and texts for p-type
 		TLine *l0 = new TLine(0,0,thickness/cm,0);
 		l0->SetLineStyle(kDashed); l0->Draw();
 		TLine *l1 = new TLine(0,bias/volt,thickness/cm,bias/volt);
@@ -164,34 +153,28 @@ void getVd(int type=1, double thickness=1*cm)
 		TLine *l3=new TLine(0,(vdep[6]+bias)/volt,thickness/cm,(vdep[6]+bias)/volt);
 		l3->SetLineStyle(kDashed); l3->Draw();
 		TText *t2 = new TText(0.04,bias/volt+20,Form("%.0f V", bias/volt));
-		t2->SetTextFont(132); 
-		t2->Draw();
+		t2->SetTextFont(132); t2->Draw();
 		TText *t3 = new TText(0.04,vdep[6]/volt+20, Form("%.0f V", vdep[6]/volt));
-		t3->SetTextFont(132); 
-		t3->Draw();
+		t3->SetTextFont(132); t3->Draw();
 		TText *t4 = new TText(0.04,(vdep[6]+bias)/volt+20,
 				Form("%.0f V", (vdep[6]+bias)/volt));
-		t4->SetTextFont(132); 
-		t4->Draw();
-		TText *t5 = new TText(0.5, -3100, "over depleted");
-		t5->SetTextFont(132); 
-		t5->SetTextColor(kMagenta); t5->Draw();
-		TText *t6 = new TText(0.76, -2500, "just depleted");
-		t6->SetTextFont(132); 
-		t6->Draw();
-		TText *t7 = new TText(0.65, -1400, "undepleted");
-		t7->SetTextFont(132); 
-		t7->SetTextColor(kRed); t7->Draw();
-		TText *t8 = new TText(0.6, -900, "bias alone");
-		t8->SetTextFont(132); 
-		t8->SetTextColor(kBlue); t8->Draw();
-		TText *t9 = new TText(0.5, -200, "space charges alone");
-		t9->SetTextFont(132); 
-		t9->SetTextColor(kGreen); t9->Draw();
-		TLatex *t10 = new TLatex(0.1, -2700,
+		t4->SetTextFont(132); t4->Draw();
+		TText *t5 = new TText(0.76, -2850, "over depleted");
+		t5->SetTextFont(132); t5->SetTextAngle(-19); t5->SetTextColor(kMagenta);
+      t5->Draw();
+		TText *t6 = new TText(0.8, -2120, "just depleted");
+		t6->SetTextFont(132); t6->SetTextAngle(-9);  t6->Draw();
+		TText *t7 = new TText(0.65, -1350, "undepleted");
+		t7->SetTextFont(132); t7->SetTextColor(kRed); t7->Draw();
+		TText *t8 = new TText(0.75, -700, "bias alone");
+		t8->SetTextFont(132); t8->SetTextAngle(-11.5); t8->SetTextColor(kBlue);
+      t8->Draw();
+		TText *t9 = new TText(0.65, -450, "space charges alone");
+		t9->SetTextFont(132); t9->SetTextAngle(12.5); t9->SetTextColor(kGreen);
+      t9->Draw();
+		TLatex *t10 = new TLatex(0.15, -2800,
 				Form("Impurity: %.0e/cm^{3}",impurity[6]/cm3));
-		t10->SetTextFont(132); 
-		t10->Draw();
+		t10->SetTextFont(132); t10->Draw();
 	}
    c->Print("undepleted.png");
 }
