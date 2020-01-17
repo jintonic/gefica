@@ -18,7 +18,7 @@ CXXFLAGS = $(shell $(RC) --cflags) -O2 -Wall -fPIC
 # other makefiles specified by the include command
 all: $(LIBRARY)
 	@echo
-	@echo "Please add current folder to (DY)LD_LIBARY_PATH."
+	@echo "Please add current folder to (DY)LD_LIBRARY_PATH."
 	@echo 
 
 # $(LIBRARY) depends on all *.o files.
