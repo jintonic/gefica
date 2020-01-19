@@ -1,5 +1,5 @@
 - Homepage: http://physino.xyz/gefica
-- Documentation: https://gefica.readthedocs.io
+- Documentation: https://arxiv.org/abs/2001.02762
 - Source code: https://github.com/jintonic/gefica
 
 ### Coding convention
