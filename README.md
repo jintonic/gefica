@@ -1,5 +1,4 @@
 [![Doxygen](https://codedocs.xyz/jintonic/gefica.svg)](https://codedocs.xyz/jintonic/gefica/)
-[![ReadTheDocs](https://readthedocs.org/projects/gefica/badge)](https://gefica.readthedocs.io)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Code size](https://img.shields.io/github/languages/code-size/jintonic/gefica.svg?style=flat)
 ![](https://img.shields.io/github/languages/top/jintonic/gefica.svg?style=flat)
@@ -40,7 +39,7 @@ root -l drawSliceInPhi.cc
 ## Similar projects
 
 - <https://github.com/JuliaPhysics/SolidStateDetectors.jl>
-- <https://radware.phy.ornl.gov/MJ/mjd_siggen/>
+- <https://github.com/radforddc/icpc_siggen>
 
 ## Git submodule of MJD fieldgen
 
