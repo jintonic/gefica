@@ -1,6 +1,6 @@
 ### Documentations
 
-- [Manual](https://gefica.rtfd.io)
+- [arXiv:2001.02762](https://arxiv.org/abs/2001.02762)
 - [Code documentation](https://codedocs.xyz/jintonic/gefica/)
 
 ### Authors
