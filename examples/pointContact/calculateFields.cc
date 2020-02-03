@@ -13,8 +13,8 @@ void calculateFields(const char *output="ICPC.root")
    detector.TaperW=3*mm; detector.TaperH=3*mm;
    detector.CornerW=3*mm; detector.CornerH=3*mm;
 
-   detector.BoreH=2*cm; detector.BoreR=8*mm;
-   detector.BoreTaperH=3*mm; detector.BoreTaperW=3*mm;
+   //detector.BoreH=2*cm; detector.BoreR=8*mm;
+   //detector.BoreTaperH=3*mm; detector.BoreTaperW=3*mm;
 
    detector.WrapAroundR=2.5*cm;
    detector.GrooveH=3*mm; detector.GrooveW=3*mm;

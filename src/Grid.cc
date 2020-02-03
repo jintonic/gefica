@@ -24,7 +24,7 @@ TGraph* FieldLine::GetGraph()
 //
 Grid::Grid(size_t n1, size_t n2, size_t n3) : Points(), TNamed("grid","grid"),
    N1(n1), N2(n2), N3(n3), MaxIterations(5000), RelaxationFactor(1.95),
-   Precision(1e-7*volt), fTree(0), fDetector(0), fIterations(0)
+   Tolerance(1e-7*volt), Iterations(0), fTree(0), fDetector(0)
 {
    // pick up a good style to modify
    gStyle->SetName("GeFiCa");
@@ -125,31 +125,46 @@ void Grid::SuccessiveOverRelax()
       abort();
    }
    Info("SuccessiveOverRelax","Start...");
-   double cp=1; // current presision
-   fIterations=0;
    TStopwatch watch; watch.Start();
-   while (fIterations<MaxIterations) {
-      if (fIterations%100==0) Printf("%4zu steps, "
-            "precision: %.1e (target: %.0e)", fIterations, cp, Precision);
+   Iterations=0; double error=1;
+   while (Iterations<MaxIterations && error>Tolerance) {
+      if (Iterations%100==0) Printf("%4zu steps, "
+            "error: %.1e (tolerance: %.0e)", Iterations, error, Tolerance);
+      for (size_t i=0; i<GetN(); i++) OverRelaxAt(i); // update Vo[i], Vp[i]
+      for (size_t i=0; i<GetN(); i++) CheckDepletionAt(i); // update Vp[i]
+      // calculate error
       double numerator=0, denominator=0;
       for (size_t i=0; i<GetN(); i++) {
-         double old=Vp[i]; // save old value of Vp[i]
-         OverRelaxAt(i); // update Vp[i]
-         if(old>0) denominator+=old; else denominator-=old;
-         double diff=Vp[i]-old;
+         if(Vo[i]>0) denominator+=Vo[i]; else denominator-=Vo[i];
+         double diff=Vp[i]-Vo[i];
          if(diff>0) numerator+=(diff); else numerator-=(diff);
       }
       if (denominator==0) {
          Error("SuccessiveOverRelax","Sum of Vs == 0!"); abort();
       }
-      cp = numerator/denominator;
-      fIterations++;
-      if (cp<Precision) break;
+      error = numerator/denominator;
+      Iterations++;
    }
    CalculateE();
-   Printf("%4zu steps, precision: %.1e (target: %.0e)",
-         fIterations, cp, Precision);
+   Printf("%4zu steps, error: %.1e (tolerance: %.0e)",
+         Iterations, error, Tolerance);
    Info("SuccessiveOverRelax", "CPU time: %.1f s", watch.CpuTime());
+}
+//______________________________________________________________________________
+//
+void Grid::CheckDepletionAt(size_t idx) // for 1D case
+{
+   fIsDepleted[idx]=false; // default
+   if (fDetector->Bias[0]==fDetector->Bias[1]) return; // no bias, no depletion
+   if (fIsFixed[idx]) return; // no need to check on boundaries
+
+   double min=Vp[idx-1], max=Vp[idx-1];
+   if (min>Vp[idx+1]) min=Vp[idx+1];
+   if (max<Vp[idx+1]) max=Vp[idx+1];
+
+   if (Vp[idx]<min) Vp.at(idx)=min;
+   else if (Vp[idx]>max) Vp.at(idx)=max;
+   else fIsDepleted[idx]=true;
 }
 //______________________________________________________________________________
 //

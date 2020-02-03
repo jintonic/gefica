@@ -66,24 +66,11 @@ double X::GetC()
 void X::OverRelaxAt(size_t idx)
 {
    if (fIsFixed[idx]) return; // no need to calculate on boundaries
-
+   // save old value of Vp[idx] to Vo[idx]
+   Vo[idx]=Vp[idx];
    // calculate Vp[idx] from Vp[idx-1] and Vp[idx+1]
-   double vnew = Src[idx]*dC1m[idx]*dC1p[idx]/2 +
+   Vp[idx] = Src[idx]*dC1m[idx]*dC1p[idx]/2 +
       (dC1p[idx]*Vp[idx-1]+dC1m[idx]*Vp[idx+1])/(dC1m[idx]+dC1p[idx]);
-   vnew = RelaxationFactor*(vnew-Vp[idx]) + Vp[idx]; // over relax
-
-   // check depletion and update Vp[idx] accordingly
-   double min=Vp[idx-1], max=Vp[idx-1];
-   if (min>Vp[idx+1]) min=Vp[idx+1];
-   if (max<Vp[idx+1]) max=Vp[idx+1];
-   if (vnew<min) {
-      fIsDepleted[idx]=false; Vp[idx]=min;
-   } else if (vnew>max) {
-      fIsDepleted[idx]=false; Vp[idx]=max;
-   } else {
-      fIsDepleted[idx]=true; Vp[idx]=vnew;
-   }
-
-   // update Vp for impurity-only case even if the point is undepleted
-   if (Vp[0]==Vp[N1-1]) Vp[idx]=vnew;
+   // over relax
+   Vp.at(idx) = RelaxationFactor * (Vp[idx] - Vo[idx]) + Vo[idx];
 }

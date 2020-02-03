@@ -15,6 +15,7 @@ class GeFiCa::RhoZ : public Grid
       double GetC();
    protected:
       void OverRelaxAt(size_t idx); 
+      void CheckDepletionAt(size_t idx); 
       void GetInfoFrom(Segmented &detector) {};
       void GetInfoFrom(PointContact &detector);
       void ReallocateGridPointsNearBoundaries(PointContact &detector);

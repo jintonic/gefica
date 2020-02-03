@@ -24,6 +24,8 @@ class GeFiCa::Points
       std::vector<double> dC3p; ///< step length to next point alone C3
       std::vector<double> dC3m; ///< step length to previous point alone C3
       size_t GetN() { return C1.size(); } ///< total number of points
+   protected:
+      std::vector<double> Vo; ///< potential at each point one iteration ago
 };
 #include <TNamed.h>
 class TGraph;
@@ -56,7 +58,8 @@ class GeFiCa::Grid : public Points, public TNamed
       size_t N3; ///< number of points along the 3rd coordinate
       size_t MaxIterations; ///< maximal iterations of SOR to be performed
       double RelaxationFactor; ///< within (0,2), used to speed up convergence
-      double Precision; ///< difference between two consecutive SOR iterations
+      double Tolerance; ///< target error for convergence
+      size_t Iterations; ///< number of iterations of SOR performed
       /**
        * Default constructor.
        * It also defines ROOT drawing style.
@@ -74,10 +77,6 @@ class GeFiCa::Grid : public Points, public TNamed
        * Successively over-relax potentials on grid points.
        */
       void SuccessiveOverRelax();
-      /**
-       * Get number of iterations for SOR to converge.
-       */
-      size_t GetIterations() { return fIterations; }
       /**
        * Solve Poisson's Equation analytically.
        * It only accepts a constant impurity throughout the grid.
@@ -132,11 +131,14 @@ class GeFiCa::Grid : public Points, public TNamed
       std::vector<bool> fIsDepleted; ///< true if a grid point is depleted
       TTree* fTree; ///<! ROOT tree to visualize fields
       Detector* fDetector; ///<! Pointer to associated detector object
-      size_t fIterations; ///< number of iterations of SOR performed
       /**
        * Over relax potential Vp[\param idx].
        */
       virtual void OverRelaxAt(size_t idx) {};
+      /**
+       * Check if a point at \param idx is depleted.
+       */
+      virtual void CheckDepletionAt(size_t idx);
       /**
        * Get index of point near \param c1 in between \param begin & \param end.
        */

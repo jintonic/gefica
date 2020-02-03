@@ -49,35 +49,52 @@ void RhoZ::OverRelaxAt(size_t idx)
    if (idx%N1==N1-1) vrp=Vp[idx]; // set potential for right boundary points
    else vrp=Vp[idx+1];
 
-   // update potential
-   double vnew = (Src[idx] + 1/C1[idx]*(vrp-vrm)/(drm+drp)
+   Vo.at(idx)=Vp[idx]; // save old Vp[idx]
+   // update Vp[idx] according to its neighbors
+   Vp.at(idx) = (Src[idx] + 1/C1[idx]*(vrp-vrm)/(drm+drp)
          + (vrp/drp+vrm/drm)*2/(drm+drp) + (vzp/dzp+vzm/dzm)*2/(dzp+dzm))
       /((1/drm+1/drp)*2/(drm+drp) + (1/dzp+1/dzm)*2/(dzp+dzm));
-   vnew = RelaxationFactor*(vnew-Vp[idx])+Vp[idx]; // over relax
+   Vp.at(idx) = RelaxationFactor * (Vp[idx]-Vo[idx]) + Vo[idx]; // over relax
+}
+//______________________________________________________________________________
+//
+void RhoZ::CheckDepletionAt(size_t idx)
+{
+   fIsDepleted[idx]=false; // default
+   if (fDetector->Bias[0]==fDetector->Bias[1]) return; // no bias, no depletion
+   if (fIsFixed[idx]) return; // no need to check on boundaries
 
-   //find minimal potential in all neighboring points
+   // setup potential for boundary points
+   double vzm,vzp,vrm,vrp; // vzm: v_z_minus
+   if (idx>=N1) vzm=Vp[idx-N1];
+   else vzm=Vp[idx+N1]; // mirroring potential for bottom boundary points
+   if (idx>=N1*N2-N1) vzp=Vp[idx]; // set potential for top boundary points
+   else vzp=Vp[idx+N1];
+   if (idx%N1==0) vrm=Vp[idx]; // set potential for left boundary points
+   else vrm=Vp[idx-1];
+   if (idx%N1==N1-1) vrp=Vp[idx]; // set potential for right boundary points
+   else vrp=Vp[idx+1];
+
+   // find minimal potential in all neighboring points
    double vmin=vrm; // minimal Vp around point[idx]
    if (vmin>vrp) vmin=vrp;
    if (vmin>vzp) vmin=vzp;
    if (vmin>vzm) vmin=vzm;
 
-   //find maximal potential in all neighboring points
+   // find maximal potential in all neighboring points
    double vmax=vrm; // maximal Vp around point[idx]
    if (vmax<vrp) vmax=vrp;
    if (vmax<vzp) vmax=vzp;
    if (vmax<vzm) vmax=vzm;
 
-   //if vnew is greater or smaller than vmax and vmin, set vnew to it.
-   if (vnew<vmin) {
-      Vp[idx]=vmin; fIsDepleted[idx]=false;
-   } else if(vnew>vmax) {
-      Vp[idx]=vmax; fIsDepleted[idx]=false;
-   } else {
-      Vp[idx]=vnew; fIsDepleted[idx]=true;
-   }
+   // update Vp[idx] if it is not depleted
+   if (Vp[idx]<vmin-0.1*volt) Vp[idx]=vmin;
+   else if (Vp[idx]>vmax+0.1*volt) Vp[idx]=vmax;
+   else fIsDepleted[idx]=true;
 
-   // update Vp for impurity-only case even if the point is undepleted
-   if (fDetector->Bias[0]==fDetector->Bias[1]) Vp[idx]=vnew;
+   //if (fIterations>1996 && C1[idx]<0.01 && C1[idx]>0)
+   //   Printf("%zu, C1: %f, C2: %f, vrp: %f, vrm: %f, vzp: %f, vzm: %f, vnew: %f",
+   //         idx, C1[idx], C2[idx], vrp, vrm, vzp, vzm, vnew);
 }
 //______________________________________________________________________________
 //
@@ -177,6 +194,8 @@ void RhoZ::GetInfoFrom(PointContact& pc)
          Vp[i]=pc.Bias[1];
       }
    }
+
+   for (size_t i=0; i<GetN(); i++) Vo.push_back(Vp[i]); // save Vp to Vo
 
    ReallocateGridPointsNearBoundaries(pc);
 }
