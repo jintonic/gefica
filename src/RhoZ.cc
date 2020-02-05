@@ -55,29 +55,21 @@ void RhoZ::OverRelaxAt(size_t idx)
       /((1/drm+1/drp)*2/(drm+drp) + (1/dzp+1/dzm)*2/(dzp+dzm));
    vnew = RelaxationFactor*(vnew-Vp[idx])+Vp[idx]; // over relax
 
+   // update Vp for impurity-only case even if the point is undepleted
+   if (fDetector->Bias[0]==fDetector->Bias[1]) { Vp[idx]=vnew; return; }
+
+   // check depletion
+   fIsDepleted[idx]=false; // default
    //find minimal potential in all neighboring points
    double vmin=vrm; // minimal Vp around point[idx]
-   if (vmin>vrp) vmin=vrp;
-   if (vmin>vzp) vmin=vzp;
-   if (vmin>vzm) vmin=vzm;
-
+   if (vmin>vrp) vmin=vrp; if (vmin>vzp) vmin=vzp; if (vmin>vzm) vmin=vzm;
    //find maximal potential in all neighboring points
    double vmax=vrm; // maximal Vp around point[idx]
-   if (vmax<vrp) vmax=vrp;
-   if (vmax<vzp) vmax=vzp;
-   if (vmax<vzm) vmax=vzm;
-
+   if (vmax<vrp) vmax=vrp; if (vmax<vzp) vmax=vzp; if (vmax<vzm) vmax=vzm;
    //if vnew is greater or smaller than vmax and vmin, set vnew to it.
-   if (vnew<vmin) {
-      Vp[idx]=vmin; fIsDepleted[idx]=false;
-   } else if(vnew>vmax) {
-      Vp[idx]=vmax; fIsDepleted[idx]=false;
-   } else {
-      Vp[idx]=vnew; fIsDepleted[idx]=true;
-   }
-
-   // update Vp for impurity-only case even if the point is undepleted
-   if (fDetector->Bias[0]==fDetector->Bias[1]) Vp[idx]=vnew;
+   if (vnew<vmin) Vp[idx]=vmin; 
+   else if(vnew>vmax) Vp[idx]=vmax;
+   else { Vp[idx]=vnew; fIsDepleted[idx]=true; } // vmin<vnew<vmax
 }
 //______________________________________________________________________________
 //
