@@ -57,6 +57,7 @@ class GeFiCa::Grid : public Points, public TNamed
       size_t MaxIterations;    ///< maximal iterations of SOR to be performed
       double RelaxationFactor; ///< within (0,2), used to speed up convergence
       double Tolerance;        ///< SOR stops when error<Tolerance
+      size_t Iterations;       ///< number of iterations of SOR performed
       /**
        * Default constructor.
        * It also defines ROOT drawing style.
@@ -74,10 +75,6 @@ class GeFiCa::Grid : public Points, public TNamed
        * Successively over-relax potentials on grid points.
        */
       void SuccessiveOverRelax();
-      /**
-       * Get number of iterations for SOR to converge.
-       */
-      size_t GetIterations() { return fIterations; }
       /**
        * Solve Poisson's Equation analytically.
        * It only accepts a constant impurity throughout the grid.
@@ -132,7 +129,6 @@ class GeFiCa::Grid : public Points, public TNamed
       std::vector<bool> fIsDepleted; ///< true if a grid point is depleted
       TTree* fTree; ///<! ROOT tree to visualize fields
       Detector* fDetector; ///<! Pointer to associated detector object
-      size_t fIterations; ///< number of iterations of SOR performed
       /**
        * Over relax potential Vp[\param idx].
        */

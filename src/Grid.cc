@@ -24,7 +24,7 @@ TGraph* FieldLine::GetGraph()
 //
 Grid::Grid(size_t n1, size_t n2, size_t n3) : Points(), TNamed("grid","grid"),
    N1(n1), N2(n2), N3(n3), MaxIterations(5000), RelaxationFactor(1.95),
-   Tolerance(1e-7*volt), fTree(0), fDetector(0), fIterations(0)
+   Tolerance(1e-7*volt), fTree(0), fDetector(0), Iterations(0)
 {
    // pick up a good style to modify
    gStyle->SetName("GeFiCa");
@@ -125,11 +125,11 @@ void Grid::SuccessiveOverRelax()
       abort();
    }
    Info("SuccessiveOverRelax","Start...");
-   double error=1; fIterations=0;
+   double error=1; Iterations=0;
    TStopwatch watch; watch.Start();
-   while (fIterations<MaxIterations && error>Tolerance) {
-      if (fIterations%100==0) Printf("%4zu steps, "
-            "error: %.1e (target: %.0e)", fIterations, error, Tolerance);
+   while (Iterations<MaxIterations && error>Tolerance) {
+      if (Iterations%100==0) Printf("%4zu steps, "
+            "error: %.1e (target: %.0e)", Iterations, error, Tolerance);
       double numerator=0, denominator=0;
       for (size_t i=0; i<GetN(); i++) {
          double old=Vp[i]; // save old value of Vp[i]
@@ -142,11 +142,11 @@ void Grid::SuccessiveOverRelax()
          Error("SuccessiveOverRelax","Sum of Vs == 0!"); abort();
       }
       error = numerator/denominator;
-      fIterations++;
+      Iterations++;
    }
    CalculateE();
    Printf("%4zu steps, error: %.1e (target: %.0e)",
-         fIterations, error, Tolerance);
+         Iterations, error, Tolerance);
    Info("SuccessiveOverRelax", "CPU time: %.1f s", watch.CpuTime());
 }
 //______________________________________________________________________________
