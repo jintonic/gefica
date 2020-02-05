@@ -118,7 +118,7 @@ All concrete grid and detector classes in GeFiCa inherit the capability to inspe
   N3                       0                   number of points along the 3rd coordinate
   MaxIterations            5000                maximal iterations of SOR to be performed
   RelaxationFactor         1.95                within (0,2), used to speed up convergence
-  Precision                1e-07               difference between two consecutive SOR iterations
+  Tolerance                1e-07               SOR stops when error<Tolerance
   ...
 ```
 

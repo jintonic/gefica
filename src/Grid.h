@@ -50,13 +50,13 @@ class TTree;
 class GeFiCa::Grid : public Points, public TNamed
 {
    public:
-      std::vector<double> Src; ///< -(net impurity concentration)x|Qe|/epsilon
       size_t N1; ///< number of points along the 1st coordinate
       size_t N2; ///< number of points along the 2nd coordinate
       size_t N3; ///< number of points along the 3rd coordinate
-      size_t MaxIterations; ///< maximal iterations of SOR to be performed
+      std::vector<double> Src; ///< -(net impurity concentration)x|Qe|/epsilon
+      size_t MaxIterations;    ///< maximal iterations of SOR to be performed
       double RelaxationFactor; ///< within (0,2), used to speed up convergence
-      double Precision; ///< difference between two consecutive SOR iterations
+      double Tolerance;        ///< SOR stops when error<Tolerance
       /**
        * Default constructor.
        * It also defines ROOT drawing style.

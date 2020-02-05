@@ -15,7 +15,6 @@ double GetCfromDepletionRadius(double voltage, double radius, double boreR)
    Rho grid(n);
    grid.SetupWith(detector);
    grid.RelaxationFactor=1.986;
-   grid.Precision=1e-18;
    grid.SuccessiveOverRelax();
    
    //search for depletion radius
@@ -44,7 +43,6 @@ double GetCfromGeFiCa(double voltage, double radius,double boreR)
    Rho grid(n);
    grid.SetupWith(detector);
    grid.RelaxationFactor=1.986;
-   grid.Precision=1e-18;
 
    return grid.GetC();
 }
