@@ -18,6 +18,7 @@ TGraph* FieldLine::GetGraph()
    if (fGl) { return fGl; }
    fGl = new TGraph(GetN(),C1.data(),C2.data());
    fGl->SetName(GetName()); fGl->SetTitle(GetTitle());
+   fGl->SetMarkerStyle(8); fGl->SetMarkerSize(0.4); fGl->SetMarkerColor(12);
    return fGl;
 }
 //______________________________________________________________________________
@@ -34,7 +35,6 @@ Grid::Grid(size_t n1, size_t n2, size_t n3) : Points(), TNamed("grid","grid"),
    gStyle->SetTitleFont(132,"XYZ");
    gStyle->SetLabelSize(0.05,"XYZ");
    gStyle->SetTitleSize(0.05,"XYZ");
-   gStyle->SetTitleOffset(-0.4,"Z");
    gStyle->SetPadTopMargin(0.02);
    // create a smoother palette than the default one
    const int nRGBs = 5;
@@ -129,7 +129,7 @@ void Grid::SuccessiveOverRelax()
    TStopwatch watch; watch.Start();
    while (Iterations<MaxIterations && error>Tolerance) {
       if (Iterations%100==0) Printf("%4zu steps, "
-            "error: %.1e (target: %.0e)", Iterations, error, Tolerance);
+            "error: %.1e (tolerance: %.0e)", Iterations, error, Tolerance);
       double numerator=0, denominator=0;
       for (size_t i=0; i<GetN(); i++) {
          double old=Vp[i]; // save old value of Vp[i]
@@ -145,7 +145,7 @@ void Grid::SuccessiveOverRelax()
       Iterations++;
    }
    CalculateE();
-   Printf("%4zu steps, error: %.1e (target: %.0e)",
+   Printf("%4zu steps, error: %.1e (tolerance: %.0e)",
          Iterations, error, Tolerance);
    Info("SuccessiveOverRelax", "CPU time: %.1f s", watch.CpuTime());
 }
