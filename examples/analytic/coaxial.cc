@@ -69,7 +69,7 @@ void drawV()
       l->AddEntry(fV[i],Form("%8.1e",-rho[i]/e*cm3),"l");
    }
    fV[0]->SetTitle("");
-   fV[0]->GetXaxis()->SetTitle("Radius [cm]");
+   fV[0]->GetXaxis()->SetTitle("Radial position in true coaxial detector [cm]");
    fV[0]->GetYaxis()->SetTitle("Voltage [V]");
 
    l->Draw();
@@ -102,7 +102,7 @@ void drawE()
       l->AddEntry(fE[i],Form("%8.1e",-rho[i]/e*cm3),"l");
    }
    fE[0]->SetTitle("");
-   fE[0]->GetXaxis()->SetTitle("Radius [cm]");
+   fE[0]->GetXaxis()->SetTitle("Radial position in true coaxial detector [cm]");
    fE[0]->GetYaxis()->SetTitle("Electric field [V/cm]");
 
    l->Draw();

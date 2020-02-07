@@ -19,7 +19,7 @@ void compare2pancake()
 
    const int nr=420, nz = 51; // number of grid points
    RhoZ grid(nr,nz); // grid step length is about 0.1 mm
-   grid.GetBoundaryConditionFrom(detector);
+   grid.SetupWith(detector);
    grid.RelaxationFactor=1.994; // fastest
    grid.SuccessiveOverRelax();
 
@@ -44,7 +44,7 @@ void compare2pancake()
    }
    TGraph *ga = new TGraph(nz,z,va);
    TGraph *gg = new TGraph(nz,z,vg);
-   ga->SetTitle(";Axial position at radius=0 [mm];Voltage [volt]");
+   ga->SetTitle(";z position at r=0 [mm];Voltage [volt]");
    ga->GetYaxis()->SetTitleOffset(0.7);
    ga->SetLineColor(kRed);
    gg->SetMarkerColor(kBlue);
@@ -71,7 +71,7 @@ void compare2pancake()
          t->GetV2(), t->GetV1(), t->GetV3());
    g2->SetName(""); g2->SetNpx(500); g2->SetNpy(500); // fine bin histogram
    TH2D *he = g2->GetHistogram();
-   he->SetTitle(";Radius [mm];Height [mm];V [volt]");
+   he->SetTitle(";r [mm];z [mm];V [volt]");
    he->GetYaxis()->SetTitleOffset(0.23);
    he->GetYaxis()->SetNdivisions(5);
    he->GetZaxis()->CenterTitle();
@@ -99,7 +99,7 @@ void compare2match()
 
    const int nr=100, nz = 51; // number of grid points
    RhoZ grid(nr,nz); // grid step length is about 0.1 mm
-   grid.GetBoundaryConditionFrom(detector);
+   grid.SetupWith(detector);
    grid.RelaxationFactor=1.994; // fastest
    grid.SuccessiveOverRelax();
 
@@ -132,7 +132,7 @@ void compare2match()
    }
    TGraph *ga = new TGraph(nr/2-20,r,va);
    TGraph *gg = new TGraph(nr/2-20,r,vg);
-   ga->SetTitle(";R position@z=5mm [mm];Voltage [volt]");
+   ga->SetTitle(";r position@z=5mm [mm];Voltage [volt]");
    ga->GetYaxis()->SetTitleOffset(2.9);
    ga->SetLineColor(kRed);
    gg->SetMarkerColor(kBlue);
@@ -161,7 +161,7 @@ void compare2match()
          t->GetV2(), t->GetV1(), t->GetV3());
    g2->SetName(""); g2->SetNpx(500); g2->SetNpy(500); // fine bin histogram
    TH2D *he = g2->GetHistogram();
-   he->SetTitle(";Radius [mm];Height [mm];V [volt]");
+   he->SetTitle(";r [mm];z [mm];Voltage [volt]");
    he->GetYaxis()->SetTitleOffset(2.7);
    he->GetZaxis()->CenterTitle();
    he->GetXaxis()->SetNdivisions(3);

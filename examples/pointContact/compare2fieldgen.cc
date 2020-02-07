@@ -67,7 +67,7 @@ void compare2fieldgen(const char *fieldgenOutput="fieldgen/fields/p1/ev.dat")
          tg->GetV2(), tg->GetV1(), tg->GetV3());
    gg->SetName("gg"); gg->SetNpx(500); gg->SetNpy(500); // fine bin histogram
    TH2D *he = gg->GetHistogram();
-   he->SetTitle(";Radius [cm];Height [cm];"
+   he->SetTitle(";r [cm];z [cm];"
          "100 #times (E_{fieldgen}-E_{GeFiCa})/E_{fieldgen}");
    he->GetZaxis()->CenterTitle();
    he->GetZaxis()->SetTitleOffset(1.5);

@@ -29,8 +29,8 @@ void showConvergingSteps()
       mg->Add(tg);
       lg->AddEntry(tg,Form("%3d iterations",iterations[i]),"l");
    }
-   mg->SetTitle(";Position in a 1 cm thick ideal planar detector [cm]"
-        ";Potential [V]");
+   mg->SetTitle(";Verticle position in planar detector [cm]"
+        ";Voltage [V]");
    mg->GetXaxis()->SetRangeUser(0,1);
    mg->GetYaxis()->SetRangeUser(0,350);
 
