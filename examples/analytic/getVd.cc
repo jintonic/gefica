@@ -84,7 +84,7 @@ void getVd(int type=1, double thickness=1*cm)
 	// over depleted
 	TF1 *fvo=new TF1("fvo", V, 0, thickness, 3);
 	fvo->SetParameters(thickness, vdep[6]+bias, impurity[6]);
-	fvo->SetTitle(";Verticle position in planar detector [cm]; Voltage [V]");
+	fvo->SetTitle(";Vertical position in planar detector [cm]; Voltage [V]");
 	fvo->SetLineColor(kMagenta);
 	fvo->SetLineStyle(2);
 	fvo->GetXaxis()->SetTitleOffset(1.1);

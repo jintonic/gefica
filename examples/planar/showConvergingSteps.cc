@@ -29,7 +29,7 @@ void showConvergingSteps()
       mg->Add(tg);
       lg->AddEntry(tg,Form("%3d iterations",iterations[i]),"l");
    }
-   mg->SetTitle(";Verticle position in planar detector [cm]"
+   mg->SetTitle(";Vertical position in planar detector [cm]"
         ";Voltage [V]");
    mg->GetXaxis()->SetRangeUser(0,1);
    mg->GetYaxis()->SetRangeUser(0,350);

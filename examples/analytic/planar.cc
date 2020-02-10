@@ -64,7 +64,7 @@ void drawV()
       // net impurity concentration = - rho/e
       l->AddEntry(fV[i],Form("%8.1e",-rho[i]/e*cm3),"l");
    }
-   fV[0]->SetTitle(";Verticle position in planar detector [cm];Voltage [V]");
+   fV[0]->SetTitle(";Vertical position in planar detector [cm];Voltage [V]");
    l->Draw();
    gPad->Print("Vx.png");
 }
@@ -92,7 +92,7 @@ void drawE()
       // net impurity concentration = - rho/e
       l->AddEntry(fE[i],Form("%8.1e",-rho[i]/e*cm3),"l");
    }
-   fE[0]->SetTitle(";Verticle position in planar detector [cm];Electric field [V/cm]");
+   fE[0]->SetTitle(";Vertical position in planar detector [cm];Electric field [V/cm]");
    l->Draw();
    c->Print("Ex.png");
 }
