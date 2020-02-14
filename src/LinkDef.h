@@ -9,6 +9,7 @@
 #pragma link C++ class GeFiCa::Grid+;
 
 #pragma link C++ class GeFiCa::X+;
+#pragma link C++ class GeFiCa::XYZ+;
 
 #pragma link C++ class GeFiCa::R+;
 #pragma link C++ class GeFiCa::RTheta+;
@@ -24,6 +25,7 @@
 #pragma link C++ class GeFiCa::Segmented+;
 #pragma link C++ class GeFiCa::Hemispherical+;
 #pragma link C++ class GeFiCa::PointContact+;
+#pragma link C++ class GeFiCa::SquarePointContact+;
 #endif
 // for Emacs and gitHub:
 // -*- c++ -*-

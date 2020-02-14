@@ -27,7 +27,7 @@ void RhoZ::SetupWith(Detector &detector)
          abort();
       }
       Segmented & se = (Segmented &) detector;
-      s.CheckConfigurations();
+      se.CheckConfigurations();
       GetInfoFrom(se);
 
    }
