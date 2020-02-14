@@ -1,6 +1,7 @@
 #include "RhoZ.h"
 #include "Units.h"
 #include "PointContact.h"
+#include "Segmented.h"
 using namespace GeFiCa;
 
 void RhoZ::SetupWith(Detector &detector)
@@ -17,7 +18,20 @@ void RhoZ::SetupWith(Detector &detector)
       PointContact& pc = (PointContact&) detector;
       pc.CheckConfigurations();
       GetInfoFrom(pc);
-   } else {
+   }
+   else if (type.Contains("Segmented"))
+   {
+      if (N1%2==1) { // we want no grid point right on z-axis
+         Error("SetupWith",
+               "Please assign even number of grid points along radius.");
+         abort();
+      }
+      Segmented & se = (Segmented &) detector;
+      s.CheckConfigurations();
+      GetInfoFrom(se);
+
+   }
+   else {
       Error("SetupWith", "%s is not expected.", type.Data());
       Error("SetupWith", "Please use "
             "PointContact or Segmented detector.");
