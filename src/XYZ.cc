@@ -49,7 +49,7 @@ void XYZ::OverRelaxAt(size_t idx)
    else pxm=Vp[idx-1];
 
    double tmp= (
-         -density/epsilon*h0*h1*h2*h3*h4*h5*(h1+h4)*(h2+h3)*(h0+h5)/2
+         density*h0*h1*h2*h3*h4*h5*(h1+h4)*(h2+h3)*(h0+h5)/2
          +(pxp*h3+pxm*h2)*h0*h1*h4*h5*(h1+h4)*(h0+h5)
          +(pyp*h4+pym*h1)*h0*h2*h3*h5*(h0+h5)*(h2+h3)
          +(pzp*h5+pzm*h0)*h1*h2*h3*h4*(h1+h4)*(h2+h3)	
@@ -117,12 +117,11 @@ double XYZ::GetC()
 }
 //_____________________________________________________________________________
 //
-void XYZ::GetInfoFrom(SquarePointContact &spc)
+void XYZ::GeneralSetup(SquarePointContact &detector)
 {
-   //TODO
-   double dx=spc.Width/(N1-1);
-   double dy=spc.Length/(N2-1);
-   double dz=spc.Height/(N3-1);
+   double dx=detector.Width/(N1-1);
+   double dy=detector.Length/(N2-1);
+   double dz=detector.Height/(N3-1);
    //general setup
    for(size_t i=0;i<N3;i++)
    {
@@ -133,16 +132,47 @@ void XYZ::GetInfoFrom(SquarePointContact &spc)
             dC1p.push_back(dx);dC1m.push_back(dx);
             dC2p.push_back(dy);dC2m.push_back(dy);
             dC3p.push_back(dz);dC3m.push_back(dz);
-            C1.push_back(k*dx-spc.Width/2);
-            C2.push_back(j*dy-spc.Length/2);
+            C1.push_back(k*dx);
+            C2.push_back(j*dy);
             C3.push_back(i*dz);
             E1.push_back(0); E2.push_back(0); Et.push_back(0); Vp.push_back(0);
             fIsFixed.push_back(false); fIsDepleted.push_back(false);
-            Src.push_back(-spc.GetImpurity(C3[i])*Qe/epsilon);
+            Src.push_back(-detector.GetImpurity(C3[i])*Qe/epsilon);
          }
       }
    }
+}
+//_____________________________________________________________________________
+//
+void XYZ::GetInfoFrom(SquarePointContact &spc)
+{
+   //TODO
+   GeneralSetup(spc);
    //boundary
+   for(size_t i=0;i<N1*N2*N3;i++)
+   {
+      if (C1[i]<=0||C1[i]>=spc.Width-1e-5//outer contact
+            ||C2[i]<=0||C2[i]>=spc.Length-1e-5
+            ||C3[i]>=spc.Height-1e-5)
+      {
+         fIsDepleted[i]=true;
+         fIsFixed[i]=true;
+         Vp[i]=spc.Bias[0];
+      }
+      if(C3[i]>=0&&C3[i]<=spc.PointContactH&&
+            C1[i]>=(spc.Width-spc.PointContactW)/2&&
+            C1[i]<=(spc.Width+spc.PointContactW)/2&&
+            C2[i]>=(spc.Length-spc.PointContactL)/2&&
+            C2[i]<=(spc.Length+spc.PointContactL)/2)
+      {
+         fIsDepleted[i]=true;
+         fIsFixed[i]=true;
+         Vp[i]=spc.Bias[1];
+
+      }
+
+
+   }
 
 
 }
@@ -152,14 +182,14 @@ void XYZ::CalculateE()
 {
    Grid::CalculateE(); // deal with E1
    for (size_t i=0; i<GetN(); i++) { 
-      //TODO:E2
+      //TODO: E2
       if (i<N1) E2[i]=-(Vp[i+N1]-Vp[i])/dC2p[i]; // lower boundary
       else if (i>GetN()-N1) E2[i]=-(Vp[i]-Vp[i-N1])/dC2m[i]; // upper boundary
       else E2[i]=-(Vp[i+N1]-Vp[i-N1])/(dC2p[i]+dC2m[i]); // the rest E2
       //end E2
       
 
-      //TODO:E1 boundary correct
+      //TODO: E1 boundary
       if (i%N1==0) E1[i]=-(Vp[i+1]-Vp[i])/dC1p[i]; // left boundary
       if ((i+1)%N1==0) E1[i]=-(Vp[i]-Vp[i-1])/dC1m[i]; // right boundary
       //end E1

@@ -23,6 +23,7 @@ class GeFiCa::XYZ : public GeFiCa::Grid
       void OverRelaxAt(size_t idx); 
       void GetInfoFrom(SquarePointContact &detector);
       void CalculateE();
+      void GeneralSetup(SquarePointContact &idetector);
       ClassDef(XYZ,1);
 };
 #endif
