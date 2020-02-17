@@ -1,4 +1,5 @@
 #include "XYZ.h"
+#include "iostream"
 #include "Units.h"
 using namespace GeFiCa;
 
@@ -27,13 +28,13 @@ void XYZ::SetupWith(Detector &detector)
 void XYZ::OverRelaxAt(size_t idx)
 {
    if (fIsFixed[idx])return;
-   double density=Src[idx];
-   double h2=dC1m[idx];
-   double h3=dC1p[idx];
-   double h4=dC2m[idx];
-   double h1=dC2p[idx];
-   double h0=dC3m[idx];
-   double h5=dC3p[idx];
+   //double density=Src[idx];
+   double dxm=dC1m[idx];
+   double dxp=dC1p[idx];
+   double dym=dC2m[idx];
+   double dyp=dC2p[idx];
+   double dzm=dC3m[idx];
+   double dzp=dC3p[idx];
    double pym,pyp,pxm,pxp,pzp,pzm;
    if(idx<N1*N2)pzm=Vp[idx];
    else pzm=Vp[idx-N1*N2];
@@ -47,16 +48,28 @@ void XYZ::OverRelaxAt(size_t idx)
    else pxp=Vp[idx+1];
    if((idx%(N1*N2))%N1==0)pxm=Vp[idx];
    else pxm=Vp[idx-1];
-
-   double tmp= (
+   double tmp=(Src[idx]
+         +(pxp/dxp+pxm/dxm)/(dxp+dxm)
+         +(pyp/dyp+pym/dym)/(dyp+dym)
+         +(pzp/dzp+pzm/dzm)/(dzp+dzm)
+         )/(
+            (1/dxp+1/dxm)/(dxp+dxm)
+            +(1/dyp+1/dym)/(dyp+dym)
+            +(1/dzp+1/dzm)/(dzp+dzm)
+           );
+         
+/*   double tmp= (
          density*h0*h1*h2*h3*h4*h5*(h1+h4)*(h2+h3)*(h0+h5)/2
          +(pxp*h3+pxm*h2)*h0*h1*h4*h5*(h1+h4)*(h0+h5)
          +(pyp*h4+pym*h1)*h0*h2*h3*h5*(h0+h5)*(h2+h3)
          +(pzp*h5+pzm*h0)*h1*h2*h3*h4*(h1+h4)*(h2+h3)	
          )
       /((h0+h5)*(h1+h4)*(h2+h3)*(h0*h1*h4*h5+h0*h2*h3*h5+h1*h2*h3*h4));
-   
-
+  */ 
+   double oldP=Vp[idx];
+   tmp=RelaxationFactor*(tmp-oldP)+oldP;
+   Vp[idx]=tmp;
+   return;
    // update Vp for impurity-only case even if the point is undepleted
    if (fDetector->Bias[0]==fDetector->Bias[1]) { Vp[idx]=tmp; return; }
 
@@ -79,16 +92,16 @@ void XYZ::OverRelaxAt(size_t idx)
    //if tmp is greater or smaller than max and min, set tmp to it.
    //Vp[idx]=RelaxationFactor*(tmp-Vp[idx])+Vp[idx];
    //if need calculate depleted voltage
-   double oldP=Vp[idx];
-   tmp=RelaxationFactor*(tmp-oldP)+oldP;
    if(tmp<min) {
       Vp[idx]=min;
       fIsDepleted[idx]=false;
    } else if(tmp>max) {
       Vp[idx]=max;
       fIsDepleted[idx]=false;
-   } else
+   } else {
+      Vp[idx]=tmp;
       fIsDepleted[idx]=true;
+   }
 }
 //______________________________________________________________________________
 //
@@ -122,6 +135,7 @@ void XYZ::GeneralSetup(SquarePointContact &detector)
    double dx=detector.Width/(N1-1);
    double dy=detector.Length/(N2-1);
    double dz=detector.Height/(N3-1);
+
    //general setup
    for(size_t i=0;i<N3;i++)
    {
@@ -135,11 +149,15 @@ void XYZ::GeneralSetup(SquarePointContact &detector)
             C1.push_back(k*dx);
             C2.push_back(j*dy);
             C3.push_back(i*dz);
-            E1.push_back(0); E2.push_back(0); Et.push_back(0); Vp.push_back(0);
+            E1.push_back(0); E2.push_back(0); E3.push_back(0); Et.push_back(0); 
+            Vp.push_back(0);
             fIsFixed.push_back(false); fIsDepleted.push_back(false);
-            Src.push_back(-detector.GetImpurity(C3[i])*Qe/epsilon);
          }
       }
+   }
+   for(int i=0;i<N1*N2*N3;i++)
+   {
+      Src.push_back(-detector.GetImpurity(C3[i])*Qe/epsilon);
    }
 }
 //_____________________________________________________________________________
@@ -151,14 +169,16 @@ void XYZ::GetInfoFrom(SquarePointContact &spc)
    //boundary
    for(size_t i=0;i<N1*N2*N3;i++)
    {
-      if (C1[i]<=0||C1[i]>=spc.Width-1e-5//outer contact
-            ||C2[i]<=0||C2[i]>=spc.Length-1e-5
+      if (C1[i]<=0+1e-5||C1[i]>=spc.Width-1e-5//outer contact
+            ||C2[i]<=0+1e-5||C2[i]>=spc.Length-1e-5
             ||C3[i]>=spc.Height-1e-5)
       {
          fIsDepleted[i]=true;
          fIsFixed[i]=true;
          Vp[i]=spc.Bias[0];
+         continue;
       }
+      //point contact
       if(C3[i]>=0&&C3[i]<=spc.PointContactH&&
             C1[i]>=(spc.Width-spc.PointContactW)/2&&
             C1[i]<=(spc.Width+spc.PointContactW)/2&&
@@ -168,6 +188,7 @@ void XYZ::GetInfoFrom(SquarePointContact &spc)
          fIsDepleted[i]=true;
          fIsFixed[i]=true;
          Vp[i]=spc.Bias[1];
+         continue;
 
       }
 
@@ -180,6 +201,8 @@ void XYZ::GetInfoFrom(SquarePointContact &spc)
 //
 void XYZ::CalculateE()
 {
+   //FIXME
+   return ;
    Grid::CalculateE(); // deal with E1
    for (size_t i=0; i<GetN(); i++) { 
       //TODO: E2
