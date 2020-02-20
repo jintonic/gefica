@@ -201,34 +201,30 @@ void XYZ::GetInfoFrom(SquarePointContact &spc)
 //
 void XYZ::CalculateE()
 {
-   //FIXME
-   return ;
-   Grid::CalculateE(); // deal with E1
-   for (size_t i=0; i<GetN(); i++) { 
-      //TODO: E2
-      if (i<N1) E2[i]=-(Vp[i+N1]-Vp[i])/dC2p[i]; // lower boundary
-      else if (i>GetN()-N1) E2[i]=-(Vp[i]-Vp[i-N1])/dC2m[i]; // upper boundary
-      else E2[i]=-(Vp[i+N1]-Vp[i-N1])/(dC2p[i]+dC2m[i]); // the rest E2
-      //end E2
+   for (size_t idx=0; idx<GetN(); idx++) { 
+      double dxm=dC1m[idx];
+      double dxp=dC1p[idx];
+      double dym=dC2m[idx];
+      double dyp=dC2p[idx];
+      double dzm=dC3m[idx];
+      double dzp=dC3p[idx];
+      double pym,pyp,pxm,pxp,pzp,pzm;
+      if(idx<N1*N2)pzm=Vp[idx];
+      else pzm=Vp[idx-N1*N2];
+      if(idx>=N1*N2*N3-N1*N2)pzp=Vp[idx];
+      else pzp=Vp[idx+N1*N2];
+      if(idx%(N1*N2)>(N1*N2)-N1-1) pyp=Vp[idx];
+      else pyp=Vp[idx+N1];
+      if(idx%(N1*N2)<N1)pym=Vp[idx];
+      else pym=Vp[idx-N1];
+      if((idx%(N1*N2))%N1==N1-1)pxp=Vp[idx];
+      else pxp=Vp[idx+1];
+      if((idx%(N1*N2))%N1==0)pxm=Vp[idx];
+      else pxm=Vp[idx-1];
+      E1[idx]=(pxp-pxm)/(dxm+dxp);
+      E2[idx]=(pyp-pym)/(dym+dyp);
+      E3[idx]=(pzp-pzm)/(dzm+dzp);
       
-
-      //TODO: E1 boundary
-      if (i%N1==0) E1[i]=-(Vp[i+1]-Vp[i])/dC1p[i]; // left boundary
-      if ((i+1)%N1==0) E1[i]=-(Vp[i]-Vp[i-1])/dC1m[i]; // right boundary
-      //end E1
-      
-      //E3
-      if (dC3p[i]==0 || dC3m[i]==0) return;
-
-      if (i<N1*N2) // C3 lower border
-         E3[i]=(Vp[i]-Vp[i+N1])/dC3p[i];
-      else if (i>=N1*N2*N3-N1*N2) // C3 upper border
-         E3[i]=(Vp[i-N1]-Vp[i])/dC3m[i];
-      else { // bulk
-         E3[i]=(Vp[i-N1]-Vp[i+N1])/(dC3m[i]+dC3p[i]);
-      } 
-      //end E3
-      
-      Et[i]=sqrt(E1[i]*E1[i]+E2[i]*E2[i]+E3[i]*E3[i]);//overall E
+      Et[idx]=sqrt(E1[idx]*E1[idx]+E2[idx]*E2[idx]+E3[idx]*E3[idx]);//overall E
    }
 }
