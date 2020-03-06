@@ -1,5 +1,4 @@
 #include "XYZ.h"
-#include "iostream"
 #include "Units.h"
 using namespace GeFiCa;
 
@@ -12,12 +11,10 @@ void XYZ::SetupWith(Detector &detector)
       SquarePointContact& spc = (SquarePointContact&) detector;
       spc.CheckConfigurations();
       GetInfoFrom(spc);
-   }
-   else {
+   } else {
       //maybe add auto configure name list 
       Error("SetupWith", "%s is not expected.", type.Data());
-      Error("SetupWith", "Please use "
-            "PointContact detector.");
+      Error("SetupWith", "Please use SquarePointContact detector.");
       abort();
    }
 
@@ -28,7 +25,6 @@ void XYZ::SetupWith(Detector &detector)
 void XYZ::OverRelaxAt(size_t idx)
 {
    if (fIsFixed[idx])return;
-   //double density=Src[idx];
    double dxm=dC1m[idx];
    double dxp=dC1p[idx];
    double dym=dC2m[idx];
@@ -57,22 +53,13 @@ void XYZ::OverRelaxAt(size_t idx)
             +(1/dyp+1/dym)/(dyp+dym)
             +(1/dzp+1/dzm)/(dzp+dzm)
            );
-         
-/*   double tmp= (
-         density*h0*h1*h2*h3*h4*h5*(h1+h4)*(h2+h3)*(h0+h5)/2
-         +(pxp*h3+pxm*h2)*h0*h1*h4*h5*(h1+h4)*(h0+h5)
-         +(pyp*h4+pym*h1)*h0*h2*h3*h5*(h0+h5)*(h2+h3)
-         +(pzp*h5+pzm*h0)*h1*h2*h3*h4*(h1+h4)*(h2+h3)	
-         )
-      /((h0+h5)*(h1+h4)*(h2+h3)*(h0*h1*h4*h5+h0*h2*h3*h5+h1*h2*h3*h4));
-  */ 
+
    double oldP=Vp[idx];
    tmp=RelaxationFactor*(tmp-oldP)+oldP;
    Vp[idx]=tmp;
    return;
    // update Vp for impurity-only case even if the point is undepleted
    if (fDetector->Bias[0]==fDetector->Bias[1]) { Vp[idx]=tmp; return; }
-
 
    //check depletion
    double min=pxm;
@@ -110,7 +97,6 @@ double XYZ::GetC()
    //FIXME:function of integration need to be update for xyz
    return -1;
 
-
    Grid::GetC(); // calculate field excluding undepleted region
 
    // calculate C based on CV^2/2 = epsilon int E^2 dx^3 / 2
@@ -137,12 +123,9 @@ void XYZ::GeneralSetup(SquarePointContact &detector)
    double dz=detector.Height/(N3-1);
 
    //general setup
-   for(size_t i=0;i<N3;i++)
-   {
-      for(size_t j=0;j<N2;j++)
-      {
-         for(size_t k=0;k<N1;k++)
-         {
+   for(size_t i=0;i<N3;i++) {
+      for(size_t j=0;j<N2;j++) {
+         for(size_t k=0;k<N1;k++) {
             dC1p.push_back(dx);dC1m.push_back(dx);
             dC2p.push_back(dy);dC2m.push_back(dy);
             dC3p.push_back(dz);dC3m.push_back(dz);
@@ -155,10 +138,8 @@ void XYZ::GeneralSetup(SquarePointContact &detector)
          }
       }
    }
-   for(int i=0;i<N1*N2*N3;i++)
-   {
+   for(size_t i=0;i<N1*N2*N3;i++)
       Src.push_back(-detector.GetImpurity(C3[i])*Qe/epsilon);
-   }
 }
 //_____________________________________________________________________________
 //
@@ -167,12 +148,10 @@ void XYZ::GetInfoFrom(SquarePointContact &spc)
    //TODO
    GeneralSetup(spc);
    //boundary
-   for(size_t i=0;i<N1*N2*N3;i++)
-   {
+   for(size_t i=0;i<N1*N2*N3;i++) {
       if (C1[i]<=0+1e-5||C1[i]>=spc.Width-1e-5//outer contact
             ||C2[i]<=0+1e-5||C2[i]>=spc.Length-1e-5
-            ||C3[i]>=spc.Height-1e-5)
-      {
+            ||C3[i]>=spc.Height-1e-5) {
          fIsDepleted[i]=true;
          fIsFixed[i]=true;
          Vp[i]=spc.Bias[0];
@@ -183,19 +162,13 @@ void XYZ::GetInfoFrom(SquarePointContact &spc)
             C1[i]>=(spc.Width-spc.PointContactW)/2&&
             C1[i]<=(spc.Width+spc.PointContactW)/2&&
             C2[i]>=(spc.Length-spc.PointContactL)/2&&
-            C2[i]<=(spc.Length+spc.PointContactL)/2)
-      {
+            C2[i]<=(spc.Length+spc.PointContactL)/2) {
          fIsDepleted[i]=true;
          fIsFixed[i]=true;
          Vp[i]=spc.Bias[1];
          continue;
-
       }
-
-
    }
-
-
 }
 //___________________________________________________________________________
 //
@@ -224,7 +197,7 @@ void XYZ::CalculateE()
       E1[idx]=(pxp-pxm)/(dxm+dxp);
       E2[idx]=(pyp-pym)/(dym+dyp);
       E3[idx]=(pzp-pzm)/(dzm+dzp);
-      
+
       Et[idx]=sqrt(E1[idx]*E1[idx]+E2[idx]*E2[idx]+E3[idx]*E3[idx]);//overall E
    }
 }

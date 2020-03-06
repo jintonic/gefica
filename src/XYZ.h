@@ -7,16 +7,13 @@
 namespace GeFiCa { class XYZ; class PointContact; }
 
 /**
- ** 3D coordinates.
- **/
+ * 3D Cartesian coordinates.
+ */
 class GeFiCa::XYZ : public GeFiCa::Grid
 {
    public:
-   /**
-   ** Default constructor.
-   **/
-      XYZ(int N1=50, int N2=50, int N3=50) :Grid(N1,N2,N3) {fName="xyz",
-         fTitle="3D coordinates";}
+      XYZ(size_t n1=50, size_t n2=50, size_t n3=50) :Grid(n1,n2,n3) {
+         fName="xyz", fTitle="3D coordinates"; }
       void SetupWith(Detector &detector);
       double GetC();
    protected:
