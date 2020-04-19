@@ -18,6 +18,8 @@ class GeFiCa::SquarePointContact : public Detector
 
       double WrapAroundW; ///< Inner radius of outer contact 
 
+      double TaperW; ///< Bottom Taper Width from outer contact 
+
       SquarePointContact(const char *name="spc",
             const char *title="squre point-contact detector");
       void CheckConfigurations();

@@ -145,13 +145,23 @@ void XYZ::GeneralSetup(SquarePointContact &detector)
 //
 void XYZ::GetInfoFrom(SquarePointContact &spc)
 {
-   //TODO
+   //boundary setup for square pointcontact
+   //TODO : boundary in detail
    GeneralSetup(spc);
    //boundary
    for(size_t i=0;i<N1*N2*N3;i++) {
       if (C1[i]<=0+1e-5||C1[i]>=spc.Width-1e-5//outer contact
             ||C2[i]<=0+1e-5||C2[i]>=spc.Length-1e-5
             ||C3[i]>=spc.Height-1e-5) {
+         fIsDepleted[i]=true;
+         fIsFixed[i]=true;
+         Vp[i]=spc.Bias[0];
+         continue;
+      }
+      if(C3[i]>=0&&C3[i]<=0+1e-5&&
+            (C1[i]<=spc.TaperW||C1[i]>spc.Width-spc.TaperW
+             ||C2[i]<=spc.TaperW||C2[i]>=spc.Length-spc.TaperW))//taper
+      {
          fIsDepleted[i]=true;
          fIsFixed[i]=true;
          Vp[i]=spc.Bias[0];

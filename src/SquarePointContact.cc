@@ -5,7 +5,7 @@ using namespace GeFiCa;
 SquarePointContact::SquarePointContact(const char *name, const char *title) :
    Detector(name, title), Width(3*cm),Length(3*cm),
    PointContactW(1*mm),PointContactL(1*mm), PointContactH(300*nm),
-   WrapAroundW(0)
+   WrapAroundW(0),TaperW(0)
 { Height=5*cm; Bias.push_back(1*kV); }
 //______________________________________________________________________________
 //
