@@ -25,12 +25,20 @@ void XYZ::SetupWith(Detector &detector)
 void XYZ::OverRelaxAt(size_t idx)
 {
    if (fIsFixed[idx])return;
+   double h2=dC1m[idx];
+   double h3=dC1p[idx];
+   double h4=dC2m[idx];
+   double h1=dC2p[idx];
+   double h0=dC3m[idx];
+   double h5=dC3p[idx];
+   /*
    double dxm=dC1m[idx];
    double dxp=dC1p[idx];
    double dym=dC2m[idx];
    double dyp=dC2p[idx];
    double dzm=dC3m[idx];
    double dzp=dC3p[idx];
+   */
    double pym,pyp,pxm,pxp,pzp,pzm;
    if(idx<N1*N2)pzm=Vp[idx];
    else pzm=Vp[idx-N1*N2];
@@ -44,7 +52,15 @@ void XYZ::OverRelaxAt(size_t idx)
    else pxp=Vp[idx+1];
    if((idx%(N1*N2))%N1==0)pxm=Vp[idx];
    else pxm=Vp[idx-1];
-   double tmp=(Src[idx]
+      double tmp= (
+                  Src[idx]*h0*h1*h2*h3*h4*h5*(h1+h4)*(h2+h3)*(h0+h5)/2
+                  +(pxp*h3+pxm*h2)*h0*h1*h4*h5*(h1+h4)*(h0+h5)
+                  +(pyp*h4+pym*h1)*h0*h2*h3*h5*(h0+h5)*(h2+h3)
+                  +(pzp*h5+pzm*h0)*h1*h2*h3*h4*(h1+h4)*(h2+h3) 
+                  )
+               /((h0+h5)*(h1+h4)*(h2+h3)*(h0*h1*h4*h5+h0*h2*h3*h5+h1*h2*h3*h4));
+   /*
+      double tmp=(Src[idx]
          +(pxp/dxp+pxm/dxm)/(dxp+dxm)
          +(pyp/dyp+pym/dym)/(dyp+dym)
          +(pzp/dzp+pzm/dzm)/(dzp+dzm)
@@ -53,7 +69,7 @@ void XYZ::OverRelaxAt(size_t idx)
             +(1/dyp+1/dym)/(dyp+dym)
             +(1/dzp+1/dzm)/(dzp+dzm)
            );
-
+*/
    double oldP=Vp[idx];
    tmp=RelaxationFactor*(tmp-oldP)+oldP;
    Vp[idx]=tmp;
@@ -67,14 +83,14 @@ void XYZ::OverRelaxAt(size_t idx)
    if(min>pxp)min=pxp;
    if (min>pyp)min=pyp;
    if (min>pym)min=pym;
-   if (min>pzm)min=pzm;
+   if (min>pzp)min=pzp;
    if (min>pzm)min=pzm;
 
    //find max
    if(max<pxp)max=pxp;
    if (max<pyp)min=pyp;
    if (max<pym)max=pym;
-   if (max<pzm)max=pzm;
+   if (max<pzp)max=pzp;
    if (max<pzm)max=pzm;
    //if tmp is greater or smaller than max and min, set tmp to it.
    //Vp[idx]=RelaxationFactor*(tmp-Vp[idx])+Vp[idx];
@@ -168,7 +184,7 @@ void XYZ::GetInfoFrom(SquarePointContact &spc)
          continue;
       }
       //point contact
-      if(C3[i]>=0&&C3[i]<=spc.PointContactH&&
+      if(C3[i]<=spc.PointContactH&&
             C1[i]>=(spc.Width-spc.PointContactW)/2&&
             C1[i]<=(spc.Width+spc.PointContactW)/2&&
             C2[i]>=(spc.Length-spc.PointContactL)/2&&

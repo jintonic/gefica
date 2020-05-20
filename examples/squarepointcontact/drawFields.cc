@@ -47,7 +47,7 @@ void drawFields(const char *input="ICPC.root")
    cv->SetLeftMargin(0.13);
    cv->SetRightMargin(0.03);
 */
-   t->Draw("c1:c3:v","c2>0.5&&c2<0.52","goff");
+   t->Draw("c1:c3:v","c2>0.9&&c2<0.92","goff");
    
    TGraph2D *gv = new TGraph2D(n, t->GetV1(), t->GetV2(), t->GetV3());
    gv->SetName("gv"); gv->SetNpx(60); gv->SetNpy(60); // fine bin histogram
