@@ -143,13 +143,38 @@ void XYZ::GetInfoFrom(SquarePointContact &spc)
    for (size_t i=0; i<N3; i++) {
       for (size_t j=0; j<N2; j++) {
          for (size_t k=0; k<N1; k++) {
+            C1.push_back(k*dx); C2.push_back(j*dy); C3.push_back(i*dz);
             dC1p.push_back(dx); dC1m.push_back(dx);
             dC2p.push_back(dy); dC2m.push_back(dy);
             dC3p.push_back(dz); dC3m.push_back(dz);
-            C1.push_back(k*dx); C2.push_back(j*dy); C3.push_back(i*dz);
             E1.push_back(0); E2.push_back(0); E3.push_back(0);
             Et.push_back(0); Vp.push_back(0);
             fIsFixed.push_back(false); fIsDepleted.push_back(false);
+
+            if (k==0) { // left most surface
+               dC1m.back()=0; E2.back()=0; E3.back()=0; Vp.back()=spc.Bias[1];
+               fIsFixed.back(true); fIsDepleted.back(true);
+            }
+            if (k==N1-1) { // right most surface
+               dC1p.back()=0; E2.back()=0; E3.back()=0; Vp.back()=spc.Bias[1];
+               fIsFixed.back(true); fIsDepleted.back(true);
+            }
+            if (j==0) { // front most surface
+               dC2m.back(0); E1.back()=0; E3.back()=0; Vp.back()=spc.Bias[1];
+               fIsFixed.back(true); fIsDepleted.back(true);
+            }
+            if (j==N2-1) { // back most surface
+               dC2p.back(0); E1.back()=0; E3.back()=0; Vp.back()=spc.Bias[1];
+               fIsFixed.back(true); fIsDepleted.back(true);
+            }
+            if (i==0) { // top surface
+               dC3m.push_back(0); E1.back()=0; E3.back()=0; Vp.back()=spc.Bias[1];
+               fIsFixed.back(true); fIsDepleted.back(true);
+            }
+            if (i==N3-1) { // bottom electrode
+               dC3p.push_back(0); E1.back()=0; E3.back()=0; Vp.back()=spc.Bias[1];
+               fIsFixed.back(true); fIsDepleted.back(true);
+            }
          }
       }
    }
@@ -165,18 +190,12 @@ void XYZ::GetInfoFrom(SquarePointContact &spc)
          fIsDepleted[i]=true;
          fIsFixed[i]=true;
          Vp[i]=spc.Bias[0];
-         continue;
-      }
-      //point contact
-      if(C3[i]<=spc.PointContactH&&
-            C1[i]>=(spc.Width-spc.PointContactW)/2&&
-            C1[i]<=(spc.Width+spc.PointContactW)/2&&
-            C2[i]>=(spc.Length-spc.PointContactL)/2&&
-            C2[i]<=(spc.Length+spc.PointContactL)/2) {
-         fIsDepleted[i]=true;
-         fIsFixed[i]=true;
-         Vp[i]=spc.Bias[1];
-         continue;
+      } else if (C3[i]<=spc.PointContactH
+            && C1[i]>=(spc.Width-spc.PointContactW)/2
+            && C1[i]<=(spc.Width+spc.PointContactW)/2
+            && C2[i]>=(spc.Length-spc.PointContactL)/2
+            && C2[i]<=(spc.Length+spc.PointContactL)/2) { //point contact
+         fIsDepleted[i]=true; fIsFixed[i]=true; Vp[i]=spc.Bias[0];
       }
    }
 }
