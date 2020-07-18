@@ -150,6 +150,7 @@ void XYZ::GetInfoFrom(SquarePointContact &spc)
             E1.push_back(0); E2.push_back(0); E3.push_back(0);
             Et.push_back(0); Vp.push_back(0);
             fIsFixed.push_back(false); fIsDepleted.push_back(false);
+            Src.push_back(-detector.GetImpurity(C3.back())*Qe/epsilon);
 
             if (k==0) { // left most surface
                dC1m.back()=0; E2.back()=0; E3.back()=0; Vp.back()=spc.Bias[1];
@@ -168,11 +169,14 @@ void XYZ::GetInfoFrom(SquarePointContact &spc)
                fIsFixed.back(true); fIsDepleted.back(true);
             }
             if (i==0) { // top surface
-               dC3m.push_back(0); E1.back()=0; E3.back()=0; Vp.back()=spc.Bias[1];
-               fIsFixed.back(true); fIsDepleted.back(true);
+               dC3m.push_back(0);
+               if (C1.back()<=spc.WrapAroundW || C1.back()>=spc.Width-spc.WrapAroundW) {
+                  E1.back()=0; E3.back()=0; Vp.back()=spc.Bias[1];
+                  fIsFixed.back(true); fIsDepleted.back(true);
+               }
             }
             if (i==N3-1) { // bottom electrode
-               dC3p.push_back(0); E1.back()=0; E3.back()=0; Vp.back()=spc.Bias[1];
+               dC3p.push_back(0); E1.back()=0; E2.back()=0; Vp.back()=spc.Bias[1];
                fIsFixed.back(true); fIsDepleted.back(true);
             }
          }
@@ -181,15 +185,6 @@ void XYZ::GetInfoFrom(SquarePointContact &spc)
 
    // detailed tuning
    for (size_t i=0; i<GetN(); i++) {
-      Src.push_back(-detector.GetImpurity(C3[i])*Qe/epsilon); // impurity
-
-      // outer contact
-      if (C1[i]<=0+1e-5||C1[i]>=spc.Width-1e-5
-            ||C2[i]<=0+1e-5||C2[i]>=spc.Length-1e-5
-            ||C3[i]<=0+1e-5||C3[i]>=spc.Height-1e-5) {
-         fIsDepleted[i]=true;
-         fIsFixed[i]=true;
-         Vp[i]=spc.Bias[0];
       } else if (C3[i]<=spc.PointContactH
             && C1[i]>=(spc.Width-spc.PointContactW)/2
             && C1[i]<=(spc.Width+spc.PointContactW)/2
