@@ -1,6 +1,6 @@
 using namespace GeFiCa;
 // draw V, E distributions saved in an input ROOT file
-void drawFields(const char *input="ICPC.root")
+void drawFields(const char *input="SPC.root")
 {
    // Get data from input file
    TFile *file = new TFile(input);

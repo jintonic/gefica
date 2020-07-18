@@ -1,6 +1,6 @@
 using namespace GeFiCa;
 // calculate and save fields of an Inverted Coaxial Point-Contact (ICPC) HPGe
-void calculateFields(const char *output="ICPC.root")
+void calculateFields(const char *output="SPC.root")
 {
    SquarePointContact detector;
    detector.Bias[0]=70; // bias on point contact
