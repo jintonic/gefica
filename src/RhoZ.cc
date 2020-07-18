@@ -76,10 +76,14 @@ void RhoZ::OverRelaxAt(size_t idx)
    fIsDepleted[idx]=false; // default
    //find minimal potential in all neighboring points
    double vmin=vrm; // minimal Vp around point[idx]
-   if (vmin>vrp) vmin=vrp; if (vmin>vzp) vmin=vzp; if (vmin>vzm) vmin=vzm;
+   if (vmin>vrp) vmin=vrp;
+   if (vmin>vzp) vmin=vzp;
+   if (vmin>vzm) vmin=vzm;
    //find maximal potential in all neighboring points
    double vmax=vrm; // maximal Vp around point[idx]
-   if (vmax<vrp) vmax=vrp; if (vmax<vzp) vmax=vzp; if (vmax<vzm) vmax=vzm;
+   if (vmax<vrp) vmax=vrp;
+   if (vmax<vzp) vmax=vzp;
+   if (vmax<vzm) vmax=vzm;
    //if vnew is greater or smaller than vmax and vmin, set vnew to it.
    if (vnew<vmin) Vp[idx]=vmin; 
    else if(vnew>vmax) Vp[idx]=vmax;
