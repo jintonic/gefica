@@ -11,8 +11,8 @@ void calculateFields(const char *output="SPC.root")
    detector.PointContactW=0.6*mm; detector.PointContactH=0.1*mm;
    detector.PointContactL=0.6*mm;
 
-   detector.TaperW=0.3*cm;
-   //detector.WrapAroundW=0.3*cm;
+   detector.WrapAroundW=detector.Width;
+   detector.WrapAroundL=detector.Length;
 
    detector.BottomImpurity=4e9/cm3; detector.TopImpurity=4e9/cm3;
 

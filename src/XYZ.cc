@@ -1,5 +1,6 @@
 #include "XYZ.h"
 #include "Units.h"
+#include "SquarePointContact.h"
 using namespace GeFiCa;
 
 void XYZ::SetupWith(Detector &detector)
@@ -12,7 +13,6 @@ void XYZ::SetupWith(Detector &detector)
       spc.CheckConfigurations();
       GetInfoFrom(spc);
    } else {
-      //maybe add auto configure name list 
       Error("SetupWith", "%s is not expected.", type.Data());
       Error("SetupWith", "Please use SquarePointContact detector.");
       abort();
@@ -24,7 +24,8 @@ void XYZ::SetupWith(Detector &detector)
 //
 void XYZ::OverRelaxAt(size_t idx)
 {
-   if (fIsFixed[idx])return;
+   if (fIsFixed[idx]) return; // no need to calculate on boundaries
+
    double h2=dC1m[idx];
    double h3=dC1p[idx];
    double h4=dC2m[idx];
@@ -39,37 +40,37 @@ void XYZ::OverRelaxAt(size_t idx)
    double dzm=dC3m[idx];
    double dzp=dC3p[idx];
    */
-   double pym,pyp,pxm,pxp,pzp,pzm;
-   if(idx<N1*N2)pzm=Vp[idx];
-   else pzm=Vp[idx-N1*N2];
-   if(idx>=N1*N2*N3-N1*N2)pzp=Vp[idx];
-   else pzp=Vp[idx+N1*N2];
-   if(idx%(N1*N2)>(N1*N2)-N1-1) pyp=Vp[idx];
-   else pyp=Vp[idx+N1];
-   if(idx%(N1*N2)<N1)pym=Vp[idx];
-   else pym=Vp[idx-N1];
-   if((idx%(N1*N2))%N1==N1-1)pxp=Vp[idx];
-   else pxp=Vp[idx+1];
-   if((idx%(N1*N2))%N1==0)pxm=Vp[idx];
-   else pxm=Vp[idx-1];
-      double tmp= (
-                  Src[idx]*h0*h1*h2*h3*h4*h5*(h1+h4)*(h2+h3)*(h0+h5)/2
-                  +(pxp*h3+pxm*h2)*h0*h1*h4*h5*(h1+h4)*(h0+h5)
-                  +(pyp*h4+pym*h1)*h0*h2*h3*h5*(h0+h5)*(h2+h3)
-                  +(pzp*h5+pzm*h0)*h1*h2*h3*h4*(h1+h4)*(h2+h3) 
-                  )
-               /((h0+h5)*(h1+h4)*(h2+h3)*(h0*h1*h4*h5+h0*h2*h3*h5+h1*h2*h3*h4));
+   double vym,vyp,vxm,vxp,vzp,vzm;
+   if (idx<N1*N2)vzm=Vp[idx];
+   else vzm=Vp[idx-N1*N2];
+   if (idx>=N1*N2*N3-N1*N2)vzp=Vp[idx];
+   else vzp=Vp[idx+N1*N2];
+   if (idx%(N1*N2)>(N1*N2)-N1-1) vyp=Vp[idx];
+   else vyp=Vp[idx+N1];
+   if (idx%(N1*N2)<N1)vym=Vp[idx];
+   else vym=Vp[idx-N1];
+   if ((idx%(N1*N2))%N1==N1-1)vxp=Vp[idx];
+   else vxp=Vp[idx+1];
+   if ((idx%(N1*N2))%N1==0)vxm=Vp[idx];
+   else vxm=Vp[idx-1];
+   double tmp= (
+         Src[idx]*h0*h1*h2*h3*h4*h5*(h1+h4)*(h2+h3)*(h0+h5)/2
+         +(vxp*h3+vxm*h2)*h0*h1*h4*h5*(h1+h4)*(h0+h5)
+         +(vyp*h4+vym*h1)*h0*h2*h3*h5*(h0+h5)*(h2+h3)
+         +(vzp*h5+vzm*h0)*h1*h2*h3*h4*(h1+h4)*(h2+h3) 
+         )
+      /((h0+h5)*(h1+h4)*(h2+h3)*(h0*h1*h4*h5+h0*h2*h3*h5+h1*h2*h3*h4));
    /*
       double tmp=(Src[idx]
-         +(pxp/dxp+pxm/dxm)/(dxp+dxm)
-         +(pyp/dyp+pym/dym)/(dyp+dym)
-         +(pzp/dzp+pzm/dzm)/(dzp+dzm)
-         )/(
-            (1/dxp+1/dxm)/(dxp+dxm)
-            +(1/dyp+1/dym)/(dyp+dym)
-            +(1/dzp+1/dzm)/(dzp+dzm)
-           );
-*/
+      +(vxp/dxp+vxm/dxm)/(dxp+dxm)
+      +(vyp/dyp+vym/dym)/(dyp+dym)
+      +(vzp/dzp+vzm/dzm)/(dzp+dzm)
+      )/(
+      (1/dxp+1/dxm)/(dxp+dxm)
+      +(1/dyp+1/dym)/(dyp+dym)
+      +(1/dzp+1/dzm)/(dzp+dzm)
+      );
+      */
    double oldP=Vp[idx];
    tmp=RelaxationFactor*(tmp-oldP)+oldP;
    Vp[idx]=tmp;
@@ -78,20 +79,20 @@ void XYZ::OverRelaxAt(size_t idx)
    if (fDetector->Bias[0]==fDetector->Bias[1]) { Vp[idx]=tmp; return; }
 
    //check depletion
-   double min=pxm;
-   double max=pxm;
-   if(min>pxp)min=pxp;
-   if (min>pyp)min=pyp;
-   if (min>pym)min=pym;
-   if (min>pzp)min=pzp;
-   if (min>pzm)min=pzm;
+   double min=vxm;
+   double max=vxm;
+   if(min>vxp)min=vxp;
+   if (min>vyp)min=vyp;
+   if (min>vym)min=vym;
+   if (min>vzp)min=vzp;
+   if (min>vzm)min=vzm;
 
    //find max
-   if(max<pxp)max=pxp;
-   if (max<pyp)min=pyp;
-   if (max<pym)max=pym;
-   if (max<pzp)max=pzp;
-   if (max<pzm)max=pzm;
+   if(max<vxp)max=vxp;
+   if (max<vyp)min=vyp;
+   if (max<vym)max=vym;
+   if (max<vzp)max=vzp;
+   if (max<vzm)max=vzm;
    //if tmp is greater or smaller than max and min, set tmp to it.
    //Vp[idx]=RelaxationFactor*(tmp-Vp[idx])+Vp[idx];
    //if need calculate depleted voltage
@@ -132,52 +133,35 @@ double XYZ::GetC()
 }
 //_____________________________________________________________________________
 //
-void XYZ::GeneralSetup(SquarePointContact &detector)
+void XYZ::GetInfoFrom(SquarePointContact &spc)
 {
+   // basic setups
    double dx=detector.Width/(N1-1);
    double dy=detector.Length/(N2-1);
    double dz=detector.Height/(N3-1);
 
-   //general setup
-   for(size_t i=0;i<N3;i++) {
-      for(size_t j=0;j<N2;j++) {
-         for(size_t k=0;k<N1;k++) {
-            dC1p.push_back(dx);dC1m.push_back(dx);
-            dC2p.push_back(dy);dC2m.push_back(dy);
-            dC3p.push_back(dz);dC3m.push_back(dz);
-            C1.push_back(k*dx);
-            C2.push_back(j*dy);
-            C3.push_back(i*dz);
-            E1.push_back(0); E2.push_back(0); E3.push_back(0); Et.push_back(0); 
-            Vp.push_back(0);
+   for (size_t i=0; i<N3; i++) {
+      for (size_t j=0; j<N2; j++) {
+         for (size_t k=0; k<N1; k++) {
+            dC1p.push_back(dx); dC1m.push_back(dx);
+            dC2p.push_back(dy); dC2m.push_back(dy);
+            dC3p.push_back(dz); dC3m.push_back(dz);
+            C1.push_back(k*dx); C2.push_back(j*dy); C3.push_back(i*dz);
+            E1.push_back(0); E2.push_back(0); E3.push_back(0);
+            Et.push_back(0); Vp.push_back(0);
             fIsFixed.push_back(false); fIsDepleted.push_back(false);
          }
       }
    }
-   for(size_t i=0;i<N1*N2*N3;i++)
-      Src.push_back(-detector.GetImpurity(C3[i])*Qe/epsilon);
-}
-//_____________________________________________________________________________
-//
-void XYZ::GetInfoFrom(SquarePointContact &spc)
-{
-   //boundary setup for square pointcontact
-   //TODO : boundary in detail
-   GeneralSetup(spc);
-   //boundary
-   for(size_t i=0;i<N1*N2*N3;i++) {
-      if (C1[i]<=0+1e-5||C1[i]>=spc.Width-1e-5//outer contact
+
+   // detailed tuning
+   for (size_t i=0; i<GetN(); i++) {
+      Src.push_back(-detector.GetImpurity(C3[i])*Qe/epsilon); // impurity
+
+      // outer contact
+      if (C1[i]<=0+1e-5||C1[i]>=spc.Width-1e-5
             ||C2[i]<=0+1e-5||C2[i]>=spc.Length-1e-5
-            ||C3[i]>=spc.Height-1e-5) {
-         fIsDepleted[i]=true;
-         fIsFixed[i]=true;
-         Vp[i]=spc.Bias[0];
-         continue;
-      }
-      if(C3[i]>=0&&C3[i]<=0+1e-5&&
-            (C1[i]<=spc.TaperW||C1[i]>spc.Width-spc.TaperW
-             ||C2[i]<=spc.TaperW||C2[i]>=spc.Length-spc.TaperW))//taper
-      {
+            ||C3[i]<=0+1e-5||C3[i]>=spc.Height-1e-5) {
          fIsDepleted[i]=true;
          fIsFixed[i]=true;
          Vp[i]=spc.Bias[0];
@@ -207,22 +191,22 @@ void XYZ::CalculateE()
       double dyp=dC2p[idx];
       double dzm=dC3m[idx];
       double dzp=dC3p[idx];
-      double pym,pyp,pxm,pxp,pzp,pzm;
-      if(idx<N1*N2)pzm=Vp[idx];
-      else pzm=Vp[idx-N1*N2];
-      if(idx>=N1*N2*N3-N1*N2)pzp=Vp[idx];
-      else pzp=Vp[idx+N1*N2];
-      if(idx%(N1*N2)>(N1*N2)-N1-1) pyp=Vp[idx];
-      else pyp=Vp[idx+N1];
-      if(idx%(N1*N2)<N1)pym=Vp[idx];
-      else pym=Vp[idx-N1];
-      if((idx%(N1*N2))%N1==N1-1)pxp=Vp[idx];
-      else pxp=Vp[idx+1];
-      if((idx%(N1*N2))%N1==0)pxm=Vp[idx];
-      else pxm=Vp[idx-1];
-      E1[idx]=(pxp-pxm)/(dxm+dxp);
-      E2[idx]=(pyp-pym)/(dym+dyp);
-      E3[idx]=(pzp-pzm)/(dzm+dzp);
+      double vym,vyp,vxm,vxp,vzp,vzm;
+      if (idx<N1*N2) vzm=Vp[idx];
+      else vzm=Vp[idx-N1*N2];
+      if (idx>=N1*N2*N3-N1*N2) vzp=Vp[idx];
+      else vzp=Vp[idx+N1*N2];
+      if (idx%(N1*N2)>(N1*N2)-N1-1) vyp=Vp[idx];
+      else vyp=Vp[idx+N1];
+      if (idx%(N1*N2)<N1) vym=Vp[idx];
+      else vym=Vp[idx-N1];
+      if ((idx%(N1*N2))%N1==N1-1) vxp=Vp[idx];
+      else vxp=Vp[idx+1];
+      if ((idx%(N1*N2))%N1==0) vxm=Vp[idx];
+      else vxm=Vp[idx-1];
+      E1[idx]=(vxp-vxm)/(dxm+dxp);
+      E2[idx]=(vyp-vym)/(dym+dyp);
+      E3[idx]=(vzp-vzm)/(dzm+dzp);
 
       Et[idx]=sqrt(E1[idx]*E1[idx]+E2[idx]*E2[idx]+E3[idx]*E3[idx]);//overall E
    }
