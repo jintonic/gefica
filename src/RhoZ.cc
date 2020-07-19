@@ -64,9 +64,9 @@ void RhoZ::OverRelaxAt(size_t idx)
    else vrp=Vp[idx+1];
 
    // update potential
-   double vnew = (Src[idx] + 1/C1[idx]*(vrp-vrm)/(drm+drp)
-         + (vrp/drp+vrm/drm)*2/(drm+drp) + (vzp/dzp+vzm/dzm)*2/(dzp+dzm))
-      /((1/drm+1/drp)*2/(drm+drp) + (1/dzp+1/dzm)*2/(dzp+dzm));
+   double vnew = (Src[idx]/2 + 1/C1[idx]*(vrp-vrm)/(drm+drp)
+         + (vrp/drp+vrm/drm)/(drm+drp) + (vzp/dzp+vzm/dzm)/(dzp+dzm))
+      /((1/drm+1/drp)/(drm+drp) + (1/dzp+1/dzm)/(dzp+dzm));
    vnew = RelaxationFactor*(vnew-Vp[idx])+Vp[idx]; // over relax
 
    // update Vp for impurity-only case even if the point is undepleted
