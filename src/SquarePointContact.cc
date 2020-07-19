@@ -5,7 +5,7 @@ using namespace GeFiCa;
 SquarePointContact::SquarePointContact(const char *name, const char *title) :
    Detector(name, title), Width(1*cm),Length(1*cm),
    PointContactW(1*mm),PointContactL(1*mm), PointContactH(300*nm),
-   WrapAroundW(1*cm), WrapAroundL(1*cm);
+   WrapAroundW(2*mm), WrapAroundL(2*mm)
 { Height=1*cm; Bias.push_back(1*kV); }
 //______________________________________________________________________________
 //
@@ -30,13 +30,13 @@ void SquarePointContact::CheckConfigurations()
       Error("CheckConfigurations", "PointContactH==%.1f!", PointContactH);
       abort();
    }
-   if (WrapAroundW+PointContactW>=Width) {
+   if (WrapAroundW<PointContactW || WrapAroundW>Width) {
       Error("CheckConfigurations", "WrapAroundW==%.1f!", WrapAroundW);
       Error("CheckConfigurations", "PointContactW==%.1f!", PointContactW);
       Error("CheckConfigurations", "Width==%.1f!", Width);
       abort();
    }
-   if (WrapAroundL+PointContactL>=Length) {
+   if (WrapAroundL<PointContactL || WrapAroundL>Length) {
       Error("CheckConfigurations", "WrapAroundL==%.1f!", WrapAroundL);
       Error("CheckConfigurations", "PointContactL==%.1f!", PointContactL);
       Error("CheckConfigurations", "Length==%.1f!", Length);
