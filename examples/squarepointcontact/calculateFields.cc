@@ -1,18 +1,18 @@
 using namespace GeFiCa;
-// calculate and save fields of an Inverted Coaxial Point-Contact (ICPC) HPGe
-void calculateFields(const char *output="ICPC.root")
+// calculate and save fields of a square point-pontact (SPC) HPGe
+void calculateFields(const char *output="SPC.root")
 {
    SquarePointContact detector;
-   detector.Bias[0]=0; // bias on point contact
-   detector.Bias[1]=70; // ground outer contact
+   detector.Bias[0]=-70*volt; // bias on point contact
+   detector.Bias[1]=0; // ground outer contact
 
-   detector.Width=1.8*cm; detector.Height=1.0*cm; detector.Length=1.8*cm;
+   detector.Height=1.0*cm;
+   detector.Width=detector.Length=1.8*cm;
+   detector.WrapAroundW=detector.WrapAroundL=detector.Length;
 
-   detector.PointContactW=0.6*mm; detector.PointContactH=0.1*mm;
+   detector.PointContactW=0.6*mm;
    detector.PointContactL=0.6*mm;
-
-   detector.TaperW=0.3*cm;
-   //detector.WrapAroundW=0.3*cm;
+   detector.PointContactH=0.1*mm;
 
    detector.BottomImpurity=4e9/cm3; detector.TopImpurity=4e9/cm3;
 

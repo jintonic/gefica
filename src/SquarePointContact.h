@@ -4,21 +4,20 @@
 #include "Detector.h"
 namespace GeFiCa { class SquarePointContact; }
 /**
- * Configuration of Squre point contact detectors.
+ * Configuration of squre point contact detectors.
  */
 class GeFiCa::SquarePointContact : public Detector
 {
    public:
-      double Width; ///< Widthi(x) of crystal
+      double Width; ///< Width(x) of crystal
       double Length; ///< Length(y) of crystal
 
       double PointContactW; ///< Width of point contact
       double PointContactL; ///< Length of point contact
       double PointContactH; ///< Height of point contact
 
-      double WrapAroundW; ///< Inner radius of outer contact 
-
-      double TaperW; ///< Bottom Taper Width from outer contact 
+      double WrapAroundW; ///< Inner width of outer contact 
+      double WrapAroundL; ///< Inner length of outer contact 
 
       SquarePointContact(const char *name="spc",
             const char *title="squre point-contact detector");
