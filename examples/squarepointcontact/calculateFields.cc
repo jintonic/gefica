@@ -16,10 +16,7 @@ void calculateFields(const char *output="SPC.root")
 
    detector.BottomImpurity=4e9/cm3; detector.TopImpurity=4e9/cm3;
 
-   int nx=50; 
-   int ny=50; // precision: 0.1 mm
-   int nz=100; // precision: 0.1 mm
-   XYZ grid(nx,ny,nz);
+   XYZ grid(61,61,51);
    grid.SetupWith(detector);
    grid.RelaxationFactor=1.94;
    grid.SuccessiveOverRelax();
