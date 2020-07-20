@@ -3,8 +3,8 @@ using namespace GeFiCa;
 void calculateFields(const char *output="ICPC.root")
 {
    SquarePointContact detector;
-   detector.Bias[0]=70; // bias on point contact
-   detector.Bias[1]=0; // ground outer contact
+   detector.Bias[0]=0; // bias on point contact
+   detector.Bias[1]=70; // ground outer contact
 
    detector.Width=1.8*cm; detector.Height=1.0*cm; detector.Length=1.8*cm;
 
@@ -18,10 +18,10 @@ void calculateFields(const char *output="ICPC.root")
 
    int nx=50; 
    int ny=50; // precision: 0.1 mm
-   int nz=50; // precision: 0.1 mm
+   int nz=100; // precision: 0.1 mm
    XYZ grid(nx,ny,nz);
    grid.SetupWith(detector);
-   grid.RelaxationFactor=1.84;
+   grid.RelaxationFactor=1.94;
    grid.SuccessiveOverRelax();
    
    TFile file(output,"recreate");
