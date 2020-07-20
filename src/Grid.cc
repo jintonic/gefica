@@ -102,7 +102,7 @@ bool Grid::IsDepleted()
       // calculate one more time in case of adding two fields together,
       // one is depleted, the other is not
       OverRelaxAt(i);
-      if (fIsDepleted[i]=false) return false;
+      if (fIsDepleted[i]==false) return false;
    }
    return true;
 }
