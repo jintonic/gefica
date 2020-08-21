@@ -644,7 +644,7 @@ FieldLine* Grid::GetFieldLineFrom(double x, double y, double z, bool positive)
          break;
       }
 
-      double ex = GetE1(x,y,z), ey = GetE2(x,y,z);
+      double ex = GetE1(x,y,z), ey = GetE2(x,y,z), ez = GetE3(x,y,z);
       double et = TMath::Sqrt(ex*ex+ey*ey+ez*ez); // total E
       if (et==0) {
          Warning("GetFieldLineFrom", "E@(x=%.1fmm,y=%.1fmm,z=%.1f)=%.1fV/cm!",
@@ -665,7 +665,7 @@ FieldLine* Grid::GetFieldLineFrom(double x, double y, double z, bool positive)
          Info("GetFieldLineFrom", "Propagated more than 2000 steps. Stop");
          break;
       }
-      if (positive) { x+=dx; y+=dy; z+dz; } else { x-=dx; y-=dy; z-=dz;}
+      if (positive) { x+=dx; y+=dy; z+=dz; } else { x-=dx; y-=dy; z-=dz;}
       i++;
    }
 
