@@ -34,7 +34,7 @@ void drawFields(const char *input="ICPC.root")
    bool positive[np] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
    if (detector->BoreH==0) { y[1]=5.03; y[5]=5.03; y[6]=5.03; } // no bore hole
    for (int i=0; i<np; i++)
-      grid->GetFieldLineFrom(x[i]*cm, y[i]*cm, 0, positive[i])
+      grid->GetFieldLineFrom(x[i]*cm, y[i]*cm, positive[i])
          ->GetGraph()->Draw("p");
 
    ce->Print("e.png");
