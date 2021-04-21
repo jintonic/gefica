@@ -13,6 +13,13 @@ RC = root-config
 CXX = $(shell $(RC) --cxx)
 LIBS = $(shell $(RC) --libs)
 CXXFLAGS = $(shell $(RC) --cflags) -O2 -Wall -fPIC
+RV = $(firstword $(subst /, ,$(shell $(RC) --version)))
+RV_GT_6_24 = $(shell echo $(RV)\>=6.24 | bc )
+ifeq ($(RV_GT_6_24), 1)
+  CREATEMAP = rootcling -f $@ -s=lib$@ --rml=lib$@ --rmf=$(ROOTMAP) $^
+else
+  CREATEMAP = rootcling -f $@ $(CXXFLAGS) -s lib$@ -rml lib$@ -rmf $(ROOTMAP) $^
+endif
 # ------------------------------------------------------------------------------
 # first target is the default target, before "make all", make will include all
 # other makefiles specified by the include command
@@ -39,7 +46,7 @@ $(LIBRARY): $(DIC_SRC:.cc=.o) $(OBJECTS)
 $(DIC_SRC): $(HEADERS) $(LINKDEF)
 	@echo 
 	@echo "creating ROOT dictionary and rootmap files:" 
-	rootcling -f $@ $(CXXFLAGS) -s lib$(LIBNAME) -rml lib$(LIBNAME) -rmf $(ROOTMAP) $^
+	$(CREATEMAP)
 	@echo 
 	@echo "creating object files:" 
 
