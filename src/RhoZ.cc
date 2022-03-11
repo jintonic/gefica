@@ -121,6 +121,7 @@ void RhoZ::GetInfoFrom(PointContact& pc)
       dC2m.push_back(pc.Height/(N2-1)); // there are mirrored points below
       C1.push_back(-pc.Radius+i*dC1p[i]); C2.push_back(0);
       E1.push_back(0); E2.push_back(0); Et.push_back(0); Vp.push_back(0);
+      Wp.push_back(0);
       fIsFixed.push_back(false); fIsDepleted.push_back(false);
       Src.push_back(-pc.GetImpurity(C2[i])*Qe/epsilon);
    }
@@ -129,6 +130,7 @@ void RhoZ::GetInfoFrom(PointContact& pc)
       dC2p.push_back(pc.Height/(N2-1)); dC2m.push_back(pc.Height/(N2-1));
       C1.push_back(C1[i-N1]); C2.push_back(C2[i-N1]+dC2p[i-N1]);
       E1.push_back(0); E2.push_back(0); Et.push_back(0); Vp.push_back(0);
+      Wp.push_back(0);
       fIsFixed.push_back(false); fIsDepleted.push_back(false);
       Src.push_back(-pc.GetImpurity(C2[i])*Qe/epsilon);
    }
@@ -138,21 +140,26 @@ void RhoZ::GetInfoFrom(PointContact& pc)
       if (C1[i]>=-pc.PointContactR && C1[i]<=pc.PointContactR
             && C2[i]<=pc.PointContactH) { // point contact
          Vp[i]=pc.Bias[0]; fIsFixed[i]=true; npc++;
+         Wp[i]=1*volt;
       } else if (C1[i]<=pc.BoreR && C1[i]>=-pc.BoreR
             && C2[i]>=pc.Height-pc.BoreH) { // bore hole
          Vp[i]=pc.Bias[1]; fIsFixed[i]=true;
+         Wp[i]=0*volt;
       } else if (((C1[i]>pc.WrapAroundR-pc.GrooveW && C1[i]<pc.WrapAroundR)
                || (C1[i]>-pc.WrapAroundR && C1[i]<-pc.WrapAroundR+pc.GrooveW))
             && C2[i]<pc.GrooveH) { // groove
          Vp[i]=pc.Bias[1]/4; Src[i]=0;
-      } else // bulk
+         Wp[i]=0*volt;
+      } else { // bulk
          Vp[i]=(pc.Bias[0]+pc.Bias[1])/2;
+         Wp[i]=0.01*volt;}
       double slope, intercept;
       if (pc.CornerW>0) { // has top taper
          slope=-pc.CornerH/pc.CornerW;
          intercept=pc.Height-slope*(pc.Radius-pc.CornerW);
          if (C2[i]>-slope*C1[i]+intercept||C2[i]>slope*C1[i]+intercept) {
             Vp[i]=pc.Bias[1]; fIsFixed[i]=true;
+            Wp[i]=0*volt;
          }
       }
       if (pc.TaperW>0) { // has bottom taper
@@ -160,6 +167,7 @@ void RhoZ::GetInfoFrom(PointContact& pc)
          intercept=-(pc.Radius-pc.TaperW)*slope;
          if (C2[i]<=C1[i]*slope+intercept || C2[i]<=-C1[i]*slope+intercept) {
             Vp[i]=pc.Bias[1]; fIsFixed[i]=true;
+            Wp[i]=0*volt;
          }
       }
       if (pc.BoreTaperW>0) { // has bore taper
@@ -168,15 +176,18 @@ void RhoZ::GetInfoFrom(PointContact& pc)
          if ((C2[i]>-slope*C1[i]+intercept && C1[i]<=-pc.BoreR) ||
                (C2[i]>slope*C1[i]+intercept && C1[i]>=pc.BoreR)) {
             Vp[i]=pc.Bias[1]; fIsFixed[i]=true;
+            Wp[i]=0*volt;
          }
       }
    }
    if (npc<1) { Error("GetInfoFrom", "no point in point contact!"); abort(); }
    for (size_t i=N1*N2-1; i>=N1*N2-N1; i--) { // top boundary
       Vp[i]=pc.Bias[1]; fIsFixed[i]=true; dC2p[i]=0;
+      Wp[i]=0*volt;
    }
    for (size_t i=0; i<=N1*N2-N1; i=i+N1) { // left & right boundaries
       Vp[i]=pc.Bias[1]; Vp[i+N1-1]=pc.Bias[1];
+      Wp[i]=0*volt;
       fIsFixed[i]=true; fIsFixed[i+N1-1]=true;
       dC1m[i]=0; dC1p[i+N1-1]=0;
    }
@@ -185,6 +196,7 @@ void RhoZ::GetInfoFrom(PointContact& pc)
       if (C1[i]>=pc.WrapAroundR||C1[i]<=-pc.WrapAroundR) {// wrap arround
          fIsFixed[i]=true;
          Vp[i]=pc.Bias[1];
+         Wp[i]=0*volt;
       }
    }
 

@@ -1,0 +1,31 @@
+:rotm rm0 0 0 0 
+
+:volu world BOX 50*cm 50*cm 50*cm G4_AIR
+:vis  world OFF
+
+// G4Polycone is broken in github repository, apply pull request #36 first.
+// https://github.com/Geant4/geant4/pull/36
+:solid main POLYCONE 0 360 6
+  0    0
+  31.5 0
+  34.5 3
+  34.5 47.5
+  31.5 50.5
+  0    50.5
+
+:solid bore POLYCONE 0 360 6
+  0  0
+  8  0
+  8  17
+  11 20
+  11 20.1 // for better cutting
+  0  20.1
+
+:solid groove TUBE 22 25 3
+
+// pivot of the polycone is the first rz point.
+:solid bulk SUBTRACTION main groove rm0 0 0 0
+:solid pc   SUBTRACTION bulk bore   rm0 0 0 30.5
+:volu  pc pc G4_Ge
+:place pc 1 world rm0 0 0 0
+:color pc 0.3 0.1 0.5

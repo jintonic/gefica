@@ -13,6 +13,7 @@ class GeFiCa::Points
       std::vector<double> C2; ///< the 2nd coordinates of the points
       std::vector<double> C3; ///< the 3rd coordinates of the points
       std::vector<double> Vp; ///< potential at each point
+      std::vector<double> Wp; ///< weighting potential at each point
       std::vector<double> Et; ///< total electric field strength
       std::vector<double> E1; ///< projection of Et on C1
       std::vector<double> E2; ///< projection of Et on C2
@@ -85,6 +86,8 @@ class GeFiCa::Grid : public Points, public TNamed
        */
       double GetV(double c1, double c2=0, double c3=0) const
       {return GetData(Vp,c1,c2,c3); }
+      double GetW(double c1, double c2=0, double c3=0) const
+      {return GetData(Wp,c1,c2,c3); }
       double GetE(double c1, double c2=0, double c3=0) const
       { return GetData(Et,c1,c2,c3); }
       double GetE1(double c1, double c2=0, double c3=0) const
