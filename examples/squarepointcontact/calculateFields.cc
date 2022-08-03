@@ -3,12 +3,12 @@ using namespace GeFiCa;
 void calculateFields(const char *output="SPC.root")
 {
    SquarePointContact detector;
-   detector.Bias[0]=-70*volt; // bias on point contact
+   detector.Bias[0]=-170*volt; // bias on point contact
    detector.Bias[1]=0; // ground outer contact
 
    detector.Height=1.0*cm;
    detector.Width=detector.Length=1.8*cm;
-   detector.WrapAroundW=detector.WrapAroundL=detector.Length;
+   detector.WrapAroundW=detector.WrapAroundL=1.6*cm;
 
    detector.PointContactW=0.6*mm;
    detector.PointContactL=0.6*mm;
