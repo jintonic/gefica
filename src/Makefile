@@ -39,7 +39,7 @@ $(LIBRARY): $(DIC_SRC:.cc=.o) $(OBJECTS)
 $(DIC_SRC): $(HEADERS) $(LINKDEF)
 	@echo 
 	@echo "creating ROOT dictionary and rootmap files:" 
-	rootcling -f $@ $(CXXFLAGS) -s lib$(LIBNAME) -rml lib$(LIBNAME) -rmf $(ROOTMAP) $^
+	rootcling -f $@ -cxxflags="$(CXXFLAGS)" -s lib$(LIBNAME) -rml lib$(LIBNAME) -rmf $(ROOTMAP) $^
 	@echo 
 	@echo "creating object files:" 
 
