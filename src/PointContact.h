@@ -3,6 +3,11 @@
 
 #include "Detector.h"
 namespace GeFiCa { class PointContact; }
+
+#include "Math/Point3D.h"
+#include "TMath.h"
+using namespace ROOT::Math;
+using namespace TMath;
 /**
  * Configuration of point contact detectors.
  */
@@ -33,6 +38,7 @@ class GeFiCa::PointContact : public Detector
             const char *title="point-contact detector");
       void CheckConfigurations();
       void Draw(Option_t* option="side");
+      int  OutsideDetector(RhoZPhiPoint pt);
       ClassDef(PointContact,1);
 };
 #endif

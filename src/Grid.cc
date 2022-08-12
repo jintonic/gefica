@@ -148,6 +148,40 @@ void Grid::SuccessiveOverRelax()
    Printf("%4zu steps, error: %.1e (tolerance: %.0e)",
          Iterations, error, Tolerance);
    Info("SuccessiveOverRelax", "CPU time: %.1f s", watch.CpuTime());
+
+   Info("Weighting potential","Start...");
+   error=1; Iterations=0;
+   std::vector<double>SrcOld = Src; // Keep
+   std::vector<double>VpOld  = Vp;  // save original rho/epsilon
+   for (size_t i=0; i<GetN(); i++) {
+      Src[i] = 0;                   // set impurity to zero
+      Vp[i]  = Wp[i];               // Initial and boundary conditions
+   }
+   watch.Start();
+   while (Iterations<MaxIterations && error>Tolerance) {
+      if (Iterations%100==0) Printf("%4zu steps, "
+            "error: %.1e (tolerance: %.0e)", Iterations, error, Tolerance);
+      double numerator=0, denominator=0;
+      for (size_t i=0; i<GetN(); i++) {
+         double old=Vp[i]; // save old value of Vp[i]
+         OverRelaxAt(i); // update Vp[i]
+         if(old>0) denominator+=old; else denominator-=old;
+         double diff=Vp[i]-old;
+         if(diff>0) numerator+=(diff); else numerator-=(diff);
+      }
+      if (denominator==0) {
+         Error("Weighting potential","Sum of Ws == 0!"); abort();
+      }
+      error = numerator/denominator;
+      Iterations++;
+   }
+   Printf("%4zu steps, error: %.1e (tolerance: %.0e)",
+         Iterations, error, Tolerance);
+   Info("Weighting potential", "CPU time: %.1f s", watch.CpuTime());
+
+   Wp  = Vp;      // populate weighting potential vector
+   Vp  = VpOld;   // reset old values
+   Src = SrcOld;
 }
 //______________________________________________________________________________
 //
@@ -216,10 +250,11 @@ TTree* Grid::GetTree(bool createNew)
    if (fTree) { if (createNew) delete fTree; else return fTree; }
 
    // define tree
-   bool b,d; double vp,et,e1,e2,e3,c1,c2,c3,p1,p2,p3,m1,m2,m3;
+   bool b,d; double vp, wp, et,e1,e2,e3,c1,c2,c3,p1,p2,p3,m1,m2,m3;
    fTree = new TTree("t","field data");
    fTree->SetDirectory(0);
    fTree->Branch("v",&vp,"v/D");
+   fTree->Branch("w",&wp,"v/D");
    fTree->Branch("e",&et,"e/D");
    // 1D data
    fTree->Branch("e1",&e1,"e1/D");
@@ -248,6 +283,7 @@ TTree* Grid::GetTree(bool createNew)
       if (N2!=0) { e2=E2[i]; c2=C2[i]; p2=dC2p[i]; m2=dC2m[i]; } // 2D data
       if (N3!=0) { e3=E3[i]; c3=C3[i]; p3=dC3p[i]; m3=dC3m[i]; } // 3D data
       vp=Vp[i]; et=Et[i]; b=fIsFixed[i]; d=fIsDepleted[i]; // common data
+      wp=Wp[i];
       fTree->Fill();
    }
 

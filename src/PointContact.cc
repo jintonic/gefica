@@ -138,3 +138,52 @@ void PointContact::Draw(Option_t* option)
    rg->SetLineColor(kBlack); rg->SetLineStyle(kDashed);
    rg->SetFillStyle(0); rg->Draw();
 }
+//______________________________________________________________________________
+//
+int PointContact::OutsideDetector(RhoZPhiPoint pt){
+  float a, b;
+  if (pt.Z() > Height || pt.Z() < 0) return 1;
+
+  if (pt.R() < 0) 
+    pt = RhoZPhiPoint(-pt.R(), pt.theta(), pt.Z());
+  if (pt.R() > Height) return 1;
+  RhoZPhiPoint pt1(Radius - pt.R(), Height - pt.Z(), 0);
+
+  if (pt.Z() < PointContactH && pt.R() < PointContactR) {
+    // if (!setup->bulletize_PC) return 1;
+   if (PointContactH > PointContactR) {
+     a = PointContactH - PointContactR;
+     if (pt.Z() < a || Sq(pt.Z()-a) + Sq(pt.R()) < Sq(PointContactR)) return 1;
+   } else {
+     a = PointContactR - PointContactH;
+     if (pt.R() < a || Sq(pt.Z()) + Sq(pt.R()-a) < Sq(PointContactH)) return 1;
+   }
+   return 0;
+  }
+  /* check ditch */
+  if (pt.Z() <= GrooveH  && GrooveW > 0 && WrapAroundR > 0 &&
+      pt.R() < WrapAroundR && pt.R() > WrapAroundR - GrooveW) 
+      return 1;
+
+  /* check hole */
+  if ( pt.R() < BoreR && pt1.Z() < BoreH) {
+      b = Height - BoreH ; // + setup->hole_bullet_radius;
+      if (pt.R() > b) return 1;
+  }
+
+  /* check inner taper of hole */
+   if (pt1.Z() < BoreTaperH && pt.R()  < BoreR +
+      ((BoreTaperH - pt1.Z()) * BoreTaperW / BoreTaperH)) 
+      return 1;
+
+  /* check outer taper of crystal */
+  if (pt1.Z() < CornerH && pt1.R() < ((CornerH - pt1.Z()) *
+      CornerW / CornerH)) 
+      return 1;
+
+  /* check 45-degree bottom outer taper of crystal */
+   if ( pt.Z() < TaperH && pt1.R() < TaperW) 
+      return 1;
+
+  return 0;
+}

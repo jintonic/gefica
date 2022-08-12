@@ -26,6 +26,7 @@
 #pragma link C++ class GeFiCa::Hemispherical+;
 #pragma link C++ class GeFiCa::PointContact+;
 #pragma link C++ class GeFiCa::SquarePointContact+;
+#pragma link C++ class GeFiCa::SignalCalculator+;
 #endif
 // for Emacs and gitHub:
 // -*- c++ -*-

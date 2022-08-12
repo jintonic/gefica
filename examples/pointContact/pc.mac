@@ -1,0 +1,29 @@
+/geometry/source ./pc.tg
+
+/physics_lists/select FTFP_BERT_EMZ
+
+/run/initialize
+/vis/open OGL
+/vis/drawVolume
+/vis/scene/add/axes
+/vis/scene/add/scale
+/vis/scene/add/trajectories
+/vis/scene/endOfEventAction accumulate
+
+/gps/pos/type Plane
+/gps/pos/shape Circle
+/gps/pos/centre 0 40 35 mm 
+/gps/pos/radius 4 mm
+/gps/pos/rot2  1 0 1
+
+/gps/direction 0 -1 0
+/gps/particle gamma
+/gps/energy 661 keV
+
+#/tracking/verbose 2
+#/run/beamOn 100
+
+/analysis/setFileName pc.root
+/vis/disable
+/run/printProgress 1000
+/run/beamOn 30000
